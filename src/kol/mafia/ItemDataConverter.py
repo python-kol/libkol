@@ -1,22 +1,22 @@
-import kol.Error as Error
-from kol.database import ItemDatabase
+import kol.Error as Error               # @UnusedImport
+from kol.database import ItemDatabase   # @UnusedImport
 from kol.serialize import ItemsSerializer
 
 import re
 import urllib2
 
-CONCOCTIONS_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/concoctions.txt"
-EQUIPMENT_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/equipment.txt"
-FOLD_GROUPS_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/foldgroups.txt"
-FULLNESS_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/fullness.txt"
-INEBRIETY_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/inebriety.txt"
-ITEM_DESCS_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/items.txt"
-MODIFIERS_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/modifiers.txt"
-NPC_STORES_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/npcstores.txt"
-OUTFITS_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/outfits.txt"
-PACKAGES_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/packages.txt"
-SPLEEN_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/spleenhit.txt"
-ZAP_GROUPS_FILE = "https://kolmafia.svn.sourceforge.net/svnroot/kolmafia/src/data/zapgroups.txt"
+CONCOCTIONS_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/concoctions.txt"
+EQUIPMENT_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/equipment.txt"
+FOLD_GROUPS_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/foldgroups.txt"
+FULLNESS_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/fullness.txt"
+INEBRIETY_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/inebriety.txt"
+ITEM_DESCS_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/items.txt"
+MODIFIERS_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/modifiers.txt"
+NPC_STORES_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/npcstores.txt"
+OUTFITS_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/outfits.txt"
+PACKAGES_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/packages.txt"
+SPLEEN_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/spleenhit.txt"
+ZAP_GROUPS_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/zapgroups.txt"
 
 REQUIRED_MUSCLE_PATTERN = re.compile("Mus: ([0-9]+)")
 REQUIRED_MYSTICALITY_PATTERN = re.compile("Mys: ([0-9]+)")
@@ -100,6 +100,7 @@ def itemByName(name):
 
 
 def readItemDescsFile():
+    print('Reading item description file...')
     text = _opener.open(ITEM_DESCS_FILE).read()
     for line in text.splitlines():
         if len(line) > 0 and line[0] != '#':
@@ -114,7 +115,7 @@ def readItemDescsFile():
                 itemTypes = parts[4].split(',')
                 for i in range(len(itemTypes)):
                     itemTypes[i] = itemTypes[i].strip()
-                itemTradeStr = parts[5]
+                itemTradeStr = parts[5]     # @UnusedVariable
                 autosell = 0
                 if len(parts[6]) > 0:
                     autosell = int(parts[6])
@@ -171,9 +172,12 @@ def readItemDescsFile():
                 _items.append(item)
                 _itemsById[itemId] = item
                 _itemsByName[name.lower()] = item
+    print('... read {0} items.'.format(len(_items)))
 
 
 def readEquipmentFile():
+    print('Reading equipment file...')
+    linesProcessed = 0
     currentType = None
     text = _opener.open(EQUIPMENT_FILE).read()
     for line in text.splitlines():
@@ -187,7 +191,7 @@ def readEquipmentFile():
                     currentType = "shirt"
                 elif line.find('Weapons section') >= 0:
                     currentType = "weapon"
-                elif line.find('Off-hand section') >= 0:
+                elif line.find('Off-hand Items section') >= 0:
                     currentType = "off-hand"
                 elif line.find('Accessories section') >= 0:
                     currentType = "accessory"
@@ -196,6 +200,7 @@ def readEquipmentFile():
             else:
                 parts = line.split('\t')
                 if len(parts) >= 3:
+                    linesProcessed = linesProcessed + 1
                     name = parts[0]
                     power = int(parts[1])
                     requirements = parts[2]
@@ -213,7 +218,8 @@ def readEquipmentFile():
                         continue
 
                     # Set the power
-                    if power > 0 or currentType == "weapon" or (currentType == "off-hand" and offHandType == "shield"):
+                    if (power > 0 or currentType == "weapon" 
+                        or (currentType == "off-hand" and offHandType == "shield")):
                         item["power"] = power
 
                     # Set the requirements
@@ -241,14 +247,18 @@ def readEquipmentFile():
                             item["type"] = "off-hand item"
                     else:
                         item["type"] = currentType
+    print('... {0} lines processed.'.format(linesProcessed))
 
 
 def readFullnessFile():
+    print('Reading fullness file...')
+    linesProcessed = 0
     text = _opener.open(FULLNESS_FILE).read()
     for line in text.splitlines():
         if len(line) > 0 and line[0] != '#':
             parts = line.split('\t')
             if len(parts) >= 8:
+                linesProcessed = linesProcessed + 1
                 name = parts[0]
                 fullness = int(parts[1])
                 level = int(parts[2])
@@ -277,14 +287,18 @@ def readFullnessFile():
                     item["mysticalityGained"] = myst
                 if mox != "0" and len(mox) > 0:
                     item["moxieGained"] = mox
+    print('... {0} lines processed.'.format(linesProcessed))
 
 
 def readInebrietyFile():
+    print('Reading inebriety file...')
+    linesProcessed = 0
     text = _opener.open(INEBRIETY_FILE).read()
     for line in text.splitlines():
         if len(line) > 0 and line[0] != '#':
             parts = line.split('\t')
             if len(parts) >= 8:
+                linesProcessed = linesProcessed + 1
                 name = parts[0]
                 drunkenness = int(parts[1])
                 level = int(parts[2])
@@ -293,9 +307,6 @@ def readInebrietyFile():
                 musc = parts[5]
                 myst = parts[6]
                 mox = parts[7]
-                if name == "ice-cold Sir Schlitz":
-                    print quality
-                    print drunkenness
 
                 try:
                     item = itemByName(name)
@@ -316,14 +327,18 @@ def readInebrietyFile():
                     item["mysticalityGained"] = myst
                 if mox != "0" and len(mox) > 0:
                     item["moxieGained"] = mox
+    print('... {0} lines processed.'.format(linesProcessed))
 
 
 def readSpleenFile():
+    print('Reading spleen file...')
+    linesProcessed = 0
     text = _opener.open(SPLEEN_FILE).read()
     for line in text.splitlines():
         if len(line) > 0 and line[0] != '#':
             parts = line.split('\t')
             if len(parts) >= 8:
+                linesProcessed = linesProcessed + 1
                 name = parts[0]
                 spleen = int(parts[1])
                 level = int(parts[2])
@@ -352,14 +367,18 @@ def readSpleenFile():
                     item["mysticalityGained"] = myst
                 if mox != "0" and len(mox) > 0:
                     item["moxieGained"] = mox
+    print('... {0} lines processed.'.format(linesProcessed))
 
 
 def readPackagesFile():
+    print('Reading packages file...')
+    linesProcessed = 0
     text = _opener.open(PACKAGES_FILE).read()
     for line in text.splitlines():
         if len(line) > 0 and line[0] != '#':
             parts = line.split('\t')
             if len(parts) >= 4:
+                linesProcessed = linesProcessed + 1
                 name = parts[0]
                 numItems = int(parts[2])
                 price = int(parts[3])
@@ -372,14 +391,18 @@ def readPackagesFile():
                 item["type"] = "gift package"
                 item["numPackageItems"] = numItems
                 item["npcPrice"] = price
+    print('... {0} lines processed.'.format(linesProcessed))
 
 
 def readOutfitsFile():
+    print('Reading outfits file...')
+    linesProcessed = 0
     text = _opener.open(OUTFITS_FILE).read()
     for line in text.splitlines():
         if len(line) > 0 and line[0] != '#':
             parts = line.split('\t')
             if len(parts) >= 3:
+                linesProcessed = linesProcessed + 1
                 outfitId = int(parts[0])
                 outfitName = parts[1]
                 outfitItems = parts[2].split(',')
@@ -391,12 +414,16 @@ def readOutfitsFile():
                         continue
                     item["outfit"] = outfitName
                     item["outfitId"] = outfitId
+    print('... {0} lines processed.'.format(linesProcessed))
 
 
 def readZapGroupsFile():
+    print('Reading zap groups file...')
+    linesProcessed = 0
     text = _opener.open(ZAP_GROUPS_FILE).read()
     for line in text.splitlines():
         if len(line) > 1 and line[0] != '#':
+            linesProcessed = linesProcessed + 1
             zapItems = line.split(',')
             for thisItem in zapItems:
                 thisItem = thisItem.strip()
@@ -405,12 +432,16 @@ def readZapGroupsFile():
                 except KeyError:
                     continue
                 item["isZappable"] = True
+    print('... {0} lines processed.'.format(linesProcessed))
 
 
 def readFoldGroupsFile():
+    print('Reading fold groups file...')
+    linesProcessed = 0
     text = _opener.open(FOLD_GROUPS_FILE).read()
     for line in text.splitlines():
         if len(line) > 1 and line[0] != '#':
+            linesProcessed = linesProcessed + 1
             foldItems = line.split(',')
             for thisItem in foldItems:
                 thisItem = thisItem.strip()
@@ -419,15 +450,19 @@ def readFoldGroupsFile():
                 except KeyError:
                     continue
                 item["isFoldable"] = True
+    print('... {0} lines processed.'.format(linesProcessed))
 
 
 def readNPCStoresFile():
+    print('Reading NPC stores file...')
+    linesProcessed = 0
     text = _opener.open(NPC_STORES_FILE).read()
     for line in text.splitlines():
         if len(line) > 0 and line[0] != '#':
             parts = line.split('\t')
             if len(parts) >= 3:
-                storeName = parts[0]
+                linesProcessed = linesProcessed + 1
+                storeName = parts[0]    # @UnusedVariable
                 storeId = parts[1]
                 itemName = parts[2]
                 price = int(parts[3])
@@ -437,9 +472,12 @@ def readNPCStoresFile():
                     continue
                 item["npcStoreId"] = storeId
                 item["npcPrice"] = price
+    print('... {0} lines processed.'.format(linesProcessed))
 
 
 def readModifiersFile():
+    print('Reading modifiers file...')
+    linesProcessed = 0
     text = _opener.open(MODIFIERS_FILE).read()
     for line in text.splitlines():
         if line == "# Special case overrides":
@@ -448,6 +486,7 @@ def readModifiersFile():
         if len(line) > 0 and line[0] != '#':
             parts = line.split('\t')
             if len(parts) >= 2:
+                linesProcessed = linesProcessed + 1
                 itemName = parts[0]
                 modifiers = parts[1].strip()
 
@@ -508,6 +547,7 @@ def readModifiersFile():
 
                 if "enchantments" in item and len(item["enchantments"]) == 0:
                     del item["enchantments"]
+    print('... {0} lines processed.'.format(linesProcessed))
 
 
 def fixupItems():
@@ -518,14 +558,14 @@ def fixupItems():
             else:
                 enchantments = item["enchantments"]
                 if "MP Regen Min" in enchantments:
-                    min = enchantments["MP Regen Min"]
-                    max = enchantments["MP Regen Max"]
+                    min = enchantments["MP Regen Min"]  # @ReservedAssignment
+                    max = enchantments["MP Regen Max"]  # @ReservedAssignment
                     del enchantments["MP Regen Min"]
                     del enchantments["MP Regen Max"]
                     enchantments["mpRegen"] = "%s-%s" % (min, max)
                 if "HP Regen Min" in enchantments:
-                    min = enchantments["HP Regen Min"]
-                    max = enchantments["HP Regen Max"]
+                    min = enchantments["HP Regen Min"]  # @ReservedAssignment
+                    max = enchantments["HP Regen Max"]  # @ReservedAssignment
                     del enchantments["HP Regen Min"]
                     del enchantments["HP Regen Max"]
                     enchantments["hpRegen"] = "%s-%s" % (min, max)
@@ -542,8 +582,11 @@ def fixupItems():
 
 
 def writeItems():
-    f = open("Items.py", "w")
-    ItemsSerializer.writeItems(_items, f)
+    #f = open("Items.py", "w")
+    with open("Items.py", "w") as f:
+        ItemsSerializer.writeItems(_items, f)
+    print('Items.py generated.')
+
 
 if __name__ == "__main__":
     main()

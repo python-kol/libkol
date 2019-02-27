@@ -6,11 +6,11 @@ from kol.request.CharpaneRequest import CharpaneRequest
 
 
 
-import cookielib
+import cookielib    # @UnusedImport
 import hashlib
 
 try:
-    import requests
+    import requests  # @UnusedImport
     from Opener import RequestsOpener as Opener
 except ImportError:
     from Opener import StandardOpener as Opener
@@ -35,9 +35,10 @@ class Session(object):
         to ensure that the user logs in using that particular server. This can be helpful
         if the user continues to be redirected to a server that is down.
         """
-
+        
         self.userName = username
         self.userPasswordHash = hashlib.md5(password).hexdigest()
+        self.password = password;
 
         # Grab the KoL homepage.
         homepageRequest = HomepageRequest(self, serverNumber=serverNumber)
@@ -45,7 +46,7 @@ class Session(object):
         self.serverURL = homepageResponse["serverURL"]
 
         # Perform the login.
-        loginRequest = LoginRequest(self, homepageResponse["loginChallenge"])
+        loginRequest = LoginRequest(self, "")
         loginRequest.doRequest()
 
         # Load the charpane once to make StatusRequest report the rollover time

@@ -2,25 +2,32 @@ import TestData
 from kol.request.BountyHunterRequest import BountyHunterRequest
 import unittest
 
-# TODO: This test needs to be redone, since the BHH interface has changed
 class Main(unittest.TestCase):
     def runTest(self):
         s = TestData.data["session"]
+        
+        # Don't do test if easy bounty is not available
         bountyRequest = BountyHunterRequest(s)
-        
         response = bountyRequest.doRequest()
-        
-        if response['bountyAvailable']:
-            self.assertFalse(response['bountyActive'], "bountyActive should not be true when a bounty is available")
+        self.assertTrue(response['easyBountyAvailable'], 
+                        "easyBounty should be available for this test")
+        self.assertFalse(response['easyBountyActive'], 
+                         "easyBounty should not be active for this test")
 
-            # Pick the first bounty and accept it
-            bountyId = bounties[0]['id']
-            acceptBountyRequest = BountyHunterRequest(s, action=BountyHunterRequest.ACCEPT_BOUNTY, item=bountyId)
-            response = acceptBountyRequest.doRequest()
-            self.assertTrue(response['bountyActive'], "bountyActive should be set to true after an accept requestio0k-p")
-            self.assertFalse(response['bountyAvailable'], "bountyAvailable should be false after accepting the bounty")
-             
-            # Abandon the bounty
-            abandonBountyRequest = BountyHunterRequest(s, action=BountyHunterRequest.ABANDON_BOUNTY)
-            response = abandonBountyRequest.doRequest()
-            self.assertTrue(response['bountyAvailable'], "bountyAvailable should be true again after abandoning the bounty")
+        # Accept the easy bounty
+        acceptEasyReq = BountyHunterRequest(s, action='takelow')
+        response = acceptEasyReq.doRequest()
+        self.assertTrue(response['easyBountyActive'], 
+                        "easyBounty should be active after an accept")
+        self.assertFalse(response['easyBountyAvailable'], 
+                         "easyBounty should not be available after an accept")
+        
+        # Abandon the easy bounty (so this test can only be done once a day :-)
+        abandonEasyReq = BountyHunterRequest(s, action='giveup_low')
+        response = abandonEasyReq.doRequest()
+        self.assertFalse(response['easyBountyAvailable'], 
+                        "easyBounty should be not be available after giving up"
+                        + " (only one offer per day)")
+        self.assertFalse(response['easyBountyActive'], 
+                         "easyBounty should not be active after giving up")
+            
