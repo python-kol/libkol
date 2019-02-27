@@ -1,9 +1,10 @@
 import TestData
+import TestBountyHunter
 import TestGetItemDescriptionRequest
 import TestItemDatabase
-import TestBountyHunter
 import TestLogin
 import TestLogout
+import TestMallItemSearch
 from kol.util import Report
 
 import sys
@@ -19,9 +20,8 @@ def main(argv=sys.argv):
     suite.addTest(TestItemDatabase.Main())
     suite.addTest(TestLogin.Main())
     suite.addTest(TestGetItemDescriptionRequest.Main())
-    # Removing failing BHH Test until the request is updated to use the new BHH interface
-#     suite.addTest(TestBountyHunter.Main())
-    
+    suite.addTest(TestBountyHunter.Main())
+    suite.addTest(TestMallItemSearch.Main())
     suite.addTest(TestLogout.Main())
     
     # Run the test suite.

@@ -27,7 +27,6 @@ class Main(unittest.TestCase):
         item = ItemDatabase.getItemFromName("baconstone")
         r = ItemDescriptionRequest(s, item["descId"])
         itemData = r.doRequest()
-        self.assertEquals(itemData["isJewelrymakingComponent"], True)
         self.assertEquals(itemData["image"], "baconstone.gif")
         self.assertEquals(itemData["autosell"], 500)
         

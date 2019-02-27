@@ -15,6 +15,7 @@ class LoginRequest(GenericRequest):
         self.url = session.serverURL + "login.php"
         self.requestData['loggingin'] = 'Yup.'
         self.requestData['loginname'] = session.userName
+        self.requestData['password'] = session.password;
         self.requestData['secure'] = '1'
         hashKey = self.session.userPasswordHash + ":" + loginChallenge
         self.requestData['response'] = hashlib.md5(hashKey).hexdigest()

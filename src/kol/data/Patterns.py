@@ -19,7 +19,7 @@ patterns = {
     "accountPwd" : r'var pwdhash = "([0-9a-f]+)";',
     "accountId" : r'var playerid = ([0-9]+);',
     "accountName" : r'<a [^<>]*href="charsheet\.php">(?:<b>)?([^<>]+)<',
-    "badPassword" : r'<b>Login failed\. Bad password\.<\/b>',
+    "badPassword" : r'<b>Login failed\.\s+?Bad password\.<\/b>',
     "loginChallenge" : r'name="?challenge"?\s+value="?([0-9a-f]+)"?',
     "loginURL" : r'^(.*)login\.php\?loginid=([0-9a-f]+)',
     "mainFrameset" : r'<frameset id="?rootset"?',
@@ -42,7 +42,7 @@ patterns = {
     "inventorySingleItem" : r'<img [^>]*descitem\(([0-9]+)[^>]*></td><td[^>]*><b[^>]*>([^<>]+)</b>&nbsp;<span><\/span>',
     "inventoryMultipleItems" : r'<img [^>]*descitem\(([0-9]+)[^>]*></td><td[^>]*><b[^>]*>([^<>]+)</b>&nbsp;<span>\(([0-9]+)\)<\/span>',
     "itemAutosell" : r'<br>Selling Price: <b>(\d*) Meat\.<\/b>',
-    "itemImage" : r'\/\/images\.kingdomofloathing\.com\/itemimages\/(.*?)"',
+    "itemImage" : r'\/images\.kingdomofloathing\.com\/itemimages\/(.*?)"',
     "itemName" : r'<b>(.+?)<\/b>',
     "itemType" : r'<br>Type: <b>([^<]*)<.*\/b><br>',
     "tooFull" : r"You're too full to eat that\.",
@@ -193,7 +193,9 @@ patterns = {
     # Mall search patterns.
     "mallItemSearchResult" : r'<tr class="graybelow(.*?)<\/tr>',
     "mallItemSearchDetails" : r'<a[^<>]*href="mallstore\.php\?whichstore=(?P<storeId>[0-9]+)&searchitem=(?P<itemId>[0-9]+)&searchprice=(?P<price>[0-9]+)"><b>(?P<storeName>.*?)<\/b><\/a>[^<>]*<\/td><td[^<>]*>(?P<quantity>[0-9,]+)<\/td><td[^<>]*>(?:&nbsp;)*(?P<limit>[0-9,]*)[^<>]*<\/td>',
-
+    "nextLink" : r'\[<a [^>]*start=([0-9]+)[^>]*>next</a>\]',
+    "mallItemHeader" : r'<tr class=.blackabove. id=.item_([0-9]+)[^0-9]>',
+    
     # Mall purchase patterns.
     "cantAffordItem" : r"<td>You can't afford that item\.<\/td>",
     "mallNoItemAtThatPrice" : r"<td>This store doesn't have that item at that price\.",
@@ -235,7 +237,7 @@ patterns = {
     "youDontHaveSGEEA" : r"<td>You don't have a green soft eyedrop echo antidote\.",
 
     # Ascension History patterns.
-    "fullAscension" : r'</tr><td[^>]*>([0-9]+).*?</td><td[^>]*>([0-9/]+).*?</td><td[^>]*><span[^>]*>([0-9,]+).*?</span>.*?</td><td[^>]*><img [^>]*title="(.*?)"[^>]*></td><td[^>]*>(.*?)</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(?:<img [^>]*title="(.*?)"[^>]*>)?</td><td[^>]*>(<img [^>]*title="(.*?)"[^>]*>|<img src="http://images.kingdomofloathing.com/otherimages/spacer.gif" width=30 height=30>)(<img [^>]*title="(.*?)"[^>]*>|</td>)',
+    "fullAscension" : r'</tr><td[^>]*>([0-9]+).*?</td><td[^>]*>([0-9/]+).*?</td><td[^>]*><span[^>]*>([0-9,]+).*?</span>.*?</td><td[^>]*><img [^>]*title="(.*?)"[^>]*></td><td[^>]*>(.*?)</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(?:<img [^>]*title="(.*?)"[^>]*>)?</td><td[^>]*>(<img [^>]*title="(.*?)"[^>]*>|<img src="http://images\.kingdomofloathing\.com/otherimages/spacer.gif" width=30 height=30>)(<img [^>]*title="(.*?)"[^>]*>|</td>)',
     "familiarAscension" : r'^(.*?) \(([0-9.]+)%\)',
     "playerName" : r'Ascension History \(<a[^>]*><font[^>]*>(.*?)<\/font><\/a>\)',
 
@@ -304,9 +306,13 @@ patterns = {
     "stillMaxLimit": r"<td>The still can\'t handle that much action today\.<\/td>",
 
     # Bounty Hunter Hunter patterns.
-    'bountyAvailable' : r"These are the things I'm currently paying bounties on",
-    'dailyBountyItem' : r'<input type=hidden name=action value="takebounty"><input type=hidden name=whichitem value=(?P<itemid>[0-9]+)>',
-    'bountyChosen' : r"Come back when you've collected",
+    'easyBountyAvailable' : r'<input type=hidden name=action value=takelow><input class=button type=submit value="I\'ll Get These">',
+    'hardBountyAvailable' : r'<input type=hidden name=action value=takehigh><input class=button type=submit value="I\'ll Get These">',
+    'specialBountyAvailable' : r'<input type=hidden name=action value=takespecial><input class=button type=submit value="I\'ll Get These">',
+    'easyBountyActive' : r'<input class=button type=submit value="I Give Up!"><input type=hidden name=action value=giveup_low>',
+    'hardBountyActive' : r'<input class=button type=submit value="I Give Up!"><input type=hidden name=action value=giveup_high>',
+    'specialBountyActive' : r'<input class=button type=submit value="I Give Up!"><input type=hidden name=action value=giveup_special>',
+    'bountyChosen' : r"Come back when you've gotten the goods",
 
     # Wok related patterns.
     "dontHaveItemsForWok" : r"<td>You don't have the materials for that amount of wokkage\.</td>",
@@ -334,7 +340,7 @@ patterns = {
     "tradeSentSuccessfully" : r"<td>Your trade offer has been sent\.",
     "tradeItem" : (r"<tr><td><img onclick\='descitem\((?P<itemdescid>[0-9]+)\).*?<b>(?P<itemname>.*?)\((?P<quantity>[0-9,]+])\)</td>'", re.DOTALL),
     "tradeMessage" : (r'<table cellpadding=5><tr><td.*?><b>Note:</b><Br><?/?c?e?n?t?e?r?>?(?P<message>.*?)</td></tr></table>', re.DOTALL),
-    "tradePendingResponseIncoming" : (r'You will give (?P<playername>.*?) \(#(?P<playerid>[0-9]+)\):<br><table>(?P<outgoingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<outgoingmeat>[0-9,]+)<br><hr>.*? will give you:<br><table>(?P<incomingitems>.*?)</table><img src\="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<incomingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="makeoffer\.php\?action\=accept&pwd\=.*?&whichoffer\=(?P<tradeid>[0-9]+)">accept', re.DOTALL),
+    "tradePendingResponseIncoming" : (r'You will give (?P<playername>.*?) \(#(?P<playerid>[0-9]+)\):<br><table>(?P<outgoingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<outgoingmeat>[0-9,]+)<br><hr>.*? will give you:<br><table>(?P<incomingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<incomingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="makeoffer\.php\?action\=accept&pwd\=.*?&whichoffer\=(?P<tradeid>[0-9]+)">accept', re.DOTALL),
     "tradePendingResponseOutgoing" : (r'You will give [^()]*?:<br><table>(?P<outgoingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<outgoingmeat>[0-9,]+?)<br><hr>(?P<playername>.*?) \(#(?P<playerid>[0-9]+?)\) will give you:<br><table>(?P<incomingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<incomingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="makeoffer\.php\?action=cancel2&whichoffer=(?P<tradeid>[0-9]+?)">cancel', re.DOTALL),
     "tradePendingOfferIncoming" : (r'Offer from (?P<playername>.*?) \(#(?P<playerid>[0-9]+)\)<br><table>(?P<incomingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<incomingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="counteroffer\.php\?whichoffer=(?P<tradeid>[0-9]+)">respond', re.DOTALL),
     "tradePendingOfferOutgoing" : (r'Offered to (?P<playername>.*?) \(#(?P<playerid>[0-9]+)\)<br><table>(?P<outgoingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<outgoingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="makeoffer\.php\?action=cancel&whichoffer=(?P<tradeid>[0-9]+)">cancel this offer', re.DOTALL),
