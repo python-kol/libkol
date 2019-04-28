@@ -1,5 +1,5 @@
 import TestData
-from kol.request.MallItemSearchRequest import MallItemSearchRequest
+from pykollib.request.MallItemSearchRequest import MallItemSearchRequest
 import unittest
 
 def printResults(response):
@@ -177,7 +177,7 @@ class Main(unittest.TestCase):
         # Look up bow, filter for booze
         misr=MISR(s, 'bow', justItems=True, category=MISR.CATEGORY_BOOZE)
         response = misr.doRequest()
-        self.assertItemCount(response, 1, 'bow booze items')
+        self.assertItemCount(response, 4, 'bow booze items')
 
         # Look up bow, filter for hats
         misr=MISR(s, 'bow', justItems=True, category=MISR.CATEGORY_HATS)

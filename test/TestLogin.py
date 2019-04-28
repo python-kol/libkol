@@ -1,5 +1,5 @@
 import TestData
-from kol.Session import Session
+from pykollib.Session import Session
 
 import unittest
 

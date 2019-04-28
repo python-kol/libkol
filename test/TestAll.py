@@ -5,7 +5,7 @@ import TestItemDatabase
 import TestLogin
 import TestLogout
 import TestMallItemSearch
-from kol.util import Report
+from pykollib.util import Report
 
 import sys
 import unittest

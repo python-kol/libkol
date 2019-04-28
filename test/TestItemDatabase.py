@@ -1,4 +1,4 @@
-from kol.database import ItemDatabase
+from pykollib.database import ItemDatabase
 
 import unittest
 

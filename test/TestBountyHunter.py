@@ -1,5 +1,5 @@
 import TestData
-from kol.request.BountyHunterRequest import BountyHunterRequest
+from pykollib.request.BountyHunterRequest import BountyHunterRequest
 import unittest
 
 class Main(unittest.TestCase):
