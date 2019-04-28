@@ -1,6 +1,6 @@
 import TestData
-from kol.database import ItemDatabase
-from kol.request.ItemDescriptionRequest import ItemDescriptionRequest
+from pykollib.database import ItemDatabase
+from pykollib.request.ItemDescriptionRequest import ItemDescriptionRequest
 
 import unittest
 
