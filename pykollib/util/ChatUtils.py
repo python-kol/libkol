@@ -1,6 +1,6 @@
-from kol.manager import PatternManager
-from kol.util import Report
-from kol.util import StringUtils
+from pykollib.manager import PatternManager
+from pykollib.util import Report
+from pykollib.util import StringUtils
 
 CHAT_CHANNELS = [
     "clan",
