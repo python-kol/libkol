@@ -1,7 +1,7 @@
-from kol.request.GetChatMessagesRequest import GetChatMessagesRequest
-from kol.request.OpenChatRequest import OpenChatRequest
-from kol.request.SendChatRequest import SendChatRequest
-from kol.util import ChatUtils
+from pykollib.request.GetChatMessagesRequest import GetChatMessagesRequest
+from pykollib.request.OpenChatRequest import OpenChatRequest
+from pykollib.request.SendChatRequest import SendChatRequest
+from pykollib.util import ChatUtils
 
 import time
 
