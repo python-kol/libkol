@@ -1,5 +1,5 @@
 from GenericRequest import GenericRequest
-from pykollib.manager import PatternManager
+from pykollib.pattern import PatternManager
 
 class ItemDescriptionRequest(GenericRequest):
     "Gets the description of an item and then parses various information from the response."

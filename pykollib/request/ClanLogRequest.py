@@ -1,5 +1,5 @@
 from GenericRequest import GenericRequest
-from pykollib.manager import PatternManager
+from pykollib.pattern import PatternManager
 from pykollib.util import Report
 
 from datetime import datetime

@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from GenericRequest import GenericRequest
 from pykollib.database import ItemDatabase
-from pykollib.manager import PatternManager
+from pykollib.pattern import PatternManager
 
 class CafeMenuRequest(GenericRequest):
     "Check the current menu at a cafe."

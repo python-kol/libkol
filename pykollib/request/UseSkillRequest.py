@@ -1,6 +1,6 @@
 from GenericRequest import GenericRequest
 from pykollib.database import SkillDatabase
-from pykollib.manager import PatternManager
+from pykollib.pattern import PatternManager
 
 class UseSkillRequest(GenericRequest):
     def __init__(self, session, skillId, numTimes=1, targetPlayer=None):

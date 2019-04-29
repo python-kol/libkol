@@ -1,6 +1,6 @@
 import pykollib.Error as Error
 from pykollib.util import Report
-from pykollib.manager import PatternManager
+from pykollib.pattern import PatternManager
 from HTMLParser import HTMLParser
 
 
