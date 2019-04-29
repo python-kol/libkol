@@ -1,0 +1,3 @@
+from GetMessagesRequest import GetMessagesRequest
+from GetChatMessagesRequest import GetChatMessagesRequest
+from OpenChatRequest import OpenChatRequest

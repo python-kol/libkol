@@ -1,6 +1,6 @@
-from kol.request.AddPlayerToClanWhitelistRequest import AddPlayerToClanWhitelistRequest
-from kol.request.LoadClanAdminRequest import LoadClanAdminRequest
-from kol.request.ToggleAcceptingClanApplicationsRequest import ToggleAcceptingClanApplicationsRequest
+from pykollib.request.AddPlayerToClanWhitelistRequest import AddPlayerToClanWhitelistRequest
+from pykollib.request.LoadClanAdminRequest import LoadClanAdminRequest
+from pykollib.request.ToggleAcceptingClanApplicationsRequest import ToggleAcceptingClanApplicationsRequest
 
 class ClanManager(object):
     "This class can be used as an interface for clan management."
