@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from pykollib.database import ItemDatabase
 from pykollib.util import ParseResponseUtils
-from pykollib.manager import PatternManager
+from pykollib.pattern import PatternManager
 from pykollib.request.GenericRequest import GenericRequest
 
 class HermitRequest(GenericRequest):

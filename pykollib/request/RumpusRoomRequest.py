@@ -1,5 +1,5 @@
 from pykollib.request.GenericRequest import GenericRequest
-from pykollib.manager import PatternManager
+from pykollib.pattern import PatternManager
 
 FURNITURE = {
     '1':{

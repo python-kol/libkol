@@ -1,6 +1,6 @@
 import pykollib.Error as Error
 from GenericRequest import GenericRequest
-from pykollib.manager import PatternManager
+from pykollib.pattern import PatternManager
 
 class QuestLogRequest(GenericRequest):
     """

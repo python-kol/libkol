@@ -1,5 +1,5 @@
 from GenericRequest import GenericRequest
-from pykollib.manager import PatternManager
+from pykollib.pattern import PatternManager
 
 class LoadClanAdminRequest(GenericRequest):
     "Load's the clan administration page."
