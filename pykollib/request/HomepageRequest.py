@@ -12,9 +12,9 @@ class HomepageRequest(GenericRequest):
     def __init__(self, session, serverNumber=0):
         super(HomepageRequest, self).__init__(session)
         if serverNumber > 0:
-            self.url = "http://www%s.kingdomofloathing.com/main.php" % serverNumber
+            self.url = "https://www%s.kingdomofloathing.com/main.php" % serverNumber
         else:
-            self.url = "http://www.kingdomofloathing.com/"
+            self.url = "https://www.kingdomofloathing.com/"
 
     def parseResponse(self):
         # Get the URL of the server that we were told to use.
