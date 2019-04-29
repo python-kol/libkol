@@ -93,6 +93,7 @@ patterns = {
     "chatPlayerLoggedOn" : r'<font color=green><a target=mainpane href=\'showplayer\.php\?who=([0-9]+)\'><font color=green><b>([^<>]+)<\/b><\/font><\/a> logged on\.<\/font>$',
     "chatPlayerLoggedOff" : r'<font color=green><a target=mainpane href=\'showplayer\.php\?who=([0-9]+)\'><font color=green><b>([^<>]+)<\/b><\/font><\/a> logged off\.<\/font>$',
     "chatTalkieFrequency" : r'<font color=green>The frequency is (.*?), Mr. Rather\.<\/font>',
+    "chatCarnival" : r'<font color="?green"?>(?:.*?)testlove=([0-9]+)\'>consult Madame Zatara about your relationship<\/a> with ([^<>]+?)\.<\/font>',
 
     # Clan dungeon patterns.
     "dungeonActivity" : r'(?:^|<br>|<br><b>|<b>)([^<>]+) \(#([0-9,]+)\) ([^<>]+) \(([0-9,]+) turns?\)',

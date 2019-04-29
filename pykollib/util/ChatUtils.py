@@ -47,6 +47,7 @@ def parseChatMessages(text, isIncoming):
             "mod warning"
             "mod announcement"
             "notification:kmail"
+            "notification:carnival"
             "unknown"
         "currentChannel" : The current channel as indicated when sending a /c, /s, or /l request
         "otherChannels" : The other channels being listened to as indicated by a /l request
@@ -73,6 +74,7 @@ def parseChatMessages(text, isIncoming):
     multiEmotePattern = PatternManager.getOrCompilePattern("chatMultiLineEmote")
     playerLoggedOnPattern = PatternManager.getOrCompilePattern("chatPlayerLoggedOn")
     playerLoggedOffPattern = PatternManager.getOrCompilePattern("chatPlayerLoggedOff")
+    newCarnivalPattern = PatternManager.getOrCompilePattern("chatCarnival")
 
     # Get the chat messages.
     chats = []
@@ -251,6 +253,15 @@ def parseChatMessages(text, isIncoming):
                     chat["text"] = ""
                     parsedChat = True
 
+            #See if this is a carnival notification
+            if parsedChat == False:
+                match = newCarnivalPattern.search(line)
+                if match:
+                    chat["type"] = "notification:carnival"
+                    chat["userName"] = match.group(2)
+                    chat["userId"] = int(match.group(1))
+                    parsedChat = True
+
             # See if this is the start of a multi-line emote (Gothy or Haiku)
             # I've seen a Haiku emote, don't know if Gothy will trigger for it
             if parsedChat == False:
@@ -365,12 +376,18 @@ def cleanChatText(dirtyText):
         textStart = match.end()
         textEnd = textStart
         found = False
+        foundTag = False
         while found == False:
-            if text[textEnd] == url[urlIndex]:
-                textEnd += 1
+            if foundTag == True:
+                if text[textEnd] == '>':
+                    foundTag = False 
+            elif text[textEnd] == '<':
+                foundTag = True
+            elif text[textEnd] == url[urlIndex]:
                 urlIndex += 1
-            elif text[textEnd] == ' ':
-                textEnd += 1
+
+            # Always advance the textEnd
+            textEnd += 1
 
             if urlIndex == len(url):
                 found = True
