@@ -1,6 +1,6 @@
 #import pykollib.Error as Error               # @UnusedImport
 #from pykollib.database import ItemDatabase   # @UnusedImport
-from pykollib.serialize import ItemsSerializer
+from pykollib.mafiadata import ItemsSerializer
 
 import re
 import urllib2
