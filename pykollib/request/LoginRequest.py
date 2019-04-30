@@ -18,7 +18,7 @@ class LoginRequest(GenericRequest):
         self.requestData['password'] = session.password;
         self.requestData['secure'] = '1'
         hashKey = self.session.userPasswordHash + ":" + loginChallenge
-        self.requestData['response'] = hashlib.md5(hashKey).hexdigest()
+        self.requestData['response'] = hashlib.md5(hashKey.encode('utf-8')).hexdigest()
         self.requestData['challenge'] = loginChallenge
 
     def parseResponse(self):
