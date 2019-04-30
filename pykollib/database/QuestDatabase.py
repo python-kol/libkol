@@ -1,18 +1,7 @@
 "This module is used as a database for KoL quest information."
 
 import pykollib.Error as Error
-#from kol.data import Quests
-import os
-try:
-    pykoldb = os.path.join(pykollibtmp, 'pykol/db')
-except NameError:
-    from tempfile import gettempdir
-    pykoldb = os.path.join(gettempdir(), 'pykol/db')
-
-import sys
-sys.path.insert(0, pykoldb)
-import Quests
-
+from pykollib.data import Quests
 from pykollib.filter import FilterManager
 from pykollib.util import Report
 

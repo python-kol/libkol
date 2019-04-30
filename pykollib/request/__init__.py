@@ -49,7 +49,7 @@ from GenericRequest import GenericRequest
 from GetChatMessagesRequest import GetChatMessagesRequest
 from GetMessagesRequest import GetMessagesRequest
 from GetPendingTradesRequest import GetPendingTradesRequest
-#from GuildTrainRequest import GuildTrainRequest
+from GuildTrainRequest import GuildTrainRequest
 from HermitRequest import HermitRequest
 from HoboFlexRequest import HoboFlexRequest
 from HomepageRequest import HomepageRequest
@@ -101,6 +101,6 @@ from UneffectRequest import UneffectRequest
 from UnequipRequest import UnequipRequest
 from UseItemRequest import UseItemRequest
 from UseMultipleRequest import UseMultipleRequest
-#from UseSkillRequest import UseSkillRequest
+from UseSkillRequest import UseSkillRequest
 from UserProfileRequest import UserProfileRequest
 from WokRequest import WokRequest
