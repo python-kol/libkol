@@ -1,8 +1,5 @@
-from .request.HomepageRequest import HomepageRequest
-from .request.LoginRequest import LoginRequest
-from .request.LogoutRequest import LogoutRequest
-from .request.StatusRequest import StatusRequest
-from .request.CharpaneRequest import CharpaneRequest
+from .request import HomepageRequest, UserProfileRequest, LoginRequest, LogoutRequest, StatusRequest, CharpaneRequest
+from .Clan import Clan
 
 import requests
 import hashlib
@@ -18,6 +15,7 @@ class Session(object):
         self.userPasswordHash = None
         self.serverURL = None
         self.pwd = None
+        self.clan = None
 
     def login(self, username, password, serverNumber=0):
         """
@@ -43,13 +41,24 @@ class Session(object):
         charpaneRequest = CharpaneRequest(self)
         charpaneRequest.doRequest()
 
+        self.getStatus()
+        self.getProfile()
+
+    def getStatus(self):
         # Get pwd, user ID, and the user's name.
         request = StatusRequest(self)
         response = request.doRequest()
+
         self.pwd = response["pwd"]
         self.userName = response["name"]
         self.userId = int(response["playerid"])
         self.rollover = int(response["rollover"])
+
+
+    def getProfile(self):
+        profileResponse = UserProfileRequest(self, self.userId).doRequest()
+        self.clan = Clan(self, id=profileResponse.get("clanId"))
+
 
     def logout(self):
         "Performs a logut request, closing the session."

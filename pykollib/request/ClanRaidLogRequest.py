@@ -12,11 +12,9 @@ class ClanRaidLogRequest(GenericRequest):
     def __init__(self, session, raidId=None):
         super(ClanRaidLogRequest, self).__init__(session)
         self.url = session.serverURL + "clan_raidlogs.php"
+        self.raidId = raidId
         if raidId:
             self.url += "?viewlog=%s" % raidId
-            self.raidId = raidId
-        else:
-            self.raidId = None
 
     def parseResponse(self):
         # If this is a request for a particular raid log, only retrieve information about it.
@@ -28,18 +26,25 @@ class ClanRaidLogRequest(GenericRequest):
 
         # Get a list of actions that occurred in Hobopolis.
         actions = []
+        dungeonLogTypePattern = PatternManager.getOrCompilePattern("dungeonLogType")
         dungeonLogCategoryPattern = PatternManager.getOrCompilePattern('dungeonLogCategory')
         dungeonActivityPattern = PatternManager.getOrCompilePattern('dungeonActivity')
-        for categoryMatch in dungeonLogCategoryPattern.finditer(txt):
-            category = categoryMatch.group(1)
-            for match in dungeonActivityPattern.finditer(categoryMatch.group(2)):
-                action = {}
-                action["category"] = category
-                action["userName"] = match.group(1)
-                action["userId"] = int(match.group(2))
-                action["event"] = match.group(3)
-                action["turns"] = int(match.group(4).replace(',', ''))
-                actions.append(action)
+        for typeMatch in dungeonLogTypePattern.finditer(txt):
+            dungeon = typeMatch.group(1)
+            raidId = int(typeMatch.group(2))
+            for categoryMatch in dungeonLogCategoryPattern.finditer(typeMatch.group(3)):
+                category = categoryMatch.group(1)
+                for match in dungeonActivityPattern.finditer(categoryMatch.group(2)):
+                    action = {
+                        "dungeon": dungeon,
+                        "raidId": raidId,
+                        "category": category,
+                        "userName": match.group(1),
+                        "userId": int(match.group(2)),
+                        "event": match.group(3),
+                        "turns": int(match.group(4).replace(',', '')),
+                    }
+                    actions.append(action)
         self.responseData["events"] = actions
 
         # Retrieve a list of loot that has been distributed.

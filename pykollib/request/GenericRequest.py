@@ -24,6 +24,7 @@ class GenericRequest(object):
         self.requestData = {}
         self.skipParseResponse = False
 
+
     def doRequest(self):
         """
         Performs the request. This method will ensure that nightly maintenance
