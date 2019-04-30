@@ -1,7 +1,7 @@
 from pykollib.request.GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 from pykollib.util import Report
-import kol.Error as Error
+import pykollib.Error as Error
 
 class DeclineTradeOfferRequest(GenericRequest):
     
