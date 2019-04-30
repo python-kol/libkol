@@ -3,6 +3,7 @@ from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 from pykollib.util import ParseResponseUtils
 
+
 class UseMultipleRequest(GenericRequest):
     "Uses multiple items at once"
 
@@ -20,11 +21,15 @@ class UseMultipleRequest(GenericRequest):
         # First parse for errors
         notEnoughPattern = PatternManager.getOrCompilePattern("notEnoughToUse")
         if notEnoughPattern.search(self.responseText):
-            raise Error.Error("You don't have that many of that item.", Error.ITEM_NOT_FOUND)
+            raise Error.Error(
+                "You don't have that many of that item.", Error.ITEM_NOT_FOUND
+            )
 
         notMultiPattern = PatternManager.getOrCompilePattern("notMultiUse")
         if notMultiPattern.search(self.responseText):
-            raise Error.Error("You cannot multi-use that item.", Error.WRONG_KIND_OF_ITEM)
+            raise Error.Error(
+                "You cannot multi-use that item.", Error.WRONG_KIND_OF_ITEM
+            )
 
         # Find out what happened
         items = ParseResponseUtils.parseItemsReceived(self.responseText, self.session)

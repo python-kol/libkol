@@ -1,5 +1,6 @@
 from .GenericRequest import GenericRequest
 
+
 class TakeItemFromClanStashRequest(GenericRequest):
     "Take items from the player's clan stash."
 
@@ -10,4 +11,3 @@ class TakeItemFromClanStashRequest(GenericRequest):
         self.requestData["action"] = "takegoodies"
         self.requestData["whichitem"] = item["id"]
         self.requestData["quantity"] = item["quantity"]
-

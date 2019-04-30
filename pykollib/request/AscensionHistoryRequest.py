@@ -2,10 +2,13 @@ from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 from datetime import timedelta, datetime
 
+
 class AscensionHistoryRequest(GenericRequest):
     def __init__(self, session, playerId, preNS13=False):
         super(AscensionHistoryRequest, self).__init__(session)
-        self.url = session.serverURL + "ascensionhistory.php?back=other&who=%s" % playerId
+        self.url = (
+            session.serverURL + "ascensionhistory.php?back=other&who=%s" % playerId
+        )
         if preNS13:
             self.url += "&prens13=1"
 
@@ -29,9 +32,9 @@ class AscensionHistoryRequest(GenericRequest):
             path -- The path of the ascension (teet, booze, oxy)
         """
 
-        fullAscensionPattern = PatternManager.getOrCompilePattern('fullAscension')
-        famPattern = PatternManager.getOrCompilePattern('familiarAscension')
-        namePattern = PatternManager.getOrCompilePattern('playerName')
+        fullAscensionPattern = PatternManager.getOrCompilePattern("fullAscension")
+        famPattern = PatternManager.getOrCompilePattern("familiarAscension")
+        namePattern = PatternManager.getOrCompilePattern("playerName")
 
         stripText = self.responseText.replace("&nbsp;", "")
 
@@ -45,8 +48,8 @@ class AscensionHistoryRequest(GenericRequest):
             ascLevel = int(ascension.group(3))
             ascClass = ascension.group(4).strip()
             ascSign = ascension.group(5).strip()
-            ascTurns = int(ascension.group(7).replace(',',''))
-            ascDays = int(ascension.group(10).replace(',',''))
+            ascTurns = int(ascension.group(7).replace(",", ""))
+            ascDays = int(ascension.group(10).replace(",", ""))
             ascFamiliarData = ascension.group(12)
             ascMode = ascension.group(14)
 
@@ -62,8 +65,8 @@ class AscensionHistoryRequest(GenericRequest):
             ascStart = ascStart.date()
             ascEnd = ascEnd.date()
 
-            ascFamiliar = ''
-            ascFamUsage = ''
+            ascFamiliar = ""
+            ascFamUsage = ""
 
             if ascFamiliarData == "No Data" or ascFamiliarData is None:
                 ascFamiliar = "None"
@@ -76,12 +79,25 @@ class AscensionHistoryRequest(GenericRequest):
             if ascMode == "Hardcore" and ascPath == "Bad Moon":
                 ascMode = "Bad Moon"
                 ascPath = "None"
-            if (not ascMode):
+            if not ascMode:
                 ascMode = "Softcore"
-            if (not ascPath):
+            if not ascPath:
                 ascPath = "None"
 
-            asc = {"id":ascNumber, "start":ascStart, "end":ascEnd, "level":ascLevel, "charClass":ascClass, "sign":ascSign, "turns":ascTurns, "days":ascDays, "familiar":ascFamiliar, "famUsage":ascFamUsage, "mode":ascMode, "path":ascPath}
+            asc = {
+                "id": ascNumber,
+                "start": ascStart,
+                "end": ascEnd,
+                "level": ascLevel,
+                "charClass": ascClass,
+                "sign": ascSign,
+                "turns": ascTurns,
+                "days": ascDays,
+                "familiar": ascFamiliar,
+                "famUsage": ascFamUsage,
+                "mode": ascMode,
+                "path": ascPath,
+            }
             ascensions.append(asc)
 
         self.responseData["ascensions"] = ascensions

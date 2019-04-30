@@ -2,6 +2,7 @@ import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 
+
 class CursePlayerRequest(GenericRequest):
     def __init__(self, session, targetPlayerNameOrId, itemId):
         super(CursePlayerRequest, self).__init__(session)
@@ -14,47 +15,79 @@ class CursePlayerRequest(GenericRequest):
 
     def parseResponse(self):
         if len(self.responseText) < 10:
-            raise Error.Error("You can't curse with that item.", Error.WRONG_KIND_OF_ITEM)
+            raise Error.Error(
+                "You can't curse with that item.", Error.WRONG_KIND_OF_ITEM
+            )
 
-        dontHaveThatItemPattern = PatternManager.getOrCompilePattern('dontHaveThatItem')
+        dontHaveThatItemPattern = PatternManager.getOrCompilePattern("dontHaveThatItem")
         if dontHaveThatItemPattern.search(self.responseText):
             raise Error.Error("You don't have that item.", Error.ITEM_NOT_FOUND)
 
-        playerNotFoundPattern = PatternManager.getOrCompilePattern('cantCursePlayerNotFound')
+        playerNotFoundPattern = PatternManager.getOrCompilePattern(
+            "cantCursePlayerNotFound"
+        )
         if playerNotFoundPattern.search(self.responseText):
             raise Error.Error("That player could not be found.", Error.USER_NOT_FOUND)
 
         if self.curseItemId == 4939:
-            cantFireAtSelfPattern = PatternManager.getOrCompilePattern('cantFireArrowAtSelf')
+            cantFireAtSelfPattern = PatternManager.getOrCompilePattern(
+                "cantFireArrowAtSelf"
+            )
             if cantFireAtSelfPattern.search(self.responseText):
-                raise Error.Error("You can't fire an arrow at yourself.", Error.INVALID_USER)
+                raise Error.Error(
+                    "You can't fire an arrow at yourself.", Error.INVALID_USER
+                )
 
-            cantFireHardcoreRonin = PatternManager.getOrCompilePattern('cantFireArrowAtHardcoreRonin')
+            cantFireHardcoreRonin = PatternManager.getOrCompilePattern(
+                "cantFireArrowAtHardcoreRonin"
+            )
             if cantFireHardcoreRonin.search(self.responseText):
-                raise Error.Error("You can't fire an arrow at a person in hardcore or ronin.", Error.USER_IN_HARDCORE_RONIN)
+                raise Error.Error(
+                    "You can't fire an arrow at a person in hardcore or ronin.",
+                    Error.USER_IN_HARDCORE_RONIN,
+                )
 
-            alreadyHitPattern = PatternManager.getOrCompilePattern('userAlreadyHitWithArrow')
+            alreadyHitPattern = PatternManager.getOrCompilePattern(
+                "userAlreadyHitWithArrow"
+            )
             if alreadyHitPattern.search(self.responseText):
-                raise Error.Error("That person has already been arrowed today.", Error.ALREADY_COMPLETED)
+                raise Error.Error(
+                    "That person has already been arrowed today.",
+                    Error.ALREADY_COMPLETED,
+                )
 
-            successPattern = PatternManager.getOrCompilePattern('fireArrowSuccess')
+            successPattern = PatternManager.getOrCompilePattern("fireArrowSuccess")
             if not successPattern.search(self.responseText):
                 print((self.responseText))
                 raise Error.Error("Unknown error.", Error.REQUEST_GENERIC)
 
         elif self.curseItemId == 7698:
-            cantUseOnSelfPattern = PatternManager.getOrCompilePattern('cantUseSpiderOnSelf')
+            cantUseOnSelfPattern = PatternManager.getOrCompilePattern(
+                "cantUseSpiderOnSelf"
+            )
             if cantUseOnSelfPattern.search(self.responseText):
-                raise Error.Error("You can't use a rubber spider on yourself.", Error.INVALID_USER)
+                raise Error.Error(
+                    "You can't use a rubber spider on yourself.", Error.INVALID_USER
+                )
 
-            cantUseHardcoreRonin = PatternManager.getOrCompilePattern('cantUseSpiderOnHardcoreRonin')
+            cantUseHardcoreRonin = PatternManager.getOrCompilePattern(
+                "cantUseSpiderOnHardcoreRonin"
+            )
             if cantUseHardcoreRonin.search(self.responseText):
-                raise Error.Error("You can't use a rubber spider on a person in hardcore or ronin.", Error.USER_IN_HARDCORE_RONIN)
+                raise Error.Error(
+                    "You can't use a rubber spider on a person in hardcore or ronin.",
+                    Error.USER_IN_HARDCORE_RONIN,
+                )
 
-            alreadyHitPattern = PatternManager.getOrCompilePattern('userAlreadyHitWithSpider')
+            alreadyHitPattern = PatternManager.getOrCompilePattern(
+                "userAlreadyHitWithSpider"
+            )
             if alreadyHitPattern.search(self.responseText):
-                raise Error.Error("That person already has a rubber spider on them.", Error.ALREADY_COMPLETED)
+                raise Error.Error(
+                    "That person already has a rubber spider on them.",
+                    Error.ALREADY_COMPLETED,
+                )
 
-            successPattern = PatternManager.getOrCompilePattern('useSpiderSuccess')
+            successPattern = PatternManager.getOrCompilePattern("useSpiderSuccess")
             if not successPattern.search(self.responseText):
                 raise Error.Error("Unknown error.", Error.REQUEST_GENERIC)

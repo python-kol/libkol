@@ -1,5 +1,6 @@
 from .GenericRequest import GenericRequest
 
+
 class LogoutRequest(GenericRequest):
     def __init__(self, session):
         super(LogoutRequest, self).__init__(session)

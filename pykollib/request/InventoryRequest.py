@@ -1,6 +1,7 @@
 from .ApiRequest import ApiRequest
 from pykollib.database import ItemDatabase
 
+
 class InventoryRequest(ApiRequest):
     "This class is used to get a list of items in the user's inventory."
 

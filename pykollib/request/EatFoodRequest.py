@@ -3,6 +3,7 @@ from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 from pykollib.util import ParseResponseUtils
 
+
 class EatFoodRequest(GenericRequest):
     """
     This class is for eating food from the inventory.
@@ -12,23 +13,31 @@ class EatFoodRequest(GenericRequest):
 
     def __init__(self, session, foodId):
         super(EatFoodRequest, self).__init__(session)
-        self.url = session.serverURL + "inv_eat.php?pwd=" + session.pwd + "&which=1&whichitem=" + str(foodId)
+        self.url = (
+            session.serverURL
+            + "inv_eat.php?pwd="
+            + session.pwd
+            + "&which=1&whichitem="
+            + str(foodId)
+        )
 
     def parseResponse(self):
         # Check for errors
-        tooFullPattern = PatternManager.getOrCompilePattern('tooFull')
+        tooFullPattern = PatternManager.getOrCompilePattern("tooFull")
         if tooFullPattern.search(self.responseText):
             raise Error.Error("You are too full to eat that.", Error.USER_IS_FULL)
-        notFoodPattern = PatternManager.getOrCompilePattern('notFood')
+        notFoodPattern = PatternManager.getOrCompilePattern("notFood")
         if notFoodPattern.search(self.responseText):
             raise Error.Error("That item is not food.", Error.WRONG_KIND_OF_ITEM)
-        foodMissingPattern = PatternManager.getOrCompilePattern('notEnoughItems')
+        foodMissingPattern = PatternManager.getOrCompilePattern("notEnoughItems")
         if foodMissingPattern.search(self.responseText):
             raise Error.Error("Item not in inventory.", Error.ITEM_NOT_FOUND)
 
         # Check the results
         results = {}
-        results["adventures"] = ParseResponseUtils.parseAdventuresGained(self.responseText)
+        results["adventures"] = ParseResponseUtils.parseAdventuresGained(
+            self.responseText
+        )
 
         substats = ParseResponseUtils.parseSubstatsGainedLost(self.responseText)
         if len(substats) > 0:
@@ -50,4 +59,3 @@ class EatFoodRequest(GenericRequest):
             results["effects"] = effects
 
         self.responseData = results
-

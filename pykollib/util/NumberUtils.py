@@ -1,34 +1,36 @@
 import locale
 
-locale.setlocale(locale.LC_ALL, '')
+locale.setlocale(locale.LC_ALL, "")
+
 
 def formatNumberWithCommas(number):
     return locale.format("%d", number, 1)
+
 
 def parseIntegerFromHumanReadableString(intStr):
     # See if this is string ends in a 'k' or 'm'.
     isThousand = False
     isMillion = False
-    if intStr[-1].lower() == 'm':
+    if intStr[-1].lower() == "m":
         isMillion = True
         intStr = intStr[:-1]
-    elif intStr[-1].lower() == 'k':
+    elif intStr[-1].lower() == "k":
         isThousand = True
         intStr = intStr[:-1]
 
     # Break the string up into parts.
-    dotIndex = intStr.find('.')
+    dotIndex = intStr.find(".")
     if dotIndex >= 0:
         integerPart = intStr[:dotIndex]
-        decimalPart = intStr[dotIndex+1:]
+        decimalPart = intStr[dotIndex + 1 :]
     else:
         integerPart = intStr
         decimalPart = None
 
     # See if we can remove commas.
-    commaIndex = integerPart.find(',')
+    commaIndex = integerPart.find(",")
     if commaIndex > 0:
-        array = integerPart.split(',')
+        array = integerPart.split(",")
         isCommaStr = True
         i = 0
         while i < len(array) and isCommaStr:
@@ -45,7 +47,7 @@ def parseIntegerFromHumanReadableString(intStr):
 
     # Determine the number.
     if decimalPart != None:
-        num = float(integerPart + '.' + decimalPart)
+        num = float(integerPart + "." + decimalPart)
     else:
         num = int(integerPart)
     if isMillion:
@@ -53,6 +55,7 @@ def parseIntegerFromHumanReadableString(intStr):
     elif isThousand:
         num *= 1000
     return int(round(num))
+
 
 def getDurationFromString(durationStr):
     duration = 0
@@ -68,13 +71,13 @@ def getDurationFromString(durationStr):
         else:
             if len(tmpNum) == 0:
                 raise ValueError("Invalid duration specified.")
-            if durationStr[i] == 'd' and hasDays == False:
+            if durationStr[i] == "d" and hasDays == False:
                 duration += int(tmpNum) * 24 * 60
                 hasDays = True
-            elif durationStr[i] == 'h' and hasHours == False:
+            elif durationStr[i] == "h" and hasHours == False:
                 duration += int(tmpNum) * 60
                 hasHours = True
-            elif durationStr[i] == 'm' and hasMinutes == False:
+            elif durationStr[i] == "m" and hasMinutes == False:
                 duration += int(tmpNum)
                 hasMinutes = True
             else:

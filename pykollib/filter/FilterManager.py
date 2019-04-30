@@ -10,6 +10,7 @@ ABORT = 0
 CONTINUE = 1
 FINISHED = 2
 
+
 def registerFilterForEvent(filter, eventName, loadOrder=10):
     """
     Registers a filter for a particular event. The loadOrder determines which order the filters
@@ -29,6 +30,7 @@ def registerFilterForEvent(filter, eventName, loadOrder=10):
     else:
         __filters[eventName] = [(filter, loadOrder)]
 
+
 def executeFiltersForEvent(eventName, context=None, **kwargs):
     """
     Iterates through all filters registered for this particular event and executes then in
@@ -39,7 +41,7 @@ def executeFiltersForEvent(eventName, context=None, **kwargs):
     if context == None:
         context = {}
 
-    index = eventName.find(':')
+    index = eventName.find(":")
     if index < 0:
         realEventName = eventName
     else:
@@ -58,7 +60,7 @@ def executeFiltersForEvent(eventName, context=None, **kwargs):
         if eventName == realEventName:
             keepGoing = False
         else:
-            index = eventName.rfind(':')
+            index = eventName.rfind(":")
             if index >= 0:
                 eventName = eventName[:index]
 

@@ -1,6 +1,7 @@
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 
+
 class LoadClanAdminRequest(GenericRequest):
     "Load's the clan administration page."
 
@@ -25,7 +26,9 @@ class LoadClanAdminRequest(GenericRequest):
         self.responseData["clanWebsite"] = match.group(1)
 
         # See if the clan is accepting applications.
-        clanAcceptingAppsPattern = PatternManager.getOrCompilePattern("clanAcceptingApps")
+        clanAcceptingAppsPattern = PatternManager.getOrCompilePattern(
+            "clanAcceptingApps"
+        )
         if clanAcceptingAppsPattern.search(self.responseText):
             self.responseData["acceptingApps"] = True
         else:

@@ -1,6 +1,7 @@
 from .ApiRequest import ApiRequest
 from pykollib.database import ItemDatabase
 
+
 class ItemInformationRequest(ApiRequest):
     "This class is used to get information about a particular item."
 
@@ -12,7 +13,7 @@ class ItemInformationRequest(ApiRequest):
 
     def parseResponse(self):
         super(ItemInformationRequest, self).parseResponse()
-        
+
         item = {}
         data = self.jsonData
         item["id"] = self.itemId

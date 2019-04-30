@@ -9,6 +9,7 @@ __isInitialized = False
 __skillsById = {}
 __skillsByName = {}
 
+
 def init():
     """
     Initializes the SkillDatabase. This method should be called before the
@@ -33,10 +34,12 @@ def init():
     __isInitialized = True
     Report.trace("skilldatabase", "Skill database initialized.")
 
+
 def addSkill(skill):
     "Adds a skill to the database."
     __skillsById[skill["id"]] = skill
     __skillsByName[skill["name"]] = skill
+
 
 def getSkillFromId(skillId, session=None):
     "Returns information about a skill given its ID."
@@ -47,12 +50,15 @@ def getSkillFromId(skillId, session=None):
         return __skillsById[skillId].copy()
     except KeyError:
         cxt = {}
-        FilterManager.executeFiltersForEvent("couldNotFindSkill", cxt, session=session, skillId=skillId)
+        FilterManager.executeFiltersForEvent(
+            "couldNotFindSkill", cxt, session=session, skillId=skillId
+        )
         if "skill" in cxt:
             skill = cxt["skill"]
             addSkill(skill)
             return skill.copy()
         raise Error.Error("Skill ID %s is unknown." % skillId, Error.SKILL_NOT_FOUND)
+
 
 def getSkillFromName(skillName, session=None):
     "Returns information about a skill given its name."
@@ -63,9 +69,13 @@ def getSkillFromName(skillName, session=None):
         return __skillsByName[skillName].copy()
     except KeyError:
         cxt = {}
-        FilterManager.executeFiltersForEvent("couldNotFindSkill", cxt, session=session, skillName=skillName)
+        FilterManager.executeFiltersForEvent(
+            "couldNotFindSkill", cxt, session=session, skillName=skillName
+        )
         if "skill" in cxt:
             skill = cxt["skill"]
             addSkill(skill)
             return skill.copy()
-        raise Error.Error("The skill '%s' is unknown." % skillName, Error.SKILL_NOT_FOUND)
+        raise Error.Error(
+            "The skill '%s' is unknown." % skillName, Error.SKILL_NOT_FOUND
+        )

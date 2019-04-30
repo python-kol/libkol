@@ -1,6 +1,7 @@
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 
+
 class OpenChatRequest(GenericRequest):
     def __init__(self, session):
         super(OpenChatRequest, self).__init__(session)
