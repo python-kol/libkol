@@ -3,51 +3,65 @@ from .GenericRequest import GenericRequest
 from pykollib.database import ItemDatabase
 from pykollib.util import Report
 
+
 class MallItemSearchRequest(GenericRequest):
     """
     Searches for an item at the mall.
     """
 
-    CATEGORY_ALL = 'allitems'
-    CATEGORY_FOOD = 'food'
-    CATEGORY_BOOZE = 'booze'
-    CATEGORY_OTHER_CONSUMABLES = 'othercon'
-    CATEGORY_WEAPONS = 'weapons'
-    CATEGORY_BACK_ITEM = 'container'
-    CATEGORY_HATS = 'hats'
-    CATEGORY_SHIRTS = 'shirts'
-    CATEGORY_PANTS = 'pants'
-    CATEGORY_ACCESSORIES = 'acc'
-    CATEGORY_OFF_HAND = 'offhand'
-    CATEGORY_FAMILIAR_EQUIPMENT = 'famequip'
-    CATEGORY_COMBAT_ITEMS = 'combat'
-    CATEGORY_POTIONS = 'potions'
-    CATEGORY_HP_RESTORERS = 'hprestore'
-    CATEGORY_MP_RESTORERS = 'mprestore'
-    CATEGORY_FAMILIARS = 'familiars'
-    CATEGORY_MR_STORE = 'mrstore'
-    CATEGORY_UNLOCKERS = 'unlockers'
-    CATEGORY_NEW = 'new'
-    SORT_BY_NAME = 'name'
-    SORT_BY_LEVEL_ASC = 'levelreq'
-    SORT_BY_LEVEL_DESC = 'levelreqdesc'
-    SORT_BY_POWER_ASC = 'power'
-    SORT_BY_POWER_DESC = 'powerdesc'
-    SORT_BY_STAT_ASC = 'statreq'
-    SORT_BY_STAT_DESC = 'statreqdesc'
-    SORT_BY_FAMILIAR = 'fam'
-    SORT_BY_PRICE = 'price'
-    SORT_BY_STOCK = 'stock'
-    TIER_NAMES = ['crappy', 'decent', 'good', 'awesome', 'epic']
+    CATEGORY_ALL = "allitems"
+    CATEGORY_FOOD = "food"
+    CATEGORY_BOOZE = "booze"
+    CATEGORY_OTHER_CONSUMABLES = "othercon"
+    CATEGORY_WEAPONS = "weapons"
+    CATEGORY_BACK_ITEM = "container"
+    CATEGORY_HATS = "hats"
+    CATEGORY_SHIRTS = "shirts"
+    CATEGORY_PANTS = "pants"
+    CATEGORY_ACCESSORIES = "acc"
+    CATEGORY_OFF_HAND = "offhand"
+    CATEGORY_FAMILIAR_EQUIPMENT = "famequip"
+    CATEGORY_COMBAT_ITEMS = "combat"
+    CATEGORY_POTIONS = "potions"
+    CATEGORY_HP_RESTORERS = "hprestore"
+    CATEGORY_MP_RESTORERS = "mprestore"
+    CATEGORY_FAMILIARS = "familiars"
+    CATEGORY_MR_STORE = "mrstore"
+    CATEGORY_UNLOCKERS = "unlockers"
+    CATEGORY_NEW = "new"
+    SORT_BY_NAME = "name"
+    SORT_BY_LEVEL_ASC = "levelreq"
+    SORT_BY_LEVEL_DESC = "levelreqdesc"
+    SORT_BY_POWER_ASC = "power"
+    SORT_BY_POWER_DESC = "powerdesc"
+    SORT_BY_STAT_ASC = "statreq"
+    SORT_BY_STAT_DESC = "statreqdesc"
+    SORT_BY_FAMILIAR = "fam"
+    SORT_BY_PRICE = "price"
+    SORT_BY_STOCK = "stock"
+    TIER_NAMES = ["crappy", "decent", "good", "awesome", "epic"]
     MELEE_WEAPONS = 1
     RANGED_WEAPONS = 2
 
-    def __init__(self, session, searchQuery, category=CATEGORY_ALL, noLimits=False, 
-                  maxPrice=0, numResults=0,
-                  # Below parameters added by me
-                  sortItemsBy=SORT_BY_NAME, sortShopsBy=SORT_BY_PRICE,
-                  justItems=False, tiers=TIER_NAMES, consumableByMe=0,
-                  weaponAttribute=3, weaponHands=3, wearableByMe=0, start=0):
+    def __init__(
+        self,
+        session,
+        searchQuery,
+        category=CATEGORY_ALL,
+        noLimits=False,
+        maxPrice=0,
+        numResults=0,
+        # Below parameters added by me
+        sortItemsBy=SORT_BY_NAME,
+        sortShopsBy=SORT_BY_PRICE,
+        justItems=False,
+        tiers=TIER_NAMES,
+        consumableByMe=0,
+        weaponAttribute=3,
+        weaponHands=3,
+        wearableByMe=0,
+        start=0,
+    ):
         """
         Arguments:
             session: The Pykol session
@@ -155,7 +169,7 @@ class MallItemSearchRequest(GenericRequest):
         # consumable_tier_3 (0 or 1) (good)
         # consumable_tier_4 (0 or 1) (awesome)
         # consumable_tier_5 (0 or 1) (epic)
-        
+
         super(MallItemSearchRequest, self).__init__(session)
         # Save parameters
         self.searchQuery = searchQuery
@@ -170,42 +184,53 @@ class MallItemSearchRequest(GenericRequest):
         self.start = start
         self.consumableByMe = consumableByMe
         self.weaponAttribute = weaponAttribute
-        self.weaponHands = weaponHands 
+        self.weaponHands = weaponHands
         self.wearableByMe = wearableByMe
         # Fill in GET request
-        self.url = session.serverURL + 'mall.php'
-        self.requestData['didadv'] = 1
-        self.requestData['pudnuggler'] = searchQuery
-        self.requestData['category'] = category
-        for cat in ['food', 'booze', 'othercon', 'hats', 'shirts', 'pants', 
-                    'weapons', 'acc', 'offhand', 'famequip']:
+        self.url = session.serverURL + "mall.php"
+        self.requestData["didadv"] = 1
+        self.requestData["pudnuggler"] = searchQuery
+        self.requestData["category"] = category
+        for cat in [
+            "food",
+            "booze",
+            "othercon",
+            "hats",
+            "shirts",
+            "pants",
+            "weapons",
+            "acc",
+            "offhand",
+            "famequip",
+        ]:
             if cat == category:
-                self.requestData[cat+'_sortitemsby'] = sortItemsBy
+                self.requestData[cat + "_sortitemsby"] = sortItemsBy
             else:
-                self.requestData[cat+'_sortitemsby'] = 'name'
-        self.requestData['consumable_byme'] = consumableByMe
-        self.requestData['weaponattribute'] = weaponAttribute
-        self.requestData['weaponhands'] = weaponHands
-        self.requestData['wearable_byme'] = wearableByMe
+                self.requestData[cat + "_sortitemsby"] = "name"
+        self.requestData["consumable_byme"] = consumableByMe
+        self.requestData["weaponattribute"] = weaponAttribute
+        self.requestData["weaponhands"] = weaponHands
+        self.requestData["wearable_byme"] = wearableByMe
         if noLimits:
-            self.requestData['nolimits'] = '1'
+            self.requestData["nolimits"] = "1"
         else:
-            self.requestData['nolimits'] = '0'
+            self.requestData["nolimits"] = "0"
         if justItems:
-            self.requestData['justitems'] = '1'
+            self.requestData["justitems"] = "1"
         else:
-            self.requestData['justitems'] = '0'
-        self.requestData['sortresultsby'] = sortShopsBy
-        self.requestData['max_price'] = maxPrice
-        self.requestData['x_cheapest'] = numResults
-        if category in ['food', 'booze']:
+            self.requestData["justitems"] = "0"
+        self.requestData["sortresultsby"] = sortShopsBy
+        self.requestData["max_price"] = maxPrice
+        self.requestData["x_cheapest"] = numResults
+        if category in ["food", "booze"]:
             for i in range(len(self.TIER_NAMES)):
-                tiername = 'consumable_tier_{0}'.format(i+1)
+                tiername = "consumable_tier_{0}".format(i + 1)
                 if self.TIER_NAMES[i] in tiers:
                     self.requestData[tiername] = 1
                 else:
                     self.requestData[tiername] = 0
-        if start > 0: self.requestData['start'] = start
+        if start > 0:
+            self.requestData["start"] = start
 
     def parseResponse(self):
         """
@@ -254,9 +279,9 @@ class MallItemSearchRequest(GenericRequest):
             storeName
         """
         items = []
-        itemMatchPattern = self.getPattern('mallItemSearchResult')
-        itemDetailsPattern = self.getPattern('mallItemSearchDetails')
-        itemHeaderPattern = self.getPattern('mallItemHeader')
+        itemMatchPattern = self.getPattern("mallItemSearchResult")
+        itemDetailsPattern = self.getPattern("mallItemSearchDetails")
+        itemHeaderPattern = self.getPattern("mallItemHeader")
         if self.justItems:
             for itemMatch in itemHeaderPattern.finditer(self.responseText):
                 itemId = int(itemMatch.group(1))
@@ -265,26 +290,28 @@ class MallItemSearchRequest(GenericRequest):
                     items.append(item)
                 except Error.Error as inst:
                     if inst.code == Error.ITEM_NOT_FOUND:
-                        Report.info("itemdatabase", 
-                                    "Unrecognized item found in mall search: {0}"
-                                        .format(itemId), 
-                                    inst)
+                        Report.info(
+                            "itemdatabase",
+                            "Unrecognized item found in mall search: {0}".format(
+                                itemId
+                            ),
+                            inst,
+                        )
                     else:
                         raise inst
         else:
             for itemMatch in itemMatchPattern.finditer(self.responseText):
                 matchText = itemMatch.group(1)
                 match = itemDetailsPattern.search(matchText)
-                itemId = int(match.group('itemId'))
+                itemId = int(match.group("itemId"))
                 try:
                     item = ItemDatabase.getItemFromId(itemId)
-                    item["price"] = int(match.group('price').replace(',', ''))
-                    item["storeId"] = int(match.group('storeId'))
-                    storeName = match.group('storeName').replace('<br>', ' ')
-                    item['storeName'] = self.HTML_PARSER.unescape(storeName)
-                    item["quantity"] = int(match.group('quantity')
-                                           .replace(',', ''))
-                    limit = match.group('limit').replace(',', '')
+                    item["price"] = int(match.group("price").replace(",", ""))
+                    item["storeId"] = int(match.group("storeId"))
+                    storeName = match.group("storeName").replace("<br>", " ")
+                    item["storeName"] = self.HTML_PARSER.unescape(storeName)
+                    item["quantity"] = int(match.group("quantity").replace(",", ""))
+                    limit = match.group("limit").replace(",", "")
                     if len(limit) > 0:
                         limit = int(limit)
                         item["limit"] = limit
@@ -293,32 +320,37 @@ class MallItemSearchRequest(GenericRequest):
                     items.append(item)
                 except Error.Error as inst:
                     if inst.code == Error.ITEM_NOT_FOUND:
-                        Report.info("itemdatabase", 
-                                    "Unrecognized item found in mall search: {0}"
-                                        .format(itemId), 
-                                    inst)
+                        Report.info(
+                            "itemdatabase",
+                            "Unrecognized item found in mall search: {0}".format(
+                                itemId
+                            ),
+                            inst,
+                        )
                     else:
                         raise inst
-        nextlink = self.searchNamedPattern('nextLink')
+        nextlink = self.searchNamedPattern("nextLink")
         if nextlink is not None:
             # There's more.  We have to collect the info from subsequent pages.
-            nextRequest = MallItemSearchRequest(session=self.session, 
-                                                searchQuery=self.searchQuery, 
-                                                category=self.category,
-                                                noLimits=self.noLimits, 
-                                                maxPrice=self.maxPrice, 
-                                                numResults=self.numResults,
-                                                sortBy=self.sortBy, 
-                                                sortResultsBy=self.sortResultsBy,
-                                                justItems=self.justItems, 
-                                                tiers=self.tiers, 
-                                                consumableByMe=self.consumableByMe,
-                                                weaponAttribute=self.weaponAttribute, 
-                                                weaponHands=self.weaponHands, 
-                                                wearableByMe=self.wearableByMe,
-                                                start=nextlink.group(1))
+            nextRequest = MallItemSearchRequest(
+                session=self.session,
+                searchQuery=self.searchQuery,
+                category=self.category,
+                noLimits=self.noLimits,
+                maxPrice=self.maxPrice,
+                numResults=self.numResults,
+                sortBy=self.sortBy,
+                sortResultsBy=self.sortResultsBy,
+                justItems=self.justItems,
+                tiers=self.tiers,
+                consumableByMe=self.consumableByMe,
+                weaponAttribute=self.weaponAttribute,
+                weaponHands=self.weaponHands,
+                wearableByMe=self.wearableByMe,
+                start=nextlink.group(1),
+            )
             resp = nextRequest.doRequest()
-            items = items + resp['results']
+            items = items + resp["results"]
             self.responseText = self.responseText + nextRequest.responseText
 
         self.responseData["results"] = items

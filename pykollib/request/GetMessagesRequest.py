@@ -6,12 +6,20 @@ from pykollib.util import StringUtils
 
 from datetime import datetime
 
+
 class GetMessagesRequest(GenericRequest):
     """
     This class is used to get a list of kmails from the server.
     """
 
-    def __init__(self, session, box="Inbox", pageNumber=None, messagesPerPage=None, oldestFirst=None):
+    def __init__(
+        self,
+        session,
+        box="Inbox",
+        pageNumber=None,
+        messagesPerPage=None,
+        oldestFirst=None,
+    ):
         """
         Initializes the GetMessagesRequest object. Due to a bug in KoL,
         it is highly recommended that you do not specify more than one
@@ -30,8 +38,12 @@ class GetMessagesRequest(GenericRequest):
             self.url += "&begin=%s" % pageNumber
 
         if messagesPerPage:
-            if messagesPerPage not in [10,20,50,100]:
-                raise Error.Error("%s is not a valid number of messages to request per page. Please specify 10, 20, 50, or 100." % messagesPerPage, Error.REQUEST_GENERIC)
+            if messagesPerPage not in [10, 20, 50, 100]:
+                raise Error.Error(
+                    "%s is not a valid number of messages to request per page. Please specify 10, 20, 50, or 100."
+                    % messagesPerPage,
+                    Error.REQUEST_GENERIC,
+                )
             self.url += "&per_page=%s" % (messagesPerPage / 10)
 
         if oldestFirst == True:
@@ -54,14 +66,14 @@ class GetMessagesRequest(GenericRequest):
             meat -- The amount of meat sent with the message.
         """
 
-        fullMessagePattern = PatternManager.getOrCompilePattern('fullMessage')
-        whitespacePattern = PatternManager.getOrCompilePattern('whitespace')
-        singleItemPattern = PatternManager.getOrCompilePattern('acquireSingleItem')
-        multiItemPattern = PatternManager.getOrCompilePattern('acquireMultipleItems')
-        meatPattern = PatternManager.getOrCompilePattern('gainMeat')
-        brickPattern = PatternManager.getOrCompilePattern('brickMessage')
-        coffeePattern = PatternManager.getOrCompilePattern('coffeeMessage')
-        candyHeartPattern = PatternManager.getOrCompilePattern('candyHeartMessage')
+        fullMessagePattern = PatternManager.getOrCompilePattern("fullMessage")
+        whitespacePattern = PatternManager.getOrCompilePattern("whitespace")
+        singleItemPattern = PatternManager.getOrCompilePattern("acquireSingleItem")
+        multiItemPattern = PatternManager.getOrCompilePattern("acquireMultipleItems")
+        meatPattern = PatternManager.getOrCompilePattern("gainMeat")
+        brickPattern = PatternManager.getOrCompilePattern("brickMessage")
+        coffeePattern = PatternManager.getOrCompilePattern("coffeeMessage")
+        candyHeartPattern = PatternManager.getOrCompilePattern("candyHeartMessage")
 
         messages = []
 
@@ -77,7 +89,7 @@ class GetMessagesRequest(GenericRequest):
                 date = dateStr
 
             rawText = message.group(5).strip()
-            index = rawText.find('<center')
+            index = rawText.find("<center")
             if index >= 0:
                 text = rawText[:index].strip()
             else:
@@ -85,7 +97,7 @@ class GetMessagesRequest(GenericRequest):
 
             # Get rid of extraneous spaces, tabs, or new lines.
             text = text.replace("\r\n", "\n")
-            text = whitespacePattern.sub(' ', text)
+            text = whitespacePattern.sub(" ", text)
             text = text.replace("<br />\n", "\n")
             text = text.replace("<br/>\n", "\n")
             text = text.replace("<br>\n", "\n")
@@ -100,7 +112,13 @@ class GetMessagesRequest(GenericRequest):
             # KoL encodes all of the HTML entities in the message. Let's decode them to get the real text.
             text = StringUtils.htmlEntityDecode(text)
 
-            m = {"id":messageId, "userId":userId, "userName":userName, "date":date, "text":text}
+            m = {
+                "id": messageId,
+                "userId": userId,
+                "userName": userName,
+                "date": date,
+                "text": text,
+            }
 
             # Find the items attached to the message.
             items = []
@@ -111,7 +129,7 @@ class GetMessagesRequest(GenericRequest):
                 items.append(item)
             for match in multiItemPattern.finditer(rawText):
                 descId = int(match.group(1))
-                quantity = int(match.group(2).replace(',', ''))
+                quantity = int(match.group(2).replace(",", ""))
                 item = ItemDatabase.getOrDiscoverItemFromDescId(descId, self.session)
                 item["quantity"] = quantity
                 items.append(item)
@@ -121,7 +139,7 @@ class GetMessagesRequest(GenericRequest):
             meat = 0
             meatMatch = meatPattern.search(rawText)
             if meatMatch:
-                meat = int(meatMatch.group(1).replace(',', ''))
+                meat = int(meatMatch.group(1).replace(",", ""))
             m["meat"] = meat
 
             # Handle special messages.

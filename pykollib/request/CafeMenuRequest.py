@@ -3,23 +3,24 @@ from .GenericRequest import GenericRequest
 from pykollib.database import ItemDatabase
 from pykollib.pattern import PatternManager
 
+
 class CafeMenuRequest(GenericRequest):
     "Check the current menu at a cafe."
 
-    CHEZ_SNOOTEE ='1'
-    MICROBREWERY = '2'
-    HELLS_KITCHEN = '3'
+    CHEZ_SNOOTEE = "1"
+    MICROBREWERY = "2"
+    HELLS_KITCHEN = "3"
 
     def __init__(self, session, cafe):
         super(CafeMenuRequest, self).__init__(session)
         self.session = session
         self.url = session.serverURL + "cafe.php"
-        self.requestData['pwd'] = session.pwd
-        self.requestData['cafeid'] = cafe
+        self.requestData["pwd"] = session.pwd
+        self.requestData["cafeid"] = cafe
 
     def parseResponse(self):
-        menuItemPattern = PatternManager.getOrCompilePattern('menuItem')
-        cannotGoPattern = PatternManager.getOrCompilePattern('userShouldNotBeHere')
+        menuItemPattern = PatternManager.getOrCompilePattern("menuItem")
+        cannotGoPattern = PatternManager.getOrCompilePattern("userShouldNotBeHere")
 
         if cannotGoPattern.search(self.responseText):
             raise Error.Error("You cannot reach that cafe.", Error.INVALID_LOCATION)

@@ -4,6 +4,7 @@ from pykollib.util import Configuration
 
 import json
 
+
 class ApiRequest(GenericRequest):
     def __init__(self, session):
         super(ApiRequest, self).__init__(session)
@@ -14,7 +15,7 @@ class ApiRequest(GenericRequest):
         if userAgent == None:
             userAgent = "pykol+by+Turias"
         self.requestData["for"] = userAgent
-    
+
     def parseResponse(self):
         self.jsonData = json.loads(self.responseText)
         if type(self.jsonData) == str or type(self.jsonData) == str:

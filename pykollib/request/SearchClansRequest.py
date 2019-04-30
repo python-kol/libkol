@@ -1,5 +1,6 @@
 from .GenericRequest import GenericRequest
 
+
 class SearchClansRequest(GenericRequest):
     def __init__(self, session, query, exact=False, nameonly=True):
         super(SearchClansRequest, self).__init__(session)
@@ -19,7 +20,7 @@ class SearchClansRequest(GenericRequest):
             "furn3": 0,
             "furn4": 0,
             "furn5": 0,
-            "furn9": 0
+            "furn9": 0,
         }
 
     def parseResponse(self):
@@ -32,8 +33,6 @@ class SearchClansRequest(GenericRequest):
             if self.exact:
                 if result["name"].lower() != self.query.lower():
                     results = []
-                break;
+                break
 
-        self.responseData = {
-            "results": results
-        }
+        self.responseData = {"results": results}

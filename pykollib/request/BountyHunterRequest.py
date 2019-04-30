@@ -1,13 +1,13 @@
-from pykollib.database import ItemDatabase   # @UnusedImport
+from pykollib.database import ItemDatabase  # @UnusedImport
 from pykollib.request.GenericRequest import GenericRequest
 
 # TODO: This request needs to be redone, since the BHH interface has changed
 class BountyHunterRequest(GenericRequest):
     """Interacts with the Bounty Hunter Hunter in the Forest Village."""
-    
+
     VISIT = None
-    BUY = 'buy'
-    
+    BUY = "buy"
+
     def __init__(self, session, action=None, item=None, quantity=None):
         """Initialize a Bounty Hunter Hunter request.
         
@@ -31,15 +31,15 @@ class BountyHunterRequest(GenericRequest):
         super(BountyHunterRequest, self).__init__(session)
         self.session = session
         self.url = session.serverURL + "bounty.php"
-        
+
         self.requestData["pwd"] = session.pwd
-        
+
         if action:
-            self.requestData['action'] = action
+            self.requestData["action"] = action
         if quantity:
-            self.requestData['howmany'] = quantity
+            self.requestData["howmany"] = quantity
         if item:
-            self.requestData['whichitem'] = item
+            self.requestData["whichitem"] = item
 
     def parseResponse(self):
         """
@@ -52,18 +52,18 @@ class BountyHunterRequest(GenericRequest):
             specialBountyActive: boolean
         """
         response = {}
-        
-        easyBountyAvailable = self.searchNamedPattern('easyBountyAvailable')
-        hardBountyAvailable = self.searchNamedPattern('hardBountyAvailable')
-        specialBountyAvailable = self.searchNamedPattern('specialBountyAvailable')
-        easyBountyActive = self.searchNamedPattern('easyBountyActive')
-        hardBountyActive = self.searchNamedPattern('hardBountyActive')
-        specialBountyActive = self.searchNamedPattern('specialBountyActive')
-        
-        response['easyBountyAvailable'] = easyBountyAvailable is not None
-        response['hardBountyAvailable'] = hardBountyAvailable is not None
-        response['specialBountyAvailable'] = specialBountyAvailable is not None
-        response['easyBountyActive'] = easyBountyActive is not None
-        response['hardBountyActive'] = hardBountyActive is not None
-        response['specialBountyActive'] = specialBountyActive is not None
+
+        easyBountyAvailable = self.searchNamedPattern("easyBountyAvailable")
+        hardBountyAvailable = self.searchNamedPattern("hardBountyAvailable")
+        specialBountyAvailable = self.searchNamedPattern("specialBountyAvailable")
+        easyBountyActive = self.searchNamedPattern("easyBountyActive")
+        hardBountyActive = self.searchNamedPattern("hardBountyActive")
+        specialBountyActive = self.searchNamedPattern("specialBountyActive")
+
+        response["easyBountyAvailable"] = easyBountyAvailable is not None
+        response["hardBountyAvailable"] = hardBountyAvailable is not None
+        response["specialBountyAvailable"] = specialBountyAvailable is not None
+        response["easyBountyActive"] = easyBountyActive is not None
+        response["hardBountyActive"] = hardBountyActive is not None
+        response["specialBountyActive"] = specialBountyActive is not None
         self.responseData = response

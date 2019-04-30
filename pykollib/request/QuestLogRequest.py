@@ -2,6 +2,7 @@ import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 
+
 class QuestLogRequest(GenericRequest):
     """
     Get info from the quest log about which quests are completed and which stage of each uncompleted quest the player is on
@@ -11,7 +12,7 @@ class QuestLogRequest(GenericRequest):
         super(QuestLogRequest, self).__init__(session)
 
         # current quests
-        #self.url = session.serverURL + "questlog.php?which=1"
+        # self.url = session.serverURL + "questlog.php?which=1"
 
         # completed quests
         self.url = session.serverURL + "questlog.php?which=" + str(page)
@@ -25,16 +26,18 @@ class QuestLogRequest(GenericRequest):
         # make a map from quest names to quest descriptions
         quests = {}
         for match in questTitlePattern.finditer(self.responseText):
-           quests[match.group(1)] = match.group(2)
-        
+            quests[match.group(1)] = match.group(2)
+
         """quests = []
         for match in questTitlePattern.finditer(self.responseText):
            quest = {}
            quest["name"] = match.group(1)
            quest["description"] = match.group(2)
            quests.append(quest)"""
-        
+
         self.responseData["quests"] = quests
+
+
 """
         noItemPattern = PatternManager.getOrCompilePattern("notEnoughItems")
         match = noItemPattern.search(self.responseText)

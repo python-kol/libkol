@@ -1,15 +1,19 @@
 "This module is used as a database for KoL item information."
 
 import pykollib.Error as Error
-#from pykollib.data import Items
+
+# from pykollib.data import Items
 import os
+
 try:
-    pykoldb = os.path.join(pykollibtmp, 'pykol/db')
+    pykoldb = os.path.join(pykollibtmp, "pykol/db")
 except NameError:
     from tempfile import gettempdir
-    pykoldb = os.path.join(gettempdir(), 'pykol/db')
+
+    pykoldb = os.path.join(gettempdir(), "pykol/db")
 
 import sys
+
 sys.path.insert(0, pykoldb)
 import Items
 
@@ -20,6 +24,7 @@ __isInitialized = False
 __itemsById = {}
 __itemsByDescId = {}
 __itemsByName = {}
+
 
 def init():
     """
@@ -45,6 +50,7 @@ def init():
     __isInitialized = True
     Report.trace("itemdatabase", "Item database initialized.")
 
+
 def addItem(item):
     "Adds an item to the database."
     if "plural" not in item:
@@ -52,6 +58,7 @@ def addItem(item):
     __itemsById[item["id"]] = item
     __itemsByDescId[item["descId"]] = item
     __itemsByName[item["name"]] = item
+
 
 def getItemFromId(itemId):
     "Returns information about an item given its ID."
@@ -63,12 +70,14 @@ def getItemFromId(itemId):
     except KeyError:
         raise Error.Error("Item ID %s is unknown." % itemId, Error.ITEM_NOT_FOUND)
 
+
 def getOrDiscoverItemFromId(itemId, session):
     try:
         return getItemFromId(itemId)
     except Error.Error:
         discoverMissingItems(session)
         return getItemFromId(itemId)
+
 
 def getItemFromDescId(descId):
     "Returns information about an item given its description ID."
@@ -78,7 +87,10 @@ def getItemFromDescId(descId):
     try:
         return __itemsByDescId[descId].copy()
     except KeyError:
-        raise Error.Error("Item with description ID %s is unknown." % descId, Error.ITEM_NOT_FOUND)
+        raise Error.Error(
+            "Item with description ID %s is unknown." % descId, Error.ITEM_NOT_FOUND
+        )
+
 
 def getOrDiscoverItemFromDescId(descId, session):
     try:
@@ -86,6 +98,7 @@ def getOrDiscoverItemFromDescId(descId, session):
     except Error.Error:
         discoverMissingItems(session)
         return getItemFromDescId(descId)
+
 
 def getItemFromName(itemName):
     "Returns information about an item given its name."
@@ -97,6 +110,7 @@ def getItemFromName(itemName):
     except KeyError:
         raise Error.Error("The item '%s' is unknown." % itemName, Error.ITEM_NOT_FOUND)
 
+
 def getOrDiscoverItemFromName(itemName, session):
     try:
         return getItemFromName(itemName)
@@ -104,9 +118,11 @@ def getOrDiscoverItemFromName(itemName, session):
         discoverMissingItems(session)
         return getItemFromName(itemName)
 
+
 def discoverMissingItems(session):
     from pykollib.request.InventoryRequest import InventoryRequest
     from pykollib.request.ItemInformationRequest import ItemInformationRequest
+
     invRequest = InventoryRequest(session)
     invRequest.ignoreItemDatabase = True
     invData = invRequest.doRequest()
@@ -118,8 +134,10 @@ def discoverMissingItems(session):
                 item = itemData["item"]
                 addItem(item)
                 Report.trace("itemdatabase", "Discovered new item: %s" % item["name"])
-                
-                context = { "item" : item }
-                FilterManager.executeFiltersForEvent("discoveredNewItem", context, session=session, item=item)
+
+                context = {"item": item}
+                FilterManager.executeFiltersForEvent(
+                    "discoveredNewItem", context, session=session, item=item
+                )
             except:
                 pass

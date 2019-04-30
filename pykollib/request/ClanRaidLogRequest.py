@@ -3,6 +3,7 @@ from pykollib.pattern import PatternManager
 
 from datetime import datetime
 
+
 class ClanRaidLogRequest(GenericRequest):
     """
     This class retrieves a list of old raid logs that the clan has completed. In addition, it also
@@ -20,15 +21,17 @@ class ClanRaidLogRequest(GenericRequest):
         # If this is a request for a particular raid log, only retrieve information about it.
         txt = self.responseText
         if self.raidId:
-            index = txt.find('<b>Current Clan Dungeons:</b>')
+            index = txt.find("<b>Current Clan Dungeons:</b>")
             if index > 0:
                 txt = txt[:index]
 
         # Get a list of actions that occurred in Hobopolis.
         actions = []
         dungeonLogTypePattern = PatternManager.getOrCompilePattern("dungeonLogType")
-        dungeonLogCategoryPattern = PatternManager.getOrCompilePattern('dungeonLogCategory')
-        dungeonActivityPattern = PatternManager.getOrCompilePattern('dungeonActivity')
+        dungeonLogCategoryPattern = PatternManager.getOrCompilePattern(
+            "dungeonLogCategory"
+        )
+        dungeonActivityPattern = PatternManager.getOrCompilePattern("dungeonActivity")
         for typeMatch in dungeonLogTypePattern.finditer(txt):
             dungeon = typeMatch.group(1)
             raidId = int(typeMatch.group(2))
@@ -42,14 +45,16 @@ class ClanRaidLogRequest(GenericRequest):
                         "userName": match.group(1),
                         "userId": int(match.group(2)),
                         "event": match.group(3),
-                        "turns": int(match.group(4).replace(',', '')),
+                        "turns": int(match.group(4).replace(",", "")),
                     }
                     actions.append(action)
         self.responseData["events"] = actions
 
         # Retrieve a list of loot that has been distributed.
         lootDistributed = []
-        dungeonLootDistributionPattern = PatternManager.getOrCompilePattern('dungeonLootDistribution')
+        dungeonLootDistributionPattern = PatternManager.getOrCompilePattern(
+            "dungeonLootDistribution"
+        )
         for match in dungeonLootDistributionPattern.finditer(txt):
             m = {}
             m["distributorName"] = match.group(1)
@@ -62,7 +67,9 @@ class ClanRaidLogRequest(GenericRequest):
 
         # Retrieve a list of previous, completed runs.
         previousRuns = []
-        dungeonPreviousRunPattern = PatternManager.getOrCompilePattern('dungeonPreviousRun')
+        dungeonPreviousRunPattern = PatternManager.getOrCompilePattern(
+            "dungeonPreviousRun"
+        )
         for match in dungeonPreviousRunPattern.finditer(self.responseText):
             run = {}
 
@@ -84,7 +91,7 @@ class ClanRaidLogRequest(GenericRequest):
 
             # Get the remaining information.
             run["dungeonName"] = match.group(3)
-            run["turns"] = int(match.group(4).replace(',', ''))
-            run["id"] = int(match.group(5).replace(',', ''))
+            run["turns"] = int(match.group(4).replace(",", ""))
+            run["id"] = int(match.group(5).replace(",", ""))
             previousRuns.append(run)
         self.responseData["previousRuns"] = previousRuns

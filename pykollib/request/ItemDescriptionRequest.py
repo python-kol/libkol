@@ -1,6 +1,7 @@
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 
+
 class ItemDescriptionRequest(GenericRequest):
     "Gets the description of an item and then parses various information from the response."
 
@@ -40,19 +41,25 @@ class ItemDescriptionRequest(GenericRequest):
             self.responseData["isCookingIngredient"] = True
 
         # See if the item is a cocktailcrafting ingredient.
-        cocktailcraftingPattern = PatternManager.getOrCompilePattern("isCocktailcraftingIngredient")
+        cocktailcraftingPattern = PatternManager.getOrCompilePattern(
+            "isCocktailcraftingIngredient"
+        )
         match = cocktailcraftingPattern.search(self.responseText)
         if match:
             self.responseData["isCocktailcraftingIngredient"] = True
 
         # See if the item is a meatsmithing component.
-        meatsmithingPattern = PatternManager.getOrCompilePattern("isMeatsmithingComponent")
+        meatsmithingPattern = PatternManager.getOrCompilePattern(
+            "isMeatsmithingComponent"
+        )
         match = meatsmithingPattern.search(self.responseText)
         if match:
             self.responseData["isMeatsmithingComponent"] = True
 
         # See if the item is a jewelrymaking component.
-        jewelrymakingPattern = PatternManager.getOrCompilePattern("isJewelrymakingComponent")
+        jewelrymakingPattern = PatternManager.getOrCompilePattern(
+            "isJewelrymakingComponent"
+        )
         match = jewelrymakingPattern.search(self.responseText)
         if match:
             self.responseData["isJewelrymakingComponent"] = True

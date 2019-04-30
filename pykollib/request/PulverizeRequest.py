@@ -3,6 +3,7 @@ from .GenericRequest import GenericRequest
 from pykollib.database import ItemDatabase
 from pykollib.pattern import PatternManager
 
+
 class PulverizeRequest(GenericRequest):
     def __init__(self, session, itemId, itemQuantity=1):
         super(PulverizeRequest, self).__init__(session)
@@ -16,33 +17,39 @@ class PulverizeRequest(GenericRequest):
         self.quantity = itemQuantity
 
     def parseResponse(self):
-        cantPulverizePattern = PatternManager.getOrCompilePattern('cantPulverizeItem')
+        cantPulverizePattern = PatternManager.getOrCompilePattern("cantPulverizeItem")
         if cantPulverizePattern.search(self.responseText) != None:
             item = ItemDatabase.getOrDiscoverItemFromId(self.itemId, self.session)
-            raise Error.Error("'%s' is not an item that can be pulverized." % item["name"], Error.WRONG_KIND_OF_ITEM)
+            raise Error.Error(
+                "'%s' is not an item that can be pulverized." % item["name"],
+                Error.WRONG_KIND_OF_ITEM,
+            )
 
-        notEnoughItemsPattern = PatternManager.getOrCompilePattern('notEnoughItems')
+        notEnoughItemsPattern = PatternManager.getOrCompilePattern("notEnoughItems")
         if notEnoughItemsPattern.search(self.responseText) != None:
             item = ItemDatabase.getOrDiscoverItemFromId(self.itemId, self.session)
             if self.quantity == 1:
                 itemStr = item["name"]
             else:
                 itemStr = item["plural"]
-            raise Error.Error("You do not have %s (%s)." % (itemStr, self.quantity), Error.ITEM_NOT_FOUND)
+            raise Error.Error(
+                "You do not have %s (%s)." % (itemStr, self.quantity),
+                Error.ITEM_NOT_FOUND,
+            )
 
         items = []
 
-        singleItemPattern = PatternManager.getOrCompilePattern('acquireSingleItem')
+        singleItemPattern = PatternManager.getOrCompilePattern("acquireSingleItem")
         for match in singleItemPattern.finditer(self.responseText):
             descId = int(match.group(1))
             item = ItemDatabase.getOrDiscoverItemFromDescId(descId, self.session)
             item["quantity"] = 1
             items.append(item)
 
-        multiItemPattern = PatternManager.getOrCompilePattern('acquireMultipleItems')
+        multiItemPattern = PatternManager.getOrCompilePattern("acquireMultipleItems")
         for match in multiItemPattern.finditer(self.responseText):
             descId = int(match.group(1))
-            quantity = int(match.group(2).replace(',', ''))
+            quantity = int(match.group(2).replace(",", ""))
             item = ItemDatabase.getOrDiscoverItemFromDescId(descId, self.session)
             item["quantity"] = quantity
             items.append(item)

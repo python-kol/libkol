@@ -9,6 +9,7 @@ __isInitialized = False
 __questsByName = {}
 __councilQuestsByLevel = {}
 
+
 def init():
     """
     Initializes the QkillDatabase. This method should be called before the
@@ -33,13 +34,19 @@ def init():
     __isInitialized = True
     Report.trace("questdatabase", "Quest database initialized.")
 
+
 "Adds a quest to the database."
+
+
 def addQuest(quest):
     __questsByName[quest["name"]] = quest
     if quest["source"] == "Council":
         __councilQuestsByLevel[quest["levelAvailable"]] = quest
 
+
 "Returns information about a quest given its name."
+
+
 def getQuestFromName(questName, session=None):
     if not __isInitialized:
         init()
@@ -48,28 +55,37 @@ def getQuestFromName(questName, session=None):
         return __questsByName[questName].copy()
     except KeyError:
         cxt = {}
-        FilterManager.executeFiltersForEvent("couldNotFindQuest", cxt, session=session, questName=questName)
+        FilterManager.executeFiltersForEvent(
+            "couldNotFindQuest", cxt, session=session, questName=questName
+        )
         if "quest" in cxt:
             quest = cxt["quest"]
             addQuest(quest)
             return quest.copy()
-        raise Error.Error("The quest '%s' is unknown." % questName, Error.QUEST_NOT_FOUND)
+        raise Error.Error(
+            "The quest '%s' is unknown." % questName, Error.QUEST_NOT_FOUND
+        )
+
 
 def getCouncilQuestFromLevel(questLevel, session=None):
     "Returns information about a quest given its name."
     if not __isInitialized:
         init()
 
-    #print "quest map: " + str(__councilQuestsByLevel)
+    # print "quest map: " + str(__councilQuestsByLevel)
 
     try:
         return __councilQuestsByLevel[questLevel].copy()
     except KeyError:
         cxt = {}
-        FilterManager.executeFiltersForEvent("couldNotFindQuest", cxt, session=session, questLevel=questLevel)
+        FilterManager.executeFiltersForEvent(
+            "couldNotFindQuest", cxt, session=session, questLevel=questLevel
+        )
         if "quest" in cxt:
             quest = cxt["quest"]
             addQuest(quest)
             return quest.copy()
-        raise Error.Error("The guild quest for level '%s' is unknown." % questLevel, Error.QUEST_NOT_FOUND)
-
+        raise Error.Error(
+            "The guild quest for level '%s' is unknown." % questLevel,
+            Error.QUEST_NOT_FOUND,
+        )
