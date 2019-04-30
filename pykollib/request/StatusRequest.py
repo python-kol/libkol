@@ -1,4 +1,4 @@
-from ApiRequest import ApiRequest
+from .ApiRequest import ApiRequest
 
 class StatusRequest(ApiRequest):
     def __init__(self, session):

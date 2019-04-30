@@ -1,4 +1,4 @@
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 
 class AddItemsToDisplayCaseRequest(GenericRequest):
     "Adds items to the player's display case."

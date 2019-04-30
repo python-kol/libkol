@@ -3,7 +3,7 @@
 from pykollib.mafiadata import ItemsSerializer
 
 import re
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 import os
 
@@ -87,7 +87,7 @@ GIFT_PACKAGES = [
 _items = []
 _itemsById = {}
 _itemsByName = {}
-_opener = urllib2.build_opener()
+_opener = urllib.request.build_opener()
 
 
 def main():
@@ -183,7 +183,7 @@ def readItemDescsFile():
                 _items.append(item)
                 _itemsById[itemId] = item
                 _itemsByName[name.lower()] = item
-    print('... read {0} items.'.format(len(_items)))
+    print(('... read {0} items.'.format(len(_items))))
 
 
 def readEquipmentFile():
@@ -258,7 +258,7 @@ def readEquipmentFile():
                             item["type"] = "off-hand item"
                     else:
                         item["type"] = currentType
-    print('... {0} lines processed.'.format(linesProcessed))
+    print(('... {0} lines processed.'.format(linesProcessed)))
 
 
 def readFullnessFile():
@@ -298,7 +298,7 @@ def readFullnessFile():
                     item["mysticalityGained"] = myst
                 if mox != "0" and len(mox) > 0:
                     item["moxieGained"] = mox
-    print('... {0} lines processed.'.format(linesProcessed))
+    print(('... {0} lines processed.'.format(linesProcessed)))
 
 
 def readInebrietyFile():
@@ -338,7 +338,7 @@ def readInebrietyFile():
                     item["mysticalityGained"] = myst
                 if mox != "0" and len(mox) > 0:
                     item["moxieGained"] = mox
-    print('... {0} lines processed.'.format(linesProcessed))
+    print(('... {0} lines processed.'.format(linesProcessed)))
 
 
 def readSpleenFile():
@@ -378,7 +378,7 @@ def readSpleenFile():
                     item["mysticalityGained"] = myst
                 if mox != "0" and len(mox) > 0:
                     item["moxieGained"] = mox
-    print('... {0} lines processed.'.format(linesProcessed))
+    print(('... {0} lines processed.'.format(linesProcessed)))
 
 
 def readPackagesFile():
@@ -402,7 +402,7 @@ def readPackagesFile():
                 item["type"] = "gift package"
                 item["numPackageItems"] = numItems
                 item["npcPrice"] = price
-    print('... {0} lines processed.'.format(linesProcessed))
+    print(('... {0} lines processed.'.format(linesProcessed)))
 
 
 def readOutfitsFile():
@@ -425,7 +425,7 @@ def readOutfitsFile():
                         continue
                     item["outfit"] = outfitName
                     item["outfitId"] = outfitId
-    print('... {0} lines processed.'.format(linesProcessed))
+    print(('... {0} lines processed.'.format(linesProcessed)))
 
 
 def readZapGroupsFile():
@@ -443,7 +443,7 @@ def readZapGroupsFile():
                 except KeyError:
                     continue
                 item["isZappable"] = True
-    print('... {0} lines processed.'.format(linesProcessed))
+    print(('... {0} lines processed.'.format(linesProcessed)))
 
 
 def readFoldGroupsFile():
@@ -461,7 +461,7 @@ def readFoldGroupsFile():
                 except KeyError:
                     continue
                 item["isFoldable"] = True
-    print('... {0} lines processed.'.format(linesProcessed))
+    print(('... {0} lines processed.'.format(linesProcessed)))
 
 
 def readNPCStoresFile():
@@ -483,7 +483,7 @@ def readNPCStoresFile():
                     continue
                 item["npcStoreId"] = storeId
                 item["npcPrice"] = price
-    print('... {0} lines processed.'.format(linesProcessed))
+    print(('... {0} lines processed.'.format(linesProcessed)))
 
 
 def readModifiersFile():
@@ -558,7 +558,7 @@ def readModifiersFile():
 
                 if "enchantments" in item and len(item["enchantments"]) == 0:
                     del item["enchantments"]
-    print('... {0} lines processed.'.format(linesProcessed))
+    print(('... {0} lines processed.'.format(linesProcessed)))
 
 
 def fixupItems():
@@ -580,7 +580,7 @@ def fixupItems():
                     del enchantments["HP Regen Min"]
                     del enchantments["HP Regen Max"]
                     enchantments["hpRegen"] = "%s-%s" % (min, max)
-                for k,v in ENCHANTMENT_MAPPINGS.iteritems():
+                for k,v in list(ENCHANTMENT_MAPPINGS.items()):
                     if k in enchantments:
                         enchantments[v] = enchantments[k]
                         del enchantments[k]

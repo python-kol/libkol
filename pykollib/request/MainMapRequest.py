@@ -1,4 +1,4 @@
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 
 class MainMapRequest(GenericRequest):
     def __init__(self, session):

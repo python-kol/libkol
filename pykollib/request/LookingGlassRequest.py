@@ -1,4 +1,4 @@
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 from pykollib.util import ParseResponseUtils
 
 class LookingGlassRequest(GenericRequest):

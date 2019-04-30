@@ -1,5 +1,5 @@
 import pykollib.Error as Error
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 from pykollib.util import Configuration
 
 import json
@@ -17,5 +17,5 @@ class ApiRequest(GenericRequest):
     
     def parseResponse(self):
         self.jsonData = json.loads(self.responseText)
-        if type(self.jsonData) == str or type(self.jsonData) == unicode:
+        if type(self.jsonData) == str or type(self.jsonData) == str:
             raise Error.Error(self.jsonData, Error.REQUEST_GENERIC)

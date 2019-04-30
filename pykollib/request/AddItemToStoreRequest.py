@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from pykollib.util import Report
 from pykollib.pattern import PatternManager
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 
 import time
 

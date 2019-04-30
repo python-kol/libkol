@@ -2,7 +2,7 @@ import pykollib.Error as Error
 from pykollib.util import Report
 from pykollib.pattern import PatternManager
 from pykollib.database import ItemDatabase
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 
 class SearchMallPriceRequest(GenericRequest):
     """
@@ -47,7 +47,7 @@ class SearchMallPriceRequest(GenericRequest):
 
         for match in mallPricesLimitedPattern.finditer(self.responseText):            
             limited = []
-            print 
+            print() 
             price = {"price" : match.group(1).replace(",", ""), "limit" : match.group(2).replace(",", ""), "count" : match.group(3).replace(",", "")}
             limited.append(price)
             price = {"price" : match.group(4).replace(",", ""), "limit" : match.group(5).replace(",", ""), "count" : match.group(6).replace(",", "")}

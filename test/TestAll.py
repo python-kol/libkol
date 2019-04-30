@@ -1,10 +1,10 @@
-import TestData
-import TestBountyHunter
-import TestGetItemDescriptionRequest
-import TestItemDatabase
-import TestLogin
-import TestLogout
-import TestMallItemSearch
+from . import TestData
+from . import TestBountyHunter
+from . import TestGetItemDescriptionRequest
+from . import TestItemDatabase
+from . import TestLogin
+from . import TestLogout
+from . import TestMallItemSearch
 from pykollib.util import Report
 
 import sys
