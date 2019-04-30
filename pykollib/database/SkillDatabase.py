@@ -1,9 +1,20 @@
 "This module is used as a database for KoL skill information."
 
-import kol.Error as Error
-from kol.data import Skills
-from kol.manager import FilterManager
-from kol.util import Report
+import pykollib.Error as Error
+#from kol.data import Skills
+import os
+try:
+    pykoldb = os.path.join(pykollibtmp, 'pykol/db')
+except NameError:
+    from tempfile import gettempdir
+    pykoldb = os.path.join(gettempdir(), 'pykol/db')
+
+import sys
+sys.path.insert(0, pykoldb)
+import Skills
+
+from pykollib.filter import FilterManager
+from pykollib.util import Report
 
 __isInitialized = False
 __skillsById = {}

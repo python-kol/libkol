@@ -13,7 +13,7 @@ import sys
 sys.path.insert(0, pykoldb)
 import Items
 
-from pykollib.manager import FilterManager
+from pykollib.filter import FilterManager
 from pykollib.util import Report
 
 __isInitialized = False
