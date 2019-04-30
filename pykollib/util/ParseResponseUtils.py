@@ -1,5 +1,5 @@
 from pykollib.database import ItemDatabase
-from pykollib.manager import PatternManager
+from pykollib.pattern import PatternManager
 
 def parseItemsReceived(text, session):
     items = []

@@ -5,7 +5,7 @@ request types, so it makes sense to have a central location to store them instea
 copies in each class.
 """
 
-from pykollib.data import Patterns
+from pykollib.pattern import Patterns
 
 import re
 
