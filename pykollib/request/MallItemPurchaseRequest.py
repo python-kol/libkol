@@ -1,5 +1,5 @@
 import pykollib.Error as Error
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 from pykollib.util import ParseResponseUtils
 

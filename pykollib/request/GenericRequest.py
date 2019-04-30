@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from pykollib.util import Report
 from pykollib.pattern import PatternManager
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 
 
 class GenericRequest(object):

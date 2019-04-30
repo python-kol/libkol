@@ -6,14 +6,14 @@ from .request.CharpaneRequest import CharpaneRequest
 
 
 
-import cookielib    # @UnusedImport
+import http.cookiejar    # @UnusedImport
 import hashlib
 
 try:
     import requests  # @UnusedImport
-    from Opener import RequestsOpener as Opener
+    from .Opener import RequestsOpener as Opener
 except ImportError:
-    from Opener import StandardOpener as Opener
+    from .Opener import StandardOpener as Opener
 
 
 class Session(object):

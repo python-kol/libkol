@@ -1,4 +1,4 @@
-import TestData
+from . import TestData
 from pykollib.request.MallItemSearchRequest import MallItemSearchRequest
 import unittest
 
@@ -12,17 +12,17 @@ def printResults(response):
     for item in results:
         if currentItemName != item['name']:
             currentItemName = item['name']
-            print('==== {0} ===='.format(currentItemName))
+            print(('==== {0} ===='.format(currentItemName)))
         if 'storeName' in item:
             limit = None
             if 'limit' in item: limit = item['limit']
             storeName = item['storeName']
             if len(storeName) > 47: storeName = storeName[0:47]+'...'
-            print('  {0:50} {1:6} {2:>5} {3:10}'.format(storeName,
+            print(('  {0:50} {1:6} {2:>5} {3:10}'.format(storeName,
                                                         item['quantity'],
                                                         limit,
-                                                        item['price']))
-    print('{0} results found.'.format(len(results)))
+                                                        item['price'])))
+    print(('{0} results found.'.format(len(results))))
     print('')
 
 def countShops(response):

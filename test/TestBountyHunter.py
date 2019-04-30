@@ -1,4 +1,4 @@
-import TestData
+from . import TestData
 from pykollib.request.BountyHunterRequest import BountyHunterRequest
 import unittest
 
