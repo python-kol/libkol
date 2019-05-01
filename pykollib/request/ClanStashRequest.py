@@ -2,6 +2,7 @@ import re
 from .GenericRequest import GenericRequest
 from pykollib.database import ItemDatabase
 
+
 class ClanStashRequest(GenericRequest):
     "This class is used to get a list of items in the user's clan stash."
 
@@ -12,20 +13,22 @@ class ClanStashRequest(GenericRequest):
 
     def parseResponse(self):
         items = []
-        pattern = re.compile(r'<option value=(?P<val>\d*) descid=\d*>(?P<item>.*?)( \((?P<qty>\d*)\))?( \(-(?P<cost>\d*)\))?</option>')
+        pattern = re.compile(
+            r"<option value=(?P<val>\d*) descid=\d*>(?P<item>.*?)( \((?P<qty>\d*)\))?( \(-(?P<cost>\d*)\))?</option>"
+        )
         handy_list = pattern.findall(self.responseText)
         for item in handy_list:
             temp = {}
             temp["id"] = int(item[0])
             temp["name"] = item[1]
-            if item[3] == '':
+            if item[3] == "":
                 temp["quantity"] = 1
             else:
                 temp["quantity"] = int(item[3])
             temp["cost"] = item[5]
-            #if item[3] == '':
+            # if item[3] == '':
             #    temp["cost"] = 0
-            #else:
+            # else:
             #    temp["cost"] = int(item[3][2:-1])
             items.append(temp)
         self.responseData["items"] = items

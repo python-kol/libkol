@@ -11,6 +11,7 @@ import re
 
 __compiledPatterns = {}
 
+
 def getOrCompilePattern(patternId):
     """
     Returns a compiled regular expression pattern if it already exists. If it doesn't, this

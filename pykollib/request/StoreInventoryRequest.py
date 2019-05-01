@@ -4,12 +4,13 @@ from pykollib.database import ItemDatabase
 from pykollib.pattern import PatternManager
 from pykollib.util import StringUtils
 
+
 class StoreInventoryRequest(GenericRequest):
     "This class is used to get a list of items currently in a user's store"
 
     def __init__(self, session):
-            super(StoreInventoryRequest, self).__init__(session)
-            self.url = session.serverURL + 'backoffice.php?which=1'
+        super(StoreInventoryRequest, self).__init__(session)
+        self.url = session.serverURL + "backoffice.php?which=1"
 
     def parseResponse(self):
         """
@@ -24,7 +25,7 @@ class StoreInventoryRequest(GenericRequest):
              
         RegExp match notes: Group 3,6,9, and 11 are garbage HTML data.
         """
-        storeInventoryPattern = PatternManager.getOrCompilePattern('storeInventory')
+        storeInventoryPattern = PatternManager.getOrCompilePattern("storeInventory")
 
         items = []
         for match in storeInventoryPattern.finditer(self.responseText):
@@ -37,7 +38,7 @@ class StoreInventoryRequest(GenericRequest):
             price = match.group(8)
             limit = int(match.group(10))
             cheapest = int(match.group(12))
-            
+
             item["orderId"] = orderId
             item["quantity"] = quantity
             item["price"] = price

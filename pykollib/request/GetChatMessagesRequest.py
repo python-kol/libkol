@@ -4,6 +4,7 @@ from pykollib.util import ChatUtils
 from pykollib.util import Report
 from pykollib.util import StringUtils
 
+
 class GetChatMessagesRequest(GenericRequest):
     def __init__(self, session, lastTime=0):
         super(GetChatMessagesRequest, self).__init__(session)
@@ -16,5 +17,7 @@ class GetChatMessagesRequest(GenericRequest):
         self.responseData["lastSeen"] = match.group(1)
 
         # Parse the chat messages.
-        text = self.responseText[:self.responseText.find('<!--lastseen')]
-        self.responseData["chatMessages"] = ChatUtils.parseIncomingChatMessage(self.responseText)
+        text = self.responseText[: self.responseText.find("<!--lastseen")]
+        self.responseData["chatMessages"] = ChatUtils.parseIncomingChatMessage(
+            self.responseText
+        )

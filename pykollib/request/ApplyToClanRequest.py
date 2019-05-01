@@ -1,5 +1,6 @@
 from .GenericRequest import GenericRequest
 
+
 class ApplyToClanRequest(GenericRequest):
     def __init__(self, session, target_id):
         super(ApplyToClanRequest, self).__init__(session)
@@ -11,7 +12,7 @@ class ApplyToClanRequest(GenericRequest):
             "whichclan": target_id,
             "action": "joinclan",
             "apply": "Apply+to+this+Clan",
-            "confirm": "on"
+            "confirm": "on",
         }
 
     def parseResponse(self):

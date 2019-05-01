@@ -3,6 +3,7 @@ from pykollib.Session import Session
 
 import unittest
 
+
 class Main(unittest.TestCase):
     def runTest(self):
         s = Session()

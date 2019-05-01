@@ -1,5 +1,6 @@
 from .GenericRequest import GenericRequest
 
+
 class AddMeatToClanStashRequest(GenericRequest):
     "Adds meat to the player's clan stash."
 

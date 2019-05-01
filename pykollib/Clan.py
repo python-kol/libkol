@@ -1,5 +1,6 @@
 from .request import ApplyToClanRequest, ClanRaidLogRequest, SearchClansRequest
 
+
 class Clan(object):
     "This class represents a Clan in the Kingdom of Loathing"
 
@@ -12,12 +13,13 @@ class Clan(object):
         self.name = name
 
         if id is None:
-            searchResponse = SearchClansRequest(session, self.name, exact=True).doRequest()
+            searchResponse = SearchClansRequest(
+                session, self.name, exact=True
+            ).doRequest()
             result = searchResponse["results"]
             if len(result) == 0:
                 raise ValueError("Clan {} does not exist".format(self.name))
             self.id = result[0]["id"]
-
 
     def join(self):
         s = self.session
@@ -29,7 +31,6 @@ class Clan(object):
             session.clan = self
 
         return success
-
 
     def getRaidLogs(self, raidId=None):
         s = self.session

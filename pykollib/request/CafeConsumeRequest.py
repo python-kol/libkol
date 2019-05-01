@@ -3,33 +3,39 @@ from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 from pykollib.util import ParseResponseUtils
 
+
 class CafeRequest(GenericRequest):
     "Purchases items from a cafe."
 
-    CHEZ_SNOOTEE ='1'
-    MICROBREWERY = '2'
-    HELLS_KITCHEN = '3'
+    CHEZ_SNOOTEE = "1"
+    MICROBREWERY = "2"
+    HELLS_KITCHEN = "3"
 
     def __init__(self, session, cafe, item):
         super(CafeRequest, self).__init__(session)
         self.session = session
         self.url = session.serverURL + "cafe.php"
-        self.requestData['pwd'] = session.pwd
-        self.requestData['cafeid'] = cafe
-        self.requestData['action'] = "CONSUME!"
-        self.requestData['whichitem'] = item
+        self.requestData["pwd"] = session.pwd
+        self.requestData["cafeid"] = cafe
+        self.requestData["action"] = "CONSUME!"
+        self.requestData["whichitem"] = item
 
     def parseResponse(self):
-        notEnoughMeatPattern = PatternManager.getOrCompilePattern('noMeatForStore')
-        cannotGoPattern = PatternManager.getOrCompilePattern('userShouldNotBeHere')
-        notSoldPattern = PatternManager.getOrCompilePattern('notSoldHere')
+        notEnoughMeatPattern = PatternManager.getOrCompilePattern("noMeatForStore")
+        cannotGoPattern = PatternManager.getOrCompilePattern("userShouldNotBeHere")
+        notSoldPattern = PatternManager.getOrCompilePattern("notSoldHere")
 
         if cannotGoPattern.search(self.responseText):
             raise Error.Error("You cannot reach that cafe.", Error.INVALID_LOCATION)
         if notSoldPattern.search(self.responseText):
-            raise Error.Error("This cafe doesn't carry that item.", Error.ITEM_NOT_FOUND)
+            raise Error.Error(
+                "This cafe doesn't carry that item.", Error.ITEM_NOT_FOUND
+            )
         if notEnoughMeatPattern.search(self.responseText):
-            raise Error.Error("You do not have enough meat to purchase the item(s).", Error.NOT_ENOUGH_MEAT)
+            raise Error.Error(
+                "You do not have enough meat to purchase the item(s).",
+                Error.NOT_ENOUGH_MEAT,
+            )
 
         response = {}
 

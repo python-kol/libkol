@@ -1,6 +1,7 @@
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 
+
 class ClanWhitelistRequest(GenericRequest):
     "Retrieves information from the clan whitelist page."
 
@@ -12,11 +13,11 @@ class ClanWhitelistRequest(GenericRequest):
         # Get the set of clan ranks.
         ranks = []
         ranksById = {}
-        rankContainerPattern = PatternManager.getOrCompilePattern('clanRankContainer')
+        rankContainerPattern = PatternManager.getOrCompilePattern("clanRankContainer")
         match = rankContainerPattern.search(self.responseText)
         if match:
             rankText = match.group(1)
-            rankPattern = PatternManager.getOrCompilePattern('clanRank')
+            rankPattern = PatternManager.getOrCompilePattern("clanRank")
             for rankMatch in rankPattern.finditer(rankText):
                 rank = {}
                 rank["rankId"] = int(rankMatch.group(1))
@@ -27,14 +28,14 @@ class ClanWhitelistRequest(GenericRequest):
 
         # Get a list of users who are whitelisted to the clan.
         members = []
-        memberPattern = PatternManager.getOrCompilePattern('clanWhitelistMember')
+        memberPattern = PatternManager.getOrCompilePattern("clanWhitelistMember")
         for match in memberPattern.finditer(self.responseText):
             member = {}
-            member["userId"] = match.group('userId')
-            member["userName"] = match.group('userName')
-            member["clanTitle"] = match.group('clanTitle')
-            rankId = match.group('clanRankId')
-            rankName = match.group('clanRankName')
+            member["userId"] = match.group("userId")
+            member["userName"] = match.group("userName")
+            member["clanTitle"] = match.group("clanTitle")
+            rankId = match.group("clanRankId")
+            rankName = match.group("clanRankName")
             rankNumber = None
             if rankId != None:
                 rank = ranksById[int(rankId)]
@@ -58,4 +59,3 @@ class ClanWhitelistRequest(GenericRequest):
 
         self.responseData["ranks"] = ranks
         self.responseData["members"] = members
-
