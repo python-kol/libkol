@@ -26,7 +26,7 @@ class Session(object):
         self.pwd = None
         self.clan = None
 
-    def login(self, username, password, serverNumber=0):
+    def login(self, username, password, serverNumber=0, stealth=True):
         """
         Perform a KoL login given a username and password. A server number may also be specified
         to ensure that the user logs in using that particular server. This can be helpful
@@ -45,12 +45,10 @@ class Session(object):
         self.serverURL = homepageResponse["serverURL"]
 
         # Perform the login.
-        loginRequest = LoginRequest(self, "")
-        loginRequest.doRequest()
+        LoginRequest(self, stealth=stealth).doRequest()
 
         # Load the charpane once to make StatusRequest report the rollover time
-        charpaneRequest = CharpaneRequest(self)
-        charpaneRequest.doRequest()
+        CharpaneRequest(self).doRequest()
 
         self.getStatus()
         self.getProfile()
