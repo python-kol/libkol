@@ -1,4 +1,4 @@
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 
 class TakeItemFromClanStashRequest(GenericRequest):
     "Take items from the player's clan stash."

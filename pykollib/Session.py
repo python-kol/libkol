@@ -4,24 +4,14 @@ from .request.LogoutRequest import LogoutRequest
 from .request.StatusRequest import StatusRequest
 from .request.CharpaneRequest import CharpaneRequest
 
-
-
-import cookielib    # @UnusedImport
+import requests
 import hashlib
-
-try:
-    import requests  # @UnusedImport
-    from Opener import RequestsOpener as Opener
-except ImportError:
-    from Opener import StandardOpener as Opener
-
 
 class Session(object):
     "This class represents a user's session with The Kingdom of Loathing."
 
     def __init__(self):
-        self.opener = Opener()
-            
+        self.opener = requests.Session()
         self.isConnected = False
         self.userId = None
         self.userName = None
@@ -35,9 +25,9 @@ class Session(object):
         to ensure that the user logs in using that particular server. This can be helpful
         if the user continues to be redirected to a server that is down.
         """
-        
+
         self.userName = username
-        self.userPasswordHash = hashlib.md5(password).hexdigest()
+        self.userPasswordHash = hashlib.md5(password.encode('utf-8')).hexdigest()
         self.password = password;
 
         # Grab the KoL homepage.

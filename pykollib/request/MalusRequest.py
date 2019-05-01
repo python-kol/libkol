@@ -1,4 +1,4 @@
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 from pykollib.database import ItemDatabase
 from pykollib.pattern import PatternManager
 

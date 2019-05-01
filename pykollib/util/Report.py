@@ -84,9 +84,9 @@ def report(section, level, message, exception=None):
 
         # Print the message.
         if doPrint:
-            print fullMessage
+            print(fullMessage)
             if exception != None:
-                print traceback.format_exc()
+                print((traceback.format_exc()))
 
         # Log the message.
         if len(logs) > 0:

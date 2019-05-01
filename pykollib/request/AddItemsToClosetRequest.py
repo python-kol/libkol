@@ -1,4 +1,4 @@
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 
 class AddItemsToClosetRequest(GenericRequest):
     "Adds items to the player's closet."

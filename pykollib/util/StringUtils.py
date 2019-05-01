@@ -1,14 +1,14 @@
-import htmlentitydefs
+import html.entities
 import re
 
 def htmlEntityEncode(text):
-    for k,v in htmlentitydefs.codepoint2name.iteritems():
-        text = text.replace(unichr(k).encode('utf-8'), "&%s;" % v)
+    for k,v in list(html.entities.codepoint2name.items()):
+        text = text.replace(chr(k).encode('utf-8'), "&%s;" % v)
     return text
 
 def htmlEntityDecode(text):
-    for k,v in htmlentitydefs.name2codepoint.iteritems():
-        text = text.replace("&%s;" % k, unichr(v).encode('utf-8'))
+    for k,v in list(html.entities.name2codepoint.items()):
+        text = text.replace("&%s;" % k, chr(v).encode('utf-8'))
     return text
 
 def htmlRemoveTags(text):

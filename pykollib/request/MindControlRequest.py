@@ -1,5 +1,5 @@
 import pykollib.Error as Error
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 
 class MindControlRequest(GenericRequest):
     def __init__(self, session, level):
