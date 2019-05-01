@@ -2,6 +2,7 @@ import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 
+
 class HomepageRequest(GenericRequest):
     """
     This request is most often used before logging in. It allows the KoL servers to assign a
@@ -18,9 +19,12 @@ class HomepageRequest(GenericRequest):
 
     def parseResponse(self):
         # Get the URL of the server that we were told to use.
-        loginUrlPattern = PatternManager.getOrCompilePattern('loginURL')
+        loginUrlPattern = PatternManager.getOrCompilePattern("loginURL")
         serverMatch = loginUrlPattern.match(self.response.url)
         if serverMatch:
             self.responseData["serverURL"] = serverMatch.group(1)
         else:
-            raise Error.Error("Unable to determine server URL from: " + self.response.url, Error.LOGIN_FAILED_GENERIC)
+            raise Error.Error(
+                "Unable to determine server URL from: " + self.response.url,
+                Error.LOGIN_FAILED_GENERIC,
+            )

@@ -24,7 +24,6 @@ class GenericRequest(object):
         self.requestData = {}
         self.skipParseResponse = False
 
-
     def doRequest(self):
         """
         Performs the request. This method will ensure that nightly maintenance
@@ -42,14 +41,16 @@ class GenericRequest(object):
 
         if self.response.url.find("/maint.php") >= 0:
             self.session.isConnected = False
-            raise Error.Error("Nightly maintenance in progress.",
-                              Error.NIGHTLY_MAINTENANCE)
+            raise Error.Error(
+                "Nightly maintenance in progress.", Error.NIGHTLY_MAINTENANCE
+            )
 
         if self.response.url.find("/login.php") >= 0:
             if self.session.isConnected:
                 self.session.isConnected = False
-                raise Error.Error("You are no longer connected to the server.",
-                                  Error.NOT_LOGGED_IN)
+                raise Error.Error(
+                    "You are no longer connected to the server.", Error.NOT_LOGGED_IN
+                )
 
         # Allow for classes that extend GenericRequest to parse all of the data someone
         # would need from the response and then to place this data in self.responseData.
@@ -57,8 +58,9 @@ class GenericRequest(object):
         if self.skipParseResponse == False and hasattr(self, "parseResponse"):
             self.parseResponse()
             if len(self.responseData) > 0:
-                Report.debug("request", "Parsed response data: {0}"
-                                            .format(self.responseData))
+                Report.debug(
+                    "request", "Parsed response data: {0}".format(self.responseData)
+                )
 
         return self.responseData
 

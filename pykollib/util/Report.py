@@ -17,27 +17,33 @@ __logs = []
 __logCurrentDate = None
 __includeThreadName = False
 
+
 def addOutputSection(sectionName):
     __outputSections.append(sectionName)
+
 
 def removeOutputSection(sectionName):
     if sectionName in __outputSections:
         __outputSections.remove(sectionName)
 
+
 def setOutputSections(arr):
     global __outputSections
     __outputSections = arr
+
 
 def setOutputLevel(level):
     global __outputLevel
     __outputLevel = level
 
+
 def setIncludeThreadName(includeThreadName):
     global __includeThreadName
     __includeThreadName = includeThreadName
 
+
 def registerLog(directory, fileName, sections=["*"], level=INFO):
-    log = {"fileName" : fileName, "sections" : sections, "level" : level}
+    log = {"fileName": fileName, "sections": sections, "level": level}
 
     # If the directory doesn't exist, let's create it.
     if directory != None:
@@ -46,6 +52,7 @@ def registerLog(directory, fileName, sections=["*"], level=INFO):
             os.mkdir(directory)
 
     __logs.append(log)
+
 
 def report(section, level, message, exception=None):
     global __logCurrentDate
@@ -61,7 +68,9 @@ def report(section, level, message, exception=None):
 
     # Should this message be printed?
     doPrint = False
-    if ("*" in __outputSections or section in __outputSections) and level <= __outputLevel:
+    if (
+        "*" in __outputSections or section in __outputSections
+    ) and level <= __outputLevel:
         doPrint = True
 
     # Should this message be logged?
@@ -94,33 +103,42 @@ def report(section, level, message, exception=None):
             for log in logs:
                 if "file" not in log:
                     if "directory" in log:
-                        filePath = os.path.join(log["directory"], log["fileName"] + '.' + currentDate)
+                        filePath = os.path.join(
+                            log["directory"], log["fileName"] + "." + currentDate
+                        )
                     else:
-                        filePath = log["fileName"] + '.' + currentDate
-                    log["file"] = open(filePath, 'a')
+                        filePath = log["fileName"] + "." + currentDate
+                    log["file"] = open(filePath, "a")
 
                 log["file"].write("%s\n" % fullMessage)
                 if exception != None:
                     log["file"].write(traceback.format_exc())
                 log["file"].flush()
 
+
 def fatal(section, message, exception=None):
     report(section, FATAL, message, exception)
+
 
 def alert(section, message, exception=None):
     report(section, ALERT, message, exception)
 
+
 def error(section, message, exception=None):
     report(section, ERROR, message, exception)
+
 
 def warning(section, message, exception=None):
     report(section, WARNING, message, exception)
 
+
 def info(section, message, exception=None):
     report(section, INFO, message, exception)
 
+
 def trace(section, message, exception=None):
     report(section, TRACE, message, exception)
+
 
 def debug(section, message, exception=None):
     report(section, DEBUG, message, exception)

@@ -4,11 +4,14 @@ from pykollib.util import ParseResponseUtils
 """
 At the moment, I have no access to a jukebox, so this request only simulates clicking on the jukebox, not selecting a song.
 """
+
+
 class JukeboxRequest(GenericRequest):
     "Uses the jukebox in the rumpus room"
+
     def __init__(self, session, whichsong):
         super(JukeboxRequest, self).__init__(session)
-        self.url = session.serverURL + 'clan_rumpus.php?action=click&spot=3&furni=2'
+        self.url = session.serverURL + "clan_rumpus.php?action=click&spot=3&furni=2"
 
     def parseResponse(self):
         response = {}

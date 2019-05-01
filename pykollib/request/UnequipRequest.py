@@ -1,5 +1,6 @@
 from .GenericRequest import GenericRequest
 
+
 class UnequipRequest(GenericRequest):
     """
     Unequips the equipment in the designated slot.  HAT, WEAPON, OFFHAND,
@@ -22,7 +23,17 @@ class UnequipRequest(GenericRequest):
         super(UnequipRequest, self).__init__(session)
 
         if slot == self.ALL:
-            self.url = session.serverURL + "inv_equip.php?pwd=" + str(session.pwd) + "&action=unequipall"
+            self.url = (
+                session.serverURL
+                + "inv_equip.php?pwd="
+                + str(session.pwd)
+                + "&action=unequipall"
+            )
         else:
-            self.url = session.serverURL + "inv_equip.php?pwd=" + str(session.pwd) + "&action=unequip&type=" + slot
-
+            self.url = (
+                session.serverURL
+                + "inv_equip.php?pwd="
+                + str(session.pwd)
+                + "&action=unequip&type="
+                + slot
+            )

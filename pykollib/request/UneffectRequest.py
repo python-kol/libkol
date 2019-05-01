@@ -3,6 +3,7 @@ from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 from pykollib.util import Report
 
+
 class UneffectRequest(GenericRequest):
     "Uses a soft green echo eyedrop antidote to remove any effect."
 
@@ -15,18 +16,31 @@ class UneffectRequest(GenericRequest):
 
     def parseResponse(self):
         # Check for errors.
-        effectRemovedPattern = PatternManager.getOrCompilePattern('effectRemoved')
+        effectRemovedPattern = PatternManager.getOrCompilePattern("effectRemoved")
         if effectRemovedPattern.search(self.responseText):
             return
 
-        youDontHaveThatEffectPattern = PatternManager.getOrCompilePattern('youDontHaveThatEffect')
+        youDontHaveThatEffectPattern = PatternManager.getOrCompilePattern(
+            "youDontHaveThatEffect"
+        )
         if youDontHaveThatEffectPattern.search(self.responseText):
-            raise Error.Error("Unable to remove effect. The user does not have that effect.", Error.EFFECT_NOT_FOUND)
+            raise Error.Error(
+                "Unable to remove effect. The user does not have that effect.",
+                Error.EFFECT_NOT_FOUND,
+            )
 
-        youDontHaveSGEEAPattern = PatternManager.getOrCompilePattern('youDontHaveSGEEA')
+        youDontHaveSGEEAPattern = PatternManager.getOrCompilePattern("youDontHaveSGEEA")
         if youDontHaveSGEEAPattern.search(self.responseText):
-            raise Error.Error("Unable to remove effect. You do not have a soft green echo eyedrop antidote.", Error.ITEM_NOT_FOUND)
+            raise Error.Error(
+                "Unable to remove effect. You do not have a soft green echo eyedrop antidote.",
+                Error.ITEM_NOT_FOUND,
+            )
 
-        Report.error("request", "Unknown error occurred when trying to remove an effect")
+        Report.error(
+            "request", "Unknown error occurred when trying to remove an effect"
+        )
         Report.error("request", self.responseText)
-        raise Error.Error("Unknown error occurred when trying to remove an effect.", Error.REQUEST_FATAL)
+        raise Error.Error(
+            "Unknown error occurred when trying to remove an effect.",
+            Error.REQUEST_FATAL,
+        )

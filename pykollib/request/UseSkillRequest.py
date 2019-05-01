@@ -2,6 +2,7 @@ from .GenericRequest import GenericRequest
 from pykollib.database import SkillDatabase
 from pykollib.pattern import PatternManager
 
+
 class UseSkillRequest(GenericRequest):
     def __init__(self, session, skillId, numTimes=1, targetPlayer=None):
         super(UseSkillRequest, self).__init__(session)
@@ -23,7 +24,7 @@ class UseSkillRequest(GenericRequest):
             self.requestData["quantity"] = numTimes
 
     def parseResponse(self):
-        resultsPattern = PatternManager.getOrCompilePattern('results')
+        resultsPattern = PatternManager.getOrCompilePattern("results")
         match = resultsPattern.search(self.responseText)
         if match:
             results = match.group(1)

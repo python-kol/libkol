@@ -2,6 +2,7 @@ from .GenericRequest import GenericRequest
 from pykollib.database import ItemDatabase
 from pykollib.pattern import PatternManager
 
+
 class MalusRequest(GenericRequest):
     def __init__(self, session, itemId, numTimes):
         super(MalusRequest, self).__init__(session)
@@ -14,17 +15,17 @@ class MalusRequest(GenericRequest):
     def parseResponse(self):
         items = []
 
-        singleItemPattern = PatternManager.getOrCompilePattern('acquireSingleItem')
+        singleItemPattern = PatternManager.getOrCompilePattern("acquireSingleItem")
         for match in singleItemPattern.finditer(self.responseText):
             descId = int(match.group(1))
             item = ItemDatabase.getOrDiscoverItemFromDescId(descId, self.session)
             item["quantity"] = 1
             items.append(item)
 
-        multiItemPattern = PatternManager.getOrCompilePattern('acquireMultipleItems')
+        multiItemPattern = PatternManager.getOrCompilePattern("acquireMultipleItems")
         for match in multiItemPattern.finditer(self.responseText):
             descId = int(match.group(1))
-            quantity = int(match.group(2).replace(',', ''))
+            quantity = int(match.group(2).replace(",", ""))
             item = ItemDatabase.getOrDiscoverItemFromDescId(descId, self.session)
             item["quantity"] = quantity
             items.append(item)

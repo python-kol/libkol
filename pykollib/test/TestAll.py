@@ -10,6 +10,7 @@ from pykollib.util import Report
 import sys
 import unittest
 
+
 def main(argv=sys.argv):
     if len(argv) < 3:
         raise ValueError("You must specify a username and password")
@@ -30,5 +31,6 @@ def main(argv=sys.argv):
     # Run the test suite.
     unittest.TextTestRunner(verbosity=2).run(suite)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

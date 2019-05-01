@@ -1,5 +1,6 @@
 from .GenericRequest import GenericRequest
 
+
 class TakeMeatFromClosetRequest(GenericRequest):
     "Adds meat to the player's closet."
 

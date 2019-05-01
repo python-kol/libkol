@@ -1,5 +1,6 @@
 from .GenericAdventuringRequest import GenericAdventuringRequest
 
+
 class CombatRequest(GenericAdventuringRequest):
     """
     A request used for a single round of combat. The user may attack, use an item or skill, or
