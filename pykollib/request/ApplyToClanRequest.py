@@ -1,4 +1,5 @@
 from .GenericRequest import GenericRequest
+import pykollib.Error as Error
 
 
 class ApplyToClanRequest(GenericRequest):
@@ -18,14 +19,22 @@ class ApplyToClanRequest(GenericRequest):
     def parseResponse(self):
         """
         Returns a dict with the following possible elements:
-            accepted: boolean
+            success: boolean
             alreadyMember: boolean
         """
+
+        if self.searchNamedPattern("clanApplicationLeaderExisting"):
+            raise Error.Error(
+                "Cannot apply to another clan because you are the leader of {}".format(
+                    self.session.preferences["clanName"]
+                ),
+                Error.CANNOT_CHANGE_CLAN,
+            )
 
         accepted = self.searchNamedPattern("clanApplicationAccepted")
         alreadyMember = self.searchNamedPattern("clanApplicationAlreadyMember")
 
-        self.response = {
+        self.responseData = {
             "success": accepted or alreadyMember,
             "alreadyMember": alreadyMember,
         }

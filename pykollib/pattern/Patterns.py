@@ -97,6 +97,7 @@ patterns = {
     "dungeonLootDistribution": r"(?:<blockquote>|<br>)([^<>]+) \(#([0-9,]+)\) distributed <b>([^<>]+)</b> to ([^<>]+) \(#([0-9,]+)\)<br>",
     "dungeonPreviousRun": r'<tr><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([0-9,]+)<\/td><td class="?tiny"?>\[<a href="clan_raidlogs\.php\?viewlog=([0-9]+)">view logs<\/a>\]<\/td><\/tr>',
     "dungeonLogType": r"<div id=[^>]+><center><b>([^:]+):<!--[^:]+:([0-9]+)--></b><p><table[^>]+><tr><td[^>]+>(.*?)</table></div>",
+    "dungeonLogStatus": r"<center>(.*?)<b>([0-9]+)<\/b> (.*?).</center>",
     "dungeonLogCategory": r"<b>([^<>]+):?<\/b><blockquote>(.*?)<\/blockquote>",
     "imprisonedByChums": r"^(.*) has been imprisoned by the C\. H\. U\. M\.s!$",
     "freedFromChums": r"^(.*) has rescued (.*) from the C\. H\. U\. M\.s\.$",
@@ -251,7 +252,8 @@ patterns = {
     "clanLogChangedRank": r"changed Rank for <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a>\.$",
     "clanLogChangedTitle": r"changed title for <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a>\. \((?P<clanTitle>.*)\)$",
     "clanApplicationAccepted": r"clanhalltop.gif",
-    "clanApplicationAlreadyMember": r"You can\'t apply to a clan you\'re already in\.",
+    "clanApplicationAlreadyMember": r"You can't apply to a clan you're already in\.",
+    "clanApplicationLeaderExisting": r"You can't apply to a new clan when you're the leader of an existing clan\.",
     "clanSearchResult": r'<b><a href="showclan\.php\?recruiter=1&whichclan=([0-9]+)">([^<>]*)</a></b>',
     # Search player Patterns
     "searchPlayers": r'showplayer\.php\?who=([0-9]+)">([^<]*)<\/a>',
