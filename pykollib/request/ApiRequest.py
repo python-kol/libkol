@@ -1,6 +1,5 @@
 import pykollib.Error as Error
 from .GenericRequest import GenericRequest
-from pykollib.util import Configuration
 
 import json
 
@@ -11,7 +10,7 @@ class ApiRequest(GenericRequest):
         self.url = session.serverURL + "api.php"
 
         # Create a user agent string.
-        userAgent = Configuration.get("userAgent")
+        userAgent = session.preferences.get("userAgent")
         if userAgent == None:
             userAgent = "pykol+by+Turias"
         self.requestData["for"] = userAgent
