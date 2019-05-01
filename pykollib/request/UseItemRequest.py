@@ -1,4 +1,4 @@
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 
 class UseItemRequest(GenericRequest):
     def __init__(self, session, itemId):

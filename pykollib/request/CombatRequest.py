@@ -1,4 +1,4 @@
-from GenericAdventuringRequest import GenericAdventuringRequest
+from .GenericAdventuringRequest import GenericAdventuringRequest
 
 class CombatRequest(GenericAdventuringRequest):
     """

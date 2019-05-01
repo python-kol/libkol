@@ -60,7 +60,13 @@ while foo:
 
 Requirements
 ------------
-pykollib requires Python 2.7. It does not require any third-party libraries, however it does use a number of libraries that ship with the standard distribution of Python.  A version using Python 3.x will be released in the near future.
+pykollib requires Python 3.x.
+
+To install third-party libraries
+
+```console
+$ pip install -r requirements.txt
+```
 
 Running the Unit Tests
 ----------------------
@@ -68,18 +74,9 @@ pykollib includes a [unittest](http://docs.python.org/2/library/unittest.html) s
 
 To run the test suite:
 
-1. Add the `pykollib/pykollib` directory to your Python path. On Windows, this will involve a trip to Environment Variables (see [this Python path on Windows tutorial](http://www.katsbits.com/tutorials/blender/setting-up-windows-python-path-system-variable.php) for an example). On Mac OS X or on Linux, you can add an `export PYTHONPATH` statement to your `~/.bashrc` file. For example, add this to the .bashrc file in your home directory (don't forget to either restart the terminal or ```source ~/.bashrc``` afterwards):
-
-	```
-	export PYTHONPATH=$PYTHONPATH:/Users/yourname/Documents/py-kol/src
-	```
-
-2. Run the full test suite from the command line, and pass in a username and password for your character (the tests include logging in, etc).
-
-	```
-	$ cd pykollib
-	$ python test/TestAll.py username password
-	```
+```console
+$ python -m pykollib.test.TestAll [username] [password]
+```
 
 How can I contribute?
 ---------------------

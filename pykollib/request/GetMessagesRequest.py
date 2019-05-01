@@ -1,5 +1,5 @@
 import pykollib.Error as Error
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 from pykollib.database import ItemDatabase
 from pykollib.pattern import PatternManager
 from pykollib.util import StringUtils

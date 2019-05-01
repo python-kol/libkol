@@ -1,4 +1,4 @@
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 
 class ToggleAcceptingClanApplicationsRequest(GenericRequest):
     "Toggle whether or not the clan accepts new applications."

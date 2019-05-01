@@ -1,5 +1,5 @@
 import re
-from GenericRequest import GenericRequest
+from .GenericRequest import GenericRequest
 from pykollib.database import ItemDatabase
 
 class ClanStashRequest(GenericRequest):

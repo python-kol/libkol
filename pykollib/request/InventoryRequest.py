@@ -1,4 +1,4 @@
-from ApiRequest import ApiRequest
+from .ApiRequest import ApiRequest
 from pykollib.database import ItemDatabase
 
 class InventoryRequest(ApiRequest):
@@ -13,7 +13,7 @@ class InventoryRequest(ApiRequest):
         super(InventoryRequest, self).parseResponse()
 
         items = []
-        for itemId, quantity in self.jsonData.iteritems():
+        for itemId, quantity in list(self.jsonData.items()):
             if self.ignoreItemDatabase:
                 item = {}
                 item["id"] = int(itemId)
