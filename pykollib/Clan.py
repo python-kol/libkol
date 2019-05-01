@@ -23,14 +23,8 @@ class Clan(object):
 
     def join(self):
         s = self.session
-
         applyResponse = ApplyToClanRequest(s, self.id).doRequest()
-        success = applyResponse.get("success")
-
-        if success:
-            session.clan = self
-
-        return success
+        return applyResponse["success"]
 
     def getRaidLogs(self, raidId=None):
         s = self.session

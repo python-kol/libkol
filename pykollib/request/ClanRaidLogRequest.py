@@ -26,8 +26,10 @@ class ClanRaidLogRequest(GenericRequest):
                 txt = txt[:index]
 
         # Get a list of actions that occurred in Hobopolis.
+        status = {}
         actions = []
         dungeonLogTypePattern = PatternManager.getOrCompilePattern("dungeonLogType")
+        dungeonLogStatusPattern = PatternManager.getOrCompilePattern("dungeonLogStatus")
         dungeonLogCategoryPattern = PatternManager.getOrCompilePattern(
             "dungeonLogCategory"
         )
@@ -35,7 +37,22 @@ class ClanRaidLogRequest(GenericRequest):
         for typeMatch in dungeonLogTypePattern.finditer(txt):
             dungeon = typeMatch.group(1)
             raidId = int(typeMatch.group(2))
-            for categoryMatch in dungeonLogCategoryPattern.finditer(typeMatch.group(3)):
+            typeText = typeMatch.group(3)
+
+            status[dungeon] = {"raidId": raidId}
+            for statusMatch in dungeonLogStatusPattern.finditer(typeText):
+                keyText = statusMatch.group(3)
+
+                if keyText.startswith("kisses"):
+                    key = "kisses"
+                elif keyText.startswith("turns"):
+                    key = "turns"
+                else:
+                    key = keyText.split(" ")[-1].lower()
+
+                status[dungeon][key] = int(statusMatch.group(2))
+
+            for categoryMatch in dungeonLogCategoryPattern.finditer(typeText):
                 category = categoryMatch.group(1)
                 for match in dungeonActivityPattern.finditer(categoryMatch.group(2)):
                     action = {
@@ -48,6 +65,7 @@ class ClanRaidLogRequest(GenericRequest):
                         "turns": int(match.group(4).replace(",", "")),
                     }
                     actions.append(action)
+        self.responseData["status"] = status
         self.responseData["events"] = actions
 
         # Retrieve a list of loot that has been distributed.
