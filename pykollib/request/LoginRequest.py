@@ -11,11 +11,11 @@ class LoginRequest(GenericRequest):
     errors. If any occur, than an appropriate exception is raised.
     """
 
-    def __init__(self, session, loginChallenge):
+    def __init__(self, session, loginChallenge="", stealth=False):
         super(LoginRequest, self).__init__(session)
         self.url = session.serverURL + "login.php"
         self.requestData["loggingin"] = "Yup."
-        self.requestData["loginname"] = session.userName
+        self.requestData["loginname"] = session.userName + ("/q" if stealth else "")
         self.requestData["password"] = session.password
         self.requestData["secure"] = "1"
         hashKey = self.session.userPasswordHash + ":" + loginChallenge
