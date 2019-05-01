@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pykollib",
-    version="0.9.1",
+    version="0.9.3",
     author="",
     author_email="dan@heathmailbox.com",
     description="Python library for interacting with the Kingdom of Loathing ",
