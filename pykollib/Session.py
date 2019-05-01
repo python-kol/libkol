@@ -6,7 +6,7 @@ from .request import (
     StatusRequest,
     CharpaneRequest,
 )
-from .Clan import Clan
+from .util.Preferences import Preferences
 
 import requests
 import hashlib
@@ -17,6 +17,7 @@ class Session(object):
 
     def __init__(self):
         self.opener = requests.Session()
+        self.preferences = Preferences("anonymous_prefs.db", False, True)
         self.isConnected = False
         self.userId = None
         self.userName = None
@@ -36,9 +37,11 @@ class Session(object):
         self.userPasswordHash = hashlib.md5(password.encode("utf-8")).hexdigest()
         self.password = password
 
+        # Load preferences for user
+        self.preferences.load("{}_prefs.db".format(username), True)
+
         # Grab the KoL homepage.
-        homepageRequest = HomepageRequest(self, serverNumber=serverNumber)
-        homepageResponse = homepageRequest.doRequest()
+        homepageResponse = HomepageRequest(self, serverNumber=serverNumber).doRequest()
         self.serverURL = homepageResponse["serverURL"]
 
         # Perform the login.
@@ -52,6 +55,9 @@ class Session(object):
         self.getStatus()
         self.getProfile()
 
+    def getUsername(self):
+        return self.userName
+
     def getStatus(self):
         # Get pwd, user ID, and the user's name.
         request = StatusRequest(self)
@@ -63,10 +69,8 @@ class Session(object):
         self.rollover = int(response["rollover"])
 
     def getProfile(self):
-        profileResponse = UserProfileRequest(self, self.userId).doRequest()
-        self.clan = Clan(self, id=profileResponse.get("clanId"))
+        return UserProfileRequest(self, self.userId).doRequest()
 
     def logout(self):
         "Performs a logut request, closing the session."
-        logoutRequest = LogoutRequest(self)
-        logoutRequest.doRequest()
+        LogoutRequest(self).doRequest()
