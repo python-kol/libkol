@@ -1,5 +1,6 @@
 #from AcceptTradeRequest import AcceptTradeRequest
 #from AddItemToStoreRequest import AddItemToStoreRequest
+from .ApplyToClanRequest import ApplyToClanRequest
 from .AddItemsToClanStashRequest import AddItemsToClanStashRequest
 from .AddItemsToClosetRequest import AddItemsToClosetRequest
 from .AddItemsToDisplayCaseRequest import AddItemsToDisplayCaseRequest
@@ -82,6 +83,7 @@ from .QuestLogRequest import QuestLogRequest
 from .RespondToTradeRequest import RespondToTradeRequest
 from .RumpusRoomRequest import RumpusRoomRequest
 from .SearchPlayerRequest import SearchPlayerRequest
+from .SearchClansRequest import SearchClansRequest
 from .SendChatRequest import SendChatRequest
 from .SendMessageRequest import SendMessageRequest
 from .SnackMachineRequest import SnackMachineRequest

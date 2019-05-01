@@ -99,6 +99,7 @@ patterns = {
     "dungeonActivity" : r'(?:^|<br>|<br><b>|<b>)([^<>]+) \(#([0-9,]+)\) ([^<>]+) \(([0-9,]+) turns?\)',
     "dungeonLootDistribution" : r'(?:<blockquote>|<br>)([^<>]+) \(#([0-9,]+)\) distributed <b>([^<>]+)</b> to ([^<>]+) \(#([0-9,]+)\)<br>',
     "dungeonPreviousRun" : r'<tr><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([0-9,]+)<\/td><td class="?tiny"?>\[<a href="clan_raidlogs\.php\?viewlog=([0-9]+)">view logs<\/a>\]<\/td><\/tr>',
+    "dungeonLogType": r'<div id=[^>]+><center><b>([^:]+):<!--[^:]+:([0-9]+)--></b><p><table[^>]+><tr><td[^>]+>(.*?)</table></div>',
     "dungeonLogCategory" : r'<b>([^<>]+):?<\/b><blockquote>(.*?)<\/blockquote>',
     "imprisonedByChums" : r'^(.*) has been imprisoned by the C\. H\. U\. M\.s!$',
     "freedFromChums" : r'^(.*) has rescued (.*) from the C\. H\. U\. M\.s\.$',
@@ -168,8 +169,8 @@ patterns = {
     'noMeatForStore' : r"(?:You can't afford that many of that item)|(?:You can't afford that item)|(?:You can't afford to purchase that)",
     'invalidStore' : r"You've been sent back here by some kind of bug",
     'notSoldHere' : r"(?:This store doesn't sell that item)|(?:Invalid item selected)",
-    "storeInventory" : r'<tr class="deets" rel="([0-9]+)" after="([0-9]+)">(.*?)<b>(.*?)</b></td><td valign="center" align="center">([0-9]+)</td(.*?)name="price\[([0-9]+)\]" value="([0-9,]+)"(.*?)name="limit\[[0-9]+\]" value="([0-9]+)"(.*?)cheapest: ([0-9]+)</span>', 
-    
+    "storeInventory" : r'<tr class="deets" rel="([0-9]+)" after="([0-9]+)">(.*?)<b>(.*?)</b></td><td valign="center" align="center">([0-9]+)</td(.*?)name="price\[([0-9]+)\]" value="([0-9,]+)"(.*?)name="limit\[[0-9]+\]" value="([0-9]+)"(.*?)cheapest: ([0-9]+)</span>',
+
     # Hermit patterns.
     'noTrinkets' : r"You don't have enough stuff",
     'noHermitPermits' : r"You don't have enough Hermit Permits to trade for that many",
@@ -196,7 +197,7 @@ patterns = {
     "mallItemSearchDetails" : r'<a[^<>]*href="mallstore\.php\?whichstore=(?P<storeId>[0-9]+)&searchitem=(?P<itemId>[0-9]+)&searchprice=(?P<price>[0-9]+)"><b>(?P<storeName>.*?)<\/b><\/a>[^<>]*<\/td><td[^<>]*>(?P<quantity>[0-9,]+)<\/td><td[^<>]*>(?:&nbsp;)*(?P<limit>[0-9,]*)[^<>]*<\/td>',
     "nextLink" : r'\[<a [^>]*start=([0-9]+)[^>]*>next</a>\]',
     "mallItemHeader" : r'<tr class=.blackabove. id=.item_([0-9]+)[^0-9]>',
-    
+
     # Mall purchase patterns.
     "cantAffordItem" : r"<td>You can't afford that item\.<\/td>",
     "mallNoItemAtThatPrice" : r"<td>This store doesn't have that item at that price\.",
@@ -271,6 +272,9 @@ patterns = {
     "clanLogMeatSpentArmy" : r'spent (?P<meat>[0-9,]+) Meat on the clan army\.$',
     "clanLogChangedRank" : r'changed Rank for <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a>\.$',
     "clanLogChangedTitle" : r'changed title for <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a>\. \((?P<clanTitle>.*)\)$',
+    "clanApplicationAccepted": r'clanhalltop.gif',
+    "clanApplicationAlreadyMember": r'You can\'t apply to a clan you\'re already in\.',
+    "clanSearchResult": r'<b><a href="showclan\.php\?recruiter=1&whichclan=([0-9]+)">([^<>]*)</a></b>',
 
     # Search player Patterns
     "searchPlayers" : r'showplayer\.php\?who=([0-9]+)">([^<]*)<\/a>',
@@ -320,7 +324,7 @@ patterns = {
     "dontHaveAdventuresForWok" : r"<td>You don't have that many adventures left\.",
     "noWokAccess" : "What wok are you tokking about\?",
     "dontHaveSkillForWok" : r"<td>You don't have the skill necessary",
-    
+
     # Sept 2013 Mall interface patterns
     "dontHaveEnoughOfItem" : r"<td>You don't have enough of those",
     "dontHaveThatItem" : r"<td>You don't have that item.([0-9]+)",
@@ -331,7 +335,7 @@ patterns = {
     "mallPricesLimited" : r"<tr><td>limited:</td><td><b>([0-9,]+)</b>\(([0-9]+)/day\) x([0-9]+).*?</td><td><b>([0-9,]+)</b>\(([0-9]+)/day\) x([0-9]+).*?</td><td><b>([0-9,]+)</b>\(([0-9]+)/day\) x([0-9]+).*?</td></tr>",
     "mallPriceNotUpdated" : "Nothing updated",
     "mallTransactions" : r"([1-9][1-9]/[1-9][1-9]/[1-9][1-9] [1-9][1-9]:[1-9][1-9]:[1-9][1-9]) <a class=nounder href=\"showplayer.php\?who=([0-9]+)\"><b>(.*?)<\/b><\/a> bought ([0-9]+) \((.*?)\) for ([0-9]+) Meat.<br>",
-    
+
     #Trade related patterns
     "traderIgnoringUs" : r"<td>You can't make an offer to a player who has placed you on his or her ignore list\.",
     "traderIsInRoninHC" : r"<td>That player cannot receive Meat or items from other players\.",
