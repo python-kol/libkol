@@ -94,7 +94,7 @@ patterns = {
     "chatTalkieFrequency": r"<font color=green>The frequency is (.*?), Mr. Rather\.<\/font>",
     "chatCarnival": r'<font color="?green"?>(?:.*?)testlove=([0-9]+)\'>consult Madame Zatara about your relationship<\/a> with ([^<>]+?)\.<\/font>',
     # Clan dungeon patterns.
-    "dungeonActivity": r"(?:^|<br>|<br><b>|<b>)([^<>]+) \(#([0-9,]+)\) ([^<>]+) \(([0-9,]+) turns?\)",
+    "dungeonActivity": r"(?:^|<blockquote>|<br>|<br><b>|<b>)([^<>]+) \(#([0-9,]+)\) ((?:[^<>](?!(?:\([0-9]+ turns?\))))+)(?: \(([0-9,]+) turns?\))?",
     "dungeonLootDistribution": r"(?:<blockquote>|<br>)([^<>]+) \(#([0-9,]+)\) distributed <b>([^<>]+)</b> to ([^<>]+) \(#([0-9,]+)\)<br>",
     "dungeonPreviousRun": r'<tr><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([0-9,]+)<\/td><td class="?tiny"?>\[<a href="clan_raidlogs\.php\?viewlog=([0-9]+)">view logs<\/a>\]<\/td><\/tr>',
     "dungeonLogType": r"<div id=[^>]+><center><b>([^:]+):<!--[^:]+:([0-9]+)--></b><p><table[^>]+><tr><td[^>]+>(.*?)</table></div>",
