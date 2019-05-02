@@ -54,15 +54,17 @@ class ClanRaidLogRequest(GenericRequest):
 
             for categoryMatch in dungeonLogCategoryPattern.finditer(typeText):
                 category = categoryMatch.group(1)
+
                 for match in dungeonActivityPattern.finditer(categoryMatch.group(2)):
+                    turns = match.group(4) or "0"
                     action = {
                         "dungeon": dungeon,
                         "raidId": raidId,
                         "category": category,
                         "userName": match.group(1),
                         "userId": int(match.group(2)),
-                        "event": match.group(3),
-                        "turns": int(match.group(4).replace(",", "")),
+                        "event": match.group(3).strip(),
+                        "turns": int(turns.replace(",", "")),
                     }
                     actions.append(action)
         self.responseData["status"] = status
