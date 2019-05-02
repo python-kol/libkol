@@ -60,6 +60,7 @@ patterns = {
     ),
     "userInHardcoreRonin": r"<center><table><tr><td>That player cannot receive Meat or items from other players right now\.",
     "userIgnoringUs": r"<center><table><tr><td>This message could not be sent, because you are on that player's ignore list\.<\/td><\/tr><\/table><\/center>",
+    "userInvalid": r"<td>Invalid PlayerID.</td>",
     "notEnoughItemsToSend": r"<center><table><tr><td>You don't have enough of one of the items you're trying to send\.<\/td><\/tr><\/table><\/center>",
     "messageSent": r"<td><center>Message sent\.<\/center><\/td>",
     "kmailNotSentUserTrendy": r"<center><table><tr><td>That player would never use something as old and outmoded as",
