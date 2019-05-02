@@ -8,6 +8,8 @@ from .request import (
 )
 from .util.Preferences import Preferences
 
+from . import Kmail
+
 import requests
 import hashlib
 
@@ -25,6 +27,7 @@ class Session(object):
         self.serverURL = None
         self.pwd = None
         self.clan = None
+        self.kmail = Kmail.Kmail(self)
 
     def login(self, username, password, serverNumber=0, stealth=True):
         """
