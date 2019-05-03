@@ -11,7 +11,6 @@ try:
     pykoldb = os.path.join(pykollibtmp, "pykol/db")
 except NameError:
     from tempfile import gettempdir
-
     pykoldb = os.path.join(gettempdir(), "pykol/db")
 
 if not os.path.isdir(pykoldb):
@@ -115,6 +114,7 @@ def readItemDescsFile():
     print("Reading item description file...")
     text = _opener.open(ITEM_DESCS_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if len(line) > 0 and line[0] != "#":
             parts = line.split("\t")
             if len(parts) >= 3:
@@ -204,6 +204,7 @@ def readEquipmentFile():
     currentType = None
     text = _opener.open(EQUIPMENT_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if len(line) > 0:
             if line[0] == "#":
                 if line.find("Hats section") >= 0:
@@ -283,6 +284,7 @@ def readFullnessFile():
     linesProcessed = 0
     text = _opener.open(FULLNESS_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if len(line) > 0 and line[0] != "#":
             parts = line.split("\t")
             if len(parts) >= 8:
@@ -323,6 +325,7 @@ def readInebrietyFile():
     linesProcessed = 0
     text = _opener.open(INEBRIETY_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if len(line) > 0 and line[0] != "#":
             parts = line.split("\t")
             if len(parts) >= 8:
@@ -363,6 +366,7 @@ def readSpleenFile():
     linesProcessed = 0
     text = _opener.open(SPLEEN_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if len(line) > 0 and line[0] != "#":
             parts = line.split("\t")
             if len(parts) >= 8:
@@ -403,6 +407,7 @@ def readPackagesFile():
     linesProcessed = 0
     text = _opener.open(PACKAGES_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if len(line) > 0 and line[0] != "#":
             parts = line.split("\t")
             if len(parts) >= 4:
@@ -427,6 +432,7 @@ def readOutfitsFile():
     linesProcessed = 0
     text = _opener.open(OUTFITS_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if len(line) > 0 and line[0] != "#":
             parts = line.split("\t")
             if len(parts) >= 3:
@@ -450,6 +456,7 @@ def readZapGroupsFile():
     linesProcessed = 0
     text = _opener.open(ZAP_GROUPS_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if len(line) > 1 and line[0] != "#":
             linesProcessed = linesProcessed + 1
             zapItems = line.split(",")
@@ -468,6 +475,7 @@ def readFoldGroupsFile():
     linesProcessed = 0
     text = _opener.open(FOLD_GROUPS_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if len(line) > 1 and line[0] != "#":
             linesProcessed = linesProcessed + 1
             foldItems = line.split(",")
@@ -486,6 +494,7 @@ def readNPCStoresFile():
     linesProcessed = 0
     text = _opener.open(NPC_STORES_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if len(line) > 0 and line[0] != "#":
             parts = line.split("\t")
             if len(parts) >= 3:
@@ -508,6 +517,7 @@ def readModifiersFile():
     linesProcessed = 0
     text = _opener.open(MODIFIERS_FILE).read()
     for line in text.splitlines():
+        line = line.decode()
         if line == "# Special case overrides":
             break
 
