@@ -6,7 +6,9 @@ from .request import (
     StatusRequest,
     CharpaneRequest,
 )
-from .Clan import Clan
+from .util.Preferences import Preferences
+
+from . import Kmail
 
 import requests
 import hashlib
@@ -17,6 +19,7 @@ class Session(object):
 
     def __init__(self):
         self.opener = requests.Session()
+        self.preferences = Preferences("anonymous_prefs.db", False, True)
         self.isConnected = False
         self.userId = None
         self.userName = None
@@ -24,8 +27,9 @@ class Session(object):
         self.serverURL = None
         self.pwd = None
         self.clan = None
+        self.kmail = Kmail.Kmail(self)
 
-    def login(self, username, password, serverNumber=0):
+    def login(self, username, password, serverNumber=0, stealth=True):
         """
         Perform a KoL login given a username and password. A server number may also be specified
         to ensure that the user logs in using that particular server. This can be helpful
@@ -36,21 +40,24 @@ class Session(object):
         self.userPasswordHash = hashlib.md5(password.encode("utf-8")).hexdigest()
         self.password = password
 
+        # Load preferences for user
+        self.preferences.load("{}_prefs.db".format(username), True)
+
         # Grab the KoL homepage.
-        homepageRequest = HomepageRequest(self, serverNumber=serverNumber)
-        homepageResponse = homepageRequest.doRequest()
+        homepageResponse = HomepageRequest(self, serverNumber=serverNumber).doRequest()
         self.serverURL = homepageResponse["serverURL"]
 
         # Perform the login.
-        loginRequest = LoginRequest(self, "")
-        loginRequest.doRequest()
+        LoginRequest(self, stealth=stealth).doRequest()
 
         # Load the charpane once to make StatusRequest report the rollover time
-        charpaneRequest = CharpaneRequest(self)
-        charpaneRequest.doRequest()
+        CharpaneRequest(self).doRequest()
 
         self.getStatus()
         self.getProfile()
+
+    def getUsername(self):
+        return self.userName
 
     def getStatus(self):
         # Get pwd, user ID, and the user's name.
@@ -63,10 +70,8 @@ class Session(object):
         self.rollover = int(response["rollover"])
 
     def getProfile(self):
-        profileResponse = UserProfileRequest(self, self.userId).doRequest()
-        self.clan = Clan(self, id=profileResponse.get("clanId"))
+        return UserProfileRequest(self, self.userId).doRequest()
 
     def logout(self):
         "Performs a logut request, closing the session."
-        logoutRequest = LogoutRequest(self)
-        logoutRequest.doRequest()
+        LogoutRequest(self).doRequest()

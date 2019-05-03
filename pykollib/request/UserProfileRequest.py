@@ -1,5 +1,6 @@
-from .GenericRequest import GenericRequest
-from pykollib.pattern import PatternManager
+from . import GenericRequest
+from ..pattern import PatternManager
+from .. import Clan
 
 
 class UserProfileRequest(GenericRequest):
@@ -9,35 +10,28 @@ class UserProfileRequest(GenericRequest):
         self.requestData["who"] = playerId
 
     def parseResponse(self):
-        usernamePattern = PatternManager.getOrCompilePattern("profileUserName")
-        match = usernamePattern.search(self.responseText)
-        self.responseData["userName"] = match.group(1)
+        usernameMatch = self.searchNamedPattern("profileUserName")
+        ascensionsMatch = self.searchNamedPattern("profileNumAscensions")
+        trophiesMatch = self.searchNamedPattern("profileNumTrophies")
+        tattoosMatch = self.searchNamedPattern("profileNumTattoos")
 
-        playerClanPattern = PatternManager.getOrCompilePattern("profileClan")
-        match = playerClanPattern.search(self.responseText)
-        if match:
-            self.responseData["clanId"] = int(match.group(1))
-            self.responseData["clanName"] = match.group(2)
+        data = {
+            "username": usernameMatch.group(1),
+            "numAscensions": int(ascensionsMatch.group(1)) if ascensionsMatch else 0,
+            "numTrophies": int(trophiesMatch.group(1)) if trophiesMatch else 0,
+            "numTattoos": int(tattoosMatch.group(1)) if tattoosMatch else 0,
+        }
 
-        numberAscensionsPattern = PatternManager.getOrCompilePattern(
-            "profileNumAscensions"
-        )
-        match = numberAscensionsPattern.search(self.responseText)
-        if match:
-            self.responseData["numAscensions"] = int(match.group(1))
-        else:
-            self.responseData["numAscensions"] = 0
+        clanMatch = self.searchNamedPattern("profileClan")
+        if clanMatch:
+            data = {
+                **data,
+                "clanId": int(clanMatch.group(1)),
+                "clanName": clanMatch.group(2),
+            }
+            self.session.clan = Clan.Clan(
+                self, id=data["clanId"], name=data["clanName"]
+            )
 
-        numberTrophiesPattern = PatternManager.getOrCompilePattern("profileNumTrophies")
-        match = numberTrophiesPattern.search(self.responseText)
-        if match:
-            self.responseData["numTrophies"] = int(match.group(1))
-        else:
-            self.responseData["numTrophies"] = 0
-
-        numberTattoosPattern = PatternManager.getOrCompilePattern("profileNumTattoos")
-        match = numberTattoosPattern.search(self.responseText)
-        if match:
-            self.responseData["numTattoos"] = int(match.group(1))
-        else:
-            self.responseData["numTattoos"] = 0
+        self.preferences.setall(data)
+        self.responseData = data

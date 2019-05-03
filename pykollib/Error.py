@@ -59,6 +59,8 @@ NOT_ENOUGH_ITEMS = __i
 __i += 1
 BANNED_FROM_CHAT = __i
 __i += 1
+CANNOT_CHANGE_CLAN = __i
+__i += 1
 ERROR = __i
 __i += 1
 
