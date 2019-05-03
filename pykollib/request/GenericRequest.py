@@ -20,6 +20,8 @@ class GenericRequest(object):
 
     def __init__(self, session):
         self.session = session
+        self.serverURL = session.serverURL
+        self.preferences = session.preferences
         self.opener = session.opener
         self.requestData = {}
         self.skipParseResponse = False

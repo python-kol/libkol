@@ -37,6 +37,9 @@ class SendMessageRequest(GenericRequest):
         trendyPattern = PatternManager.getOrCompilePattern("kmailNotSentUserTrendy")
         ignoringUserPattern = PatternManager.getOrCompilePattern("weAreIgnoringUser")
 
+        if self.searchNamedPattern("userInvalid"):
+            raise Error.Error("Invalid player ID.", Error.USER_NOT_FOUND)
+
         if hardcoreRoninPattern.search(self.responseText):
             raise Error.Error(
                 "Unable to send items or meat. User is in hardcore or ronin.",
