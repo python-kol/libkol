@@ -61,7 +61,7 @@ def parse_raid_log(name: str, id: int, raid: "BeautifulSoup") -> Dict[str, Any]:
     }
 
 
-def parse(html: str, url: "URL", **kwargs) -> Dict[str, Any]:
+async def parse(html: str, url: "URL", **kwargs) -> Dict[str, Any]:
     soup = BeautifulSoup(html, "html.parser")
 
     title = soup.find("b", text=previousRunPattern)

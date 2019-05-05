@@ -14,7 +14,7 @@ rateLimitIP = re.compile(r"Too many login failures from this IP")
 badPassword = re.compile(r"<b>Login failed\.\s+?Bad password\.<\/b>")
 
 
-def parse(html: str, session: "Session", **kwargs) -> bool:
+async def parse(html: str, session: "Session", **kwargs) -> bool:
     if mainFrameset.search(html):
         session.is_connected = True
         return True

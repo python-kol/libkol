@@ -9,9 +9,20 @@ from .request import (
 from .util.Preferences import Preferences
 from . import Kmail
 
-from typing import Callable, Dict, Any
+from typing import Callable, Dict, Any,Optional
 from urllib.parse import urlparse
 from aiohttp import ClientSession
+
+
+async def parse_method(self, encoding: Optional[str] = None, **kwargs) -> Any:
+    """This method is patched into ClientResponses"""
+    if self._body is None:
+        await self.read()
+
+    if encoding is None:
+        encoding = self.get_encoding()
+
+    return await self._kol_parse(html=self._body.decode(encoding), url=self.url, session=self._kol_session, **kwargs) # type: ignore
 
 
 class Session:
@@ -45,16 +56,9 @@ class Session:
             url = "{}/{}".format(self.server_url, url)
 
         response = await self.client.post(url, **kwargs)
-
-        def parse_method(**kwargs):
-            return response.json(
-                loads=lambda html: parse(
-                    html=html, url=response.url, session=self, **kwargs
-                ),
-                content_type=None,
-            )
-
-        response.parse = parse_method
+        response._kol_parse = parse
+        response._kol_session = self
+        response.parse = parse_method.__get__(response, response.__class__)
 
         return response
 

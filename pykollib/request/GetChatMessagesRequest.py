@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 lastSeenPattern = re.compile(r"lastseen:([0-9]+)")
 
 
-def parse(html: str, **kwargs) -> Dict[str, Any]:
+async def parse(html: str, **kwargs) -> Dict[str, Any]:
     # Get the timestamp we should send to the server next time we make a request.
     lastSeen = lastSeenPattern.search(html).group(1)
     html = html[: html.find("<!--lastseen")]

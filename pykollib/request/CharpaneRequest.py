@@ -165,7 +165,7 @@ def titleToClass(title: str) -> str:
     return None
 
 
-def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
+async def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
     data = {
         "pwd": accountPwd.search(html).group(1),
         "userName": accountName.search(html).group(1),
