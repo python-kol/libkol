@@ -8,9 +8,9 @@ from typing import Dict, Any, TYPE_CHECKING
 if TYPE_CHECKING:
     from ..Session import Session
 
-accepted = re.compile(r"clanhalltop.gif")
-alreadyMember = re.compile(r"You can't apply to a clan you're already in\.")
-leaderOfExisting = re.compile(
+acceptedPattern = re.compile(r"clanhalltop.gif")
+alreadyMemberPattern = re.compile(r"You can't apply to a clan you're already in\.")
+leaderOfExistingPattern = re.compile(
     r"You can't apply to a new clan when you're the leader of an existing clan\."
 )
 
@@ -22,20 +22,17 @@ def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
         alreadyMember: boolean
     """
 
-    if leaderOfExisting.match(html):
+    if leaderOfExistingPattern.search(html):
         raise CannotChangeClanError(
             "Cannot apply to another clan because you are the leader of {}".format(
                 session.preferences["clanName"]
             )
         )
 
-    acceptedMatch = accepted.match(html)
-    alreadyMemberMatch = alreadyMember.match(html)
+    accepted = acceptedPattern.search(html) is not None
+    alreadyMember = alreadyMemberPattern.search(html) is not None
 
-    return {
-        "success": acceptedMatch or alreadyMemberMatch,
-        "alreadyMember": alreadyMemberMatch,
-    }
+    return {"success": accepted or alreadyMember, "alreadyMember": alreadyMember}
 
 
 async def applyToClanRequest(session: "Session", target_id: int) -> ClientResponse:
@@ -48,4 +45,4 @@ async def applyToClanRequest(session: "Session", target_id: int) -> ClientRespon
         "confirm": "on",
     }
 
-    return session.post("showclan.php", data=payload, parse=parse)
+    return await session.post("showclan.php", data=payload, parse=parse)

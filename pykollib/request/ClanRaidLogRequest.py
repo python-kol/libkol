@@ -35,7 +35,7 @@ def parse_raid_log(name: str, id: int, raid: "BeautifulSoup") -> Dict[str, Any]:
 
     # We now look for subsection titles, these are zones or
     # sections like "Loot Distribution"
-    while True:
+    while section is not None:
         title = section.text
         section = section.find_next_sibling("blockquote")
 
@@ -52,8 +52,6 @@ def parse_raid_log(name: str, id: int, raid: "BeautifulSoup") -> Dict[str, Any]:
         events.append((title, logs))
 
         section = section.find_next_sibling("b")
-        if section is None:
-            break
 
     return {
         "id": id,

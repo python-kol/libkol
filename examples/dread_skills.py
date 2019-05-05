@@ -6,58 +6,76 @@ acquired from The Machine over all past and present raids
 
 import asyncio
 import re
+from tabulate import tabulate
+from itertools import groupby
+from tqdm import tqdm
 
-from pykollib.Session import Session
+from pykollib import Session, Clan
 
 kill_pattern = re.compile(r"^([^\(]+) \(#([0-9]+)\) defeated (.*) \(([0-9]+) turns?\)")
-skill_pattern = re.compile(r"^^([^\(]+) \(#([0-9]+)\)  used The Machine")
+skill_pattern = re.compile(r"^([^\(]+) \(#([0-9]+)\)  used The Machine")
 
 
-def events_for_player(raids, zones, pattern, get_turns):
-    per_player = {}
-
+def events_for_player(raids, zones, pattern, get_count):
     events = [
-        event
+        pattern.match(event)
         for raid in raids
         for zone, events in raid["events"]
         for event in events
         if zone.lower() in zones and pattern.match(event)
     ]
 
-    for event in events:
-        m = pattern.match(event)
-        player = m.group(1)
-        per_player[player] = per_player.get(player, 0) + get_turns(m)
+    events = sorted(events, key=lambda e: e.group(1))
 
-    return per_player
+    return {
+        player: sum(get_count(e) for e in events)
+        for player, events in groupby(events, key=lambda e: e.group(1))
+    }
 
 
 async def main():
     async with Session() as kol:
         await kol.login("username", "password")
 
-        tasks = [kol.clan.get_raids()]
+        clan = kol.clan
+        tasks = [asyncio.ensure_future(clan.get_raids())]
         tasks += [
-            kol.clan.get_raid_log(raid_id=raid["id"])
-            for raid in await kol.clan.get_previous_raids()
+            asyncio.ensure_future(clan.get_raid_log(raid_id=raid["id"]))
+            for raid in await clan.get_previous_raids()
         ]
 
-        current, *previous = await asyncio.gather(*tasks)
+        current, *previous = [
+            await t
+            for t in tqdm(
+                asyncio.as_completed(tasks),
+                desc="Parsing raids",
+                unit="raids",
+                total=len(tasks),
+            )
+        ]
+        raids = current + previous
 
-        raids = [raid for raid in current + previous if raid["name"] == "dreadsylvania"]
+        dreads = [raid for raid in raids if raid["name"] == "dreadsylvania"]
 
         kills = events_for_player(
-            raids,
+            dreads,
             ["the village", "the castle", "the woods"],
             kill_pattern,
             lambda m: int(m.group(4)),
         )
 
-        skills = events_for_player(raids, ["miscellaneous"], skill_pattern, lambda m: 1)
+        skills = events_for_player(
+            dreads, ["miscellaneous"], skill_pattern, lambda m: 1
+        )
 
-        for player, killcount in kills.items():
-            ranking = killcount / (skills.get(player, 0) + 0.5)
-            print("{}: {}".format(player, ranking))
+        table = [
+            {"player": player, "k/s": killcount / (skills.get(player, 0) + 0.5)}
+            for player, killcount in kills.items()
+        ]
+
+        table = sorted(table, key=lambda r: -r["k/s"])
+
+        print(tabulate(table))
 
 
 if __name__ == "__main__":

@@ -66,6 +66,6 @@ class Clan(object):
 
     async def join(self):
         s = self.session
-        async with applyToClanRequest(s, self.id) as r:
-            data = await r.parse()
-            return data["success"]
+
+        data = await (await applyToClanRequest(s, self.id)).parse()
+        return data["success"]
