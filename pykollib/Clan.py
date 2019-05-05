@@ -1,4 +1,13 @@
-from .request import ApplyToClanRequest, ClanRaidLogRequest, SearchClansRequest
+from math import ceil
+import asyncio
+
+from .request import (
+    applyToClanRequest,
+    clanRaidLogRequest,
+    searchClansRequest,
+    clanRaidsRequest,
+    clanRaidsPreviousRequest,
+)
 
 
 class Clan(object):
@@ -12,21 +21,51 @@ class Clan(object):
         self.id = id
         self.name = name
 
-        if id is None:
-            searchResponse = SearchClansRequest(
-                session, self.name, exact=True
-            ).doRequest()
-            result = searchResponse["results"]
-            if len(result) == 0:
+    async def get_id(self):
+        if self.id is None:
+            r = await searchClansRequest(self.session, self.name, exact=True)
+            data = await r.parse()
+            results = data["results"]
+            if len(results) == 0:
                 raise ValueError("Clan {} does not exist".format(self.name))
-            self.id = result[0]["id"]
+            self.id = results[0]["id"]
 
-    def join(self):
-        s = self.session
-        applyResponse = ApplyToClanRequest(s, self.id).doRequest()
-        return applyResponse["success"]
+        return self.id
 
-    def getRaidLogs(self, raidId=None):
+    async def get_raids(self):
+        r = await clanRaidsRequest(self.session)
+        return await r.parse()
+
+    async def get_raid_log(self, raid_id):
+        r = await clanRaidLogRequest(self.session, raid_id)
+        return await r.parse()
+
+    async def get_previous_raids(self, limit=None):
         s = self.session
-        raidLogResponse = ClanRaidLogRequest(s, raidId).doRequest()
-        return raidLogResponse
+
+        raids = []
+
+        if limit is None:
+            first_page = await (await clanRaidsPreviousRequest(s, page=0)).parse()
+            raids += first_page["raids"]
+            limit = first_page["total"]
+
+        tasks = []
+        for page in range(ceil(limit / 10)):
+            if page == 0 and len(raids) > 0:
+                continue
+            task = asyncio.ensure_future(clanRaidsPreviousRequest(s, page=page))
+            tasks.append(task)
+
+        r = await asyncio.gather(*tasks)
+        for page in r:
+            data = await page.parse()
+            raids += data["raids"]
+
+        return raids
+
+    async def join(self):
+        s = self.session
+        async with applyToClanRequest(s, self.id) as r:
+            data = await r.parse()
+            return data["success"]
