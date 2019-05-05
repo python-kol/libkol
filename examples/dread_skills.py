@@ -1,5 +1,7 @@
 """
 This file shows how you can use Clan methods to determine
+the ratio of monster kills in Dreadsylvania to skills
+acquired from The Machine over all past and present raids
 """
 
 import asyncio
