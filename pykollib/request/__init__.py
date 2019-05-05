@@ -51,8 +51,8 @@ from .EatFoodRequest import EatFoodRequest
 from .EquipRequest import EquipRequest
 from .GenericAdventuringRequest import GenericAdventuringRequest
 from .GenericRequest import GenericRequest
-from .GetChatMessagesRequest import GetChatMessagesRequest
-from .GetMessagesRequest import GetMessagesRequest
+from .GetChatMessagesRequest import getChatMessagesRequest
+from .GetMessagesRequest import getMessagesRequest
 from .GetPendingTradesRequest import GetPendingTradesRequest
 from .GuildTrainRequest import GuildTrainRequest
 from .HermitRequest import HermitRequest
@@ -81,7 +81,7 @@ from .MindControlRequest import MindControlRequest
 from .MrKlawRequest import MrKlawRequest
 from .NashCrosbysStillRequest import NashCrosbysStillRequest
 from .OldTimeyRadioRequest import OldTimeyRadioRequest
-from .OpenChatRequest import OpenChatRequest
+from .OpenChatRequest import openChatRequest
 from .ProposeTradeRequest import ProposeTradeRequest
 from .PulverizeRequest import PulverizeRequest
 from .QuestLogRequest import QuestLogRequest
@@ -164,8 +164,8 @@ __all__ = [
     EquipRequest,
     GenericAdventuringRequest,
     GenericRequest,
-    GetChatMessagesRequest,
-    GetMessagesRequest,
+    getChatMessagesRequest,
+    getMessagesRequest,
     GetPendingTradesRequest,
     GuildTrainRequest,
     HermitRequest,
@@ -192,7 +192,7 @@ __all__ = [
     MrKlawRequest,
     NashCrosbysStillRequest,
     OldTimeyRadioRequest,
-    OpenChatRequest,
+    openChatRequest,
     ProposeTradeRequest,
     PulverizeRequest,
     QuestLogRequest,
