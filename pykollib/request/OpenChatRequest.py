@@ -1,13 +1,18 @@
-from .GenericRequest import GenericRequest
+from aiohttp import ClientResponse
+from typing import Dict, Any, TYPE_CHECKING
+
 from pykollib.pattern import PatternManager
 
+if TYPE_CHECKING:
+    from ..Session import Session
 
-class OpenChatRequest(GenericRequest):
-    def __init__(self, session):
-        super(OpenChatRequest, self).__init__(session)
-        self.url = session.server_url + "lchat.php"
+currentChannelPattern = PatternManager.getOrCompilePattern("currentChatChannel")
 
-    def parseResponse(self):
-        currentChannelPattern = PatternManager.getOrCompilePattern("currentChatChannel")
-        match = currentChannelPattern.search(self.responseText)
-        self.responseData["currentChannel"] = match.group(1)
+
+def parse(html: str, **kwargs) -> Dict[str, Any]:
+    match = currentChannelPattern.search(html)
+    return {"current_channel": match.group(1)}
+
+
+async def openChatRequest(session: "Session") -> ClientResponse:
+    return await session.post("lchat.php", parse=parse)

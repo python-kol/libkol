@@ -62,7 +62,6 @@ patterns = {
     "notEnoughItems": r"(?:<td>You haven't got that many\.<\/td>)|(?:You don't have the item you're trying to use\.)|(?:You don't have the item you're trying to equip\.)",
     # Chat patterns.
     "currentChatChannel": r'<font color="?#?\w+"?>Currently in channel: ([^<>]+)<',
-    "chatLastSeen": r"lastseen:([0-9]+)",
     "chatChannel": r'^<font color="?#?\w+"?>\[([^<>]+)\]<\/font> ',
     "chatMessage": r'<b><a target="?mainpane"? href="showplayer\.php\?who=(-?[0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/font>(?:<\/b>|<\/a>|:)* (.*)$',
     "chatEmote": r'<b><i><a target="?mainpane"? href="showplayer\.php\?who=([0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/b><\/font><\/a> (.*)<\/i>$',

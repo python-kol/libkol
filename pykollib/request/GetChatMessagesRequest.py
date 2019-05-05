@@ -1,23 +1,25 @@
-from .GenericRequest import GenericRequest
-from pykollib.pattern import PatternManager
+from aiohttp import ClientResponse
+from typing import Dict, Any, TYPE_CHECKING
+import re
 from pykollib.util import ChatUtils
-from pykollib.util import Report
-from pykollib.util import StringUtils
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
-class GetChatMessagesRequest(GenericRequest):
-    def __init__(self, session, lastTime=0):
-        super(GetChatMessagesRequest, self).__init__(session)
-        self.url = session.server_url + "newchatmessages.php?lasttime=%s" % lastTime
+lastSeenPattern = re.compile(r"lastseen:([0-9]+)")
 
-    def parseResponse(self):
-        # Get the timestamp we should send to the server next time we make a request.
-        lastSeenPattern = PatternManager.getOrCompilePattern("chatLastSeen")
-        match = lastSeenPattern.search(self.responseText)
-        self.responseData["lastSeen"] = match.group(1)
 
-        # Parse the chat messages.
-        text = self.responseText[: self.responseText.find("<!--lastseen")]
-        self.responseData["chatMessages"] = ChatUtils.parseIncomingChatMessage(
-            self.responseText
-        )
+def parse(html: str, **kwargs) -> Dict[str, Any]:
+    # Get the timestamp we should send to the server next time we make a request.
+    lastSeen = lastSeenPattern.search(html).group(1)
+    html = html[: html.find("<!--lastseen")]
+    return {
+        "lastSeen": lastSeen,
+        "chatMessages": ChatUtils.parseIncomingChatMessage(html),
+    }
+
+
+async def getChatMessagesRequest(session: "Session", since: int = 0) -> ClientResponse:
+    params = {"lasttime": since}
+    return await session.post("newchatmessages.php", params=params, parse=parse)

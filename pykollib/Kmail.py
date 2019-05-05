@@ -1,4 +1,4 @@
-from .request import SendMessageRequest
+from .request import SendMessageRequest, getMessagesRequest
 
 
 class Kmail(object):
@@ -6,6 +6,10 @@ class Kmail(object):
 
     def __init__(self, session):
         self.session = session
+
+    async def get(self):
+        s = self.session
+        return await (await getMessagesRequest(s)).parse()
 
     def send(self, recipient, message=""):
         msg = {"userId": recipient, "text": message}
