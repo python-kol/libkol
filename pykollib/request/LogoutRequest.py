@@ -1,10 +1,12 @@
-from .GenericRequest import GenericRequest
+from aiohttp import ClientResponse
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
-class LogoutRequest(GenericRequest):
-    def __init__(self, session):
-        super(LogoutRequest, self).__init__(session)
-        self.url = session.serverURL + "logout.php"
-
-    def parseResponse(self):
-        self.session.isConnected = False
+async def logoutRequest(session: "Session") -> ClientResponse:
+    response = await session.post("logout.php")
+    session.is_connected = False
+    return response

@@ -1,30 +1,27 @@
-import pykollib.Error as Error
-from .GenericRequest import GenericRequest
-from pykollib.pattern import PatternManager
+from urllib.parse import urlparse
+from aiohttp import ClientResponse
+
+from ..Error import LoginFailedGenericError
+
+from typing import Dict, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
-class HomepageRequest(GenericRequest):
+def parse(url: str, **kwargs) -> Dict[str, Any]:
+    return {"server_url": str(url.origin())}
+
+
+async def homepageRequest(session: "Session", server_number: int = 0) -> ClientResponse:
     """
     This request is most often used before logging in. It allows the KoL servers to assign a
     particular server number to the user. In addition, it gives us the user's login challenge
     so that we might login to the server in a more secure fashion.
     """
+    if server_number > 0:
+        url = "https://www{}.kingdomofloathing.com/main.php".format(server_number)
+    else:
+        url = "https://www.kingdomofloathing.com/"
 
-    def __init__(self, session, serverNumber=0):
-        super(HomepageRequest, self).__init__(session)
-        if serverNumber > 0:
-            self.url = "https://www%s.kingdomofloathing.com/main.php" % serverNumber
-        else:
-            self.url = "https://www.kingdomofloathing.com/"
-
-    def parseResponse(self):
-        # Get the URL of the server that we were told to use.
-        loginUrlPattern = PatternManager.getOrCompilePattern("loginURL")
-        serverMatch = loginUrlPattern.match(self.response.url)
-        if serverMatch:
-            self.responseData["serverURL"] = serverMatch.group(1)
-        else:
-            raise Error.Error(
-                "Unable to determine server URL from: " + self.response.url,
-                Error.LOGIN_FAILED_GENERIC,
-            )
+    return await session.post(url, parse=parse)

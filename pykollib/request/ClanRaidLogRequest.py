@@ -1,117 +1,84 @@
-from .GenericRequest import GenericRequest
-from pykollib.pattern import PatternManager
+from aiohttp import ClientResponse
+from yarl import URL
+from bs4 import BeautifulSoup
+from typing import Dict, Any, TYPE_CHECKING
+import re
+import itertools
 
-from datetime import datetime
+if TYPE_CHECKING:
+    from ..Session import Session
+
+previousRunPattern = re.compile(r"^(.+?) run, ([A-Za-z]+) ([0-9]{2}), ([0-9]{4})$")
 
 
-class ClanRaidLogRequest(GenericRequest):
+def center_with_no_link(tag):
+    return tag.name == "center" and tag.a is None
+
+
+def parse_raid_log(name: str, id: int, raid: "BeautifulSoup") -> Dict[str, Any]:
     """
-    This class retrieves a list of old raid logs that the clan has completed. In addition, it also
-    returns information about any given raid instance.
+    Parse a single raid's HTML tree
     """
+    # They throw random <p>s everywhere, so get rid of them
+    for p in raid.find_all("p", recursive=True):
+        p.unwrap()
 
-    def __init__(self, session, raidId=None):
-        super(ClanRaidLogRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_raidlogs.php"
-        self.raidId = raidId
-        if raidId:
-            self.url += "?viewlog=%s" % raidId
+    summary = raid.find_all(center_with_no_link)
 
-    def parseResponse(self):
-        # If this is a request for a particular raid log, only retrieve information about it.
-        txt = self.responseText
-        if self.raidId:
-            index = txt.find("<b>Current Clan Dungeons:</b>")
-            if index > 0:
-                txt = txt[:index]
+    events = []
 
-        # Get a list of actions that occurred in Hobopolis.
-        status = {}
-        actions = []
-        dungeonLogTypePattern = PatternManager.getOrCompilePattern("dungeonLogType")
-        dungeonLogStatusPattern = PatternManager.getOrCompilePattern("dungeonLogStatus")
-        dungeonLogCategoryPattern = PatternManager.getOrCompilePattern(
-            "dungeonLogCategory"
-        )
-        dungeonActivityPattern = PatternManager.getOrCompilePattern("dungeonActivity")
-        for typeMatch in dungeonLogTypePattern.finditer(txt):
-            dungeon = typeMatch.group(1)
-            raidId = int(typeMatch.group(2))
-            typeText = typeMatch.group(3)
+    # In the old days there were no summaries
+    if len(summary) == 0:
+        section = raid.find("b")
+    else:
+        section = summary[-1].find_next_sibling("b")
 
-            status[dungeon] = {"raidId": raidId}
-            for statusMatch in dungeonLogStatusPattern.finditer(typeText):
-                keyText = statusMatch.group(3)
+    # We now look for subsection titles, these are zones or
+    # sections like "Loot Distribution"
+    while True:
+        title = section.text
+        section = section.find_next_sibling("blockquote")
 
-                if keyText.startswith("kisses"):
-                    key = "kisses"
-                elif keyText.startswith("turns"):
-                    key = "turns"
-                else:
-                    key = keyText.split(" ")[-1].lower()
+        # This just traverses the list of HTML elements,
+        # breaking it up by <br /> tag
+        logs = [
+            "".join([e.text if e.name else e for e in g])
+            for k, g in itertools.groupby(
+                section.children, key=lambda e: e.name != "br"
+            )
+            if k
+        ]
 
-                status[dungeon][key] = int(statusMatch.group(2))
+        events.append((title, logs))
 
-            for categoryMatch in dungeonLogCategoryPattern.finditer(typeText):
-                category = categoryMatch.group(1)
+        section = section.find_next_sibling("b")
+        if section is None:
+            break
 
-                for match in dungeonActivityPattern.finditer(categoryMatch.group(2)):
-                    turns = match.group(4) or "0"
-                    action = {
-                        "dungeon": dungeon,
-                        "raidId": raidId,
-                        "category": category,
-                        "userName": match.group(1),
-                        "userId": int(match.group(2)),
-                        "event": match.group(3).strip(),
-                        "turns": int(turns.replace(",", "")),
-                    }
-                    actions.append(action)
-        self.responseData["status"] = status
-        self.responseData["events"] = actions
+    return {
+        "id": id,
+        "name": name.lower(),
+        "summary": [s.text for s in summary],
+        "events": events,
+    }
 
-        # Retrieve a list of loot that has been distributed.
-        lootDistributed = []
-        dungeonLootDistributionPattern = PatternManager.getOrCompilePattern(
-            "dungeonLootDistribution"
-        )
-        for match in dungeonLootDistributionPattern.finditer(txt):
-            m = {}
-            m["distributorName"] = match.group(1)
-            m["distributorId"] = int(match.group(2))
-            m["itemName"] = match.group(3)
-            m["receiverName"] = match.group(4)
-            m["receiverId"] = match.group(5)
-            lootDistributed.append(m)
-        self.responseData["lootDistributed"] = lootDistributed
 
-        # Retrieve a list of previous, completed runs.
-        previousRuns = []
-        dungeonPreviousRunPattern = PatternManager.getOrCompilePattern(
-            "dungeonPreviousRun"
-        )
-        for match in dungeonPreviousRunPattern.finditer(self.responseText):
-            run = {}
+def parse(html: str, url: "URL", **kwargs) -> Dict[str, Any]:
+    soup = BeautifulSoup(html, "html.parser")
 
-            # Parse the start date.
-            dateStr = match.group(1)
-            try:
-                date = datetime.strptime(dateStr, "%B %d, %Y")
-            except ValueError:
-                date = dateStr
-            run["startDate"] = date
+    title = soup.find("b", text=previousRunPattern)
+    name = previousRunPattern.match(title.text).group(1)
+    id = int(url.query["viewlog"])
+    first = title.parent
+    raid = first.parent
+    first.decompose()
+    return parse_raid_log(name, id, raid)
 
-            # Parse the end date.
-            dateStr = match.group(2)
-            try:
-                date = datetime.strptime(dateStr, "%B %d, %Y")
-            except ValueError:
-                date = dateStr
-            run["endDate"] = date
 
-            # Get the remaining information.
-            run["dungeonName"] = match.group(3)
-            run["turns"] = int(match.group(4).replace(",", ""))
-            run["id"] = int(match.group(5).replace(",", ""))
-            previousRuns.append(run)
-        self.responseData["previousRuns"] = previousRuns
+async def clanRaidLogRequest(session: "Session", raid_id: int) -> ClientResponse:
+    """
+    Retrieves on a previous raid.
+    """
+    params = {"viewlog": raid_id}
+
+    return await session.post("clan_viewraidlog.php", params=params, parse=parse)

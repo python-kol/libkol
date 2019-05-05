@@ -1,38 +1,38 @@
-from .GenericRequest import GenericRequest
+import re
+from aiohttp import ClientResponse
+
+from typing import List, Dict, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..Session import Session
+
+clanSearchResult = re.compile(
+    r"<b><a href=\"showclan\.php\?recruiter=1&whichclan=([0-9]+)\">([^<>]*)</a></b>"
+)
 
 
-class SearchClansRequest(GenericRequest):
-    def __init__(self, session, query, exact=False, nameonly=True):
-        super(SearchClansRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_signup.php"
+def parse(html: str) -> List[Dict[str, Any]]:
+    return [
+        {"id": int(m.group(1)), "name": m.group(2)}
+        for m in clanSearchResult.finditer(html)
+    ]
 
-        self.query = query
-        self.exact = exact
 
-        self.requestData = {
-            "action": "search",
-            "searchstring": query,
-            "whichfield": 1 if nameonly else 0,
-            "countoper": 0,
-            "countqty": 0,
-            "furn1": 0,
-            "furn2": 0,
-            "furn3": 0,
-            "furn4": 0,
-            "furn5": 0,
-            "furn9": 0,
-        }
+def searchClansRequest(
+    session: "Session", query: str, nameonly: bool = True
+) -> ClientResponse:
+    payload = {
+        "action": "search",
+        "searchstring": query,
+        "whichfield": 1 if nameonly else 0,
+        "countoper": 0,
+        "countqty": 0,
+        "furn1": 0,
+        "furn2": 0,
+        "furn3": 0,
+        "furn4": 0,
+        "furn5": 0,
+        "furn9": 0,
+    }
 
-    def parseResponse(self):
-        results = []
-        resultPattern = self.getPattern("clanSearchResult")
-
-        for resultMatch in resultPattern.finditer(self.responseText):
-            result = {"id": int(resultMatch.group(1)), "name": resultMatch.group(2)}
-            results.append(result)
-            if self.exact:
-                if result["name"].lower() != self.query.lower():
-                    results = []
-                break
-
-        self.responseData = {"results": results}
+    session.post("clan_signup.php", data=payload)
