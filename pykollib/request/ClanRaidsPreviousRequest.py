@@ -12,7 +12,7 @@ pageSummary = re.compile(r"Showing [0-9]+-[0-9]+ of ([0-9]+)")
 notFound = re.compile(r"\(No previous Clan Dungeon records found\)")
 
 
-def parse(html: str, **kwargs) -> Dict[str, Any]:
+async def parse(html: str, **kwargs) -> Dict[str, Any]:
     if notFound.search(html):
         raise ClanRaidsNotFoundError("Page of old clan raids not found")
 
