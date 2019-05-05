@@ -6,7 +6,7 @@ class AddItemsToClanStashRequest(GenericRequest):
 
     def __init__(self, session, items):
         super(AddItemsToClanStashRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_stash.php"
+        self.url = session.server_url + "clan_stash.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "addgoodies"
 

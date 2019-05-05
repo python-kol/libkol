@@ -5,7 +5,7 @@ from .GenericRequest import GenericRequest
 class MindControlRequest(GenericRequest):
     def __init__(self, session, level):
         super(MindControlRequest, self).__init__(session)
-        self.url = session.serverURL + "canadia.php"
+        self.url = session.server_url + "canadia.php"
         self.requestData["action"] = "changedial"
         self.requestData["whichlevel"] = level
 

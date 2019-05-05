@@ -32,7 +32,7 @@ class GetMessagesRequest(GenericRequest):
         """
 
         super(GetMessagesRequest, self).__init__(session)
-        self.url = session.serverURL + "messages.php?box=%s" % box
+        self.url = session.server_url + "messages.php?box=%s" % box
 
         if pageNumber and pageNumber > 1:
             self.url += "&begin=%s" % pageNumber

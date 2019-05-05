@@ -7,7 +7,7 @@ import json
 class ApiRequest(GenericRequest):
     def __init__(self, session):
         super(ApiRequest, self).__init__(session)
-        self.url = session.serverURL + "api.php"
+        self.url = session.server_url + "api.php"
 
         # Create a user agent string.
         userAgent = session.preferences.get("userAgent")

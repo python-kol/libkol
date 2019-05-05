@@ -7,7 +7,7 @@ class ClanWhitelistRequest(GenericRequest):
 
     def __init__(self, session):
         super(ClanWhitelistRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_whitelist.php"
+        self.url = session.server_url + "clan_whitelist.php"
 
     def parseResponse(self):
         # Get the set of clan ranks.

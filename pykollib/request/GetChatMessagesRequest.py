@@ -8,7 +8,7 @@ from pykollib.util import StringUtils
 class GetChatMessagesRequest(GenericRequest):
     def __init__(self, session, lastTime=0):
         super(GetChatMessagesRequest, self).__init__(session)
-        self.url = session.serverURL + "newchatmessages.php?lasttime=%s" % lastTime
+        self.url = session.server_url + "newchatmessages.php?lasttime=%s" % lastTime
 
     def parseResponse(self):
         # Get the timestamp we should send to the server next time we make a request.

@@ -30,7 +30,7 @@ class BountyHunterRequest(GenericRequest):
         """
         super(BountyHunterRequest, self).__init__(session)
         self.session = session
-        self.url = session.serverURL + "bounty.php"
+        self.url = session.server_url + "bounty.php"
 
         self.requestData["pwd"] = session.pwd
 

@@ -6,5 +6,5 @@ class AdventureRequest(GenericAdventuringRequest):
 
     def __init__(self, session, locationId):
         super(AdventureRequest, self).__init__(session)
-        self.url = session.serverURL + "adventure.php"
+        self.url = session.server_url + "adventure.php"
         self.requestData["snarfblat"] = locationId

@@ -7,7 +7,7 @@ class ItemDescriptionRequest(GenericRequest):
 
     def __init__(self, session, descId):
         super(ItemDescriptionRequest, self).__init__(session)
-        self.url = session.serverURL + "desc_item.php?whichitem=%s" % descId
+        self.url = session.server_url + "desc_item.php?whichitem=%s" % descId
 
     def parseResponse(self):
         # Get the item name.

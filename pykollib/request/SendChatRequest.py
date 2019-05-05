@@ -10,8 +10,8 @@ class SendChatRequest(GenericRequest):
     def __init__(self, session, text):
         super(SendChatRequest, self).__init__(session)
         self.text = text.strip()
-        self.url = session.serverURL + "submitnewchat.php?playerid=%s&pwd=%s" % (
-            session.userId,
+        self.url = session.server_url + "submitnewchat.php?playerid=%s&pwd=%s" % (
+            session.user_id,
             session.pwd,
         )
         self.url += "&%s" % urllib.parse.urlencode(

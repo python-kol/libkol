@@ -6,7 +6,7 @@ class ChoiceRequest(GenericAdventuringRequest):
 
     def __init__(self, session, choiceId, choiceNumber):
         super(ChoiceRequest, self).__init__(session)
-        self.url = session.serverURL + "choice.php"
+        self.url = session.server_url + "choice.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["whichchoice"] = choiceId
         self.requestData["option"] = choiceNumber

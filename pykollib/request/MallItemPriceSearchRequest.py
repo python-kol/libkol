@@ -20,7 +20,7 @@ class SearchMallPriceRequest(GenericRequest):
     def __init__(self, session, itemId):
 
         super(SearchMallPriceRequest, self).__init__(session)
-        self.url = session.serverURL + "backoffice.php"
+        self.url = session.server_url + "backoffice.php"
         self.requestData["action"] = "prices"
         self.requestData["pwd"] = session.pwd
         self.requestData["iid"] = itemId

@@ -11,7 +11,7 @@ class CancelTradeRequest(GenericRequest):
 
     def __init__(self, session, tradeid, tradetype):
         super(CancelTradeRequest, self).__init__(session)
-        self.url = session.serverURL + "makeoffer.php"
+        self.url = session.server_url + "makeoffer.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "cancel2" if tradetype == 4 else "cancel1"
         self.requestData["whichoffer"] = tradeid

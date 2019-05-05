@@ -11,7 +11,7 @@ class EquipRequest(GenericRequest):
     def __init__(self, session, itemId, slot=0):
         super(EquipRequest, self).__init__(session)
         self.url = (
-            session.serverURL
+            session.server_url
             + "inv_equip.php?pwd="
             + str(session.pwd)
             + "&which=2&action=equip&whichitem="

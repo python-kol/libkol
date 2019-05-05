@@ -11,7 +11,7 @@ OUTGOING_RESPONSE = 4
 class GetPendingTradesRequest(GenericRequest):
     def __init__(self, session):
         super(GetPendingTradesRequest, self).__init__(session)
-        self.url = session.serverURL + "makeoffer.php"
+        self.url = session.server_url + "makeoffer.php"
 
     def parseResponse(self):
         """

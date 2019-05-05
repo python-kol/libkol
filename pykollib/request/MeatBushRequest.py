@@ -7,7 +7,7 @@ class MeatBushRequest(GenericRequest):
 
     def __init__(self, session):
         super(MeatBushRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_rumpus.php?action=click&spot=4&furni=2"
+        self.url = session.server_url + "clan_rumpus.php?action=click&spot=4&furni=2"
 
     def parseResponse(self):
         self.responseData["meat"] = ParseResponseUtils.parseMeatGainedLost(

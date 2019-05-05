@@ -6,7 +6,7 @@ class AddItemsToDisplayCaseRequest(GenericRequest):
 
     def __init__(self, session, items):
         super(AddItemsToDisplayCaseRequest, self).__init__(session)
-        self.url = session.serverURL + "managecollection.php"
+        self.url = session.server_url + "managecollection.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "put"
 

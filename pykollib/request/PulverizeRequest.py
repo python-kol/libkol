@@ -7,7 +7,7 @@ from pykollib.pattern import PatternManager
 class PulverizeRequest(GenericRequest):
     def __init__(self, session, itemId, itemQuantity=1):
         super(PulverizeRequest, self).__init__(session)
-        self.url = session.serverURL + "craft.php"
+        self.url = session.server_url + "craft.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "pulverize"
         self.requestData["mode"] = "smith"

@@ -9,7 +9,7 @@ class CampgroundKitchenRequest(GenericRequest):
 
     def __init__(self, session):
         super(CampgroundKitchenRequest, self).__init__(session)
-        self.url = session.serverURL + "campground.php"
+        self.url = session.server_url + "campground.php"
         self.requestData["action"] = "inspectkitchen"
         self.requestData["pwd"] = session.pwd
 

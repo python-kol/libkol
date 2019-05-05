@@ -7,7 +7,7 @@ class LoadClanAdminRequest(GenericRequest):
 
     def __init__(self, session):
         super(LoadClanAdminRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_admin.php"
+        self.url = session.server_url + "clan_admin.php"
 
     def parseResponse(self):
         # Get the clan name.

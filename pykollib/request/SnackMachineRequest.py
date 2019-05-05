@@ -12,7 +12,7 @@ class SnackMachineRequest(GenericRequest):
 
     def __init__(self, session):
         super(SnackMachineRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_rumpus.php?action=click&spot=9&furni=2"
+        self.url = session.server_url + "clan_rumpus.php?action=click&spot=9&furni=2"
 
     def parseResponse(self):
         items = ParseResponseUtils.parseItemsReceived(self.responseText, self.session)

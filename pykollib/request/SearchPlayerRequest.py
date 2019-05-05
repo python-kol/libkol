@@ -18,7 +18,7 @@ class SearchPlayerRequest(GenericRequest):
         searchRanking=None,
     ):
         super(SearchPlayerRequest, self).__init__(session)
-        self.url = session.serverURL + "searchplayer.php"
+        self.url = session.server_url + "searchplayer.php"
         self.requestData["searchstring"] = queryString
         self.requestData["startswith"] = queryType
         self.requestData["searching"] = "Yep"

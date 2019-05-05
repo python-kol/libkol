@@ -12,10 +12,10 @@ class QuestLogRequest(GenericRequest):
         super(QuestLogRequest, self).__init__(session)
 
         # current quests
-        # self.url = session.serverURL + "questlog.php?which=1"
+        # self.url = session.server_url + "questlog.php?which=1"
 
         # completed quests
-        self.url = session.serverURL + "questlog.php?which=" + str(page)
+        self.url = session.server_url + "questlog.php?which=" + str(page)
 
     def parseResponse(self):
 

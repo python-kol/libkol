@@ -6,4 +6,4 @@ class ToggleAcceptingClanApplicationsRequest(GenericRequest):
 
     def __init__(self, session):
         super(ToggleAcceptingClanApplicationsRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_admin.php?action=noapp"
+        self.url = session.server_url + "clan_admin.php?action=noapp"

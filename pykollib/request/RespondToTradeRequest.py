@@ -7,7 +7,7 @@ from pykollib.util import Report
 class RespondToTradeRequest(GenericRequest):
     def __init__(self, session, tradeid, items=None, meat=0, message=""):
         super(RespondToTradeRequest, self).__super__(session)
-        self.url = session.serverURL + "makeoffer.php"
+        self.url = session.server_url + "makeoffer.php"
         self.requestData["action"] = "counter"
         self.requestData["pwd"] = session.pwd
         self.requestData["whichoffer"] = tradeid

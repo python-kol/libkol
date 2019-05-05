@@ -7,7 +7,7 @@ class ArcaneTomesRequest(GenericRequest):
 
     def __init__(self, session, numTurns):
         super(ArcaneTomesRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_rumpus.php"
+        self.url = session.server_url + "clan_rumpus.php"
         self.requestData["preaction"] = "gym"
         self.requestData["whichgym"] = "1"
         self.requestData["numturns"] = numTurns

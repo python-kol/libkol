@@ -15,7 +15,7 @@ class UpdateItemInStoreRequest(GenericRequest):
 
     def __init__(self, session, items):
         super(UpdateItemInStoreRequest, self).__init__(session)
-        self.url = session.serverURL + "backoffice.php"
+        self.url = session.server_url + "backoffice.php"
         self.requestData["action"] = "updateinv"
         self.requestData["pwd"] = session.pwd
         self.requestData["ajax"] = 1

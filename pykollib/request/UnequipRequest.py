@@ -24,14 +24,14 @@ class UnequipRequest(GenericRequest):
 
         if slot == self.ALL:
             self.url = (
-                session.serverURL
+                session.server_url
                 + "inv_equip.php?pwd="
                 + str(session.pwd)
                 + "&action=unequipall"
             )
         else:
             self.url = (
-                session.serverURL
+                session.server_url
                 + "inv_equip.php?pwd="
                 + str(session.pwd)
                 + "&action=unequip&type="

@@ -5,7 +5,7 @@ class DiscardItemRequest(GenericRequest):
     def __init__(self, session, itemId):
         super(DiscardItemRequest, self).__init__(session)
         self.url = (
-            session.serverURL
+            session.server_url
             + "inventory.php?pwd="
             + session.pwd
             + "&action=discard&whichitem="

@@ -50,7 +50,7 @@ class RumpusRoomRequest(GenericRequest):
 
     def __init__(self, session):
         super(RumpusRoomRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_rumpus.php"
+        self.url = session.server_url + "clan_rumpus.php"
 
     def parseResponse(self):
         furnPresent = []

@@ -6,7 +6,7 @@ from pykollib.pattern import PatternManager
 class CursePlayerRequest(GenericRequest):
     def __init__(self, session, targetPlayerNameOrId, itemId):
         super(CursePlayerRequest, self).__init__(session)
-        self.url = session.serverURL + "curse.php"
+        self.url = session.server_url + "curse.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "use"
         self.requestData["whichitem"] = itemId

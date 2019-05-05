@@ -16,7 +16,7 @@ class TakeItemFromStoreRequest(GenericRequest):
 
     def __init__(self, session, item):
         super(TakeItemFromStoreRequest, self).__init__(session)
-        self.url = session.serverURL + "backoffice.php"
+        self.url = session.server_url + "backoffice.php"
         self.requestData["action"] = "removeitem"
         self.requestData["pwd"] = session.pwd
 

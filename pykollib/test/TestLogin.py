@@ -8,5 +8,5 @@ class Main(unittest.TestCase):
     def runTest(self):
         s = Session()
         s.login(TestData.data["userName"], TestData.data["password"])
-        self.assertTrue(s.isConnected == True)
+        self.assertTrue(s.is_connected == True)
         TestData.data["session"] = s

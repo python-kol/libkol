@@ -10,7 +10,7 @@ class StoreInventoryRequest(GenericRequest):
 
     def __init__(self, session):
         super(StoreInventoryRequest, self).__init__(session)
-        self.url = session.serverURL + "backoffice.php?which=1"
+        self.url = session.server_url + "backoffice.php?which=1"
 
     def parseResponse(self):
         """

@@ -10,7 +10,7 @@ class MakePasteRequest(GenericRequest):
 
     def __init__(self, session, itemId, quantity=1):
         super(MakePasteRequest, self).__init__(session)
-        self.url = session.serverURL + "craft.php"
+        self.url = session.server_url + "craft.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "makepaste"
         self.requestData["qty"] = quantity
