@@ -18,15 +18,7 @@ patterns = {
     "accountPwd": r'var pwdhash = "([0-9a-f]+)";',
     "accountId": r"var playerid = ([0-9]+);",
     "accountName": r'<a [^<>]*href="charsheet\.php">(?:<b>)?([^<>]+)<',
-    "badPassword": r"<b>Login failed\.\s+?Bad password\.<\/b>",
     "loginChallenge": r'name="?challenge"?\s+value="?([0-9a-f]+)"?',
-    "loginURL": r"^(.*)login\.php\?loginid=([0-9a-f]+)",
-    "mainFrameset": r'<frameset id="?rootset"?',
-    "tooManyLoginsFailuresFromThisIP": r"Too many login failures from this IP",
-    "waitOneMinuteLoginError": r"Please wait a minute",
-    "waitTwoMinutesLoginError": r"you'll need to wait a couple of minutes before you can log in again\.",
-    "waitFiveMinutesLoginError": r"Please wait five minutes and try again\.",
-    "waitFifteenMinutesLoginError": r"Please wait fifteen minutes and try again\.",
     # Item-related patterns.
     "menuItem": r'<input type=radio name=whichitem value="?(-?[0-9]+)"?></td><td><img .*? onclick=\'descitem\("?([^"]+)"?\);\'>',
     "acquireSingleItem": r'<td[^>]*><img src="[^"]*" alt="[^"]*" title="[^"]*"[^>]*descitem\(([0-9]+)\)[^>]*><\/td><td[^>]*>You acquire an item',
@@ -122,20 +114,6 @@ patterns = {
     "campgroundHasKit": r"You've got a Queue Du Coq cocktailcrafting kit in your kitchen.",
     "campgroundHasBartender": r"You've got a (clockwork )?Bartender-in-the-box. He'll help you mix up fancy cocktails, and make it so cocktailcrafting doesn't cost an Adventure!",
     "campgroundHasMat": r"Your kitchen is equipped with a sushi-rolling mat.",
-    # Character Pane patterns.
-    "characterLevel": r"<br>Level ([0-9]+)<br>(.*?)<table",
-    "characterMuscle": r"Muscle:</td><td align=left><b>(?:<font color=blue>([0-9]+)</font>)?(?:&nbsp;)?\(?([0-9]+)\)?</b>",
-    "characterMoxie": r"Moxie:</td><td align=left><b>(?:<font color=blue>([0-9]+)</font>)?(?:&nbsp;)?\(?([0-9]+)\)?</b>",
-    "characterMysticality": r"Mysticality:</td><td align=left><b>(?:<font color=blue>([0-9]+)</font>)?(?:&nbsp;)?\(?([0-9]+)\)?</b>",
-    "characterHP": r'onclick=\'doc\("hp"\);\'[^<>]*><br><span class=[^>]+>([0-9]+)&nbsp;/&nbsp;([0-9]+)</span>',
-    "characterMP": r'onclick=\'doc\("mp"\);\'[^<>]*><br><span class=[^>]+>([0-9]+)&nbsp;/&nbsp;([0-9]+)</span>',
-    "characterMeat": r'onclick=\'doc\("meat"\);\'[^<>]*><br><span class=black>([0-9,]+)</span>',
-    "characterAdventures": r'onclick=\'doc\("adventures"\);\'[^<>]*><br><span class=black>([0-9]+)</span>',
-    "currentFamiliar": r'href="familiar.php">(?:<b>)?<font size=[0-9]+>(.*?)</a>(?:</b>)?, the  ([0-9]+)-pound (.*?)</font></td></tr></table>',
-    "characterEffect": r'eff\("[a-fA-F0-9]+"\);\'.*?></td><td valign=center><font size=[0-9]+>(.*?) ?\(([0-9]+)\)</font><br></td>',
-    "characterRonin": r">Ronin</a>: <b>([0-9]+)</b>",
-    "characterMindControl": r">Mind Control</a>: <b>([0-9]{1,2})</b>",
-    "characterDrunk": r">(?:Inebriety|Temulency|Tipsiness|Drunkenness):</td><td><b>([0-9]{1,2})</b>",
     # Stat, Substat, Leveling, HP, and MP patterns. Will fail in Haiku Dungeon.
     "muscleGainLoss": r"You (gain|lose) ([0-9,]+) (?:Beefiness|Fortitude|Muscleboundness|Strengthliness|Strongness)",
     "mysticalityGainLoss": r"You (gain|lose) ([0-9,]+) (?:Enchantedness|Magicalness|Mysteriousness|Wizardliness)",
@@ -225,12 +203,6 @@ patterns = {
     "fullAscension": r'</tr><td[^>]*>([0-9]+).*?</td><td[^>]*>([0-9/]+).*?</td><td[^>]*><span[^>]*>([0-9,]+).*?</span>.*?</td><td[^>]*><img [^>]*title="(.*?)"[^>]*></td><td[^>]*>(.*?)</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(?:<img [^>]*title="(.*?)"[^>]*>)?</td><td[^>]*>(<img [^>]*title="(.*?)"[^>]*>|<img src="http://images\.kingdomofloathing\.com/otherimages/spacer.gif" width=30 height=30>)(<img [^>]*title="(.*?)"[^>]*>|</td>)',
     "familiarAscension": r"^(.*?) \(([0-9.]+)%\)",
     "playerName": r"Ascension History \(<a[^>]*><font[^>]*>(.*?)<\/font><\/a>\)",
-    # User Profile patterns.
-    "profileUserName": r'<td valign="?center"?>(?:<center>)?<b>([^<>]+)<\/b> \(#[0-9]+\)<br>',
-    "profileClan": r'Clan: <b><a class=nounder href="showclan\.php\?whichclan=([0-9]+)">(.*?)<\/a>',
-    "profileNumAscensions": r"Ascensions<\/a>:<\/b><\/td><td>([0-9,]+)<\/td>",
-    "profileNumTrophies": r"Trophies Collected:<\/b><\/td><td>([0-9,]+)<\/td>",
-    "profileNumTattoos": r"Tattoos Collected:<\/b><\/td><td>([0-9,]+)<\/td>",
     # Quest Log patterns.
     "questsCompleted": r"<b>([\w\s,\.\'\?!]+)<\/b>(?!<\/td>)<br>([\w\s,\.\'\?!]+)<p>",
     # Clan patterns.
@@ -252,10 +224,6 @@ patterns = {
     "clanLogMeatSpentArmy": r"spent (?P<meat>[0-9,]+) Meat on the clan army\.$",
     "clanLogChangedRank": r"changed Rank for <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a>\.$",
     "clanLogChangedTitle": r"changed title for <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a>\. \((?P<clanTitle>.*)\)$",
-    "clanApplicationAccepted": r"clanhalltop.gif",
-    "clanApplicationAlreadyMember": r"You can't apply to a clan you're already in\.",
-    "clanApplicationLeaderExisting": r"You can't apply to a new clan when you're the leader of an existing clan\.",
-    "clanSearchResult": r'<b><a href="showclan\.php\?recruiter=1&whichclan=([0-9]+)">([^<>]*)</a></b>',
     # Search player Patterns
     "searchPlayers": r'showplayer\.php\?who=([0-9]+)">([^<]*)<\/a>',
     # Traveling Trader Patterns

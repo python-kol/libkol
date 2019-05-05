@@ -1,12 +1,12 @@
-from .ApiRequest import ApiRequest
+from aiohttp import ClientResponse
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
-class StatusRequest(ApiRequest):
-    def __init__(self, session):
-        super(StatusRequest, self).__init__(session)
-        self.url = session.serverURL + "api.php"
-        self.requestData["what"] = "status"
+async def statusRequest(session: "Session") -> ClientResponse:
+    payload = {"for": session.preferences["userAgent"], "what": "status"}
 
-    def parseResponse(self):
-        super(StatusRequest, self).parseResponse()
-        self.responseData = self.jsonData
+    return await session.post("api.php", data=payload)

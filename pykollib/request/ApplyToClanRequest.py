@@ -1,40 +1,51 @@
-from .GenericRequest import GenericRequest
-import pykollib.Error as Error
+import re
+from aiohttp import ClientResponse
+
+from ..Error import CannotChangeClanError
+
+from typing import Dict, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..Session import Session
+
+accepted = re.compile(r"clanhalltop.gif")
+alreadyMember = re.compile(r"You can't apply to a clan you're already in\.")
+leaderOfExisting = re.compile(
+    r"You can't apply to a new clan when you're the leader of an existing clan\."
+)
 
 
-class ApplyToClanRequest(GenericRequest):
-    def __init__(self, session, target_id):
-        super(ApplyToClanRequest, self).__init__(session)
-        self.url = session.serverURL + "showclan.php"
+def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
+    """
+    Returns a dict with the following possible elements:
+        success: boolean
+        alreadyMember: boolean
+    """
 
-        self.requestData = {
-            "recruiter": 1,
-            "pwd": session.pwd,
-            "whichclan": target_id,
-            "action": "joinclan",
-            "apply": "Apply+to+this+Clan",
-            "confirm": "on",
-        }
-
-    def parseResponse(self):
-        """
-        Returns a dict with the following possible elements:
-            success: boolean
-            alreadyMember: boolean
-        """
-
-        if self.searchNamedPattern("clanApplicationLeaderExisting"):
-            raise Error.Error(
-                "Cannot apply to another clan because you are the leader of {}".format(
-                    self.session.preferences["clanName"]
-                ),
-                Error.CANNOT_CHANGE_CLAN,
+    if leaderOfExisting.match(html):
+        raise CannotChangeClanError(
+            "Cannot apply to another clan because you are the leader of {}".format(
+                session.preferences["clanName"]
             )
+        )
 
-        accepted = self.searchNamedPattern("clanApplicationAccepted")
-        alreadyMember = self.searchNamedPattern("clanApplicationAlreadyMember")
+    acceptedMatch = accepted.match(html)
+    alreadyMemberMatch = alreadyMember.match(html)
 
-        self.responseData = {
-            "success": accepted or alreadyMember,
-            "alreadyMember": alreadyMember,
-        }
+    return {
+        "success": acceptedMatch or alreadyMemberMatch,
+        "alreadyMember": alreadyMemberMatch,
+    }
+
+
+async def applyToClanRequest(session: "Session", target_id: int) -> ClientResponse:
+    payload = {
+        "recruiter": 1,
+        "pwd": session.pwd,
+        "whichclan": target_id,
+        "action": "joinclan",
+        "apply": "Apply+to+this+Clan",
+        "confirm": "on",
+    }
+
+    return session.post("showclan.php", data=payload, parse=parse)
