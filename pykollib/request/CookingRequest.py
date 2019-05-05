@@ -7,7 +7,7 @@ from pykollib.request.GenericRequest import GenericRequest
 class CookingRequest(GenericRequest):
     def __init__(self, session, itemid1, itemid2, numMake=1, makeMax=False):
         super(CookingRequest, self).__init__(session)
-        self.url = session.serverURL + "craft.php"
+        self.url = session.server_url + "craft.php"
         self.requestData["mode"] = "cook"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "craft"

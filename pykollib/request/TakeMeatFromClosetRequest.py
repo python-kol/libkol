@@ -6,7 +6,7 @@ class TakeMeatFromClosetRequest(GenericRequest):
 
     def __init__(self, session, meat=""):
         super(TakeMeatFromClosetRequest, self).__init__(session)
-        self.url = session.serverURL + "closet.php"
+        self.url = session.server_url + "closet.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "takemeat"
         self.requestData["amt"] = meat

@@ -12,7 +12,7 @@ class AutoSellRequest(GenericRequest):
 
     def __init__(self, session, itemList, howMany, amount=1):
         super(AutoSellRequest, self).__init__(session)
-        self.url = session.serverURL + "sellstuff_ugly.php"
+        self.url = session.server_url + "sellstuff_ugly.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "sell"
 

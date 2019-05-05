@@ -7,4 +7,4 @@ class Main(unittest.TestCase):
     def runTest(self):
         s = TestData.data["session"]
         s.logout()
-        self.assertTrue(s.isConnected == False)
+        self.assertTrue(s.is_connected == False)

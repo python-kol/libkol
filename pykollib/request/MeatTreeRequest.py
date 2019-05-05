@@ -7,7 +7,7 @@ class MeatTreeRequest(GenericRequest):
 
     def __init__(self, session):
         super(MeatTreeRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_rumpus.php?action=click&spot=9&furni=3"
+        self.url = session.server_url + "clan_rumpus.php?action=click&spot=9&furni=3"
 
     def parseResponse(self):
         response = {}

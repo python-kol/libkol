@@ -22,7 +22,7 @@ class ClanLogRequest(GenericRequest):
 
     def __init__(self, session):
         super(ClanLogRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_log.php"
+        self.url = session.server_url + "clan_log.php"
 
     def parseResponse(self):
         entries = []

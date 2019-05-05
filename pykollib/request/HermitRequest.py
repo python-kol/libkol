@@ -9,7 +9,7 @@ class HermitRequest(GenericRequest):
     def __init__(self, session, item, quantity=1):
         super(HermitRequest, self).__init__(session)
         self.session = session
-        self.url = session.serverURL + "hermit.php"
+        self.url = session.server_url + "hermit.php"
         self.requestData["action"] = "trade"
         self.requestData["quantity"] = quantity
         self.requestData["whichitem"] = item

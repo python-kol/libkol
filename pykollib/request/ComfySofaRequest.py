@@ -7,7 +7,7 @@ class ComfySofaRequest(GenericRequest):
 
     def __init__(self, session, numturns):
         super(ComfySofaRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_rumpus.php"
+        self.url = session.server_url + "clan_rumpus.php"
         self.requestData["preaction"] = "nap"
         self.requestData["numturns"] = numturns
 

@@ -22,7 +22,7 @@ class CombatRequest(GenericAdventuringRequest):
         skill the user wishes to use.
         """
         super(CombatRequest, self).__init__(session)
-        self.url = session.serverURL + "fight.php"
+        self.url = session.server_url + "fight.php"
 
         if action == self.ATTACK:
             self.requestData["action"] = "attack"

@@ -6,7 +6,7 @@ from pykollib.pattern import PatternManager
 class Crimbo2011ToyFactoryRequest(GenericRequest):
     def __init__(self, session, itemId, quantity, targetPlayer="", note=""):
         super(Crimbo2011ToyFactoryRequest, self).__init__(session)
-        self.url = session.serverURL + "crimbo11.php"
+        self.url = session.server_url + "crimbo11.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "reallybuygifts"
         self.requestData["whichitem"] = itemId

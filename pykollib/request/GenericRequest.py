@@ -20,7 +20,7 @@ class GenericRequest(object):
 
     def __init__(self, session):
         self.session = session
-        self.serverURL = session.serverURL
+        self.server_url = session.server_url
         self.preferences = session.preferences
         self.opener = session.opener
         self.requestData = {}
@@ -42,14 +42,14 @@ class GenericRequest(object):
         Report.debug("request", "Response Text: {0}".format(self.responseText))
 
         if self.response.url.find("/maint.php") >= 0:
-            self.session.isConnected = False
+            self.session.is_connected = False
             raise Error.Error(
                 "Nightly maintenance in progress.", Error.NIGHTLY_MAINTENANCE
             )
 
         if self.response.url.find("/login.php") >= 0:
-            if self.session.isConnected:
-                self.session.isConnected = False
+            if self.session.is_connected:
+                self.session.is_connected = False
                 raise Error.Error(
                     "You are no longer connected to the server.", Error.NOT_LOGGED_IN
                 )

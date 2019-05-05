@@ -8,7 +8,7 @@ class ClanStashRequest(GenericRequest):
 
     def __init__(self, session, which=None):
         super(ClanStashRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_stash.php"
+        self.url = session.server_url + "clan_stash.php"
         self.requestData["pwd"] = session.pwd
 
     def parseResponse(self):

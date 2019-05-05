@@ -7,7 +7,7 @@ class MrKlawRequest(GenericRequest):
 
     def __init__(self, session):
         super(MrKlawRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_rumpus.php?action=click&spot=3&furni=3"
+        self.url = session.server_url + "clan_rumpus.php?action=click&spot=3&furni=3"
 
     def parseResponse(self):
         self.responseData["items"] = ParseResponseUtils.parseItemsReceived(

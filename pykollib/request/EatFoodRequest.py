@@ -14,7 +14,7 @@ class EatFoodRequest(GenericRequest):
     def __init__(self, session, foodId):
         super(EatFoodRequest, self).__init__(session)
         self.url = (
-            session.serverURL
+            session.server_url
             + "inv_eat.php?pwd="
             + session.pwd
             + "&which=1&whichitem="

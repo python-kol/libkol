@@ -187,7 +187,7 @@ class MallItemSearchRequest(GenericRequest):
         self.weaponHands = weaponHands
         self.wearableByMe = wearableByMe
         # Fill in GET request
-        self.url = session.serverURL + "mall.php"
+        self.url = session.server_url + "mall.php"
         self.requestData["didadv"] = 1
         self.requestData["pudnuggler"] = searchQuery
         self.requestData["category"] = category

@@ -9,7 +9,7 @@ class UseMultipleRequest(GenericRequest):
 
     def __init__(self, session, item, quantity):
         super(UseMultipleRequest, self).__init__(session)
-        self.url = session.serverURL + "multiuse.php"
+        self.url = session.server_url + "multiuse.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "useitem"
         self.requestData["quantity"] = quantity

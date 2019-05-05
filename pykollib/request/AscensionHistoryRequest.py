@@ -7,7 +7,7 @@ class AscensionHistoryRequest(GenericRequest):
     def __init__(self, session, playerId, preNS13=False):
         super(AscensionHistoryRequest, self).__init__(session)
         self.url = (
-            session.serverURL + "ascensionhistory.php?back=other&who=%s" % playerId
+            session.server_url + "ascensionhistory.php?back=other&who=%s" % playerId
         )
         if preNS13:
             self.url += "&prens13=1"

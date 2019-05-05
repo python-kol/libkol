@@ -14,7 +14,7 @@ class CafeMenuRequest(GenericRequest):
     def __init__(self, session, cafe):
         super(CafeMenuRequest, self).__init__(session)
         self.session = session
-        self.url = session.serverURL + "cafe.php"
+        self.url = session.server_url + "cafe.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["cafeid"] = cafe
 

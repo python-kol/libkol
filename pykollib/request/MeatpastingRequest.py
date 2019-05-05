@@ -7,7 +7,7 @@ from pykollib.util import ParseResponseUtils
 class MeatpastingRequest(GenericRequest):
     def __init__(self, session, itemid1, itemid2, numPasted=1, makeMax=False):
         super(MeatpastingRequest, self).__init__(session)
-        self.url = session.serverURL + "craft.php"
+        self.url = session.server_url + "craft.php"
         self.requestData["mode"] = "combine"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "craft"

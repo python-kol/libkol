@@ -7,7 +7,7 @@ from pykollib.request.GenericRequest import GenericRequest
 class WokRequest(GenericRequest):
     def __init__(self, session, itemid1, numMake=1):
         super(WokRequest, self).__init__(session)
-        self.url = session.serverURL + "guild.php"
+        self.url = session.server_url + "guild.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "wokcook"
         self.requestData["quantity"] = numMake

@@ -7,7 +7,7 @@ from pykollib.util import ParseResponseUtils
 class CanadianStudiesRequest(GenericRequest):
     def __init__(self, session, turns):
         super(CanadianStudiesRequest, self).__init__(session)
-        self.url = session.serverURL + "canadia.php"
+        self.url = session.server_url + "canadia.php"
         self.requestData["action"] = "institute"
         self.requestData["numturns"] = turns
 

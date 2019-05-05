@@ -7,7 +7,7 @@ import pykollib.Error as Error
 class NashCrosbysStillRequest(GenericRequest):
     def __init__(self, session, itemId, qty):
         super(NashCrosbysStillRequest, self).__init__(session)
-        self.url = session.serverURL + "guild.php"
+        self.url = session.server_url + "guild.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "stillbooze"
         self.requestData["whichitem"] = itemId

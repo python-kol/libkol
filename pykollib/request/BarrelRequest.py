@@ -12,7 +12,7 @@ class BarrelRequest(GenericRequest):
     def __init__(self, session, whichBarrel):
         super(BarrelRequest, self).__init__(session)
         self.session = session
-        self.url = session.serverURL + "barrel.php"
+        self.url = session.server_url + "barrel.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["smash"] = whichBarrel
 

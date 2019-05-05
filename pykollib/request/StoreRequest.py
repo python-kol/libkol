@@ -29,7 +29,7 @@ class StoreRequest(GenericRequest):
 
     def __init__(self, session, store, item, quantity=1):
         super(StoreRequest, self).__init__(session)
-        self.url = session.serverURL + "store.php"
+        self.url = session.server_url + "store.php"
         self.requestData["phash"] = session.pwd
         self.requestData["whichstore"] = store
         self.requestData["buying"] = "Yep."

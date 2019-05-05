@@ -21,7 +21,7 @@ class PutItemInStoreRequest(GenericRequest):
 
     def __init__(self, session, item):
         super(PutItemInStoreRequest, self).__init__(session)
-        self.url = session.serverURL + "backoffice.php"
+        self.url = session.server_url + "backoffice.php"
         self.requestData["action"] = "additem"
         self.requestData["pwd"] = session.pwd
         self.requestData["_"] = int(time.time() * 1000)

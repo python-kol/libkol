@@ -6,4 +6,4 @@ class CampgroundRestRequest(GenericRequest):
 
     def __init__(self, session):
         super(CampgroundRestRequest, self).__init__(session)
-        self.url = session.serverURL + "campground.php?action=rest"
+        self.url = session.server_url + "campground.php?action=rest"

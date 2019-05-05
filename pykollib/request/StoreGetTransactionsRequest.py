@@ -22,7 +22,7 @@ class StoreGetTransactions(GenericRequest):
 
     def __init__(self, session):
         super(StoreGetTransactions, self).__init__(session)
-        self.url = session.serverURL + "backoffice.php"
+        self.url = session.server_url + "backoffice.php"
         self.requestData["which"] = 3
         self.requestData["pwd"] = session.pwd
 

@@ -15,7 +15,7 @@ class DrinkBoozeRequest(GenericRequest):
     def __init__(self, session, boozeId):
         super(DrinkBoozeRequest, self).__init__(session)
         self.url = (
-            session.serverURL
+            session.server_url
             + "inv_booze.php?pwd="
             + session.pwd
             + "&which=1&whichitem="

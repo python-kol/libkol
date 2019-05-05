@@ -7,7 +7,7 @@ import pykollib.Error as Error
 class DeclineTradeResponseRequest(GenericRequest):
     def __init__(self, session, tradeid):
         super(DeclineTradeResponseRequest, self).__init__(session)
-        self.url = session.serverURL + "makeoffer.php"
+        self.url = session.server_url + "makeoffer.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "decline2"
         self.requestData["whichoffer"] = tradeid

@@ -7,7 +7,7 @@ from pykollib.request.GenericRequest import GenericRequest
 class CocktailcraftingRequest(GenericRequest):
     def __init__(self, session, itemid1, itemid2, numDrinks=1, makeMax=False):
         super(CocktailcraftingRequest, self).__init__(session)
-        self.url = session.serverURL + "craft.php"
+        self.url = session.server_url + "craft.php"
         self.requestData["mode"] = "cocktail"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "craft"

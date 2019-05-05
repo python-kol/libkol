@@ -9,7 +9,7 @@ class UneffectRequest(GenericRequest):
 
     def __init__(self, session, effectId):
         super(UneffectRequest, self).__init__(session)
-        self.url = session.serverURL + "uneffect.php"
+        self.url = session.server_url + "uneffect.php"
         self.requestData["using"] = "Yep."
         self.requestData["pwd"] = session.pwd
         self.requestData["whicheffect"] = effectId

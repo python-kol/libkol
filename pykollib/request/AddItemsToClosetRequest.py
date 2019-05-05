@@ -6,7 +6,7 @@ class AddItemsToClosetRequest(GenericRequest):
 
     def __init__(self, session, itemId, quantity="all"):
         super(AddItemsToClosetRequest, self).__init__(session)
-        self.url = session.serverURL + "fillcloset.php"
+        self.url = session.server_url + "fillcloset.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "closetpush"
         self.requestData["whichitem"] = itemId

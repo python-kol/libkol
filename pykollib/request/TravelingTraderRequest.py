@@ -7,7 +7,7 @@ from pykollib.util import ParseResponseUtils
 class TravelingTraderRequest(GenericRequest):
     def __init__(self, session, itemId, quantity=1, tradeAll=False):
         super(TravelingTraderRequest, self).__init__(session)
-        self.url = session.serverURL + "traveler.php"
+        self.url = session.server_url + "traveler.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "For Gnomeregan!"
         self.requestData["whichitem"] = itemId

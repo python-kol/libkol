@@ -13,7 +13,7 @@ class CurrentEquipmentRequest(GenericRequest):
     def __init__(self, session):
         super(CurrentEquipmentRequest, self).__init__(session)
         self.session = session
-        self.url = session.serverURL + "inventory.php?which=2"
+        self.url = session.server_url + "inventory.php?which=2"
 
     def parseResponse(self):
         hatPattern = PatternManager.getOrCompilePattern("currentHat")

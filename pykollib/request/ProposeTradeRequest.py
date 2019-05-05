@@ -8,7 +8,7 @@ from pykollib.util import Report
 class ProposeTradeRequest(GenericRequest):
     def __init__(self, session, towhom, items=None, meat=0, message=""):
         super(ProposeTradeRequest, self).__init__(session)
-        self.url = session.serverURL + "makeoffer.php"
+        self.url = session.server_url + "makeoffer.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "proposeoffer"
         self.requestData["towho"] = towhom

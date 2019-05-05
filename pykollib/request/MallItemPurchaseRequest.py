@@ -13,7 +13,7 @@ class MallItemPurchaseRequest(GenericRequest):
 
     def __init__(self, session, storeId, itemId, price, quantity=1):
         super(MallItemPurchaseRequest, self).__init__(session)
-        self.url = session.serverURL + "mallstore.php"
+        self.url = session.server_url + "mallstore.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["buying"] = "1"
         self.requestData["ajax"] = "1"

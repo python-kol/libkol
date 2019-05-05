@@ -7,7 +7,7 @@ class TanULotsRequest(GenericRequest):
 
     def __init__(self, session, numTurns=1):
         super(TanULotsRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_rumpus.php"
+        self.url = session.server_url + "clan_rumpus.php"
         self.requestData["preaction"] = "gym"
         self.requestData["whichgym"] = "2"
         self.requestData["numturns"] = numTurns

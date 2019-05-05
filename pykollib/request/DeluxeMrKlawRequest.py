@@ -7,7 +7,7 @@ class DeluxeMrKlawRequest(GenericRequest):
 
     def __init__(self, session):
         super(DeluxeMrKlawRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_viplounge.php"
+        self.url = session.server_url + "clan_viplounge.php"
         self.requestData["action"] = "klaw"
 
     def parseResponse(self):

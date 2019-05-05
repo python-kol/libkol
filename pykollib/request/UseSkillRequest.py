@@ -6,7 +6,7 @@ from pykollib.pattern import PatternManager
 class UseSkillRequest(GenericRequest):
     def __init__(self, session, skillId, numTimes=1, targetPlayer=None):
         super(UseSkillRequest, self).__init__(session)
-        self.url = session.serverURL + "skills.php"
+        self.url = session.server_url + "skills.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "Skillz"
         self.requestData["whichskill"] = skillId
@@ -19,7 +19,7 @@ class UseSkillRequest(GenericRequest):
                 self.requestData["targetplayer"] = ""
             else:
                 self.requestData["specificplayer"] = ""
-                self.requestData["targetplayer"] = session.userId
+                self.requestData["targetplayer"] = session.user_id
         else:
             self.requestData["quantity"] = numTimes
 
