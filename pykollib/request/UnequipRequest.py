@@ -1,39 +1,29 @@
-from .GenericRequest import GenericRequest
+from aiohttp import ClientResponse
 
 
-class UnequipRequest(GenericRequest):
-    """
-    Unequips the equipment in the designated slot.  HAT, WEAPON, OFFHAND,
-    SHIRT, PANTS, SLOT1, SLOT2, SLOT3, and FAMILIAR may be used to de-equip
-    certain things, or ALL will de-equip everything.
-    """
+"""
+Unequips the equipment in the designated slot.  HAT, WEAPON, OFFHAND,
+SHIRT, PANTS, SLOT1, SLOT2, SLOT3, and FAMILIAR may be used to de-equip
+certain things, or ALL will de-equip everything.
+"""
 
-    HAT = "hat"
-    WEAPON = "weapon"
-    OFFHAND = "offhand"
-    SHIRT = "shirt"
-    PANTS = "pants"
-    SLOT1 = "acc1"
-    SLOT2 = "acc2"
-    SLOT3 = "acc3"
-    FAMILIAR = "familiarequip"
-    ALL = 999
+HAT = "hat"
+WEAPON = "weapon"
+OFFHAND = "offhand"
+SHIRT = "shirt"
+PANTS = "pants"
+SLOT1 = "acc1"
+SLOT2 = "acc2"
+SLOT3 = "acc3"
+FAMILIAR = "familiarequip"
+ALL = 999
 
-    def __init__(self, session, slot):
-        super(UnequipRequest, self).__init__(session)
+async def UnequipRequest(session: "Session" slot: str ) -> ClientResponse:
 
-        if slot == self.ALL:
-            self.url = (
-                session.server_url
-                + "inv_equip.php?pwd="
-                + str(session.pwd)
-                + "&action=unequipall"
-            )
-        else:
-            self.url = (
-                session.server_url
-                + "inv_equip.php?pwd="
-                + str(session.pwd)
-                + "&action=unequip&type="
-                + slot
-            )
+    if slot == "ALL":
+        params["action"] = "unequipall"
+    else:
+        params["action"] = "unequip"
+        params["type"] = slot
+
+    return await session.post("inv_equip.php", params=params)
