@@ -18,7 +18,7 @@ SLOT3 = "acc3"
 FAMILIAR = "familiarequip"
 ALL = 999
 
-async def UnequipRequest(session: "Session" slot: str ) -> ClientResponse:
+async def unequipRequest(session: "Session" slot: str ) -> ClientResponse:
 
     if slot == "ALL":
         params["action"] = "unequipall"
