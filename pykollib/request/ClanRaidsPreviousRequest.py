@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from datetime import datetime
 from typing import Dict, Any, TYPE_CHECKING
 from urllib.parse import urlparse, parse_qs
 import re
@@ -24,10 +25,14 @@ def parse(html: str, **kwargs) -> Dict[str, Any]:
     raids = []
     for r in rows:
         cells = r.find_all("td")
+        start = datetime.strptime(
+            cells[0].text.replace(u"\xa0", ""), "%B %d, %Y"
+        ).date()
+        end = datetime.strptime(cells[1].text.replace(u"\xa0", ""), "%B %d, %Y").date()
+        name = cells[2].text.replace(u"\xa0", "").lower()
         url = cells[4].find("a")["href"]
         id = int(parse_qs(urlparse(url).query)["viewlog"][0])
-        name = cells[2].text.replace(u"\xa0", "").lower()
-        raids.append({"id": id, "name": name})
+        raids.append({"id": id, "name": name, "start": start, "end": end})
 
     return {"total": total, "raids": raids}
 
