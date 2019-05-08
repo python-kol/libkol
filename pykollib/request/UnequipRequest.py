@@ -1,5 +1,9 @@
 from aiohttp import ClientResponse
 from enum import Enum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
 class Slot(Enum):
