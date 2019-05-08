@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 currentChannelPattern = PatternManager.getOrCompilePattern("currentChatChannel")
 
 
-async def parse(html: str, **kwargs) -> Dict[str, Any]:
+def parse(html: str, **kwargs) -> Dict[str, Any]:
     match = currentChannelPattern.search(html)
     return {"current_channel": match.group(1)}
 

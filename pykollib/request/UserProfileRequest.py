@@ -19,7 +19,7 @@ numTrophies = re.compile(r"Trophies Collected:<\/b><\/td><td>([0-9,]+)<\/td>")
 numTattoos = re.compile(r"Tattoos Collected:<\/b><\/td><td>([0-9,]+)<\/td>")
 
 
-async def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
+def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
     usernameMatch = username.search(html)
     ascensionsMatch = numAscensions.search(html)
     trophiesMatch = numTrophies.search(html)

@@ -15,7 +15,7 @@ leaderOfExistingPattern = re.compile(
 )
 
 
-async def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
+def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
     """
     Returns a dict with the following possible elements:
         success: boolean
