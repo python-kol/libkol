@@ -1,26 +1,29 @@
 from aiohttp import ClientResponse
+from enum import Enum
 
 
-"""
-Unequips the equipment in the designated slot.  HAT, WEAPON, OFFHAND,
-SHIRT, PANTS, SLOT1, SLOT2, SLOT3, and FAMILIAR may be used to de-equip
-certain things, or ALL will de-equip everything.
-"""
+class Slot(Enum):
+    Hat = "hat"
+    Weapon = "weapon"
+    Offhand = "offhand"
+    Shirt = "shirt"
+    Pants = "pants"
+    Slot1 = "acc1"
+    Slot2 = "acc2"
+    Slot3 = "acc3"
+    Familiar = "familiarequip"
 
-HAT = "hat"
-WEAPON = "weapon"
-OFFHAND = "offhand"
-SHIRT = "shirt"
-PANTS = "pants"
-SLOT1 = "acc1"
-SLOT2 = "acc2"
-SLOT3 = "acc3"
-FAMILIAR = "familiarequip"
-ALL = 999
 
-async def UnequipRequest(session: "Session" slot: str ) -> ClientResponse:
+async def unequipRequest(session: "Session", slot: "Slot" = None) -> ClientResponse:
+    """
+    Unequips the equipment in the designated slot.
 
-    if slot == "ALL":
+    :param slot: Will remove item from the specified Slot, or everything if Slot is None
+    """
+
+    params = {}
+
+    if slot is None:
         params["action"] = "unequipall"
     else:
         params["action"] = "unequip"

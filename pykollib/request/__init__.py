@@ -109,7 +109,7 @@ from .ToggleAcceptingClanApplicationsRequest import (
 )
 from .TravelingTraderRequest import TravelingTraderRequest
 from .UneffectRequest import UneffectRequest
-from .UnequipRequest import UnequipRequest
+from .UnequipRequest import unequipRequest
 from .UseItemRequest import UseItemRequest
 from .UseMultipleRequest import UseMultipleRequest
 from .UseSkillRequest import UseSkillRequest
@@ -214,7 +214,7 @@ __all__ = [
     ToggleAcceptingClanApplicationsRequest,
     TravelingTraderRequest,
     UneffectRequest,
-    UnequipRequest,
+    unequipRequest,
     UseItemRequest,
     UseMultipleRequest,
     UseSkillRequest,
