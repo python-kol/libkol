@@ -9,9 +9,11 @@ from .request import (
 from .util.Preferences import Preferences
 from . import Kmail
 
-from typing import Callable, Dict, Any,Optional
+from functools import partial
+from typing import Callable, Dict, Any, Optional
 from urllib.parse import urlparse
 from aiohttp import ClientSession
+import asyncio
 
 
 async def parse_method(self, encoding: Optional[str] = None, **kwargs) -> Any:
@@ -22,7 +24,17 @@ async def parse_method(self, encoding: Optional[str] = None, **kwargs) -> Any:
     if encoding is None:
         encoding = self.get_encoding()
 
-    return await self._kol_parse(html=self._body.decode(encoding), url=self.url, session=self._kol_session, **kwargs) # type: ignore
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(
+        None,
+        partial(
+            self._kol_parse,
+            html=self._body.decode(encoding),
+            url=self.url,
+            session=self._kol_session,
+            **kwargs
+        ),
+    )  # type: ignore
 
 
 class Session:

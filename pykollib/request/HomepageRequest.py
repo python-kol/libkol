@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from ..Session import Session
 
 
-async def parse(url: str, **kwargs) -> Dict[str, Any]:
+def parse(url: str, **kwargs) -> Dict[str, Any]:
     return {"server_url": str(url.origin())}
 
 

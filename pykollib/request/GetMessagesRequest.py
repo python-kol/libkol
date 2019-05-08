@@ -19,7 +19,7 @@ coffeePattern = PatternManager.getOrCompilePattern("coffeeMessage")
 candyHeartPattern = PatternManager.getOrCompilePattern("candyHeartMessage")
 
 
-async def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
+def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
     """
     Parses through the response and constructs an array of messages.
     Each message is represented as a dictionary with the following

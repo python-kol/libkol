@@ -11,7 +11,7 @@ clanSearchResult = re.compile(
 )
 
 
-async def parse(html: str) -> List[Dict[str, Any]]:
+def parse(html: str) -> List[Dict[str, Any]]:
     return [
         {"id": int(m.group(1)), "name": m.group(2)}
         for m in clanSearchResult.finditer(html)

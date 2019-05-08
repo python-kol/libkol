@@ -36,7 +36,7 @@ class Clan(object):
         r = await clanRaidsRequest(self.session)
         return await r.parse()
 
-    async def get_raid_log(self, raid_id):
+    async def get_raid_log(self, raid_id: int):
         r = await clanRaidLogRequest(self.session, raid_id)
         return await r.parse()
 
