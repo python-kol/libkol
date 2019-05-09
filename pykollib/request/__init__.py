@@ -29,7 +29,7 @@ from .ClanLogRequest import ClanLogRequest
 from .ClanRaidsRequest import clanRaidsRequest
 from .ClanRaidsPreviousRequest import clanRaidsPreviousRequest
 from .ClanRaidLogRequest import clanRaidLogRequest
-from .ClanStashRequest import ClanStashRequest
+from .ClanStashRequest import clanStashRequest
 from .ClanWhitelistRequest import ClanWhitelistRequest
 from .CocktailcraftingRequest import CocktailcraftingRequest
 from .CombatRequest import CombatRequest
@@ -142,7 +142,7 @@ __all__ = [
     clanRaidsRequest,
     clanRaidsPreviousRequest,
     clanRaidLogRequest,
-    ClanStashRequest,
+    clanStashRequest,
     ClanWhitelistRequest,
     CocktailcraftingRequest,
     CombatRequest,

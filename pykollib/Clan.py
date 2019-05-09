@@ -7,6 +7,7 @@ from .request import (
     searchClansRequest,
     clanRaidsRequest,
     clanRaidsPreviousRequest,
+    clanStashRequest,
 )
 
 
@@ -38,6 +39,10 @@ class Clan(object):
 
     async def get_raid_log(self, raid_id: int):
         r = await clanRaidLogRequest(self.session, raid_id)
+        return await r.parse()
+
+    async def get_stash(self):
+        r = await clanStashRequest(self.session)
         return await r.parse()
 
     async def get_previous_raids(self, limit=None):
