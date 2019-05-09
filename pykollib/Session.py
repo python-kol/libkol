@@ -62,10 +62,19 @@ class Session:
         await self.client.close()
 
     async def post(
-        self, url: str, parse: Callable[..., Dict[str, Any]] = lambda: {}, **kwargs
+        self,
+        url: str,
+        parse: Callable[..., Dict[str, Any]] = lambda: {},
+        pwd: bool = False,
+        **kwargs
     ):
         if urlparse(url).netloc == "":
             url = "{}/{}".format(self.server_url, url)
+
+        if pwd:
+            if "params" not in kwargs:
+                kwargs["params"] = {}
+            kwargs["params"]["pwd"] = self.pwd
 
         response = await self.client.post(url, **kwargs)
         response._kol_parse = parse

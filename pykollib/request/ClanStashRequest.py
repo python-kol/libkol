@@ -1,34 +1,26 @@
+from typing import List, Dict, Any, TYPE_CHECKING
 import re
-from .GenericRequest import GenericRequest
-from pykollib.database import ItemDatabase
+
+if TYPE_CHECKING:
+    from ..Session import Session
+
+stashItemsPattern = re.compile(
+    r"<option value=(?P<id>\d*) descid=\d*>(?P<name>.*?)(?: \((?P<quantity>\d*)\))?(?: \(-(?P<cost>\d*)\))?</option>"
+)
 
 
-class ClanStashRequest(GenericRequest):
+def parse(html: str, **kwargs) -> List[Dict[str, Any]]:
+    return [
+        {
+            "id": int(i["id"]),
+            "name": i["name"],
+            "quantity": int(i["quantity"] or 1),
+            "cost": int(i["cost"] or 0),
+        }
+        for i in (m.groupdict() for m in stashItemsPattern.finditer(html))
+    ]
+
+
+def clanStashRequest(session: "Session"):
     "This class is used to get a list of items in the user's clan stash."
-
-    def __init__(self, session, which=None):
-        super(ClanStashRequest, self).__init__(session)
-        self.url = session.server_url + "clan_stash.php"
-        self.requestData["pwd"] = session.pwd
-
-    def parseResponse(self):
-        items = []
-        pattern = re.compile(
-            r"<option value=(?P<val>\d*) descid=\d*>(?P<item>.*?)( \((?P<qty>\d*)\))?( \(-(?P<cost>\d*)\))?</option>"
-        )
-        handy_list = pattern.findall(self.responseText)
-        for item in handy_list:
-            temp = {}
-            temp["id"] = int(item[0])
-            temp["name"] = item[1]
-            if item[3] == "":
-                temp["quantity"] = 1
-            else:
-                temp["quantity"] = int(item[3])
-            temp["cost"] = item[5]
-            # if item[3] == '':
-            #    temp["cost"] = 0
-            # else:
-            #    temp["cost"] = int(item[3][2:-1])
-            items.append(temp)
-        self.responseData["items"] = items
+    return session.post("clan_stash.php", parse=parse, pwd=True)
