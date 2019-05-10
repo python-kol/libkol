@@ -35,4 +35,4 @@ def searchClansRequest(
         "furn9": 0,
     }
 
-    session.post("clan_signup.php", data=payload)
+    return session.request("clan_signup.php", data=payload)

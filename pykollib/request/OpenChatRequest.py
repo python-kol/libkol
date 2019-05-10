@@ -14,5 +14,5 @@ def parse(html: str, **kwargs) -> Dict[str, Any]:
     return {"current_channel": match.group(1)}
 
 
-async def openChatRequest(session: "Session") -> ClientResponse:
-    return await session.post("lchat.php", parse=parse)
+def openChatRequest(session: "Session") -> ClientResponse:
+    return session.request("lchat.php", parse=parse)

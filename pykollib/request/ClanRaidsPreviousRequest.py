@@ -1,3 +1,4 @@
+from aiohttp import ClientResponse
 from bs4 import BeautifulSoup
 from datetime import datetime
 from typing import Dict, Any, TYPE_CHECKING
@@ -37,10 +38,10 @@ def parse(html: str, **kwargs) -> Dict[str, Any]:
     return {"total": total, "raids": raids}
 
 
-def clanRaidsPreviousRequest(session: "Session", page: int = 0):
+def clanRaidsPreviousRequest(session: "Session", page: int = 0) -> ClientResponse:
     """
     Retrieves a list of old raid logs, in pages of length 10
     """
     params = {"startrow": page * 10}
 
-    return session.post("clan_oldraidlogs.php", params=params, parse=parse)
+    return session.request("clan_oldraidlogs.php", params=params, parse=parse)

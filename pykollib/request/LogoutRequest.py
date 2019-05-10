@@ -7,6 +7,6 @@ if TYPE_CHECKING:
 
 
 async def logoutRequest(session: "Session") -> ClientResponse:
-    response = await session.post("logout.php")
+    response = await session.request("logout.php")
     session.is_connected = False
     return response

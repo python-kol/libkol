@@ -1,9 +1,8 @@
-import re
 from aiohttp import ClientResponse
+from typing import Dict, Any, TYPE_CHECKING
+import re
 
 from ..Error import CannotChangeClanError
-
-from typing import Dict, Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..Session import Session
@@ -35,7 +34,7 @@ def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
     return {"success": accepted or alreadyMember, "alreadyMember": alreadyMember}
 
 
-async def applyToClanRequest(session: "Session", target_id: int) -> ClientResponse:
+def applyToClanRequest(session: "Session", target_id: int) -> ClientResponse:
     payload = {
         "recruiter": 1,
         "pwd": session.pwd,
@@ -45,4 +44,4 @@ async def applyToClanRequest(session: "Session", target_id: int) -> ClientRespon
         "confirm": "on",
     }
 
-    return await session.post("showclan.php", data=payload, parse=parse)
+    return session.request("showclan.php", data=payload, parse=parse)

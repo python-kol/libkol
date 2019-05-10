@@ -23,4 +23,4 @@ def parse(html: str, **kwargs) -> List[Dict[str, Any]]:
 
 def clanStashRequest(session: "Session"):
     "This class is used to get a list of items in the user's clan stash."
-    return session.post("clan_stash.php", parse=parse, pwd=True)
+    return session.request("clan_stash.php", parse=parse, pwd=True)

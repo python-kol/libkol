@@ -73,10 +73,10 @@ def parse(html: str, url: "URL", **kwargs) -> Dict[str, Any]:
     return parse_raid_log(name, id, raid)
 
 
-async def clanRaidLogRequest(session: "Session", raid_id: int) -> ClientResponse:
+def clanRaidLogRequest(session: "Session", raid_id: int) -> ClientResponse:
     """
     Retrieves on a previous raid.
     """
     params = {"viewlog": raid_id}
 
-    return await session.post("clan_viewraidlog.php", params=params, parse=parse)
+    return session.request("clan_viewraidlog.php", params=params, parse=parse)

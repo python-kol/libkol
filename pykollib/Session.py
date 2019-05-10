@@ -61,9 +61,10 @@ class Session:
             await self.logout()
         await self.client.close()
 
-    async def post(
+    async def request(
         self,
         url: str,
+        method: str = "POST",
         parse: Callable[..., Dict[str, Any]] = lambda: {},
         pwd: bool = False,
         **kwargs
@@ -76,7 +77,9 @@ class Session:
                 kwargs["params"] = {}
             kwargs["params"]["pwd"] = self.pwd
 
-        response = await self.client.post(url, **kwargs)
+        request = self.client.request(method, url, **kwargs)
+
+        response = await request
         response._kol_parse = parse
         response._kol_session = self
         response.parse = parse_method.__get__(response, response.__class__)
@@ -101,7 +104,7 @@ class Session:
 
         # Perform the login.
         r = await loginRequest(self, username, password, stealth=stealth)
-        login = await r.parse()
+        await r.parse()
         self.username = username
 
         # Load the charpane once to make StatusRequest report the rollover time

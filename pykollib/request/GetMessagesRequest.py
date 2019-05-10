@@ -116,7 +116,7 @@ def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
     return messages
 
 
-async def getMessagesRequest(
+def getMessagesRequest(
     session: "Session",
     box: str = "Inbox",
     page: int = 0,
@@ -147,4 +147,4 @@ async def getMessagesRequest(
     if oldest_first:
         params["order"] = 1
 
-    return await session.post("messages.php", params=params, parse=parse)
+    return session.request("messages.php", params=params, parse=parse)

@@ -18,7 +18,7 @@ class Slot(Enum):
     Familiar = "familiarequip"
 
 
-async def unequipRequest(session: "Session", slot: "Slot" = None) -> ClientResponse:
+def unequipRequest(session: "Session", slot: "Slot" = None) -> ClientResponse:
     """
     Unequips the equipment in the designated slot.
 
@@ -33,4 +33,4 @@ async def unequipRequest(session: "Session", slot: "Slot" = None) -> ClientRespo
         params["action"] = "unequip"
         params["type"] = slot
 
-    return await session.post("inv_equip.php", params=params)
+    return session.request("inv_equip.php", params=params)
