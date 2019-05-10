@@ -42,7 +42,7 @@ def parse(html: str, session: "Session", **kwargs) -> bool:
     raise LoginFailedGenericError("Unknown login error.")
 
 
-async def loginRequest(
+def loginRequest(
     session: "Session",
     username: str,
     password: str,
@@ -62,4 +62,4 @@ async def loginRequest(
         response = hashlib.md5(response_key.encode("utf-8")).hexdigest()
         payload = {**payload, "challenge": challenge, "response": response}
 
-    return await session.post("login.php", data=payload, parse=parse)
+    return session.request("login.php", data=payload, parse=parse)

@@ -20,6 +20,6 @@ def parse(html: str, **kwargs) -> Dict[str, Any]:
     }
 
 
-async def getChatMessagesRequest(session: "Session", since: int = 0) -> ClientResponse:
+def getChatMessagesRequest(session: "Session", since: int = 0) -> ClientResponse:
     params = {"lasttime": since}
-    return await session.post("newchatmessages.php", params=params, parse=parse)
+    return session.request("newchatmessages.php", params=params, parse=parse)

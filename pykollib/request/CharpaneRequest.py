@@ -246,6 +246,6 @@ def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
     return data
 
 
-async def charpaneRequest(session: "Session") -> ClientResponse:
+def charpaneRequest(session: "Session") -> ClientResponse:
     "Requests the user's character pane."
-    return await session.post("charpane.php", parse=parse)
+    return session.request("charpane.php", parse=parse)

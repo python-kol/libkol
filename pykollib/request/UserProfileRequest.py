@@ -46,6 +46,6 @@ def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
     return data
 
 
-async def userProfileRequest(session: "Session", playerId: str) -> ClientResponse:
+def userProfileRequest(session: "Session", playerId: str) -> ClientResponse:
     payload = {"who": playerId}
-    return await session.post("showplayer.php", data=payload, parse=parse)
+    return session.request("showplayer.php", data=payload, parse=parse)

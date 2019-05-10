@@ -24,9 +24,9 @@ def parse(html: str, url: "URL", **kwargs) -> Dict[str, Any]:
     return logs
 
 
-async def clanRaidsRequest(session: "Session") -> ClientResponse:
+def clanRaidsRequest(session: "Session") -> ClientResponse:
     """
     Retrieves information on all active raids
     """
 
-    return await session.post("clan_raidlogs.php", parse=parse)
+    return session.request("clan_raidlogs.php", parse=parse)
