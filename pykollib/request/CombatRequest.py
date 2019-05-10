@@ -1,40 +1,61 @@
-from .GenericAdventuringRequest import GenericAdventuringRequest
+from aiohttp import ClientResponse
+from typing import Union, List, TYPE_CHECKING
+from enum import Enum
+
+from ..Error import InvalidActionError
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
-class CombatRequest(GenericAdventuringRequest):
+class Action(Enum):
+    Attack = "attack"
+    Item = "useitem"
+    Skill = "skill"
+    RunAway = "runaway"
+    PickPocket = "steal"
+
+
+def combatRequest(
+    session: "Session",
+    action: Action,
+    skill: int = None,
+    item: Union[int, List[int]] = None,
+) -> ClientResponse:
     """
     A request used for a single round of combat. The user may attack, use an item or skill, or
     attempt to run away.
+
+    In this constructor, action should be set to CombatRequest.ATTACK, CombatRequest.USE_ITEM,
+    CombatRequest.USE_SKILL, CombatRequest.RUN_AWAY, or CombatRequest.PICK_POCKET. If a skill
+    or item is to be used, the caller should also specify param to be the number of the item or
+    skill the user wishes to use.
     """
+    """
+    Submit a given option in response to a give choice
 
-    # What follows are a list of available actions.
-    ATTACK = 0
-    USE_ITEM = 1
-    USE_SKILL = 2
-    RUN_AWAY = 3
-    PICK_POCKET = 4
+    :param session: KoL session
+    :param action: The Action to carry out in this combat round
+    :param skill: If the Action is Skill, specifies the id of the skill to use
+    :param item: If the Action is Item, either specifies the id of the item to use, or an array of
+                 the items to funksling
+    """
+    params = {"action": action}
 
-    def __init__(self, session, action, param=None, param2=None):
-        """
-        In this constructor, action should be set to CombatRequest.ATTACK, CombatRequest.USE_ITEM,
-        CombatRequest.USE_SKILL, CombatRequest.RUN_AWAY, or CombatRequest.PICK_POCKET. If a skill
-        or item is to be used, the caller should also specify param to be the number of the item or
-        skill the user wishes to use.
-        """
-        super(CombatRequest, self).__init__(session)
-        self.url = session.server_url + "fight.php"
+    if action == Action.Item:
+        if isinstance(item, int):
+            params["whichitem"] = item
+        elif len(item) > 0:
+            params["whichitem"] = item[0]
+            if item[1]:
+                params["whichitem2"] = item[1]
+        else:
+            raise InvalidActionError("You must specify an item(s) to use")
 
-        if action == self.ATTACK:
-            self.requestData["action"] = "attack"
-        elif action == self.USE_ITEM:
-            self.requestData["action"] = "useitem"
-            self.requestData["whichitem"] = param
-            if param2 != None:
-                self.requestData["whichitem2"] = param2
-        elif action == self.USE_SKILL:
-            self.requestData["action"] = "skill"
-            self.requestData["whichskill"] = param
-        elif action == self.RUN_AWAY:
-            self.requestData["action"] = "runaway"
-        elif action == self.PICK_POCKET:
-            self.requestData["action"] = "steal"
+    if action == Action.Skill:
+        if skill is None:
+            raise InvalidActionError("You must specify a skill to use")
+
+        params["whichskill"] = skill
+
+    return session.request("fight.php", params=params)

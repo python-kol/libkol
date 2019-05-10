@@ -1,10 +1,12 @@
-from pykollib.request.GenericAdventuringRequest import GenericAdventuringRequest
+from aiohttp import ClientResponse
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
-class AdventureRequest(GenericAdventuringRequest):
+def adventureRequest(session: "Session", location_id: int) -> ClientResponse:
     "A request used to initiate an adventure at any location."
+    params = {"snarfblat": location_id}
 
-    def __init__(self, session, locationId):
-        super(AdventureRequest, self).__init__(session)
-        self.url = session.server_url + "adventure.php"
-        self.requestData["snarfblat"] = locationId
+    return session.request("adventure.php", method="GET", params=params)

@@ -7,7 +7,7 @@ from .AddItemsToDisplayCaseRequest import AddItemsToDisplayCaseRequest
 from .AddMeatToClanStashRequest import AddMeatToClanStashRequest
 from .AddMeatToClosetRequest import AddMeatToClosetRequest
 from .AddPlayerToClanWhitelistRequest import AddPlayerToClanWhitelistRequest
-from .AdventureRequest import AdventureRequest
+from .AdventureRequest import adventureRequest
 from .ApiRequest import ApiRequest
 from .ArcaneTomesRequest import ArcaneTomesRequest
 from .AscensionHistoryRequest import AscensionHistoryRequest
@@ -24,7 +24,7 @@ from .CanadianStudiesRequest import CanadianStudiesRequest
 
 # from CancelTradeRequest import CancelTradeRequest
 from .CharpaneRequest import charpaneRequest
-from .ChoiceRequest import ChoiceRequest
+from .ChoiceRequest import choiceRequest
 from .ClanLogRequest import ClanLogRequest
 from .ClanRaidsRequest import clanRaidsRequest
 from .ClanRaidsPreviousRequest import clanRaidsPreviousRequest
@@ -32,7 +32,7 @@ from .ClanRaidLogRequest import clanRaidLogRequest
 from .ClanStashRequest import clanStashRequest
 from .ClanWhitelistRequest import ClanWhitelistRequest
 from .CocktailcraftingRequest import CocktailcraftingRequest
-from .CombatRequest import CombatRequest
+from .CombatRequest import combatRequest
 from .ComfySofaRequest import ComfySofaRequest
 from .CookingRequest import CookingRequest
 from .Crimbo2011ToyFactoryRequest import Crimbo2011ToyFactoryRequest
@@ -124,7 +124,7 @@ __all__ = [
     AddMeatToClanStashRequest,
     AddMeatToClosetRequest,
     AddPlayerToClanWhitelistRequest,
-    AdventureRequest,
+    adventureRequest,
     ApiRequest,
     ArcaneTomesRequest,
     AscensionHistoryRequest,
@@ -137,7 +137,7 @@ __all__ = [
     CampgroundRestRequest,
     CanadianStudiesRequest,
     charpaneRequest,
-    ChoiceRequest,
+    choiceRequest,
     ClanLogRequest,
     clanRaidsRequest,
     clanRaidsPreviousRequest,
@@ -145,7 +145,7 @@ __all__ = [
     clanStashRequest,
     ClanWhitelistRequest,
     CocktailcraftingRequest,
-    CombatRequest,
+    combatRequest,
     ComfySofaRequest,
     CookingRequest,
     Crimbo2011ToyFactoryRequest,
