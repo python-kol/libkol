@@ -9,9 +9,10 @@ from .request import (
 from .util.Preferences import Preferences
 from . import Kmail
 from . import Clan
+from .Location import Location
 
 from functools import partial
-from typing import Callable, Dict, Any, Optional
+from typing import Callable, Dict, Any, Union, Optional
 from urllib.parse import urlparse
 from aiohttp import ClientSession
 import asyncio
@@ -131,6 +132,15 @@ class Session:
 
     async def get_profile(self):
         return await (await userProfileRequest(self, self.user_id)).parse()
+
+    async def adventure(
+        self,
+        location_id: int,
+        choices: Union[Dict[str, int], Callable[[str], int]] = {},
+        combat: Callable = None,
+    ):
+        location = Location(self, id=location_id)
+        return await (await location.visit()).text()
 
     async def logout(self):
         "Performs a logut request, closing the session."

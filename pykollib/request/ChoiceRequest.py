@@ -1,12 +1,17 @@
-from pykollib.request.GenericAdventuringRequest import GenericAdventuringRequest
+from aiohttp import ClientResponse
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
-class ChoiceRequest(GenericAdventuringRequest):
-    "A request to choose an option for a choice adventure."
+def choiceRequest(session: "Session", choice: int, option: int) -> ClientResponse:
+    """
+    Submit a given option in response to a give choice
 
-    def __init__(self, session, choiceId, choiceNumber):
-        super(ChoiceRequest, self).__init__(session)
-        self.url = session.server_url + "choice.php"
-        self.requestData["pwd"] = session.pwd
-        self.requestData["whichchoice"] = choiceId
-        self.requestData["option"] = choiceNumber
+    :param session: KoL session
+    :param choice: The id of the choice
+    :param option: The number option to submit
+    """
+    params = {"whichchoce": choice, "option": option}
+    return session.request("choice.php", params=params, pwd=True)
