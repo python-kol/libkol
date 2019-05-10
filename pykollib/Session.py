@@ -8,6 +8,7 @@ from .request import (
 )
 from .util.Preferences import Preferences
 from . import Kmail
+from . import Clan
 
 from functools import partial
 from typing import Callable, Dict, Any, Optional
@@ -114,6 +115,9 @@ class Session:
         await self.get_profile()
 
         return True
+
+    async def join_clan(self, id: int = None, name: str = None):
+        return await Clan(self, id=id, name=name).join()
 
     def get_username(self):
         return self.username
