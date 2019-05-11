@@ -3,6 +3,7 @@ from .request import (
     userProfileRequest,
     loginRequest,
     logoutRequest,
+    mainRequest,
     statusRequest,
     charpaneRequest,
 )
@@ -109,7 +110,8 @@ class Session:
         await r.parse()
         self.username = username
 
-        # Load the charpane once to make StatusRequest report the rollover time
+        # Loading these both makes various things work
+        await mainRequest(self)
         await charpaneRequest(self)
 
         await self.get_status()
