@@ -66,7 +66,7 @@ from .LoadClanAdminRequest import LoadClanAdminRequest
 from .LoginRequest import loginRequest
 from .LogoutRequest import logoutRequest
 from .LookingGlassRequest import LookingGlassRequest
-from .MainMapRequest import MainMapRequest
+from .MainRequest import mainRequest
 from .MakePasteRequest import MakePasteRequest
 
 # from MallItemPriceSearchRequest import MallItemPriceSearchRequest
@@ -179,7 +179,7 @@ __all__ = [
     loginRequest,
     logoutRequest,
     LookingGlassRequest,
-    MainMapRequest,
+    mainRequest,
     MakePasteRequest,
     MallItemPurchaseRequest,
     MallItemSearchRequest,
