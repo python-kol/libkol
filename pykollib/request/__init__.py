@@ -44,7 +44,7 @@ from .DeclineTradeOfferRequest import DeclineTradeOfferRequest
 from .DeclineTradeResponseRequest import DeclineTradeResponseRequest
 from .DeleteMessagesRequest import DeleteMessagesRequest
 from .DeluxeMrKlawRequest import DeluxeMrKlawRequest
-from .DiscardItemRequest import DiscardItemRequest
+from .DiscardItemRequest import discardItemRequest
 from .DrinkBoozeRequest import DrinkBoozeRequest
 from .DynamicRequest import DynamicRequest
 from .EatFoodRequest import EatFoodRequest

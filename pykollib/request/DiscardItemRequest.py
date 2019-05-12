@@ -1,13 +1,10 @@
-from .GenericRequest import GenericRequest
+from aiohttp import ClientResponse
 
+def discardItemRequest(session: "Session", item: "Item" = 0) -> ClientResponse:
 
-class DiscardItemRequest(GenericRequest):
-    def __init__(self, session, itemId):
-        super(DiscardItemRequest, self).__init__(session)
-        self.url = (
-            session.server_url
-            + "inventory.php?pwd="
-            + session.pwd
-            + "&action=discard&whichitem="
-            + str(itemId)
-        )
+    params = {}
+
+    params["action"] = "discard"
+    params["whichitem"] = str(item)
+
+    return session.request("inventory.php", params=params)

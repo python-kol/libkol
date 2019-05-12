@@ -1,8 +1,5 @@
 from aiohttp import ClientResponse
 
-if TYPE_CHECKING:
-    from ..Session import Session
-
 
 def takeMeatFromClosetRequest(session: "Session", amt: "Amt" = 0) -> ClientResponse:
 
