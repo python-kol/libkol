@@ -100,7 +100,7 @@ from .StoreInventoryRequest import StoreInventoryRequest
 from .StoreRequest import StoreRequest
 
 # from StoreUpdateItemRequest import StoreUpdateItemRequest
-from .TakeItemFromClanStashRequest import TakeItemFromClanStashRequest
+from .TakeItemFromClanStashRequest import takeItemFromClanStashRequest
 from .TakeItemFromStoreRequest import TakeItemFromStoreRequest
 from .TakeMeatFromClosetRequest import TakeMeatFromClosetRequest
 from .TanULotsRequest import TanULotsRequest
@@ -110,7 +110,7 @@ from .ToggleAcceptingClanApplicationsRequest import (
 from .TravelingTraderRequest import TravelingTraderRequest
 from .UneffectRequest import UneffectRequest
 from .UnequipRequest import unequipRequest
-from .UseItemRequest import UseItemRequest
+from .UseItemRequest import useItemRequest
 from .UseMultipleRequest import UseMultipleRequest
 from .UseSkillRequest import UseSkillRequest
 from .UserProfileRequest import userProfileRequest
