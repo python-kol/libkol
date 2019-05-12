@@ -16,6 +16,7 @@ class Slot(Enum):
     Slot2 = "acc2"
     Slot3 = "acc3"
     Familiar = "familiarequip"
+    All = "everthing"
 
 
 def unequipRequest(session: "Session", slot: "Slot" = None) -> ClientResponse:
@@ -27,7 +28,7 @@ def unequipRequest(session: "Session", slot: "Slot" = None) -> ClientResponse:
 
     params = {}
 
-    if slot is None:
+    if slot is "All":
         params["action"] = "unequipall"
     else:
         params["action"] = "unequip"

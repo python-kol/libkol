@@ -1,13 +1,15 @@
-from .GenericRequest import GenericRequest
+from aiohttp import ClientResponse
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
-class UseItemRequest(GenericRequest):
-    def __init__(self, session, itemId):
-        super(UseItemRequest, self).__init__(session)
-        self.url = (
-            session.server_url
-            + "inv_use.php?pwd="
-            + session.pwd
-            + "&whichitem="
-            + str(itemId)
-        )
+def useItemRequest(session: "Session", itemId: "itemId" = None) -> ClientResponse:
+
+    """
+    Uses the requested item.
+    """
+
+    params={'whichitem': str(itemId)}
+    return session.request("inv_use.php", params=pararms)
