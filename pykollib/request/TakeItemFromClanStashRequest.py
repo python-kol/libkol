@@ -1,8 +1,5 @@
 from aiohttp import ClientResponse
 
-if TYPE_CHECKING:
-    from ..Session import Session
-
 def unequipRequest(session: "Session", itemId: "itemId" = 0, quantity: "quantity" = 0) -> ClientResponse:
     "Take items from the player's clan stash."
 
