@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 def takeMeatFromClosetRequest(session: "Session", amt: "Amt" = 0) -> ClientResponse:
 
-    "Adds meat to the player's closet."
+    "Takes meat to the player's closet."
 
     params = {}
 
