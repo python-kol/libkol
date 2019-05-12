@@ -1,13 +1,15 @@
-from .GenericRequest import GenericRequest
+from aiohttp import ClientResponse
 
+if TYPE_CHECKING:
+    from ..Session import Session
 
-class TakeItemFromClanStashRequest(GenericRequest):
+def unequipRequest(session: "Session", itemId: "itemId" = 0, quantity: "quantity" = 0) -> ClientResponse:
     "Take items from the player's clan stash."
 
-    def __init__(self, session, item):
-        super(TakeItemFromClanStashRequest, self).__init__(session)
-        self.url = session.server_url + "clan_stash.php"
-        self.requestData["pwd"] = session.pwd
-        self.requestData["action"] = "takegoodies"
-        self.requestData["whichitem"] = item["id"]
-        self.requestData["quantity"] = item["quantity"]
+    params = {}
+
+    params["action"] = "takegoodies"
+    params["whichitem"] = itemId
+    params["quantity"] = quantity
+
+    return session.request("clan_stash.php", params=params)
