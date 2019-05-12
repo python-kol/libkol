@@ -1,15 +1,12 @@
-from .GenericRequest import GenericRequest
-from pykollib.util import ParseResponseUtils
+from aiohttp import ClientResponse
 
 
-class OldTimeyRadioRequest(GenericRequest):
+def oldTimeyRadioRequest(session: "Session") -> ClientResponse:
     "Uses the Old-Timey Radio in the clan rumpus room."
 
-    def __init__(self, session):
-        super(OldTimeyRadioRequest, self).__init__(session)
-        self.url = session.server_url + "clan_rumpus.php?action=click&spot=4&furni=1"
+    params["action"] = "click"
+    params["spot"] = 4
+    params["furni] = 1
 
-    def parseResponse(self):
-        self.responseData["effects"] = ParseResponseUtils.parseEffectsGained(
-            self.responseText
-        )
+    return session.request("clan_rumpus.php", params=params)
+

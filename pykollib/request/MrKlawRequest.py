@@ -1,15 +1,12 @@
-from .GenericRequest import GenericRequest
-from pykollib.util import ParseResponseUtils
+from aiohttp import ClientResponse
 
 
-class MrKlawRequest(GenericRequest):
-    "Uses Mr. Klaw in the clan rumpus room."
+def mrKlawRequest(session: "Session") -> ClientResponse:
+    "Uses the Mr. Klaw in the clan rumpus room."
 
-    def __init__(self, session):
-        super(MrKlawRequest, self).__init__(session)
-        self.url = session.server_url + "clan_rumpus.php?action=click&spot=3&furni=3"
+    params["action"] = "click"
+    params["spot"] = 3
+    params["furni] = 3
 
-    def parseResponse(self):
-        self.responseData["items"] = ParseResponseUtils.parseItemsReceived(
-            self.responseText, self.session
-        )
+    return session.request("clan_rumpus.php", params=params)
+

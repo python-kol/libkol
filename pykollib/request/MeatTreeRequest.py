@@ -1,16 +1,12 @@
-from pykollib.request.GenericRequest import GenericRequest
-from pykollib.util import ParseResponseUtils
+from aiohttp import ClientResponse
 
 
-class MeatTreeRequest(GenericRequest):
-    "Uses the meat bush in the rumpus room"
+def meatTreeRequest(session: "Session") -> ClientResponse:
+    "Uses the meat tree in the clan rumpus room."
 
-    def __init__(self, session):
-        super(MeatTreeRequest, self).__init__(session)
-        self.url = session.server_url + "clan_rumpus.php?action=click&spot=9&furni=3"
+    params["action"] = "click"
+    params["spot"] = 9
+    params["furni] = 3
 
-    def parseResponse(self):
-        response = {}
-        response["meat"] = ParseResponseUtils.parseMeatGainedLost(self.responseText)
+    return session.request("clan_rumpus.php", params=params)
 
-        self.responseData = response

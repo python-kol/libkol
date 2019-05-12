@@ -1,15 +1,12 @@
-from .GenericRequest import GenericRequest
-from pykollib.util import ParseResponseUtils
+from aiohttp import ClientResponse
 
 
-class MeatBushRequest(GenericRequest):
+def sodaMachineRequest(session: "Session") -> ClientResponse:
     "Uses the meat bush in the clan rumpus room."
 
-    def __init__(self, session):
-        super(MeatBushRequest, self).__init__(session)
-        self.url = session.server_url + "clan_rumpus.php?action=click&spot=4&furni=2"
+    params["action"] = "click"
+    params["spot"] = 4
+    params["furni] = 2
 
-    def parseResponse(self):
-        self.responseData["meat"] = ParseResponseUtils.parseMeatGainedLost(
-            self.responseText
-        )
+    return session.request("clan_rumpus.php", params=params)
+
