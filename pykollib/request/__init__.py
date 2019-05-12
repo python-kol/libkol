@@ -61,7 +61,7 @@ from .HomepageRequest import homepageRequest
 from .InventoryRequest import InventoryRequest
 from .ItemDescriptionRequest import ItemDescriptionRequest
 from .ItemInformationRequest import ItemInformationRequest
-from .JukeboxRequest import JukeboxRequest
+from .JukeboxRequest import jukeboxRequest
 from .LoadClanAdminRequest import LoadClanAdminRequest
 from .LoginRequest import loginRequest
 from .LogoutRequest import logoutRequest
@@ -91,8 +91,8 @@ from .SearchPlayerRequest import SearchPlayerRequest
 from .SearchClansRequest import searchClansRequest
 from .SendChatRequest import SendChatRequest
 from .SendMessageRequest import SendMessageRequest
-from .SnackMachineRequest import SnackMachineRequest
-from .SodaMachineRequest import SodaMachineRequest
+from .SnackMachineRequest import snackMachineRequest
+from .SodaMachineRequest import sodaMachineRequest
 from .StatusRequest import statusRequest
 
 # from StoreGetTransactionsRequest import StoreGetTransactionsRequest

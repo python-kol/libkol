@@ -1,25 +1,11 @@
-from pykollib.request.GenericRequest import GenericRequest
-from pykollib.util import ParseResponseUtils
-
-"""
-At the moment, I have no access to a jukebox, so this request only simulates clicking on the jukebox, not selecting a song.
-"""
+from aiohttp import ClientResponse
 
 
-class JukeboxRequest(GenericRequest):
-    "Uses the jukebox in the rumpus room"
+def jukeboxRequest(session: "Session") -> ClientResponse:
+    "Uses the jukebox in the clan rumpus room."
 
-    def __init__(self, session, whichsong):
-        super(JukeboxRequest, self).__init__(session)
-        self.url = session.server_url + "clan_rumpus.php?action=click&spot=3&furni=2"
+    params["action"] = "click"
+    params["spot"] = 3
+    params["furni] = 2
 
-    def parseResponse(self):
-        response = {}
-        effectResponse = ParseResponseUtils.parseEffectsGained(self.responseText)
-        if len(effectResponse) > 0:
-            response["effects"] = effectResponse
-        hpResponse = ParseResponseUtils.parseHPGainedLost(self.responseText)
-        if hpResponse != 0:
-            response["hp"] = hpResponse
-
-        self.responseData = response
+    return session.request("clan_rumpus.php", params=params)
