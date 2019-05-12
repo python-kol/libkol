@@ -1,15 +1,11 @@
-from pykollib.request.GenericRequest import GenericRequest
-from pykollib.util import ParseResponseUtils
+from aiohttp import ClientResponse
 
 
-class SodaMachineRequest(GenericRequest):
+def sodaMachineRequest(session: "Session") -> ClientResponse:
     "Uses the soda machine in the clan rumpus room."
 
-    def __init__(self, session):
-        super(SodaMachineRequest, self).__init__(session)
-        self.url = session.server_url + "clan_rumpus.php?action=click&spot=3&furni=1"
+    params["action"] = "click"
+    params["spot"] = 3
+    params["furni] = 1
 
-    def parseResponse(self):
-        self.responseData["items"] = ParseResponseUtils.parseItemsReceived(
-            self.responseText, self.session
-        )
+    return session.request("clan_rumpus.php", params=params)
