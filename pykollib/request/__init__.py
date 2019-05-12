@@ -102,7 +102,7 @@ from .StoreRequest import StoreRequest
 # from StoreUpdateItemRequest import StoreUpdateItemRequest
 from .TakeItemFromClanStashRequest import takeItemFromClanStashRequest
 from .TakeItemFromStoreRequest import TakeItemFromStoreRequest
-from .TakeMeatFromClosetRequest import TakeMeatFromClosetRequest
+from .TakeMeatFromClosetRequest import takeMeatFromClosetRequest
 from .TanULotsRequest import TanULotsRequest
 from .ToggleAcceptingClanApplicationsRequest import (
     ToggleAcceptingClanApplicationsRequest,

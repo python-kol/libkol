@@ -1,4 +1,7 @@
-from .GenericRequest import GenericRequest
+from aiohttp import ClientResponse
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
 class TakeMeatFromClosetRequest(GenericRequest):
@@ -10,3 +13,15 @@ class TakeMeatFromClosetRequest(GenericRequest):
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "takemeat"
         self.requestData["amt"] = meat
+
+def takeMeatFromClosetRequest(session: "Session", amt: "Amt" = 0) -> ClientResponse:
+
+    "Adds meat to the player's closet."
+
+    params = {}
+
+    params["action"] = "takemeat"
+    params["amt"] = amt
+
+    return session.request("closet.php", params=params)
+
