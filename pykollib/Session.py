@@ -15,13 +15,15 @@ from .Location import Location
 from functools import partial
 from typing import Callable, Dict, Any, Union, Optional
 from urllib.parse import urlparse
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientResponse
 import asyncio
 
 
-async def parse_method(self, encoding: Optional[str] = None, **kwargs) -> Any:
+async def parse_method(
+    self: ClientResponse, encoding: Optional[str] = None, **kwargs
+) -> Any:
     """This method is patched into ClientResponses"""
-    if self._body is None:
+    if "_body" not in self or self._body is None:
         await self.read()
 
     if encoding is None:
