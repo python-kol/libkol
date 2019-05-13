@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from ..Session import Session
 
 
-def parse(html: str, url: "URL", **kwargs) -> Dict[str, Any]:
+def parse(html: str, url: URL, **kwargs) -> Dict[str, Any]:
     soup = BeautifulSoup(html, "html.parser")
 
     raids = soup.find("b", text="Current Clan Dungeons:").next_sibling.find_all("div")

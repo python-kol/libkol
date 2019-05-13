@@ -1,11 +1,12 @@
 from aiohttp import ClientResponse
 from typing import Dict, Any, TYPE_CHECKING
+from yarl import URL
 
 if TYPE_CHECKING:
     from ..Session import Session
 
 
-def parse(url: str, **kwargs) -> Dict[str, Any]:
+def parse(url: URL, **kwargs) -> Dict[str, Any]:
     return {"server_url": str(url.origin())}
 
 
