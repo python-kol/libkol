@@ -6,7 +6,7 @@ def oldTimeyRadioRequest(session: "Session") -> ClientResponse:
 
     params["action"] = "click"
     params["spot"] = 4
-    params["furni] = 1
+    params["furni"] = 1
 
     return session.request("clan_rumpus.php", params=params)
 

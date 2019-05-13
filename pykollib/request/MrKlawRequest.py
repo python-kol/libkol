@@ -6,7 +6,7 @@ def mrKlawRequest(session: "Session") -> ClientResponse:
 
     params["action"] = "click"
     params["spot"] = 3
-    params["furni] = 3
+    params["furni"] = 3
 
     return session.request("clan_rumpus.php", params=params)
 
