@@ -1,12 +1,12 @@
 # from AcceptTradeRequest import AcceptTradeRequest
-# from AddItemToStoreRequest import AddItemToStoreRequest
+from .AddItemToStoreRequest import addItemToStoreRequest
 from .ApplyToClanRequest import applyToClanRequest
 from .AddItemsToClanStashRequest import AddItemsToClanStashRequest
 from .AddItemsToClosetRequest import AddItemsToClosetRequest
 from .AddItemsToDisplayCaseRequest import AddItemsToDisplayCaseRequest
 from .AddMeatToClanStashRequest import AddMeatToClanStashRequest
 from .AddMeatToClosetRequest import AddMeatToClosetRequest
-from .AddPlayerToClanWhitelistRequest import AddPlayerToClanWhitelistRequest
+from .AddPlayerToClanWhitelistRequest import addPlayerToClanWhitelistRequest
 from .AdventureRequest import adventureRequest
 from .ApiRequest import ApiRequest
 from .ArcaneTomesRequest import ArcaneTomesRequest
@@ -30,7 +30,7 @@ from .ClanRaidsRequest import clanRaidsRequest
 from .ClanRaidsPreviousRequest import clanRaidsPreviousRequest
 from .ClanRaidLogRequest import clanRaidLogRequest
 from .ClanStashRequest import clanStashRequest
-from .ClanWhitelistRequest import ClanWhitelistRequest
+from .ClanWhitelistRequest import clanWhitelistRequest
 from .CocktailcraftingRequest import CocktailcraftingRequest
 from .CombatRequest import combatRequest
 from .ComfySofaRequest import ComfySofaRequest
@@ -118,12 +118,13 @@ from .WokRequest import WokRequest
 
 __all__ = [
     applyToClanRequest,
+    addItemToStoreRequest,
     AddItemsToClanStashRequest,
     AddItemsToClosetRequest,
     AddItemsToDisplayCaseRequest,
     AddMeatToClanStashRequest,
     AddMeatToClosetRequest,
-    AddPlayerToClanWhitelistRequest,
+    addPlayerToClanWhitelistRequest,
     adventureRequest,
     ApiRequest,
     ArcaneTomesRequest,
@@ -143,7 +144,7 @@ __all__ = [
     clanRaidsPreviousRequest,
     clanRaidLogRequest,
     clanStashRequest,
-    ClanWhitelistRequest,
+    clanWhitelistRequest,
     CocktailcraftingRequest,
     combatRequest,
     ComfySofaRequest,

@@ -70,7 +70,7 @@ class Session:
         self,
         url: str,
         method: str = "POST",
-        parse: Callable[..., Dict[str, Any]] = lambda: {},
+        parse: Callable[..., Dict[str, Any]] = lambda html, **kwargs: html,
         pwd: bool = False,
         **kwargs
     ):

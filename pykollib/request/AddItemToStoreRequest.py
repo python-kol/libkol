@@ -1,68 +1,60 @@
-import pykollib.Error as Error
-from pykollib.util import Report
-from pykollib.pattern import PatternManager
-from .GenericRequest import GenericRequest
+from aiohttp import ClientResponse
+from typing import TYPE_CHECKING
+from time import time
 
-import time
+from ..Error import ItemNotFoundError
+from ..pattern import PatternManager
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
-class PutItemInStoreRequest(GenericRequest):
+def parse(html: str, **kwargs) -> bool:
+    # First parse for errors
+    notEnoughPattern = PatternManager.getOrCompilePattern("dontHaveEnoughOfItem")
+    if notEnoughPattern.search(html):
+        raise ItemNotFoundError("You don't have that many of that item.")
+
+    dontHaveItemPattern = PatternManager.getOrCompilePattern("dontHaveThatItem")
+    if dontHaveItemPattern.search(html):
+        raise ItemNotFoundError("You don't have that item.")
+
+    # Check if responseText matches the success pattern. If not, raise error.
+    itemAddedSuccessfully = PatternManager.getOrCompilePattern("itemAddedSuccessfully")
+    if itemAddedSuccessfully.search(html):
+        return True
+    else:
+        raise ItemNotFoundError("Something went wrong with the adding.")
+
+
+def addItemToStoreRequest(
+    session: "Session",
+    item_id: int,
+    quantity: int = 1,
+    limit: int = "",
+    price: int = 999999999,
+    from_hangks: bool = False,
+) -> ClientResponse:
     """
     Add a single item to your store. The interface to the mall was updated on Sept 13, 2013.
     It looks like items are now added only one at a time.
-    
+
     Notes about new URL: http://www.kingdomofloathing.com/backoffice.php
     itemid: this will contain an "h" in front of it if the item is in Hangk's
-    
+
     There is now a submitted field name '_'. This appears to be the milliseconds since epoch.
     Testing will need to be done to see how important this is. Presumably you could just append
     000 after the current seconds since epoch.
     """
 
-    def __init__(self, session, item):
-        super(PutItemInStoreRequest, self).__init__(session)
-        self.url = session.server_url + "backoffice.php"
-        self.requestData["action"] = "additem"
-        self.requestData["pwd"] = session.pwd
-        self.requestData["_"] = int(time.time() * 1000)
-        self.requestData["ajax"] = 1
+    params = {
+        "action": "additem",
+        "_": int(time() * 1000),
+        "ajax": 1,
+        "itemid": item_id if from_hangks is False else "h{}".format(item_id),
+        "price": price,
+        "limit": limit,
+        "quantity": quantity,
+    }
 
-        if "isInHangks" in item:
-            self.requestData["itemid"] = "h%s" % item["id"]
-        else:
-            self.requestData["itemid"] = item["id"]
-        if "price" in item:
-            self.requestData["price"] = item["price"]
-        else:
-            self.requestData["price"] = "999999999"
-        if "limit" in item:
-            self.requestData["limit"] = item["limit"]
-        else:
-            self.requestData["limit"] = ""
-        if "quantity" in item:
-            self.requestData["quantity"] = item["quantity"]
-        else:
-            self.requestData["quantity"] = "1"
-
-    def parseResponse(self):
-        # First parse for errors
-        notEnoughPattern = PatternManager.getOrCompilePattern("dontHaveEnoughOfItem")
-        if notEnoughPattern.search(self.responseText):
-            raise Error.Error(
-                "You don't have that many of that item.", Error.ITEM_NOT_FOUND
-            )
-
-        dontHaveItemPattern = PatternManager.getOrCompilePattern("dontHaveThatItem")
-        if dontHaveItemPattern.search(self.responseText):
-            raise Error.Error("You don't have that item.", Error.ITEM_NOT_FOUND)
-
-        # Check if responseText matches the success pattern. If not, raise error.
-        itemAddedSuccessfully = PatternManager.getOrCompilePattern(
-            "itemAddedSuccessfully"
-        )
-        if itemAddedSuccessfully.search(self.responseText):
-            Report.trace("request", "Item appears to have been added")
-        else:
-            raise Error.Error(
-                "Something went wrong with the adding.", Error.ITEM_NOT_FOUND
-            )
+    return session.request("backoffice.php", pwd=True, params=params, parse=parse)

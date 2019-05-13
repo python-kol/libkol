@@ -1,7 +1,7 @@
 from aiohttp import ClientResponse
 from yarl import URL
-from bs4 import BeautifulSoup
-from typing import Dict, Any, TYPE_CHECKING
+from bs4 import BeautifulSoup, PageElement
+from typing import Tuple, Dict, List, Any, TYPE_CHECKING
 
 from .ClanRaidLogRequest import parse_raid_log
 
@@ -9,19 +9,17 @@ if TYPE_CHECKING:
     from ..Session import Session
 
 
+def dungeon_name_id_from_title(comment: List[PageElement]) -> Tuple[str, int]:
+    return (comment[0][:-1].lower(), int(comment[1].split(":")[-1]))
+
+
 def parse(html: str, url: URL, **kwargs) -> Dict[str, Any]:
     soup = BeautifulSoup(html, "html.parser")
-
     raids = soup.find("b", text="Current Clan Dungeons:").next_sibling.find_all("div")
-
-    logs = []
-    for d in raids:
-        info = list(d.find("b").children)
-        name = info[0][:-1].lower()
-        id = int(info[1].split(":")[-1])
-        logs += [parse_raid_log(name, id, d.find("td"))]
-
-    return logs
+    return [
+        parse_raid_log(*dungeon_name_id_from_title(d.find("b").children), d.find("td"))
+        for d in raids
+    ]
 
 
 def clanRaidsRequest(session: "Session") -> ClientResponse:

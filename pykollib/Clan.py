@@ -6,8 +6,10 @@ from .request import (
     clanRaidLogRequest,
     searchClansRequest,
     clanRaidsRequest,
+    clanWhitelistRequest,
     clanRaidsPreviousRequest,
     clanStashRequest,
+    addPlayerToClanWhitelistRequest,
 )
 
 
@@ -43,6 +45,14 @@ class Clan(object):
 
     async def get_stash(self):
         r = await clanStashRequest(self.session)
+        return await r.parse()
+
+    async def add_user_to_whitelist(self, user, rank: int = 0, title: str = ""):
+        r = await addPlayerToClanWhitelistRequest(self.session, user, rank, title)
+        return await r.parse()
+
+    async def get_whitelist(self, include_rank: bool = False):
+        r = await clanWhitelistRequest(self.session, include_rank)
         return await r.parse()
 
     async def get_previous_raids(self, limit=None):
