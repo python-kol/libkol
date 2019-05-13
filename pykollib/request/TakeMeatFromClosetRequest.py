@@ -1,14 +1,12 @@
 from aiohttp import ClientResponse
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 
-def takeMeatFromClosetRequest(session: "Session", amt: "Amt" = 0) -> ClientResponse:
+def takeMeatFromClosetRequest(session: "Session", amount: int = 0) -> ClientResponse:
+    "Takes meat from the player's closet."
 
-    "Takes meat to the player's closet."
-
-    params = {}
-
-    params["action"] = "takemeat"
-    params["amt"] = amt
-
+    params = {"action": "takemeat", "amt": amount}
     return session.request("closet.php", params=params)
-

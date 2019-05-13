@@ -28,7 +28,7 @@ def unequipRequest(session: "Session", slot: "Slot" = None) -> ClientResponse:
 
     params = {}
 
-    if slot is "All":
+    if slot is slot.All:
         params["action"] = "unequipall"
     else:
         params["action"] = "unequip"
