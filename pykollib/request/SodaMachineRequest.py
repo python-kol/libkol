@@ -6,6 +6,6 @@ def sodaMachineRequest(session: "Session") -> ClientResponse:
 
     params["action"] = "click"
     params["spot"] = 3
-    params["furni] = 1
+    params["furni"] = 1
 
     return session.request("clan_rumpus.php", params=params)

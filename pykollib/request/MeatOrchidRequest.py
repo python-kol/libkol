@@ -6,7 +6,7 @@ def meatOrchidRequest(session: "Session") -> ClientResponse:
 
     params["action"] = "click"
     params["spot"] = 1
-    params["furni] = 4
+    params["furni"] = 4
 
     return session.request("clan_rumpus.php", params=params)
 

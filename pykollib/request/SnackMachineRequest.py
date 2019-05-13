@@ -6,7 +6,7 @@ def snackMachineRequest(session: "Session") -> ClientResponse:
 
     params["action"] = "click"
     params["spot"] = 9
-    params["furni] = 2
+    params["furni"] = 2
 
     return session.request("clan_rumpus.php", params=params)
 
