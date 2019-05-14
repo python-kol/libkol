@@ -72,7 +72,7 @@ from .MakePasteRequest import MakePasteRequest
 
 # from MallItemPriceSearchRequest import MallItemPriceSearchRequest
 from .MallItemPurchaseRequest import MallItemPurchaseRequest
-from .MallItemSearchRequest import MallItemSearchRequest
+from .MallSearchRequest import mallSearchRequest
 from .MalusRequest import MalusRequest
 from .MeatBushRequest import meatBushRequest
 from .MeatOrchidRequest import meatOrchidRequest
@@ -185,7 +185,7 @@ __all__ = [
     mainRequest,
     MakePasteRequest,
     MallItemPurchaseRequest,
-    MallItemSearchRequest,
+    mallSearchRequest,
     MalusRequest,
     meatBushRequest,
     meatOrchidRequest,
