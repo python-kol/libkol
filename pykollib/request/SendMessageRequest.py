@@ -7,7 +7,7 @@ from pykollib.util import Report
 class SendMessageRequest(GenericRequest):
     def __init__(self, session, message):
         super(SendMessageRequest, self).__init__(session)
-        self.url = session.server_url + "sendmessage.php?toid="
+        self.url = "sendmessage.php?toid="
         self.requestData["action"] = "send"
         self.requestData["pwd"] = session.pwd
         self.requestData["towho"] = message["userId"]
