@@ -32,7 +32,7 @@ async def parse_method(
     self: ClientResponse, encoding: Optional[str] = None, **kwargs
 ) -> Any:
     """This method is patched into ClientResponses"""
-    if "_body" not in self or self._body is None:
+    if self.content is None:
         await self.read()
 
     if encoding is None:
@@ -43,7 +43,7 @@ async def parse_method(
         None,
         partial(
             self._kol_parse,
-            html=self._body.decode(encoding),
+            html=(await self.text(encoding)),
             url=self.url,
             session=self._kol_session,
             **kwargs
