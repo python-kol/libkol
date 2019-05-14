@@ -14,7 +14,7 @@ class Kmail(object):
         return await (await getMessagesRequest(s)).parse()
 
     @logged_in
-    def send(self, recipient, message=""):
+    async def send(self, recipient, message=""):
         msg = {"userId": recipient, "text": message}
 
-        SendMessageRequest(self.session, msg).doRequest()
+        await SendMessageRequest(self.session, msg).doRequest()

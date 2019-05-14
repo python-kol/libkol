@@ -21,12 +21,10 @@ class GenericRequest(object):
     def __init__(self, session):
         self.session = session
         self.server_url = session.server_url
-        self.preferences = session.preferences
-        self.opener = session.opener
         self.requestData = {}
         self.skipParseResponse = False
 
-    def doRequest(self):
+    async def doRequest(self):
         """
         Performs the request. This method will ensure that nightly maintenance
         is not occurring.  In addition, this method will throw a NOT_LOGGED_IN
@@ -35,19 +33,19 @@ class GenericRequest(object):
 
         Report.debug("request", "Requesting {0}".format(self.url))
 
-        self.response = self.opener.post(self.url, data=self.requestData)
-        self.responseText = self.response.text
+        self.response = await self.session.request(self.url, data=self.requestData)
+        self.responseText = await self.response.text()
 
         Report.debug("request", "Received response: {0}".format(self.url))
         Report.debug("request", "Response Text: {0}".format(self.responseText))
 
-        if self.response.url.find("/maint.php") >= 0:
+        if str(self.response.url).find("/maint.php") >= 0:
             self.session.is_connected = False
             raise Error.Error(
                 "Nightly maintenance in progress.", Error.NIGHTLY_MAINTENANCE
             )
 
-        if self.response.url.find("/login.php") >= 0:
+        if str(self.response.url).find("/login.php") >= 0:
             if self.session.is_connected:
                 self.session.is_connected = False
                 raise Error.Error(
