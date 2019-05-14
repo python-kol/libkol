@@ -6,12 +6,13 @@ if TYPE_CHECKING:
 
 
 def parse(html: str, **kwargs):
-    print(html)
-    if html.index("That player is already on the whitelist."):
-        return True
+    success = " added to whitelist.</td>" in html
+    already = "<td>That player is already on the whitelist.</td>" in html
+
+    return {"success": success or already, "already": already}
 
 
-def addPlayerToClanWhitelistRequest(
+def clanWhitelistAddPlayerRequest(
     session: "Session", user: Union[int, str], rank: int = 0, title: str = ""
 ) -> ClientResponse:
     payload = {"action": "add", "addwho": user, "level": rank, "title": title}

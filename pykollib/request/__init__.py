@@ -6,7 +6,8 @@ from .AddItemsToClosetRequest import AddItemsToClosetRequest
 from .AddItemsToDisplayCaseRequest import AddItemsToDisplayCaseRequest
 from .AddMeatToClanStashRequest import AddMeatToClanStashRequest
 from .AddMeatToClosetRequest import AddMeatToClosetRequest
-from .AddPlayerToClanWhitelistRequest import addPlayerToClanWhitelistRequest
+from .ClanWhitelistAddPlayerRequest import clanWhitelistAddPlayerRequest
+from .ClanWhitelistRemovePlayerRequest import clanWhitelistRemovePlayerRequest
 from .AdventureRequest import adventureRequest
 from .ApiRequest import ApiRequest
 from .ArcaneTomesRequest import ArcaneTomesRequest
@@ -124,7 +125,8 @@ __all__ = [
     AddItemsToDisplayCaseRequest,
     AddMeatToClanStashRequest,
     AddMeatToClosetRequest,
-    addPlayerToClanWhitelistRequest,
+    clanWhitelistAddPlayerRequest,
+    clanWhitelistRemovePlayerRequest,
     adventureRequest,
     ApiRequest,
     ArcaneTomesRequest,
