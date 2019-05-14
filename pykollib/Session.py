@@ -7,16 +7,25 @@ from .request import (
     statusRequest,
     charpaneRequest,
 )
-from .util.Preferences import Preferences
 from . import Kmail
 from . import Clan
 from .Location import Location
+from .Error import NotLoggedInError
 
 from functools import partial
 from typing import Callable, Dict, Any, Union, Optional
 from urllib.parse import urlparse
 from aiohttp import ClientSession, ClientResponse
 import asyncio
+
+
+def logged_in(func):
+    def _decorator(self, *args, **kwargs):
+        if self.is_connected is False:
+            raise NotLoggedInError
+        func(self, *args, **kwargs)
+
+    return _decorator
 
 
 async def parse_method(
@@ -116,6 +125,7 @@ class Session:
 
         return True
 
+    @logged_in
     async def join_clan(self, id: int = None, name: str = None):
         return await Clan(self, id=id, name=name).join()
 
@@ -125,6 +135,7 @@ class Session:
     def get_user_id(self):
         return self.state.get("user_id", None)
 
+    @logged_in
     async def get_status(self):
         data = await (await statusRequest(self)).json(content_type=None)
         self.pwd = data["pwd"]
@@ -135,6 +146,7 @@ class Session:
     async def get_profile(self):
         return await (await userProfileRequest(self, self.get_user_id())).parse()
 
+    @logged_in
     async def adventure(
         self,
         location_id: int,
@@ -144,6 +156,7 @@ class Session:
         location = Location(self, id=location_id)
         return await (await location.visit()).text()
 
+    @logged_in
     async def logout(self):
         "Performs a logut request, closing the session."
         await logoutRequest(self)
