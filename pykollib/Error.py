@@ -133,3 +133,7 @@ class CannotChangeClanError(Error):
 
 class ClanRaidsNotFoundError(Error):
     pass
+
+
+class ClanPermissionsError(Error):
+    pass
