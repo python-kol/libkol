@@ -36,12 +36,12 @@ def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
     if clanMatch:
         data = {
             **data,
-            "clanId": int(clanMatch.group(1)),
-            "clanName": clanMatch.group(2),
+            "clan_id": int(clanMatch.group(1)),
+            "clan_name": clanMatch.group(2),
         }
         session.clan = Clan.Clan(session, id=data["clanId"], name=data["clanName"])
 
-    session.preferences.setall(data)
+    session.state.update(data)
 
     return data
 
