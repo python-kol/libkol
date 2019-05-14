@@ -1,6 +1,7 @@
 from math import ceil
 import asyncio
 
+from .util.decorators import logged_in
 from .request import (
     applyToClanRequest,
     clanRaidLogRequest,
@@ -9,7 +10,8 @@ from .request import (
     clanWhitelistRequest,
     clanRaidsPreviousRequest,
     clanStashRequest,
-    addPlayerToClanWhitelistRequest,
+    clanWhitelistAddPlayerRequest,
+    clanWhitelistRemovePlayerRequest,
 )
 
 
@@ -24,6 +26,7 @@ class Clan(object):
         self.id = id
         self.name = name
 
+    @logged_in
     async def get_id(self):
         if self.id is None:
             r = await searchClansRequest(self.session, self.name, exact=True)
@@ -35,26 +38,37 @@ class Clan(object):
 
         return self.id
 
+    @logged_in
     async def get_raids(self):
         r = await clanRaidsRequest(self.session)
         return await r.parse()
 
+    @logged_in
     async def get_raid_log(self, raid_id: int):
         r = await clanRaidLogRequest(self.session, raid_id)
         return await r.parse()
 
+    @logged_in
     async def get_stash(self):
         r = await clanStashRequest(self.session)
         return await r.parse()
 
+    @logged_in
     async def add_user_to_whitelist(self, user, rank: int = 0, title: str = ""):
-        r = await addPlayerToClanWhitelistRequest(self.session, user, rank, title)
+        r = await clanWhitelistAddPlayerRequest(self.session, user, rank, title)
+        return (await r.parse())["success"]
+
+    @logged_in
+    async def remove_user_from_whitelist(self, user):
+        r = await clanWhitelistRemovePlayerRequest(self.session, user)
         return await r.parse()
 
+    @logged_in
     async def get_whitelist(self, include_rank: bool = False):
         r = await clanWhitelistRequest(self.session, include_rank)
         return await r.parse()
 
+    @logged_in
     async def get_previous_raids(self, limit=None):
         s = self.session
 
@@ -79,6 +93,7 @@ class Clan(object):
 
         return raids
 
+    @logged_in
     async def join(self):
         s = self.session
 

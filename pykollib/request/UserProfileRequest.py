@@ -39,7 +39,7 @@ def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
             "clan_id": int(clanMatch.group(1)),
             "clan_name": clanMatch.group(2),
         }
-        session.clan = Clan.Clan(session, id=data["clanId"], name=data["clanName"])
+        session.clan = Clan.Clan(session, id=data["clan_id"], name=data["clan_name"])
 
     session.state.update(data)
 
