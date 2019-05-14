@@ -24,7 +24,7 @@ def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
     if leaderOfExistingPattern.search(html):
         raise CannotChangeClanError(
             "Cannot apply to another clan because you are the leader of {}".format(
-                session.preferences["clanName"]
+                session.state.get("clan_name", "unknown")
             )
         )
 

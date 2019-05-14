@@ -241,7 +241,7 @@ def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
     if match:
         data["mindControl"] = int(match.group(1))
 
-    session.preferences.setall(data)
+    session.state.update(data)
 
     return data
 

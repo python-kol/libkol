@@ -49,10 +49,8 @@ class Session:
         super().__init__()
         self.client = ClientSession()
         self.opener = self.client
-        self.preferences = Preferences("anonymous_prefs.db", False, True)
         self.is_connected = False
-        self.userId = None
-        self.username = None
+        self.state = {}
         self.server_url = None
         self.pwd = None
         self.clan = None
@@ -100,9 +98,6 @@ class Session:
         if the user continues to be redirected to a server that is down.
         """
 
-        # Load preferences for user
-        self.preferences.load("{}_prefs.db".format(username), True)
-
         # Grab the KoL homepage.
         r = await homepageRequest(self, server_number=server_number)
         self.server_url = (await r.parse())["server_url"]
@@ -110,7 +105,7 @@ class Session:
         # Perform the login.
         r = await loginRequest(self, username, password, stealth=stealth)
         await r.parse()
-        self.username = username
+        self.state["username"] = username
 
         # Loading these both makes various things work
         await mainRequest(self)
@@ -125,17 +120,20 @@ class Session:
         return await Clan(self, id=id, name=name).join()
 
     def get_username(self):
-        return self.username
+        return self.state.get("username", None)
+
+    def get_user_id(self):
+        return self.state.get("user_id", None)
 
     async def get_status(self):
         data = await (await statusRequest(self)).json(content_type=None)
         self.pwd = data["pwd"]
-        self.username = data["name"]
-        self.user_id = int(data["playerid"])
-        self.rollover = int(data["rollover"])
+        self.state["username"] = data["name"]
+        self.state["user_id"] = int(data["playerid"])
+        self.state["rollover"] = int(data["rollover"])
 
     async def get_profile(self):
-        return await (await userProfileRequest(self, self.user_id)).parse()
+        return await (await userProfileRequest(self, self.get_user_id())).parse()
 
     async def adventure(
         self,

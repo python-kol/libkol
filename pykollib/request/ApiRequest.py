@@ -10,9 +10,7 @@ class ApiRequest(GenericRequest):
         self.url = session.server_url + "api.php"
 
         # Create a user agent string.
-        userAgent = session.preferences.get("userAgent")
-        if userAgent == None:
-            userAgent = "pykol+by+Turias"
+        userAgent = session.state.get("user_agent", "pykollib")
         self.requestData["for"] = userAgent
 
     def parseResponse(self):
