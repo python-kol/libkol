@@ -10,22 +10,13 @@ from .request import (
 from . import Kmail
 from . import Clan
 from .Location import Location
-from .Error import NotLoggedInError
+from .util.decorators import logged_in
 
 from functools import partial
 from typing import Callable, Dict, Any, Union, Optional
 from urllib.parse import urlparse
 from aiohttp import ClientSession, ClientResponse
 import asyncio
-
-
-def logged_in(func):
-    def _decorator(self, *args, **kwargs):
-        if self.is_connected is False:
-            raise NotLoggedInError
-        func(self, *args, **kwargs)
-
-    return _decorator
 
 
 async def parse_method(
@@ -112,8 +103,10 @@ class Session:
         self.server_url = (await r.parse())["server_url"]
 
         # Perform the login.
-        r = await loginRequest(self, username, password, stealth=stealth)
-        await r.parse()
+        logged_in = await (
+            await loginRequest(self, username, password, stealth=stealth)
+        ).parse()
+        self.is_connected = logged_in
         self.state["username"] = username
 
         # Loading these both makes various things work

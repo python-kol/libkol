@@ -6,6 +6,6 @@ if TYPE_CHECKING:
 
 
 def statusRequest(session: "Session") -> ClientResponse:
-    payload = {"for": session.status.get("user_agent", "pykollib"), "what": "status"}
+    payload = {"for": session.state.get("user_agent", "pykollib"), "what": "status"}
 
     return session.request("api.php", data=payload)
