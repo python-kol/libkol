@@ -9,6 +9,7 @@ from .AddMeatToClosetRequest import AddMeatToClosetRequest
 from .ClanWhitelistAddPlayerRequest import clanWhitelistAddPlayerRequest
 from .ClanWhitelistRemovePlayerRequest import clanWhitelistRemovePlayerRequest
 from .ClanRanksListRequest import clanRanksListRequest
+from .ClanShowRequest import clanShowRequest
 from .AdventureRequest import adventureRequest
 from .ApiRequest import ApiRequest
 from .ArcaneTomesRequest import ArcaneTomesRequest
@@ -147,6 +148,7 @@ __all__ = [
     clanRaidsPreviousRequest,
     clanRaidLogRequest,
     clanRanksListRequest,
+    clanShowRequest,
     clanStashRequest,
     clanWhitelistRequest,
     CocktailcraftingRequest,
