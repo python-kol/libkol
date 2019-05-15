@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 rankNameAndNumber = re.compile(r"(.*?) \(°([0-9]+)\)")
 
 
-def parse(html: str, include_rank: bool = False, **kwargs):
+def parse(html: str, include_rank: bool = False, only_rank: bool = False, **kwargs):
     soup = BeautifulSoup(html, "html.parser")
 
     # Get rid of stupid forms everywhere
@@ -18,7 +18,7 @@ def parse(html: str, include_rank: bool = False, **kwargs):
         f.unwrap()
 
     # If we want to include the ranks of the whitelist we can, but it's off by default
-    if include_rank:
+    if include_rank or only_rank:
         ranks = [
             {"id": id, "name": name, "number": number}
             for id, name, number in (
@@ -28,6 +28,9 @@ def parse(html: str, include_rank: bool = False, **kwargs):
                 ).children
             )
         ]
+
+    if only_rank:
+        return ranks
 
     members = [
         {

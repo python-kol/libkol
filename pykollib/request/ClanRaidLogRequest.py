@@ -15,7 +15,7 @@ def center_with_no_link(tag):
     return tag.name == "center" and tag.a is None
 
 
-def parse_raid_log(name: str, id: int, raid: "BeautifulSoup") -> Dict[str, Any]:
+def parse_raid_log(name: str, id: int, raid: BeautifulSoup) -> Dict[str, Any]:
     """
     Parse a single raid's HTML tree
     """
