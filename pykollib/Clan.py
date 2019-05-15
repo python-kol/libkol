@@ -7,6 +7,7 @@ from .request import (
     applyToClanRequest,
     clanRaidLogRequest,
     searchClansRequest,
+    clanShowRequest,
     clanRaidsRequest,
     clanRanksListRequest,
     clanWhitelistRequest,
@@ -20,25 +21,31 @@ from .request import (
 class Clan(object):
     "This class represents a Clan in the Kingdom of Loathing"
 
-    def __init__(self, session, id=None, name=None):
-        if id is None and name is None:
-            raise ValueError("Must specify a name or id for a clan")
-
+    def __init__(self, session, id, name=None):
         self.session = session
         self.id = id
         self.name = name
+        self.leader = None
+        self.website = None
+        self.credo = None
+
+    @classmethod
+    @logged_in
+    async def find(self, session, name):
+        r = await searchClansRequest(self.session, self.name, exact=True)
+        results = await r.parse()
+        if len(results) == 0:
+            raise ValueError("Cannot find clan")
+        id = results[0]["id"]
+        return Clan(session, id, name)
 
     @logged_in
-    async def get_id(self):
-        if self.id is None:
-            r = await searchClansRequest(self.session, self.name, exact=True)
-            data = await r.parse()
-            results = data["results"]
-            if len(results) == 0:
-                raise ValueError("Clan {} does not exist".format(self.name))
-            self.id = results[0]["id"]
-
-        return self.id
+    async def load(self, session):
+        info = await (await clanShowRequest(self.session, self.id)).parse()
+        self.leader = info["leader"]
+        self.name = info["name"]
+        self.website = info["website"]
+        self.credo = info["credo"]
 
     @logged_in
     async def get_raids(self):
