@@ -1,5 +1,6 @@
 from math import ceil
 import asyncio
+from typing import List, Dict, Any
 
 from .util.decorators import logged_in
 from .request import (
@@ -7,6 +8,7 @@ from .request import (
     clanRaidLogRequest,
     searchClansRequest,
     clanRaidsRequest,
+    clanRanksListRequest,
     clanWhitelistRequest,
     clanRaidsPreviousRequest,
     clanStashRequest,
@@ -54,22 +56,32 @@ class Clan(object):
         return await r.parse()
 
     @logged_in
-    async def add_user_to_whitelist(self, user, rank: int = 0, title: str = ""):
+    async def add_user_to_whitelist(self, user, rank: int = 0, title: str = "") -> bool:
         r = await clanWhitelistAddPlayerRequest(self.session, user, rank, title)
         return (await r.parse())["success"]
 
     @logged_in
-    async def remove_user_from_whitelist(self, user):
+    async def remove_user_from_whitelist(self, user) -> bool:
         r = await clanWhitelistRemovePlayerRequest(self.session, user)
         return await r.parse()
 
     @logged_in
-    async def get_whitelist(self, include_rank: bool = False):
-        r = await clanWhitelistRequest(self.session, include_rank)
+    async def get_whitelist(self, include_rank: bool = False) -> List[Dict[str, Any]]:
+        r = await clanWhitelistRequest(self.session)
+        return await r.parse(include_rank=include_rank)
+
+    @logged_in
+    async def get_rank_permissions(self) -> List[Dict[str, Any]]:
+        r = await clanRanksListRequest(self.session)
         return await r.parse()
 
     @logged_in
-    async def get_previous_raids(self, limit=None):
+    async def get_ranks(self) -> List[Dict[str, Any]]:
+        r = await clanWhitelistRequest(self.session)
+        return await r.parse(only_rank=True)
+
+    @logged_in
+    async def get_previous_raids(self, limit: int = None) -> List[Dict[str, Any]]:
         s = self.session
 
         raids = []
@@ -94,7 +106,7 @@ class Clan(object):
         return raids
 
     @logged_in
-    async def join(self):
+    async def join(self) -> bool:
         s = self.session
 
         data = await (await applyToClanRequest(s, self.id)).parse()

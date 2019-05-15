@@ -1,7 +1,6 @@
 from enum import Enum
 from yarl import URL
 from bs4 import BeautifulSoup
-from pykollib.Error import Error, ItemNotFoundError
 from pykollib.database import ItemDatabase
 
 
