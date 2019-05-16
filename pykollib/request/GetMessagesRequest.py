@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List, Dict, Any, TYPE_CHECKING
 from html import unescape
 
-from pykollib.database import ItemDatabase
+from pykollib.old_database import ItemDatabase
 from pykollib.pattern import PatternManager
 
 if TYPE_CHECKING:

@@ -1,7 +1,7 @@
 from enum import Enum
 from yarl import URL
 from bs4 import BeautifulSoup
-from pykollib.database import ItemDatabase
+from pykollib.old_database import ItemDatabase
 
 
 class Category(Enum):

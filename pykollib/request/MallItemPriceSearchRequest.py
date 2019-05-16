@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from pykollib.util import Report
 from pykollib.pattern import PatternManager
-from pykollib.database import ItemDatabase
+from pykollib.old_database import ItemDatabase
 from .GenericRequest import GenericRequest
 
 

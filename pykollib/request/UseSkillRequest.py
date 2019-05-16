@@ -1,5 +1,5 @@
 from .GenericRequest import GenericRequest
-from pykollib.database import SkillDatabase
+from pykollib.old_database import SkillDatabase
 from pykollib.pattern import PatternManager
 
 

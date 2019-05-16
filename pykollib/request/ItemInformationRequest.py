@@ -1,5 +1,5 @@
 from .ApiRequest import ApiRequest
-from pykollib.database import ItemDatabase
+from pykollib.old_database import ItemDatabase
 
 
 class ItemInformationRequest(ApiRequest):

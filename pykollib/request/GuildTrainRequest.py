@@ -1,6 +1,6 @@
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
-from pykollib.database import SkillDatabase
+from pykollib.old_database import SkillDatabase
 import pykollib.Error as Error
 
 
