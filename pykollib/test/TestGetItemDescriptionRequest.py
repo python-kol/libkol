@@ -1,5 +1,5 @@
 from . import TestData
-from pykollib.database import ItemDatabase
+from pykollib.old_database import ItemDatabase
 from pykollib.request.ItemDescriptionRequest import ItemDescriptionRequest
 
 import unittest

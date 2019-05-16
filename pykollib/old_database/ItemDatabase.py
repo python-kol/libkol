@@ -9,12 +9,14 @@ try:
     pykoldb = os.path.join(pykollibtmp, "pykol/db")
 except NameError:
     from tempfile import gettempdir
+
     pykoldb = os.path.join(gettempdir(), "pykol/db")
 
 itemfile = "%s/Items.py" % pykoldb
 
 if not os.path.isfile(itemfile):
     from pykollib.mafiadata import ItemDataConverter
+
     ItemDataConverter.main()
 
 import sys

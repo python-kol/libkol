@@ -1,4 +1,4 @@
-from pykollib.database import ItemDatabase  # @UnusedImport
+from pykollib.old_database import ItemDatabase  # @UnusedImport
 from pykollib.request.GenericRequest import GenericRequest
 
 # TODO: This request needs to be redone, since the BHH interface has changed

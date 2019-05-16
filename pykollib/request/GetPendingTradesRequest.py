@@ -1,6 +1,6 @@
 from pykollib.request.GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
-from pykollib.database import ItemDatabase
+from pykollib.old_database import ItemDatabase
 
 INCOMING = 1
 OUTGOING = 2

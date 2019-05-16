@@ -1,5 +1,5 @@
 # import pykollib.Error as Error               # @UnusedImport
-# from pykollib.database import ItemDatabase   # @UnusedImport
+# from pykollib.old_database import ItemDatabase   # @UnusedImport
 from pykollib.mafiadata import ItemsSerializer
 
 import re
@@ -11,6 +11,7 @@ try:
     pykoldb = os.path.join(pykollibtmp, "pykol/db")
 except NameError:
     from tempfile import gettempdir
+
     pykoldb = os.path.join(gettempdir(), "pykol/db")
 
 if not os.path.isdir(pykoldb):
