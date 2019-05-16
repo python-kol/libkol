@@ -22,7 +22,13 @@ def parse(html: str, url: URL, **kwargs) -> Dict[str, Any]:
         raise ClanPermissionsError("You do not have dungeon access for this clan")
 
     soup = BeautifulSoup(html, "html.parser")
-    raids = soup.find("b", text="Current Clan Dungeons:").next_sibling.find_all("div")
+
+    current = soup.find("b", text="Current Clan Dungeons:")
+
+    if curret is None:
+        raise ClanPermissionsErrir("You cannot see any current clan dungeons")
+
+    raids = current.next_sibling.find_all("div")
     return [
         parse_raid_log(*dungeon_name_id_from_title(d.find("b").contents), d.find("td"))
         for d in raids
