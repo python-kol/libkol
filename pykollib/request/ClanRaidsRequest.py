@@ -25,8 +25,8 @@ def parse(html: str, url: URL, **kwargs) -> Dict[str, Any]:
 
     current = soup.find("b", text="Current Clan Dungeons:")
 
-    if curret is None:
-        raise ClanPermissionsErrir("You cannot see any current clan dungeons")
+    if current is None:
+        raise ClanPermissionsError("You cannot see any current clan dungeons")
 
     raids = current.next_sibling.find_all("div")
     return [
