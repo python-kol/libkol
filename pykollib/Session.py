@@ -1,3 +1,10 @@
+from os import path
+from functools import partial
+from typing import Callable, Dict, Any, Union, Optional
+from urllib.parse import urlparse
+from aiohttp import ClientSession, ClientResponse
+import asyncio
+
 from .request import (
     homepageRequest,
     userProfileRequest,
@@ -7,16 +14,10 @@ from .request import (
     statusRequest,
     charpaneRequest,
 )
-from . import Kmail
-from . import Clan
+from . import Kmail, Clan
+from .database import db, db_kol
 from .Location import Location
 from .util.decorators import logged_in
-
-from functools import partial
-from typing import Callable, Dict, Any, Union, Optional
-from urllib.parse import urlparse
-from aiohttp import ClientSession, ClientResponse
-import asyncio
 
 
 async def parse_method(
@@ -45,7 +46,7 @@ async def parse_method(
 class Session:
     "This class represents a user's session with The Kingdom of Loathing."
 
-    def __init__(self):
+    def __init__(self, db_file=None):
         super().__init__()
         self.client = ClientSession()
         self.opener = self.client
@@ -55,6 +56,7 @@ class Session:
         self.pwd = None
         self.clan = None
         self.kmail = Kmail.Kmail(self)
+        self._db_init(db_file)
 
     async def __aenter__(self) -> "Session":
         return self
@@ -63,6 +65,13 @@ class Session:
         if self.is_connected:
             await self.logout()
         await self.client.close()
+
+    def _db_init(self, db_file=None):
+        if db_file is None:
+            db_file = path.join(path.dirname(__file__), "pykollib.db")
+
+        db.init(db_file)
+        db_kol.init(self)
 
     async def request(
         self,
