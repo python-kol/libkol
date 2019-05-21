@@ -116,7 +116,7 @@ def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
     return messages
 
 
-def getMessagesRequest(
+def kmail_get(
     session: "Session",
     box: str = "Inbox",
     page: int = 0,

@@ -21,8 +21,6 @@ patterns = {
     "loginChallenge": r'name="?challenge"?\s+value="?([0-9a-f]+)"?',
     # Item-related patterns.
     "menuItem": r'<input type=radio name=whichitem value="?(-?[0-9]+)"?></td><td><img .*? onclick=\'descitem\("?([^"]+)"?\);\'>',
-    "acquireSingleItem": r'<td[^>]*><img src="[^"]*" alt="[^"]*" title="[^"]*"[^>]*descitem\(([0-9]+)\)[^>]*><\/td><td[^>]*>You acquire an item',
-    "acquireMultipleItems": r'<td[^>]*><img src="[^"]*" alt="[^"]*" title="[^"]*"[^>]*descitem\(([0-9]+)\)[^>]*><\/td><td[^>]*>You acquire <b>([0-9,]*) ',
     "gainMeat": r'<td><img src="[^"]*meat\.gif"[^>]*><\/td><td[^>]*>You gain ([0-9,]*?) Meat\.<\/td>',
     "loseMeat": r"You lose ([0-9,]*?) Meat",
     "isCocktailcraftingIngredient": (r"<br>\(Cocktailcrafting ingredient\)<br>"),
@@ -39,9 +37,6 @@ patterns = {
     "tooDrunk": r"You're way too drunk already\.",
     "notBooze": r"That's not booze\.",
     "notFood": r"That's not something you can eat\.",
-    "notEquip": r"That's not something you can equip\.  And stop screwing with the URLs\.",
-    "notEnoughToUse": r"<table><tr><td>You don't have that many of that item.</td></tr></table>",
-    "notMultiUse": r"<table><tr><td>That item isn't usable in quantity.</td></tr></table>",
     # Message-related patterns.
     "brickMessage": r"\/\/images\.kingdomofloathing\.com\/adventureimages\/(brokewin|bigbrick)\.gif",
     "candyHeartMessage": r"\/\/images\.kingdomofloathing\.com\/otherimages\/heart\/hearttop\.gif",
@@ -58,10 +53,8 @@ patterns = {
     "kmailNotSentUserTrendy": r"<center><table><tr><td>That player would never use something as old and outmoded as",
     "weAreIgnoringUser": r"<td>This message could not be sent, because that player is on your ignore list\.<\/td>",
     # Error patterns.
-    "cantPulverizeItem": r"<td>That's not something you can pulverize\.<\/td>",
     "notEnoughItems": r"(?:<td>You haven't got that many\.<\/td>)|(?:You don't have the item you're trying to use\.)|(?:You don't have the item you're trying to equip\.)",
     # Chat patterns.
-    "currentChatChannel": r'<font color="?#?\w+"?>Currently in channel: ([^<>]+)<',
     "chatChannel": r'^<font color="?#?\w+"?>\[([^<>]+)\]<\/font> ',
     "chatMessage": r'<b><a target="?mainpane"? href="showplayer\.php\?who=(-?[0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/font>(?:<\/b>|<\/a>|:)* (.*)$',
     "chatEmote": r'<b><i><a target="?mainpane"? href="showplayer\.php\?who=([0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/b><\/font><\/a> (.*)<\/i>$',
@@ -93,17 +86,6 @@ patterns = {
     "dungeonLogCategory": r"<b>([^<>]+):?<\/b><blockquote>(.*?)<\/blockquote>",
     "imprisonedByChums": r"^(.*) has been imprisoned by the C\. H\. U\. M\.s!$",
     "freedFromChums": r"^(.*) has rescued (.*) from the C\. H\. U\. M\.s\.$",
-    # Cocktailcrafting patterns.
-    "itemsDontMakeCocktail": r"<td>Those two items don't combine to make a refreshing cocktail\.</td>",
-    "dontHaveSkillToMixCocktail": r"<td>You don't have the skill necessary to make that cocktail\.</td>",
-    "dontHaveItemsForThatCocktail": r"<td>You don't have enough of one of the necessary items to make a cocktail that tasty\.</td>",
-    "dontHaveAdventuresToMixCocktail": r"<td>You don't have that many adventures left\. +It takes <i>time<\/i> to make a good cocktail, man\.</td>",
-    "bartenderExplosion": r"Smoke begins to pour from the head of your bartender-in-the-box. It begins to vibrate noisily, spits out a few drinks at random, and then explodes\.",
-    # Cooking patterns.
-    "itemsDontCook": r"<td>Those two items don't combine to make anything tasty\.</td>",
-    "dontHaveSkillToCook": r"<td>You don't have the skill necessary to cook this item\.</td>",
-    "dontHaveItemsForCook": r"<td>You don't have enough of one of the ingredients of that dish\.</td>",
-    "dontHaveAdventuresToCook": r"<td>You don't have that many adventures left\. +It takes <i>time<\/i> to cook stuff, man\.</td>",
     "chefExplosion": r"Smoke begins to pour from the head of your chef-in-the-box. It begins to vibrate noisily, spits out a few dishes at random, and then explodes\.",
     # Stat, Substat, Leveling, HP, and MP patterns. Will fail in Haiku Dungeon.
     "muscleGainLoss": r"You (gain|lose) ([0-9,]+) (?:Beefiness|Fortitude|Muscleboundness|Strengthliness|Strongness)",
@@ -120,12 +102,6 @@ patterns = {
     "gainAdventures": r"You gain ([0-9,]+) Adventures",
     "gainEffect": r"<td valign=center class=effect>You acquire an effect: <b>(.*?)</b><br>\(duration: ([0-9,]+) Adventures\)</td>",
     # Meatpasting patterns.
-    "noMeatpaste": (
-        r"<b>Results:</b>.*You don't have any meat paste.*<b>Combine Items:</b>",
-        re.DOTALL,
-    ),
-    "itemsDontMeatpaste": r"<td>Those two items don't combine to make anything interesting\.</td>",
-    "dontHaveItemsMeatpaste": r"<td>You don't have enough of one the necessary items to make that combination\.</td>",
     "noMeatForMeatpasting": r"<td>You don't have enough Meat to make that many\.</td>",
     # Store patterns.
     "meatSpent": r"You spent ([0-9,]+) Meat",
@@ -181,16 +157,10 @@ patterns = {
     "currentAcc2": r"Accessory</a>&nbsp;2:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
     "currentAcc3": r"Accessory</a>&nbsp;3:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
     "currentFam": r"Familiar</a>:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    # Uneffect patterns.
-    "effectRemoved": r"<td>Effect removed\.<\/td>",
-    "youDontHaveThatEffect": r"<td>You don't have that effect\.",
-    "youDontHaveSGEEA": r"<td>You don't have a green soft eyedrop echo antidote\.",
     # Ascension History patterns.
     "fullAscension": r'</tr><td[^>]*>([0-9]+).*?</td><td[^>]*>([0-9/]+).*?</td><td[^>]*><span[^>]*>([0-9,]+).*?</span>.*?</td><td[^>]*><img [^>]*title="(.*?)"[^>]*></td><td[^>]*>(.*?)</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(?:<img [^>]*title="(.*?)"[^>]*>)?</td><td[^>]*>(<img [^>]*title="(.*?)"[^>]*>|<img src="http://images\.kingdomofloathing\.com/otherimages/spacer.gif" width=30 height=30>)(<img [^>]*title="(.*?)"[^>]*>|</td>)',
     "familiarAscension": r"^(.*?) \(([0-9.]+)%\)",
     "playerName": r"Ascension History \(<a[^>]*><font[^>]*>(.*?)<\/font><\/a>\)",
-    # Quest Log patterns.
-    "questsCompleted": r"<b>([\w\s,\.\'\?!]+)<\/b>(?!<\/td>)<br>([\w\s,\.\'\?!]+)<p>",
     # Clan patterns.
     "clanName": r'<a href="clan_hall\.php">([^<>]*)<\/a>',
     "clanCredo": r"<textarea name=newcredo[^<>]*>([^<>]*)</textarea>",
@@ -223,17 +193,6 @@ patterns = {
     "crimboInvalidGift": r"<td>Invalid gift selected\.  Bah Humbug!<\/td>",
     "crimboInvalidPlayer": r"<td>Sorry, I couldn't find the player ",
     "crimboUserAlreadyReceivedGift": r"<td>The factory workers inform you that your intended recipient already has one of those\.<\/td>",
-    # Curse Patterns
-    "dontHaveThatItem": r"<td>You don't have that item\.<\/td>",
-    "cantFireArrowAtSelf": r"<td>You can't fire that at yourself\. +Your accuracy at point-blank range is terrible\.<\/td>",
-    "userAlreadyHitWithArrow": r"<td>That player has already been hit with a time's arrow today\.<\/td>",
-    "cantFireArrowAtHardcoreRonin": r"<td>You can't fire a time's arrow at somebody in Ronin or Hardcore\.<\/td>",
-    "cantCursePlayerNotFound": r"<td>That player could not be found\. +Confound it\.<\/td>",
-    "fireArrowSuccess": r"It hits with a satisfying <i>thwock<\/i>",
-    "cantUseSpiderOnSelf": r"You decide against scaring yourself with that spider.",
-    "userAlreadyHitWithSpider": r"You run across an already hidden spider when you go to hide this spider, and decide to wait a while.",
-    "cantUseSpiderOnHardcoreRonin": r"That item cannot be used on a player in Ronin or Hardcore.",
-    "useSpiderSuccess": r"You carefully hide the spider where .* is sure to find it.",
     # Nash Crosby's Still Patterns
     "wrongStillProfession": r"<td>No still for you\.<\/td>",
     "invalidStillItem": r"<td>Nash Crosby doesn\'t want anything to do with that item\.<\/td>",

@@ -1,5 +1,6 @@
+import re
 from bs4 import BeautifulSoup
-from typing import List, Dict, Any
+from typing import List, Dict, Any, NamedTuple
 from pykollib.pattern import PatternManager
 
 from ..Item import Item, ItemQuantity
@@ -13,21 +14,27 @@ def panel(html: str, title: str = "Results:") -> BeautifulSoup:
     return header.parent.parent.next_sibling.td
 
 
+single_item_pattern = re.compile(
+    r"<td[^>]*><img src=\"[^\"]*\" alt=\"[^\"]*\" title=\"[^\"]*\"[^>]*descitem\(([0-9]+)\)[^>]*><\/td><td[^>]*>You acquire an item"
+)
+multi_item_pattern = re.compile(
+    r"<td[^>]*><img src=\"[^\"]*\" alt=\"[^\"]*\" title=\"[^\"]*\"[^>]*descitem\(([0-9]+)\)[^>]*><\/td><td[^>]*>You acquire <b>([0-9,]*)"
+)
+
+
 def item(text: str) -> List[ItemQuantity]:
-    itemQuantities = []
+    item_quantities = []
 
-    singleItemPattern = PatternManager.getOrCompilePattern("acquireSingleItem")
-    for match in singleItemPattern.finditer(text):
+    for match in single_item_pattern.finditer(text):
         item = Item.get_or_none(desc_id=int(match.group(1)))
-        itemQuantities += [ItemQuantity(item, 1)]
+        item_quantities += [ItemQuantity(item, 1)]
 
-    multiItemPattern = PatternManager.getOrCompilePattern("acquireMultipleItems")
-    for match in multiItemPattern.finditer(text):
+    for match in multi_item_pattern.finditer(text):
         quantity = int(match.group(2).replace(",", ""))
         item = Item.get_or_none(desc_id=int(match.group(1)))
-        itemQuantities += [ItemQuantity(item, quantity)]
+        item_quantities += [ItemQuantity(item, quantity)]
 
-    return itemQuantities
+    return item_quantities
 
 
 def meat(text) -> int:
@@ -176,3 +183,27 @@ def effects(text: str) -> List[Dict[str, Any]]:
         ]
 
     return effects
+
+
+class ResourceGain(NamedTuple):
+    adventures: int
+    inebriety: int
+    substats: Dict[str, int]
+    stats: Dict[str, int]
+    level: int
+    effects: List[Dict[str, any]]
+    hp: int
+    mp: int
+
+
+def resource_gain(html: str) -> ResourceGain:
+    return ResourceGain(
+        adventures(html),
+        inebriety(html),
+        substat(html),
+        stat(html),
+        level(html),
+        effects(html),
+        hp(html),
+        mp(html),
+    )

@@ -29,7 +29,7 @@ def parse(url: URL, html: str, **kwargs) -> Response:
     stat = gym_stat_mapping[int(url.query["whichgym"])]
 
     return Response(
-        {
+        **{
             "substats": parsing.substat(html, stat=stat),
             "stats": parsing.stat(html, stat=stat),
             "level": parsing.level(html),

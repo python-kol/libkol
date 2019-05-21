@@ -9,18 +9,18 @@ from ..util import parsing
 from .clan_rumpus import Furniture
 
 
-class MeatFurniture(Enum):
-    Orchid = Furniture.MeatOrchid
-    Tree = Furniture.MeatTree
-    Bush = Furniture.MeatBush
+class ItemFurniture(Enum):
+    SodaMachine = Furniture.SodaMachine
+    SnackMachine = Furniture.SnackMachine
+    MrKlaw = Furniture.MrKlaw
 
 
-def parse(html: str) -> int:
-    return parsing.meat(html)
+def parse(html: str, **kwargs):
+    return parsing.item(html)
 
 
-def clan_rumpus_meat(session: "Session", furniture: MeatFurniture) -> ClientResponse:
-    "Uses the meat bush in the clan rumpus room."
+def clan_rumpus_item(session: "Session", furniture: ItemFurniture) -> ClientResponse:
+    "Uses the item dispensing machines in the clan rumpus room."
     spot, furni = furniture.value
 
     params = {"action": "click", "spot": spot, "furni": furni}
