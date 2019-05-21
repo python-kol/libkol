@@ -1,5 +1,5 @@
 from aiohttp import ClientResponse
-from typing import List, Dict, NamedTuple, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..Session import Session
@@ -15,18 +15,7 @@ cannot_go_pattern = PatternManager.getOrCompilePattern("userShouldNotBeHere")
 not_sold_pattern = PatternManager.getOrCompilePattern("notSoldHere")
 
 
-class Response(NamedTuple):
-    adventures: int
-    inebriety: int
-    substats: Dict[str, int]
-    stats: Dict[str, int]
-    level: int
-    effects: List[Dict[str, any]]
-    hp: int
-    mp: int
-
-
-def parse(html: str, **kwargs) -> Response:
+def parse(html: str, **kwargs) -> parsing.ResourceGain:
     if cannot_go_pattern.search(html):
         raise InvalidLocationError("You cannot reach that cafe.")
     if not_sold_pattern.search(html):
@@ -34,16 +23,7 @@ def parse(html: str, **kwargs) -> Response:
     if not_enough_meat_pattern.search(html):
         raise NotEnoughMeatError("You do not have enough meat to purchase the item(s).")
 
-    return Response(
-        parsing.adventures(html),
-        parsing.inebriety(html),
-        parsing.substat(html),
-        parsing.stat(html),
-        parsing.level(html),
-        parsing.effects(html),
-        parsing.hp(html),
-        parsing.mp(html),
-    )
+    return parsing.resource_gain(html)
 
 
 def cafe_consume(session: "Session", cafe: Cafe, item: Item) -> ClientResponse:

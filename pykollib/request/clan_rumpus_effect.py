@@ -1,3 +1,4 @@
+from enum import Enum
 from aiohttp import ClientResponse
 from typing import TYPE_CHECKING, List, Dict, Any
 
@@ -11,8 +12,13 @@ def parse(html: str, **kwargs) -> List[Dict[str, Any]]:
     return parsing.effects(html)
 
 
-def clan_rumpus_jukebox(session: "Session") -> ClientResponse:
-    "Uses the jukebox in the clan rumpus room."
+class Type(Enum):
+    Jukebox = (3, 2)
+    Radio = (4, 1)
 
-    params = {"action": "click", "spot": 3, "furni": 2}
+
+def clan_rumpus_jukebox(session: "Session") -> ClientResponse:
+    "Uses an effect giver in the clan rumpus room."
+
+    params = {"action": "click", "spot": type.value[0], "furni": type.value[1]}
     return session.request("clan_rumpus.php", params=params, parse=parse)

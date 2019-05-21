@@ -6,7 +6,7 @@ from typing import List, Dict, Any, TYPE_CHECKING
 if TYPE_CHECKING:
     from ..Session import Session
 
-clanSearchResult = re.compile(
+clan_search_result_pattern = re.compile(
     r"<b><a href=\"showclan\.php\?recruiter=1&whichclan=([0-9]+)\">([^<>]*)</a></b>"
 )
 
@@ -14,14 +14,14 @@ clanSearchResult = re.compile(
 def parse(html: str) -> List[Dict[str, Any]]:
     return [
         {"id": int(m.group(1)), "name": m.group(2)}
-        for m in clanSearchResult.finditer(html)
+        for m in clan_search_result_pattern.finditer(html)
     ]
 
 
-def searchClansRequest(
+def clan_search(
     session: "Session", query: str, nameonly: bool = True
 ) -> ClientResponse:
-    payload = {
+    data = {
         "action": "search",
         "searchstring": query,
         "whichfield": 1 if nameonly else 0,
@@ -35,4 +35,4 @@ def searchClansRequest(
         "furn9": 0,
     }
 
-    return session.request("clan_signup.php", data=payload)
+    return session.request("clan_signup.php", data=data)

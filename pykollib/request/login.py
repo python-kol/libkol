@@ -41,7 +41,7 @@ def parse(html: str, **kwargs) -> bool:
     raise LoginFailedGenericError("Unknown login error.")
 
 
-def loginRequest(
+def login(
     session: "Session",
     username: str,
     password: str,

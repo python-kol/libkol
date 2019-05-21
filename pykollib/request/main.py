@@ -5,5 +5,5 @@ if TYPE_CHECKING:
     from ..Session import Session
 
 
-def mainRequest(session: "Session") -> ClientResponse:
+def main(session: "Session") -> ClientResponse:
     return session.request("main.php")
