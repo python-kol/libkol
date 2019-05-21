@@ -1,5 +1,5 @@
 from .GenericRequest import GenericRequest
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
 
 
 class LookingGlassRequest(GenericRequest):
@@ -11,6 +11,6 @@ class LookingGlassRequest(GenericRequest):
         self.requestData["action"] = "lookingglass"
 
     def parseResponse(self):
-        self.responseData["items"] = ParseResponseUtils.parseItemsReceived(
+        self.responseData["items"] = parsing.parseItemsReceived(
             self.responseText, self.session
         )

@@ -2,7 +2,7 @@ import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.old_database import ItemDatabase
 from pykollib.pattern import PatternManager
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
 
 
 class MakePasteRequest(GenericRequest):
@@ -27,7 +27,7 @@ class MakePasteRequest(GenericRequest):
             )
 
         # Get the item(s) we received.
-        items = ParseResponseUtils.parseItemsReceived(self.responseText, self.session)
+        items = parsing.parseItemsReceived(self.responseText, self.session)
         if len(items) > 0:
             self.responseData["items"] = items
         else:

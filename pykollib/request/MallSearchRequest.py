@@ -1,7 +1,8 @@
 from enum import Enum
 from yarl import URL
 from bs4 import BeautifulSoup
-from pykollib.old_database import ItemDatabase
+
+from ..Item import Item
 
 
 class Category(Enum):
@@ -116,13 +117,13 @@ def parse(html: str, **kwargs):
 
     if len(rows) == 0:
         return [
-            ItemDatabase.getItemFromId(int(item["id"][5:]))
+            Item[int(item["id"][5:])]
             for item in soup.find_all("tr", id=lambda i: i and i.startswith("item_"))
         ]
 
     return [
         {
-            **ItemDatabase.getItemFromId(int(url.query["searchitem"])),
+            "item": Item[int(url.query["searchitem"])],
             "price": int(url.query["searchprice"]),
             "store_id": int(url.query["whichstore"]),
             "store_name": store_name,

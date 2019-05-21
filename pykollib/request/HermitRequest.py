@@ -1,6 +1,6 @@
 import pykollib.Error as Error
 from pykollib.old_database import ItemDatabase
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
 from pykollib.pattern import PatternManager
 from pykollib.request.GenericRequest import GenericRequest
 
@@ -47,7 +47,7 @@ class HermitRequest(GenericRequest):
             raise e
 
         response = {}
-        items = ParseResponseUtils.parseItemsReceived(self.responseText, self.session)
+        items = parsing.parseItemsReceived(self.responseText, self.session)
         if len(items) > 0:
             response["items"] = items
         self.responseData = response

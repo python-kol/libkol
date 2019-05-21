@@ -1,8 +1,8 @@
-from os import path
+from aiohttp import ClientSession, ClientResponse
 from functools import partial
+from os import path
 from typing import Callable, Dict, Any, Union, Optional
 from urllib.parse import urlparse
-from aiohttp import ClientSession, ClientResponse
 import asyncio
 
 from .request import (
@@ -40,7 +40,7 @@ async def parse_method(
             session=self._kol_session,
             **kwargs
         ),
-    )  # type: ignore
+    )
 
 
 class Session:
