@@ -98,6 +98,14 @@ class Session:
 
         return response
 
+    async def parse(self, request: Callable, *args, **kwargs):
+        response = await request(self, *args, **kwargs)
+        try:
+            return await response.parse()
+        except Exception as e:
+            print(request.__name__)
+            raise e
+
     async def login(
         self, username: str, password: str, server_number: int = 0, stealth: bool = True
     ) -> bool:
@@ -119,8 +127,8 @@ class Session:
         self.state["username"] = username
 
         # Loading these both makes various things work
-        await mainRequest(self)
-        await charpaneRequest(self)
+        await self.parse(mainRequest)
+        await self.parse(charpaneRequest)
 
         await self.get_status()
         await self.get_profile()
