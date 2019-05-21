@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
 
 
 class MallItemPurchaseRequest(GenericRequest):
@@ -49,7 +49,7 @@ class MallItemPurchaseRequest(GenericRequest):
                 Error.LIMIT_REACHED,
             )
 
-        items = ParseResponseUtils.parseItemsReceived(self.responseText, self.session)
+        items = parsing.parseItemsReceived(self.responseText, self.session)
         if len(items) == 0:
             raise Error.Error(
                 "Unknown error: %s" % self.responseText, Error.REQUEST_GENERIC

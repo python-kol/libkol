@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
 
 
 class MeatpastingRequest(GenericRequest):
@@ -45,7 +45,7 @@ class MeatpastingRequest(GenericRequest):
             )
 
         # Find the items attached to the message.
-        items = ParseResponseUtils.parseItemsReceived(self.responseText, self.session)
+        items = parsing.item(self.responseText)
         if len(items) > 0:
             self.responseData["items"] = items
         else:

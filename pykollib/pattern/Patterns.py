@@ -105,14 +105,6 @@ patterns = {
     "dontHaveItemsForCook": r"<td>You don't have enough of one of the ingredients of that dish\.</td>",
     "dontHaveAdventuresToCook": r"<td>You don't have that many adventures left\. +It takes <i>time<\/i> to cook stuff, man\.</td>",
     "chefExplosion": r"Smoke begins to pour from the head of your chef-in-the-box. It begins to vibrate noisily, spits out a few dishes at random, and then explodes\.",
-    # Campground patterns.
-    "campgroundHasOven": r"You've got an E-Z Cook&trade; oven installed in your kitchen.",
-    "campgroundHasRange": r"You've got a Dramatic&trade; range installed in your kitchen.",
-    "campgroundHasChef": r"You've got a (clockwork )?Chef-in-the-box. He'll help you cook fancy dishes, and make it so cooking doesn't cost an Adventure!",
-    "campgroundHasShaker": r"You've got a My First Shaker&trade; cocktailcrafting kit in your kitchen.",
-    "campgroundHasKit": r"You've got a Queue Du Coq cocktailcrafting kit in your kitchen.",
-    "campgroundHasBartender": r"You've got a (clockwork )?Bartender-in-the-box. He'll help you mix up fancy cocktails, and make it so cocktailcrafting doesn't cost an Adventure!",
-    "campgroundHasMat": r"Your kitchen is equipped with a sushi-rolling mat.",
     # Stat, Substat, Leveling, HP, and MP patterns. Will fail in Haiku Dungeon.
     "muscleGainLoss": r"You (gain|lose) ([0-9,]+) (?:Beefiness|Fortitude|Muscleboundness|Strengthliness|Strongness)",
     "mysticalityGainLoss": r"You (gain|lose) ([0-9,]+) (?:Enchantedness|Magicalness|Mysteriousness|Wizardliness)",
@@ -189,11 +181,6 @@ patterns = {
     "currentAcc2": r"Accessory</a>&nbsp;2:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
     "currentAcc3": r"Accessory</a>&nbsp;3:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
     "currentFam": r"Familiar</a>:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    # Autosell patterns.
-    "autosellResponse": r"You sell your (.*?) to (?:.*?) for ([0-9,]+) Meat.",
-    "autosellItems": r" ([0-9,]*) ?(.*?),",
-    "autosellLastTwo": r" ([0-9,]*) ?(.*?) and your ([0-9,]*) ?(.*?)$",
-    "autosellOne": r"([0-9,]*) ?(.*?)$",
     # Uneffect patterns.
     "effectRemoved": r"<td>Effect removed\.<\/td>",
     "youDontHaveThatEffect": r"<td>You don't have that effect\.",
@@ -282,31 +269,6 @@ patterns = {
     "traderHasNotEnoughItems": r"<td>You don't have enough of one of the items you're trying to send.",
     "traderBannedFromChat": r"<td>You can't send offers while you're banned from the chat\.",
     "tradeSentSuccessfully": r"<td>Your trade offer has been sent\.",
-    "tradeItem": (
-        r"<tr><td><img onclick\='descitem\((?P<itemdescid>[0-9]+)\).*?<b>(?P<itemname>.*?)\((?P<quantity>[0-9,]+])\)</td>'",
-        re.DOTALL,
-    ),
-    "tradeMessage": (
-        r"<table cellpadding=5><tr><td.*?><b>Note:</b><Br><?/?c?e?n?t?e?r?>?(?P<message>.*?)</td></tr></table>",
-        re.DOTALL,
-    ),
-    "tradePendingResponseIncoming": (
-        r'You will give (?P<playername>.*?) \(#(?P<playerid>[0-9]+)\):<br><table>(?P<outgoingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<outgoingmeat>[0-9,]+)<br><hr>.*? will give you:<br><table>(?P<incomingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<incomingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="makeoffer\.php\?action\=accept&pwd\=.*?&whichoffer\=(?P<tradeid>[0-9]+)">accept',
-        re.DOTALL,
-    ),
-    "tradePendingResponseOutgoing": (
-        r'You will give [^()]*?:<br><table>(?P<outgoingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<outgoingmeat>[0-9,]+?)<br><hr>(?P<playername>.*?) \(#(?P<playerid>[0-9]+?)\) will give you:<br><table>(?P<incomingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<incomingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="makeoffer\.php\?action=cancel2&whichoffer=(?P<tradeid>[0-9]+?)">cancel',
-        re.DOTALL,
-    ),
-    "tradePendingOfferIncoming": (
-        r'Offer from (?P<playername>.*?) \(#(?P<playerid>[0-9]+)\)<br><table>(?P<incomingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<incomingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="counteroffer\.php\?whichoffer=(?P<tradeid>[0-9]+)">respond',
-        re.DOTALL,
-    ),
-    "tradePendingOfferOutgoing": (
-        r'Offered to (?P<playername>.*?) \(#(?P<playerid>[0-9]+)\)<br><table>(?P<outgoingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<outgoingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="makeoffer\.php\?action=cancel&whichoffer=(?P<tradeid>[0-9]+)">cancel this offer',
-        re.DOTALL,
-    ),
     "tradeResponseSentSuccessfully": r"Pending Responses \(Outgoing\)",
     "tradeCancelledSuccessfully": r"Offer cancelled\.",
-    "tradeAccepted": r"Offer Accepted\.",
 }

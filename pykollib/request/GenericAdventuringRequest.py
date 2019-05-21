@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
 
 
 class GenericAdventuringRequest(GenericRequest):
@@ -52,23 +52,13 @@ class GenericAdventuringRequest(GenericRequest):
 
             # Get items, meat, and substats gained. We always need to check these since they can
             # happen at any point during the fight.
-            self.responseData["items"] = ParseResponseUtils.parseItemsReceived(
-                self.responseText, self.session
-            )
-            self.responseData["meat"] = ParseResponseUtils.parseMeatGainedLost(
-                self.responseText
-            )
-            self.responseData["substats"] = ParseResponseUtils.parseSubstatsGainedLost(
-                self.responseText
-            )
+            self.responseData["items"] = parsing.item(self.responseText)
+            self.responseData["meat"] = parsing.meat(self.responseText)
+            self.responseData["substats"] = parsing.substat(self.responseText)
 
             # The same goes for HP and MP
-            self.responseData["hp"] = ParseResponseUtils.parseHPGainedLost(
-                self.responseText
-            )
-            self.responseData["mp"] = ParseResponseUtils.parseMPGainedLost(
-                self.responseText
-            )
+            self.responseData["hp"] = parsing.hp(self.responseText)
+            self.responseData["mp"] = parsing.mp(self.responseText)
 
         elif url.find("/choice.php") >= 0:
             self.responseData["adventureType"] = "choice"
@@ -83,15 +73,11 @@ class GenericAdventuringRequest(GenericRequest):
                     self.responseText
                 ).group(1)
             else:
-                self.responseData["items"] = ParseResponseUtils.parseItemsReceived(
+                self.responseData["items"] = parsing.parseItemsReceived(
                     self.responseText, self.session
                 )
-                self.responseData["meat"] = ParseResponseUtils.parseMeatGainedLost(
-                    self.responseText
-                )
-                self.responseData[
-                    "substats"
-                ] = ParseResponseUtils.parseSubstatsGainedLost(self.responseText)
+                self.responseData["meat"] = parsing.meat(self.responseText)
+                self.responseData["substats"] = parsing.substat(self.responseText)
 
         elif url.find("/adventure.php") >= 0:
             self.responseData["adventureType"] = "noncombat"
@@ -99,15 +85,11 @@ class GenericAdventuringRequest(GenericRequest):
             noncombatNameMatch = noncombatNamePattern.search(self.responseText)
             if noncombatNameMatch:
                 self.responseData["noncombatName"] = noncombatNameMatch.group(1)
-            self.responseData["items"] = ParseResponseUtils.parseItemsReceived(
+            self.responseData["items"] = parsing.parseItemsReceived(
                 self.responseText, self.session
             )
-            self.responseData["meat"] = ParseResponseUtils.parseMeatGainedLost(
-                self.responseText
-            )
-            self.responseData["substats"] = ParseResponseUtils.parseSubstatsGainedLost(
-                self.responseText
-            )
+            self.responseData["meat"] = parsing.meat(self.responseText)
+            self.responseData["substats"] = parsing.substat(self.responseText)
         else:
             raise Error.Error(
                 "Adventure URL not recognized: %s" % url, Error.REQUEST_GENERIC

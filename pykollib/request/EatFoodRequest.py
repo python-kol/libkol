@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
 
 
 class EatFoodRequest(GenericRequest):
@@ -35,26 +35,24 @@ class EatFoodRequest(GenericRequest):
 
         # Check the results
         results = {}
-        results["adventures"] = ParseResponseUtils.parseAdventuresGained(
-            self.responseText
-        )
+        results["adventures"] = parsing.adventures(self.responseText)
 
-        substats = ParseResponseUtils.parseSubstatsGainedLost(self.responseText)
+        substats = parsing.substat(self.responseText)
         if len(substats) > 0:
             results["substats"] = substats
-        stats = ParseResponseUtils.parseStatsGainedLost(self.responseText)
+        stats = parsing.stat(self.responseText)
         if len(stats) > 0:
             results["stats"] = stats
-        level = ParseResponseUtils.parseLevelsGained(self.responseText)
+        level = parsing.level(self.responseText)
         if level != 0:
             results["level"] = level
-        hp = ParseResponseUtils.parseHPGainedLost(self.responseText)
+        hp = parsing.hp(self.responseText)
         if hp != 0:
             results["hp"] = hp
-        mp = ParseResponseUtils.parseMPGainedLost(self.responseText)
+        mp = parsing.mp(self.responseText)
         if mp != 0:
             results["mp"] = mp
-        effects = ParseResponseUtils.parseEffectsGained(self.responseText)
+        effects = parsing.effects(self.responseText)
         if len(effects) > 0:
             results["effects"] = effects
 

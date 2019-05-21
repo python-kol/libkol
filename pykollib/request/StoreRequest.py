@@ -2,7 +2,7 @@ import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.old_database import ItemDatabase
 from pykollib.pattern import PatternManager
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
 
 
 class StoreRequest(GenericRequest):
@@ -59,7 +59,7 @@ class StoreRequest(GenericRequest):
                 Error.NOT_ENOUGH_MEAT,
             )
 
-        items = ParseResponseUtils.parseItemsReceived(self.responseText, self.session)
+        items = parsing.parseItemsReceived(self.responseText, self.session)
         if len(items) == 0:
             raise Error.Error("Unknown error. No items received.", Error.REQUEST_FATAL)
         self.responseData["items"] = items

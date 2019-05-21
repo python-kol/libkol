@@ -1,3 +1,4 @@
+from typing import NamedTuple
 from peewee import IntegerField, CharField, BooleanField, ForeignKeyField
 
 from .database import BaseModel
@@ -79,3 +80,11 @@ class Item(BaseModel):
     gift = BooleanField(default=False)  # is a gift item
     tradeable = BooleanField(default=False)  # is tradeable
     discardable = BooleanField(default=False)  # is discardable
+
+    def pluralize(self):
+        return "{}s".format(self.name) if self.plural is None else self.plural
+
+
+class ItemQuantity(NamedTuple):
+    item: Item
+    quantity: int

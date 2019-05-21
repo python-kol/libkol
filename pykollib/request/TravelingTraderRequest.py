@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
 
 
 class TravelingTraderRequest(GenericRequest):
@@ -34,7 +34,7 @@ class TravelingTraderRequest(GenericRequest):
                 "You are unable to trade for that many items.", Error.NOT_ENOUGH_MEAT
             )
 
-        items = ParseResponseUtils.parseItemsReceived(self.responseText, self.session)
+        items = parsing.item(self.responseText)
         if len(items) == 0:
             raise Error.Error("Unknown error. No items received.", Error.REQUEST_FATAL)
         self.responseData["items"] = items

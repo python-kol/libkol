@@ -1,7 +1,7 @@
 import pykollib.Error as Error
 from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
 
 
 class UseMultipleRequest(GenericRequest):
@@ -32,30 +32,30 @@ class UseMultipleRequest(GenericRequest):
             )
 
         # Find out what happened
-        items = ParseResponseUtils.parseItemsReceived(self.responseText, self.session)
+        items = parsing.item(self.responseText)
         if len(items) > 0:
             self.responseData["items"] = items
 
-        meat = ParseResponseUtils.parseMeatGainedLost(self.responseText)
+        meat = parsing.meat(self.responseText)
         if meat != 0:
             self.responseData["meat"] = meat
 
-        hp = ParseResponseUtils.parseHPGainedLost(self.responseText)
+        hp = parsing.hp(self.responseText)
         if hp != 0:
             self.responseData["hp"] = hp
 
-        mp = ParseResponseUtils.parseMPGainedLost(self.responseText)
+        mp = parsing.mp(self.responseText)
         if mp != 0:
             self.responseData["mp"] = mp
 
-        drunk = ParseResponseUtils.parseDrunkGained(self.responseText)
+        drunk = parsing.inebriety(self.responseText)
         if drunk != 0:
             self.responseData["drunk"] = drunk
 
-        adventures = ParseResponseUtils.parseAdventuresGained(self.responseText)
+        adventures = parsing.adventures(self.responseText)
         if adventures != 0:
             self.responseData["adventures"] = adventures
 
-        effects = ParseResponseUtils.parseEffectsGained(self.responseText)
+        effects = parsing.effects(self.responseText)
         if len(effects) > 0:
             self.responseData["effects"] = effects
