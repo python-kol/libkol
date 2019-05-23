@@ -137,3 +137,7 @@ class ClanRaidsNotFoundError(Error):
 
 class ClanPermissionsError(Error):
     pass
+
+
+class UnknownError(Error):
+    pass

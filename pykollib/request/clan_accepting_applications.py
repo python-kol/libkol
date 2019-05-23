@@ -20,7 +20,7 @@ def parse(html: str, **kwargs) -> bool:
     raise UnknownError("Unknown response")
 
 
-def clan_applications_toggle(session: "Session") -> ClientResponse:
+def clan_accepting_applications(session: "Session") -> ClientResponse:
     "Toggle whether or not the clan accepts new applications."
 
     params = {"action": "noapp"}

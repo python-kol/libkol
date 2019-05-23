@@ -4,12 +4,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..Session import Session
 
-from .GetPendingTradesRequest import TradeType
+from .trade_pending import Status
 
 
-def trade_cancel(
-    session: "Session", trade_id: int, trade_type: TradeType
-) -> ClientResponse:
+def trade_cancel(session: "Session", id: int, status: Status) -> ClientResponse:
     """
     Cancel a trade request.
 
@@ -18,7 +16,7 @@ def trade_cancel(
     """
 
     params = {
-        "whichoffer": trade_id,
-        "action": "cancel2" if trade_type == TradeType.OutgoingResponse else "cancel1",
+        "whichoffer": id,
+        "action": "cancel2" if status == Status.OutgoingResponse else "cancel1",
     }
     return session.request("makeoffer.php", pwd=True, params=params)

@@ -1,230 +1,201 @@
-# from AcceptTradeRequest import AcceptTradeRequest
-from .AddItemToStoreRequest import addItemToStoreRequest
-from .ApplyToClanRequest import applyToClanRequest
-from .AddItemsToClanStashRequest import AddItemsToClanStashRequest
-from .AddItemsToClosetRequest import AddItemsToClosetRequest
-from .AddItemsToDisplayCaseRequest import AddItemsToDisplayCaseRequest
-from .AddMeatToClanStashRequest import AddMeatToClanStashRequest
-from .AddMeatToClosetRequest import AddMeatToClosetRequest
-from .ClanWhitelistAddPlayerRequest import clanWhitelistAddPlayerRequest
-from .ClanWhitelistRemovePlayerRequest import clanWhitelistRemovePlayerRequest
-from .ClanRanksListRequest import clanRanksListRequest
-from .ClanShowRequest import clanShowRequest
-from .AdventureRequest import adventureRequest
-from .ApiRequest import ApiRequest
-from .ArcaneTomesRequest import ArcaneTomesRequest
-from .AscensionHistoryRequest import AscensionHistoryRequest
-from .AutoSellRequest import AutoSellRequest
-from .BarrelRequest import BarrelRequest
-from .BootClanMemberRequest import BootClanMemberRequest
-from .BountyHunterRequest import BountyHunterRequest
-
-# from CafeConsumeRequest import CafeConsumeRequest
-from .CafeMenuRequest import CafeMenuRequest
-from .CampgroundKitchenRequest import CampgroundKitchenRequest
-from .CampgroundRestRequest import CampgroundRestRequest
-from .CanadianStudiesRequest import CanadianStudiesRequest
-
-# from CancelTradeRequest import CancelTradeRequest
-from .CharpaneRequest import charpaneRequest
-from .ChoiceRequest import choiceRequest
+from .adventure import adventure
+from .ascension_history import ascension_history
+from .autosell_items import autosell_items
+from .cafe_consume import cafe_consume
+from .cafe_menu import cafe_menu
+from .campground_kitchen import campground_kitchen
+from .campground_rest import campground_rest
+from .canadia_gym import canadia_gym
+from .canadia_mindcontrol import canadia_mindcontrol
+from .charpane import charpane
+from .chat_channel import chat_channel
+from .chat_messages_get import chat_messages_get
+from .choice import choice
+from .clan_accepting_applications import clan_accepting_applications
+from .clan_apply import clan_apply
 from .ClanLogRequest import ClanLogRequest
-from .ClanRaidsRequest import clanRaidsRequest
-from .ClanRaidsPreviousRequest import clanRaidsPreviousRequest
-from .ClanRaidLogRequest import clanRaidLogRequest
-from .ClanStashRequest import clanStashRequest
-from .ClanWhitelistRequest import clanWhitelistRequest
-from .CocktailcraftingRequest import CocktailcraftingRequest
-from .CombatRequest import combatRequest
-from .ComfySofaRequest import ComfySofaRequest
-from .CookingRequest import CookingRequest
-from .Crimbo2011ToyFactoryRequest import Crimbo2011ToyFactoryRequest
-from .Crimbo2011TradeInCandyRequest import Crimbo2011TradeInCandyRequest
-from .CrimboTreeRequest import CrimboTreeRequest
+from .clan_member_boot import clan_member_boot
+from .clan_raid_log import clan_raid_log
+from .clan_raids_previous import clan_raids_previous
+from .clan_raids import clan_raids
+from .clan_ranks import clan_ranks
+from .clan_rumpus_effect import clan_rumpus_effect
+from .clan_rumpus_gym import clan_rumpus_gym
+from .clan_rumpus_item import clan_rumpus_item
+from .clan_rumpus_meat import clan_rumpus_meat
+from .clan_rumpus import clan_rumpus
+from .clan_rumpus_sofa import clan_rumpus_sofa
+from .clan_search import clan_search
+from .clan_show import clan_show
+from .clan_stash_item_add import clan_stash_item_add
+from .clan_stash_item_remove import clan_stash_item_remove
+from .clan_stash_meat_add import clan_stash_meat_add
+from .clan_stash import clan_stash
+from .clan_vip_crimbotree import clan_vip_crimbotree
+from .clan_vip_klaw import clan_vip_klaw
+from .clan_vip_lookingglass import clan_vip_lookingglass
+from .clan_whitelist_add import clan_whitelist_add
+from .clan_whitelist import clan_whitelist
+from .clan_whitelist_remove import clan_whitelist_remove
+from .closet_item_add import closet_item_add
+from .closet_meat_add import closet_meat_add
+from .closet_meat_remove import closet_meat_remove
+from .combat import combat
+from .craft import craft
 from .CurrentEquipmentRequest import CurrentEquipmentRequest
-from .CursePlayerRequest import CursePlayerRequest
-from .DeclineTradeOfferRequest import DeclineTradeOfferRequest
-from .DeclineTradeResponseRequest import DeclineTradeResponseRequest
-from .DeleteMessagesRequest import DeleteMessagesRequest
-from .DeluxeMrKlawRequest import DeluxeMrKlawRequest
-from .DiscardItemRequest import discardItemRequest
+from .curse import curse
+from .display_case_add_items import display_case_add_items
 from .DrinkBoozeRequest import DrinkBoozeRequest
 from .DynamicRequest import DynamicRequest
 from .EatFoodRequest import EatFoodRequest
-from .EquipRequest import EquipRequest
+from .equip import equip
 from .GenericAdventuringRequest import GenericAdventuringRequest
 from .GenericRequest import GenericRequest
-from .GetChatMessagesRequest import getChatMessagesRequest
-from .GetMessagesRequest import getMessagesRequest
-from .GetPendingTradesRequest import GetPendingTradesRequest
 from .GuildTrainRequest import GuildTrainRequest
 from .HermitRequest import HermitRequest
-from .HoboFlexRequest import HoboFlexRequest
-from .HomepageRequest import homepageRequest
-from .InventoryRequest import InventoryRequest
+from .homepage import homepage
+from .inventory import inventory
 from .ItemDescriptionRequest import ItemDescriptionRequest
-from .ItemInformationRequest import ItemInformationRequest
-from .JukeboxRequest import jukeboxRequest
+from .item_discard import item_discard
+from .item_information import item_information
+from .item_multi_use import item_multi_use
+from .item_use import item_use
+from .kmail_delete import kmail_delete
+from .kmail_get import kmail_get
 from .LoadClanAdminRequest import LoadClanAdminRequest
-from .LoginRequest import loginRequest
-from .LogoutRequest import logoutRequest
-from .LookingGlassRequest import LookingGlassRequest
-from .MainRequest import mainRequest
+from .login import login
+from .logout import logout
+from .main import main
 from .MakePasteRequest import MakePasteRequest
-
-# from MallItemPriceSearchRequest import MallItemPriceSearchRequest
+from .MallItemPriceSearchRequest import MallItemPriceSearchRequest
 from .MallItemPurchaseRequest import MallItemPurchaseRequest
-from .MallSearchRequest import mallSearchRequest
+from .mall_search import mall_search
 from .MalusRequest import MalusRequest
-from .MeatBushRequest import meatBushRequest
-from .MeatOrchidRequest import meatOrchidRequest
-from .MeatTreeRequest import meatTreeRequest
-from .MeatpastingRequest import MeatpastingRequest
-from .MindControlRequest import MindControlRequest
-from .MrKlawRequest import mrKlawRequest
 from .NashCrosbysStillRequest import NashCrosbysStillRequest
-from .OldTimeyRadioRequest import oldTimeyRadioRequest
-from .OpenChatRequest import openChatRequest
-from .ProposeTradeRequest import ProposeTradeRequest
-from .PulverizeRequest import PulverizeRequest
-from .QuestLogRequest import QuestLogRequest
-from .RespondToTradeRequest import RespondToTradeRequest
-from .RumpusRoomRequest import RumpusRoomRequest
+from .pulverize import pulverize
+from .questlog import questlog
 from .SearchPlayerRequest import SearchPlayerRequest
-from .SearchClansRequest import searchClansRequest
 from .SendChatRequest import SendChatRequest
 from .SendMessageRequest import SendMessageRequest
-from .SnackMachineRequest import snackMachineRequest
-from .SodaMachineRequest import sodaMachineRequest
-from .StatusRequest import statusRequest
-
-# from StoreGetTransactionsRequest import StoreGetTransactionsRequest
-from .StoreInventoryRequest import StoreInventoryRequest
+from .skill_use import skill_use
+from .status import status
+from .StoreGetTransactionsRequest import StoreGetTransactionsRequest
+from .store_inventory import store_inventory
+from .store_item_add import store_item_add
+from .store_item_remove import store_item_remove
+from .store_item_update import store_item_update
 from .StoreRequest import StoreRequest
-
-# from StoreUpdateItemRequest import StoreUpdateItemRequest
-from .TakeItemFromClanStashRequest import takeItemFromClanStashRequest
-from .TakeItemFromStoreRequest import TakeItemFromStoreRequest
-from .TakeMeatFromClosetRequest import takeMeatFromClosetRequest
-from .TanULotsRequest import TanULotsRequest
-from .ToggleAcceptingClanApplicationsRequest import (
-    ToggleAcceptingClanApplicationsRequest,
-)
+from .trade_cancel import trade_cancel
+from .trade_offer_decline import trade_offer_decline
+from .trade_pending import trade_pending
+from .trade_propose import trade_propose
+from .trade_respond import trade_respond
+from .trade_response_accept import trade_response_accept
+from .trade_response_decline import trade_response_decline
 from .TravelingTraderRequest import TravelingTraderRequest
-from .UneffectRequest import UneffectRequest
-from .UnequipRequest import unequipRequest
-from .UseItemRequest import useItemRequest
-from .UseMultipleRequest import UseMultipleRequest
-from .UseSkillRequest import UseSkillRequest
-from .UserProfileRequest import userProfileRequest
+from .uneffect import uneffect
+from .unequip import unequip
+from .user_profile import user_profile
 from .WokRequest import WokRequest
 
 __all__ = [
-    applyToClanRequest,
-    addItemToStoreRequest,
-    AddItemsToClanStashRequest,
-    AddItemsToClosetRequest,
-    AddItemsToDisplayCaseRequest,
-    AddMeatToClanStashRequest,
-    AddMeatToClosetRequest,
-    clanWhitelistAddPlayerRequest,
-    clanWhitelistRemovePlayerRequest,
-    adventureRequest,
-    ApiRequest,
-    ArcaneTomesRequest,
-    AscensionHistoryRequest,
-    AutoSellRequest,
-    BarrelRequest,
-    BootClanMemberRequest,
-    BountyHunterRequest,
-    CafeMenuRequest,
-    CampgroundKitchenRequest,
-    CampgroundRestRequest,
-    CanadianStudiesRequest,
-    charpaneRequest,
-    choiceRequest,
+    adventure,
+    ascension_history,
+    autosell_items,
+    cafe_consume,
+    cafe_menu,
+    campground_kitchen,
+    campground_rest,
+    canadia_gym,
+    canadia_mindcontrol,
+    charpane,
+    chat_channel,
+    chat_messages_get,
+    choice,
+    clan_accepting_applications,
+    clan_apply,
     ClanLogRequest,
-    clanRaidsRequest,
-    clanRaidsPreviousRequest,
-    clanRaidLogRequest,
-    clanRanksListRequest,
-    clanShowRequest,
-    clanStashRequest,
-    clanWhitelistRequest,
-    CocktailcraftingRequest,
-    combatRequest,
-    ComfySofaRequest,
-    CookingRequest,
-    Crimbo2011ToyFactoryRequest,
-    Crimbo2011TradeInCandyRequest,
-    CrimboTreeRequest,
+    clan_member_boot,
+    clan_raid_log,
+    clan_raids_previous,
+    clan_raids,
+    clan_ranks,
+    clan_rumpus_effect,
+    clan_rumpus_gym,
+    clan_rumpus_item,
+    clan_rumpus_meat,
+    clan_rumpus,
+    clan_rumpus_sofa,
+    clan_search,
+    clan_show,
+    clan_stash_item_add,
+    clan_stash_item_remove,
+    clan_stash_meat_add,
+    clan_stash,
+    clan_vip_crimbotree,
+    clan_vip_klaw,
+    clan_vip_lookingglass,
+    clan_whitelist_add,
+    clan_whitelist,
+    clan_whitelist_remove,
+    closet_item_add,
+    closet_meat_add,
+    closet_meat_remove,
+    combat,
+    craft,
     CurrentEquipmentRequest,
-    CursePlayerRequest,
-    DeclineTradeOfferRequest,
-    DeclineTradeResponseRequest,
-    DeleteMessagesRequest,
-    DeluxeMrKlawRequest,
-    discardItemRequest,
+    curse,
+    display_case_add_items,
     DrinkBoozeRequest,
     DynamicRequest,
     EatFoodRequest,
-    EquipRequest,
+    equip,
     GenericAdventuringRequest,
     GenericRequest,
-    getChatMessagesRequest,
-    getMessagesRequest,
-    GetPendingTradesRequest,
     GuildTrainRequest,
     HermitRequest,
-    HoboFlexRequest,
-    homepageRequest,
-    InventoryRequest,
+    homepage,
+    inventory,
     ItemDescriptionRequest,
-    ItemInformationRequest,
-    jukeboxRequest,
+    item_discard,
+    item_information,
+    item_multi_use,
+    item_use,
+    kmail_delete,
+    kmail_get,
     LoadClanAdminRequest,
-    loginRequest,
-    logoutRequest,
-    LookingGlassRequest,
-    mainRequest,
+    login,
+    logout,
+    main,
     MakePasteRequest,
+    MallItemPriceSearchRequest,
     MallItemPurchaseRequest,
-    mallSearchRequest,
+    mall_search,
     MalusRequest,
-    meatBushRequest,
-    meatOrchidRequest,
-    meatTreeRequest,
-    MeatpastingRequest,
-    MindControlRequest,
-    mrKlawRequest,
     NashCrosbysStillRequest,
-    oldTimeyRadioRequest,
-    openChatRequest,
-    ProposeTradeRequest,
-    PulverizeRequest,
-    QuestLogRequest,
-    RespondToTradeRequest,
-    RumpusRoomRequest,
+    pulverize,
+    questlog,
     SearchPlayerRequest,
-    searchClansRequest,
     SendChatRequest,
     SendMessageRequest,
-    snackMachineRequest,
-    sodaMachineRequest,
-    statusRequest,
-    StoreInventoryRequest,
+    skill_use,
+    status,
+    StoreGetTransactionsRequest,
+    store_inventory,
+    store_item_add,
+    store_item_remove,
+    store_item_update,
     StoreRequest,
-    takeItemFromClanStashRequest,
-    TakeItemFromStoreRequest,
-    takeMeatFromClosetRequest,
-    TanULotsRequest,
-    ToggleAcceptingClanApplicationsRequest,
+    trade_cancel,
+    trade_offer_decline,
+    trade_pending,
+    trade_propose,
+    trade_respond,
+    trade_response_accept,
+    trade_response_decline,
     TravelingTraderRequest,
-    UneffectRequest,
-    unequipRequest,
-    useItemRequest,
-    UseMultipleRequest,
-    UseSkillRequest,
-    userProfileRequest,
+    uneffect,
+    unequip,
+    user_profile,
     WokRequest,
 ]

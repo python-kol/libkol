@@ -29,7 +29,7 @@ def parse(html: str, **kwargs) -> bool:
         raise ItemNotFoundError("Something went wrong with the adding.")
 
 
-def store_add_item(
+def store_item_add(
     session: "Session",
     item: Item,
     quantity: int = 1,

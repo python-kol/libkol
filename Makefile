@@ -1,5 +1,5 @@
 test:
-	python -m pykollib.test.TestAll ${username} ${password}
+	python -m unittest pykollib/test/**/test_*.py
 
 install:
 	pre-commit install

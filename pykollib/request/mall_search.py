@@ -144,7 +144,7 @@ def parse(html: str, **kwargs):
     ]
 
 
-def mallSearchRequest(
+def mall_search(
     session,
     searchQuery,
     category=Category.All,

@@ -1,5 +1,5 @@
 from aiohttp import ClientResponse
-from typing import OrderedTuple, TYPE_CHECKING
+from typing import NamedTuple, TYPE_CHECKING
 
 from ..Error import CannotChangeClanError
 
@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from ..Session import Session
 
 
-class Response(OrderedTuple):
+class Response(NamedTuple):
     success: bool
     already_member: bool
 

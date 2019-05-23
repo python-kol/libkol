@@ -1,12 +1,10 @@
-import pykollib.Error as Error
-from pykollib.util import Report
 from pykollib.pattern import PatternManager
 from .GenericRequest import GenericRequest
 
 import time
 
 
-class StoreGetTransactions(GenericRequest):
+class StoreGetTransactionsRequest(GenericRequest):
     """
 	Get the last 2 weeks of transactions from your store.
 
@@ -21,7 +19,7 @@ class StoreGetTransactions(GenericRequest):
 	"""
 
     def __init__(self, session):
-        super(StoreGetTransactions, self).__init__(session)
+        super(StoreGetTransactionsRequest, self).__init__(session)
         self.url = session.server_url + "backoffice.php"
         self.requestData["which"] = 3
         self.requestData["pwd"] = session.pwd

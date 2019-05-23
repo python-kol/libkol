@@ -39,7 +39,7 @@ def parse(html: str, **kwargs) -> List[Listing]:
     ]
 
 
-def story_inventory(session: "Session") -> ClientResponse:
+def store_inventory(session: "Session") -> ClientResponse:
     """
     This class is used to get a list of items currently in a user's store
     """

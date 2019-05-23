@@ -1,25 +1,23 @@
-import pykollib.Error as Error
-from pykollib.util import Report
 from pykollib.pattern import PatternManager
 from pykollib.old_database import ItemDatabase
 from .GenericRequest import GenericRequest
 
 
-class SearchMallPriceRequest(GenericRequest):
+class MallItemPriceSearchRequest(GenericRequest):
     """
     Search the mall for the lowest prices of an item. This will return the
-    4 lowest unlimited prices, and if applicable, the 3 lowest limited 
+    4 lowest unlimited prices, and if applicable, the 3 lowest limited
     prices with their limit amount per day.
-    
+
     Unlimited and Limited patterns had to be broken apart, since not all items
-    have a limited quantity. 
-    
+    have a limited quantity.
+
     I'm not sure what the counts when doing a search are, but I'm including it anyways.
     """
 
     def __init__(self, session, itemId):
 
-        super(SearchMallPriceRequest, self).__init__(session)
+        super(MallItemPriceSearchRequest, self).__init__(session)
         self.url = session.server_url + "backoffice.php"
         self.requestData["action"] = "prices"
         self.requestData["pwd"] = session.pwd
