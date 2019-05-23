@@ -1,4 +1,4 @@
-from .request import adventureRequest
+from .request import adventure
 
 
 class Location(object):
@@ -9,5 +9,4 @@ class Location(object):
         self.id = id
 
     async def visit(self):
-        s = self.session
-        return await adventureRequest(s, self.id)
+        return await self.session.parse(adventure, self.id)

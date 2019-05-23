@@ -4,17 +4,17 @@ from typing import List, Dict, Any
 
 from .util.decorators import logged_in
 from .request import (
-    applyToClanRequest,
-    clanRaidLogRequest,
-    searchClansRequest,
-    clanShowRequest,
-    clanRaidsRequest,
-    clanRanksListRequest,
-    clanWhitelistRequest,
-    clanRaidsPreviousRequest,
-    clanStashRequest,
-    clanWhitelistAddPlayerRequest,
-    clanWhitelistRemovePlayerRequest,
+    clan_apply,
+    clan_raid_log,
+    clan_search,
+    clan_show,
+    clan_raids,
+    clan_ranks,
+    clan_whitelist,
+    clan_raids_previous,
+    clan_stash,
+    clan_whitelist_add,
+    clan_whitelist_remove,
 )
 
 
@@ -32,8 +32,7 @@ class Clan(object):
     @classmethod
     @logged_in
     async def find(self, session, name):
-        r = await searchClansRequest(self.session, self.name, exact=True)
-        results = await r.parse()
+        results = await session.parse(clan_search, self.name, exact=True)
         if len(results) == 0:
             raise ValueError("Cannot find clan")
         id = results[0]["id"]
@@ -41,7 +40,7 @@ class Clan(object):
 
     @logged_in
     async def load(self, session):
-        info = await (await clanShowRequest(self.session, self.id)).parse()
+        info = await session.parse(clan_show, self.id)
         self.leader = info["leader"]
         self.name = info["name"]
         self.website = info["website"]
@@ -49,43 +48,35 @@ class Clan(object):
 
     @logged_in
     async def get_raids(self):
-        r = await clanRaidsRequest(self.session)
-        return await r.parse()
+        return await self.session.parse(clan_raids)
 
     @logged_in
     async def get_raid_log(self, raid_id: int):
-        r = await clanRaidLogRequest(self.session, raid_id)
-        return await r.parse()
+        return await self.session.parse(clan_raid_log, raid_id)
 
     @logged_in
     async def get_stash(self):
-        r = await clanStashRequest(self.session)
-        return await r.parse()
+        return await self.session.parse(clan_stash)
 
     @logged_in
     async def add_user_to_whitelist(self, user, rank: int = 0, title: str = "") -> bool:
-        r = await clanWhitelistAddPlayerRequest(self.session, user, rank, title)
-        return (await r.parse())["success"]
+        return await self.session.parse(clan_whitelist_add, user, rank, title)
 
     @logged_in
     async def remove_user_from_whitelist(self, user) -> bool:
-        r = await clanWhitelistRemovePlayerRequest(self.session, user)
-        return await r.parse()
+        return await self.session.parse(clan_whitelist_remove, user)
 
     @logged_in
     async def get_whitelist(self, include_rank: bool = False) -> List[Dict[str, Any]]:
-        r = await clanWhitelistRequest(self.session)
-        return await r.parse(include_rank=include_rank)
+        return await self.session.parse(clan_whitelist)
 
     @logged_in
     async def get_rank_permissions(self) -> List[Dict[str, Any]]:
-        r = await clanRanksListRequest(self.session)
-        return await r.parse()
+        return await self.session.parse(clan_ranks)
 
     @logged_in
     async def get_ranks(self) -> List[Dict[str, Any]]:
-        r = await clanWhitelistRequest(self.session)
-        return await r.parse(only_rank=True)
+        return await self.session.parse(clan_whitelist, parse_args={"only_rank": True})
 
     @logged_in
     async def get_previous_raids(self, limit: int = None) -> List[Dict[str, Any]]:
@@ -94,7 +85,7 @@ class Clan(object):
         raids = []
 
         if limit is None:
-            first_page = await (await clanRaidsPreviousRequest(s, page=0)).parse()
+            first_page = await s.parse(clan_raids_previous, page=0)
             raids += first_page["raids"]
             limit = first_page["total"]
 
@@ -102,7 +93,7 @@ class Clan(object):
         for page in range(ceil(limit / 10)):
             if page == 0 and len(raids) > 0:
                 continue
-            task = asyncio.ensure_future(clanRaidsPreviousRequest(s, page=page))
+            task = asyncio.ensure_future(clan_raids_previous(s, page=page))
             tasks.append(task)
 
         r = await asyncio.gather(*tasks)
@@ -114,7 +105,4 @@ class Clan(object):
 
     @logged_in
     async def join(self) -> bool:
-        s = self.session
-
-        data = await (await applyToClanRequest(s, self.id)).parse()
-        return data["success"]
+        return await self.session.parse(clan_apply, self.id)["success"]

@@ -3,17 +3,14 @@ from datetime import datetime
 from typing import List, Dict, Any, TYPE_CHECKING
 from html import unescape
 
-from pykollib.old_database import ItemDatabase
-from pykollib.pattern import PatternManager
+from ..util import parsing
+from ..pattern import PatternManager
 
 if TYPE_CHECKING:
     from ..Session import Session
 
 fullMessagePattern = PatternManager.getOrCompilePattern("fullMessage")
 whitespacePattern = PatternManager.getOrCompilePattern("whitespace")
-singleItemPattern = PatternManager.getOrCompilePattern("acquireSingleItem")
-multiItemPattern = PatternManager.getOrCompilePattern("acquireMultipleItems")
-meatPattern = PatternManager.getOrCompilePattern("gainMeat")
 brickPattern = PatternManager.getOrCompilePattern("brickMessage")
 coffeePattern = PatternManager.getOrCompilePattern("coffeeMessage")
 candyHeartPattern = PatternManager.getOrCompilePattern("candyHeartMessage")
@@ -80,26 +77,10 @@ def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
         }
 
         # Find the items attached to the message.
-        items = []
-        for match in singleItemPattern.finditer(rawText):
-            descId = int(match.group(1))
-            item = ItemDatabase.getOrDiscoverItemFromDescId(descId, session)
-            item["quantity"] = 1
-            items.append(item)
-        for match in multiItemPattern.finditer(rawText):
-            descId = int(match.group(1))
-            quantity = int(match.group(2).replace(",", ""))
-            item = ItemDatabase.getOrDiscoverItemFromDescId(descId, session)
-            item["quantity"] = quantity
-            items.append(item)
-        m["items"] = items
+        m["items"] = parsing.item(rawText)
 
         # Find how much meat was attached to the message.
-        meat = 0
-        meatMatch = meatPattern.search(rawText)
-        if meatMatch:
-            meat = int(meatMatch.group(1).replace(",", ""))
-        m["meat"] = meat
+        m["meat"] = parsing.meat(rawText)
 
         # Handle special messages.
         if brickPattern.search(rawText):

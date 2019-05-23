@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup, PageElement
 from typing import Tuple, Dict, List, Any, TYPE_CHECKING
 
 from ..Error import ClanPermissionsError
-from .ClanRaidLogRequest import parse_raid_log
+from .clan_raid_log import parse_raid_log
 
 if TYPE_CHECKING:
     from ..Session import Session

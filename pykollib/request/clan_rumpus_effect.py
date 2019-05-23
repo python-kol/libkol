@@ -17,7 +17,7 @@ class Type(Enum):
     Radio = (4, 1)
 
 
-def clan_rumpus_jukebox(session: "Session") -> ClientResponse:
+def clan_rumpus_effect(session: "Session") -> ClientResponse:
     "Uses an effect giver in the clan rumpus room."
 
     params = {"action": "click", "spot": type.value[0], "furni": type.value[1]}

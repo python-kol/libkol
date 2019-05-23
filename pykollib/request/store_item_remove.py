@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..Session import Session
 
-from ..Errror import ItemNotFoundError
+from ..Error import ItemNotFoundError
 from ..pattern import PatternManager
 from ..Item import Item
 

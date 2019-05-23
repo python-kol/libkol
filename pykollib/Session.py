@@ -5,15 +5,7 @@ from typing import Callable, Dict, Any, Union, Optional
 from urllib.parse import urlparse
 import asyncio
 
-from .request import (
-    homepageRequest,
-    userProfileRequest,
-    loginRequest,
-    logoutRequest,
-    mainRequest,
-    statusRequest,
-    charpaneRequest,
-)
+from .request import homepage, user_profile, login, logout, main, status, charpane
 from . import Kmail, Clan
 from .database import db, db_kol
 from .Location import Location
@@ -35,7 +27,8 @@ async def parse_method(
         None,
         partial(
             self._kol_parse,
-            html=(await self.text(encoding)),
+            html=(await self.text(encoding)) if self._kol_json is False else None,
+            json=(await self.json()) if self._kol_json is True else None,
             url=self.url,
             session=self._kol_session,
             **kwargs
@@ -79,6 +72,7 @@ class Session:
         method: str = "POST",
         parse: Callable[..., Dict[str, Any]] = lambda html, **kwargs: html,
         pwd: bool = False,
+        json: bool = False,
         **kwargs
     ):
         if urlparse(url).netloc == "":
@@ -93,15 +87,16 @@ class Session:
 
         response = await request
         response._kol_parse = parse
+        response._kol_json = json
         response._kol_session = self
         response.parse = parse_method.__get__(response, response.__class__)
 
         return response
 
-    async def parse(self, request: Callable, *args, **kwargs):
+    async def parse(self, request: Callable, parse_args={}, *args, **kwargs):
         response = await request(self, *args, **kwargs)
         try:
-            return await response.parse()
+            return await response.parse(**parse_args)
         except Exception as e:
             print(request.__name__)
             raise e
@@ -116,19 +111,18 @@ class Session:
         """
 
         # Grab the KoL homepage.
-        r = await homepageRequest(self, server_number=server_number)
-        self.server_url = (await r.parse())["server_url"]
+        self.server_url = (await self.parse(homepage, server_number=server_number))[
+            "server_url"
+        ]
 
         # Perform the login.
-        logged_in = await (
-            await loginRequest(self, username, password, stealth=stealth)
-        ).parse()
+        logged_in = await self.parse(login, username, password, stealth=stealth)
         self.is_connected = logged_in
         self.state["username"] = username
 
         # Loading these both makes various things work
-        await self.parse(mainRequest)
-        await self.parse(charpaneRequest)
+        await self.parse(main)
+        await self.parse(charpane)
 
         await self.get_status()
         await self.get_profile()
@@ -147,14 +141,14 @@ class Session:
 
     @logged_in
     async def get_status(self):
-        data = await (await statusRequest(self)).json(content_type=None)
+        data = await (await status(self)).json(content_type=None)
         self.pwd = data["pwd"]
         self.state["username"] = data["name"]
         self.state["user_id"] = int(data["playerid"])
         self.state["rollover"] = int(data["rollover"])
 
     async def get_profile(self):
-        return await (await userProfileRequest(self, self.get_user_id())).parse()
+        return await self.parse(user_profile, self.get_user_id())
 
     @logged_in
     async def adventure(
@@ -169,4 +163,4 @@ class Session:
     @logged_in
     async def logout(self):
         "Performs a logut request, closing the session."
-        await logoutRequest(self)
+        await self.parse(logout)

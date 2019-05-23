@@ -5,7 +5,7 @@ if TYPE_CHECKING:
     from ..Session import Session
 
 
-def campgroud_rest(session: "Session") -> ClientResponse:
+def campground_rest(session: "Session") -> ClientResponse:
     """
     Rests at the user's campground.
     """

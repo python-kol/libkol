@@ -19,7 +19,7 @@ message_pattern = re.compile(
 )
 
 incoming_response_pattern = re.compile(
-    ': (r\'You will give (?P<playername>.*?) \(#(?P<playerid>[0-9]+)\):<br><table>(?P<outgoingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<outgoingmeat>[0-9,]+)<br><hr>.*? will give you:<br><table>(?P<incomingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<incomingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="makeoffer\.php\?action\=accept&pwd\=.*?&whichoffer\=(?P<tradeid>[0-9]+)">accept',
+    r'You will give (?P<playername>.*?) \(#(?P<playerid>[0-9]+)\):<br><table>(?P<outgoingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<outgoingmeat>[0-9,]+)<br><hr>.*? will give you:<br><table>(?P<incomingitems>.*?)</table><img src="http://images\.kingdomofloathing\.com/itemimages/meat\.gif" width=30 height=30><b>:</b> (?P<incomingmeat>[0-9,]+)<br>(?P<message>.*?)<a href="makeoffer\.php\?action\=accept&pwd\=.*?&whichoffer\=(?P<tradeid>[0-9]+)">accept',
     re.DOTALL,
 )
 
