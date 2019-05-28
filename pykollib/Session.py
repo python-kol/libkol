@@ -93,7 +93,7 @@ class Session:
 
         return response
 
-    async def parse(self, request: Callable, parse_args={}, *args, **kwargs):
+    async def parse(self, request: Callable, *args, parse_args={}, **kwargs):
         response = await request(self, *args, **kwargs)
         try:
             return await response.parse(**parse_args)
@@ -111,9 +111,9 @@ class Session:
         """
 
         # Grab the KoL homepage.
-        self.server_url = (await self.parse(homepage, server_number=server_number))[
-            "server_url"
-        ]
+        self.server_url = (
+            await self.parse(homepage, server_number=server_number)
+        ).server_url
 
         # Perform the login.
         logged_in = await self.parse(login, username, password, stealth=stealth)

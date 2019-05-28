@@ -30,7 +30,7 @@ def parse(html: str, session: "Session", **kwargs) -> Response:
     accepted = "clanhalltop.gif" in html
     already_member = "You can't apply to a clan you're already in." in html
 
-    return {"success": accepted or already_member, "already_member": already_member}
+    return Response(accepted or already_member, already_member)
 
 
 def clan_apply(session: "Session", clan_id: int) -> ClientResponse:

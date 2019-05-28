@@ -105,4 +105,4 @@ class Clan(object):
 
     @logged_in
     async def join(self) -> bool:
-        return await self.session.parse(clan_apply, self.id)["success"]
+        return (await self.session.parse(clan_apply, self.id)).success
