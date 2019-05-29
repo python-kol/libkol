@@ -15,7 +15,7 @@ class Response(NamedTuple):
 def parse(html: str, url: URL, **kwargs) -> Response:
     soup = BeautifulSoup(html, "html.parser")
 
-    challenge_input = soup.find("input", name="challenge")
+    challenge_input = soup.find("input", attrs={"name": "challenge"})
     challenge = challenge_input["value"] if challenge_input else None
 
     return Response(str(url.origin()), challenge)
