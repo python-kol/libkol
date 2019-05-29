@@ -6,7 +6,7 @@ from typing import Callable, Dict, Any, Union, Optional
 from urllib.parse import urlparse
 import asyncio
 
-from .request import homepage, user_profile, login, logout, main, status, charpane
+from .request import homepage, player_profile, login, logout, main, status, charpane
 from . import Kmail, Clan
 from .database import db, db_kol
 from .Location import Location
@@ -155,7 +155,7 @@ class Session:
         self.state["rollover"] = int(data["rollover"])
 
     async def get_profile(self):
-        return await self.parse(user_profile, self.get_user_id())
+        return await self.parse(player_profile, self.get_user_id())
 
     @logged_in
     async def adventure(
