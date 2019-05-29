@@ -11,13 +11,14 @@ from ..Item import Item
 
 class Slot(Enum):
     Hat = "hat"
+    Back = "back"
     Weapon = "weapon"
     Offhand = "offhand"
     Shirt = "shirt"
     Pants = "pants"
-    Slot1 = "acc1"
-    Slot2 = "acc2"
-    Slot3 = "acc3"
+    Acc1 = "acc1"
+    Acc2 = "acc2"
+    Acc3 = "acc3"
     Familiar = "familiarequip"
 
 
