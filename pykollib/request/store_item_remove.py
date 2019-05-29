@@ -1,5 +1,5 @@
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Coroutine, Any
 
 if TYPE_CHECKING:
     from ..Session import Session
@@ -25,7 +25,7 @@ def parse(html: str, **kwargs) -> bool:
 
 def store_item_remove(
     session: "Session", item: Item, quantity: int = 1
-) -> ClientResponse:
+) -> Coroutine[Any, Any, ClientResponse]:
     """
     Take a single item from your store using the new Mall interface from Sep 2013
 

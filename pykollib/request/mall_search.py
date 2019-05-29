@@ -1,6 +1,11 @@
 from enum import Enum
 from yarl import URL
 from bs4 import BeautifulSoup
+from aiohttp import ClientResponse
+from typing import List, Any, TYPE_CHECKING, Coroutine, NamedTuple
+
+if TYPE_CHECKING:
+    from ..Session import Session
 
 from ..Item import Item
 
@@ -49,9 +54,6 @@ class Tier(Enum):
     Epic = 5
 
 
-MELEE_WEAPONS = 1
-RANGED_WEAPONS = 2
-
 sortable_categories = [
     "food",
     "booze",
@@ -66,52 +68,16 @@ sortable_categories = [
 ]
 
 
-def parse(html: str, **kwargs):
-    """
-    Returns a dict in which 'results' references an array of dicts.  If the
-    search included items only, each dict would have the following item keys:
-        descId (always)
-        id (always)
-        image (always)
-        name (always)
-    and sometime, depending on the kind of item,
-        adventuresGained
-        autosell
-        drunkenness
-        fullness
-        isBounty
-        isCandy
-        isCombatReusable
-        isCombatUsable
-        isMultiUsable
-        isReusable
-        isSphere
-        isUsable
-        isUsableOnOthers
-        isZappable
-        moxieGained
-        muscleGained
-        mysticalityGained
-        npcPrice
-        npcStoreId
-        numPackageItems
-        plural
-        power
-        quality
-        requiredMoxie
-        requiredMuscle
-        requiredMysticality
-        spleen
-        type
-    If the search included shops, the dicts would have the following
-    additional keys:
-        hitLimit (if the item's limit has been hit by the session character)
-        limit (if the item is limited per day)
-        price
-        quantity
-        storeId
-        storeName
-    """
+class Listing(NamedTuple):
+    item: Item
+    price: int
+    store_id: int
+    store_name: str
+    stock: int
+    limit: int
+
+
+def parse(html: str, **kwargs) -> List[Listing]:
     soup = BeautifulSoup(html, "html.parser")
     rows = soup.find_all("tr", id=lambda i: i and i.startswith("stock_"))
 
@@ -122,16 +88,18 @@ def parse(html: str, **kwargs):
         ]
 
     return [
-        {
-            "item": Item[int(url.query["searchitem"])],
-            "price": int(url.query["searchprice"]),
-            "store_id": int(url.query["whichstore"]),
-            "store_name": store_name,
-            "stock": int(stock.replace(",", "")),
-            "limit": 0
-            if limit == "\xa0"
-            else int(limit.replace("\xa0", "").replace("/day", "")),
-        }
+        Listing(
+            Item[int(url.query["searchitem"])],
+            int(url.query["searchprice"]),
+            int(url.query["whichstore"]),
+            store_name,
+            int(stock.replace(",", "")),
+            (
+                0
+                if limit == "\xa0"
+                else int(limit.replace("\xa0", "").replace("/day", ""))
+            ),
+        )
         for url, store_name, stock, limit in (
             (
                 URL(row.contents[1].a["href"]),
@@ -145,150 +113,73 @@ def parse(html: str, **kwargs):
 
 
 def mall_search(
-    session,
-    searchQuery,
-    category=Category.All,
-    noLimits=False,
-    maxPrice=0,
-    numResults=0,
-    sortItemsBy=SortBy.Name,
-    sortShopsBy=SortBy.Price,
-    justItems=False,
-    tiers=[t for t in Tier],
-    consumableByMe=0,
-    weaponAttribute=3,
-    weaponHands=3,
-    wearableByMe=0,
+    session: "Session",
+    query: str,
+    category: Category = Category.All,
+    no_limits: bool = False,
+    max_price: int = 0,
+    num_results: int = 0,
+    sort_items_by: SortBy = SortBy.Name,
+    sort_shops_by: SortBy = SortBy.Price,
+    just_items: bool = False,
+    tiers: List[Tier] = [t for t in Tier],
+    consumable_by_me: bool = False,
+    weapon_attribute: int = 3,
+    weapon_hands: int = 3,
+    wearable_by_me: bool = False,
     start=0,
-):
+) -> Coroutine[Any, Any, ClientResponse]:
     """
     Searches for an item at the mall
-    Arguments:
-        session: The Pykol session
-        searchQuery: The string to search for.  You can use % for a wildcard.
-        category: The category to search in, such as 'food'.  The default is
-            to search in all categories.  Note the convenience constants
-            above.
-        noLimits: Whether to exclude shops that have daily purchase limits.
-            Defaults to False.
-        maxPrice: The maximum price to show.  Defaults to 0, which shows all
-            prices.
-        numResults: The number of shops to show per item.  The default is 0,
-            which shows a number of shops depending on the number of items
-            returned.
-        sortItemsBy: How to sort the items listed in the output.  Can be 'name'
-            (the default), 'levelreq', 'levelreqdesc', 'power', 'powerdesc',
-            'statreq', 'statreqdesc', or 'fam'.  Depending on the other
-            search parameters, not all of these values will be maningful.
-        sortShopsBy: How to sort the shops within each individual item.
-            Can be 'price' (the default) or 'stock'.
-        justItems: Whether to suppress the shops and just show a list of items.
-            Defaults to False.
-        tiers: For food and booze, an array listing which quality levels to
-            include in the search results.  Each item in the array can be one
-            of 'crappy', 'decent', 'good', 'awesome', and 'epic'.  Defaults
-            to an array of all five qualities.
-        consumableByMe: For consumable items, whether to list only items that
-            are consumable by the session's character.  Defaults to False.
-        weaponAttribute: For weapons, 1 to list only melee weapons, 2 to list
-            only ranged weapons, or 3 (the default) to list all weapons.
-        weaponHands: For weapons, 1 to list only one-handed weapons, 2 to
-            list only 2-handed weapons, or 3 (the default) to list all weapons.
-        wearableByMe: For wearable items, whether to list only items that can
-            be worn by the session's character.  Defaults to False.
-        start: Not usually needed by the user.  Tells which item in the list
-            of results is to be returned first.  Defaults to 0 (the first item).
-    """
 
-    # NOTES ON THE KOL MALL SEARCH PARAMETERS:
-    # category: One of food,booze,othercon,weapons,hats,shirts,container,
-    #     pants,acc,offhand,famequip,combat,potions,hprestore,mprestore,familiars,
-    #     mrstore,unlockers,new
-    # food_sortitemsby (food)
-    #     name
-    #     levelreq (level requirement)
-    #     levelreqdesc (highest to lowest)
-    # booze_sortitemsby (booze)
-    #     name
-    #     levelreq (level requirement)
-    #     levelreqdesc (highest to lowest)
-    # othercon_sortitemsby (othercon)
-    #     name
-    #     levelreq (level requirement)
-    #     levelreqdesc (highest to lowest)
-    # consumable_byme (0 or 1) (food, booze, othercon)
-    # hats_sortitemsby (hats)
-    #     name
-    #     power
-    #     powerdesc
-    #     statreq
-    #     statreqdesc
-    # shirts_sortitemsby (shirts)
-    #     name
-    #     power
-    #     powerdesc
-    #     statreq
-    #     statreqdesc
-    # pants_sortitemsby (pants)
-    #     name
-    #     power
-    #     powerdesc
-    #     statreq
-    #     statreqdesc
-    # weapons_sortitemsby (weapons)
-    #     name
-    #     power
-    #     powerdesc
-    #     statreq
-    #     statreqdesc
-    # weaponattribute (weapons)
-    #     1: melee, 2: ranged, 3: both
-    # weaponhands (weapons)
-    #     1, 2, 3: both
-    # acc_sortitemsby (accessories)
-    #     name
-    #     statreq
-    #     statreqdesc
-    # offhand_sortitemsby (offhand)
-    #     name
-    #     statreq
-    #     statreqdesc
-    # wearable_byme (shirts hats weapons pants accessories offhand)
-    # famequip_sortitemsby (famequip)
-    #     name
-    #     fam (applicable familiar)
-    # nolimits (0 or 1)
-    # justitems (0 or 1)
-    # sortresultsby
-    #     price (lowest to highest)
-    #     stock (highest to lowest)
-    # max_price
-    # x_cheapest
-    # consumable_tier_1 (0 or 1) (crappy)
-    # consumable_tier_2 (0 or 1) (decent)
-    # consumable_tier_3 (0 or 1) (good)
-    # consumable_tier_4 (0 or 1) (awesome)
-    # consumable_tier_5 (0 or 1) (epic)
+    :param session: The Pykol session
+    :param query: The string to search for.  You can use % for a wildca:param d
+    :param category: The category to search in, such as 'food'.  The default is
+                     to search in all categories.  Note the convenience constants
+                     above.
+    :param no_limits: Whether to exclude shops that have daily purchase limits.
+    :param max_price: The maximum price to show.  Defaults to 0, which shows all
+                      prices.
+    :param num_results: The number of shops to show per item.  The default is 0,
+                        which shows a number of shops depending on the number of items
+                        returned.
+    :param sort_items_by: How to sort the items listed in the output. Depending on the other
+                          search parameters, not all of the possible values will be maningful.
+    :param sort_shops_by: How to sort the shops within each individual item.
+    :param just_items: Whether to suppress the shops and just show a list of items.
+    :param tiers: For food and booze, an array listing which quality levels to
+                  include in the search results.
+    :param consumable_by_me: For consumable items, whether to list only items that
+                             are consumable by the session's character.
+    :param weapon_attribute: For weapons, 1 to list only melee weapons, 2 to list
+                             only ranged weapons, or 3 to list all weapons.
+    :param weapon_hands: For weapons, 1 to list only one-handed weapons, 2 to
+                         list only 2-handed weapons, or 3 to list all weapons.
+    :param wearable_by_me: For wearable items, whether to list only items that can
+                           be worn by the session's character.
+    :param start: Not usually needed by the user. Tells which item in the list
+                  of results is to be returned first.
+    """
 
     params = {
         "didadv": 1,
-        "pudnuggler": searchQuery,
+        "pudnuggler": query,
         "category": category.value,
-        "consumable_byme": consumableByMe,
-        "weaponattribute": weaponAttribute,
-        "weaponhands": weaponHands,
-        "wearable_byme": wearableByMe,
-        "nolimits": "1" if noLimits else "0",
-        "justitems": "1" if justItems else "0",
-        "sortresultsby": sortShopsBy.value,
-        "max_price": maxPrice,
-        "x_cheapest": numResults,
+        "consumable_byme": "1" if consumable_by_me else "0",
+        "weaponattribute": weapon_attribute,
+        "weaponhands": weapon_hands,
+        "wearable_byme": "1" if wearable_by_me else "0",
+        "nolimits": "1" if no_limits else "0",
+        "justitems": "1" if just_items else "0",
+        "sortresultsby": sort_shops_by.value,
+        "max_price": max_price,
+        "x_cheapest": num_results,
         "start": start,
     }
 
     for cat in sortable_categories:
         if cat == category:
-            params[cat + "_sortitemsby"] = sortItemsBy.value
+            params[cat + "_sortitemsby"] = sort_items_by.value
         else:
             params[cat + "_sortitemsby"] = SortBy.Name.value
 
@@ -297,3 +188,75 @@ def mall_search(
             params["consumable_tier_{}".format(tier.value)] = 1 if tier in tiers else 0
 
     return session.request("mall.php", params=params, parse=parse)
+
+
+""" NOTES ON THE KOL MALL SEARCH PARAMETERS:
+category: One of food,booze,othercon,weapons,hats,shirts,container,
+    pants,acc,offhand,famequip,combat,potions,hprestore,mprestore,familiars,
+    mrstore,unlockers,new
+food_sortitemsby (food)
+    name
+    levelreq (level requirement)
+    levelreqdesc (highest to lowest)
+booze_sortitemsby (booze)
+    name
+    levelreq (level requirement)
+    levelreqdesc (highest to lowest)
+othercon_sortitemsby (othercon)
+    name
+    levelreq (level requirement)
+    levelreqdesc (highest to lowest)
+consumable_byme (0 or 1) (food, booze, othercon)
+hats_sortitemsby (hats)
+    name
+    power
+    powerdesc
+    statreq
+    statreqdesc
+shirts_sortitemsby (shirts)
+    name
+    power
+    powerdesc
+    statreq
+    statreqdesc
+pants_sortitemsby (pants)
+    name
+    power
+    powerdesc
+    statreq
+    statreqdesc
+weapons_sortitemsby (weapons)
+    name
+    power
+    powerdesc
+    statreq
+    statreqdesc
+weaponattribute (weapons)
+    1: melee, 2: ranged, 3: both
+weaponhands (weapons)
+    1, 2, 3: both
+acc_sortitemsby (accessories)
+    name
+    statreq
+    statreqdesc
+offhand_sortitemsby (offhand)
+    name
+    statreq
+    statreqdesc
+wearable_byme (shirts hats weapons pants accessories offhand)
+famequip_sortitemsby (famequip)
+    name
+    fam (applicable familiar)
+nolimits (0 or 1)
+justitems (0 or 1)
+sortresultsby
+    price (lowest to highest)
+    stock (highest to lowest)
+max_price
+x_cheapest
+consumable_tier_1 (0 or 1) (crappy)
+consumable_tier_2 (0 or 1) (decent)
+consumable_tier_3 (0 or 1) (good)
+consumable_tier_4 (0 or 1) (awesome)
+consumable_tier_5 (0 or 1) (epic)
+"""

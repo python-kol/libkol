@@ -1,7 +1,8 @@
 from aiohttp import ClientResponse
 from datetime import datetime
-from typing import List, Dict, Any, TYPE_CHECKING
+from typing import List, Dict, Any, TYPE_CHECKING, Union, Coroutine
 from html import unescape
+import re
 
 from ..util import parsing
 from ..pattern import PatternManager
@@ -9,11 +10,21 @@ from ..pattern import PatternManager
 if TYPE_CHECKING:
     from ..Session import Session
 
-fullMessagePattern = PatternManager.getOrCompilePattern("fullMessage")
-whitespacePattern = PatternManager.getOrCompilePattern("whitespace")
-brickPattern = PatternManager.getOrCompilePattern("brickMessage")
-coffeePattern = PatternManager.getOrCompilePattern("coffeeMessage")
-candyHeartPattern = PatternManager.getOrCompilePattern("candyHeartMessage")
+brick_message_pattern = re.compile(
+    r"\/\/images\.kingdomofloathing\.com\/adventureimages\/(brokewin|bigbrick)\.gif"
+)
+candy_heart_message_pattern = re.compile(
+    r"\/\/images\.kingdomofloathing\.com\/otherimages\/heart\/hearttop\.gif"
+)
+coffee_message_pattern = re.compile(
+    r"\/\/images\.kingdomofloathing\.com\/otherimages\/heart\/cuptop\.gif"
+)
+full_message_pattern = re.compile(
+    '<tr><td[^>]*><input type=checkbox name="sel([0-9]+)".*?<b>[^<]*<\/b> <a href="showplayer\.php\?who=([0-9]+)">([^<]*)<\/a>.*?<b>Date:<\/b>([^<]*?)</b>.*?<blockquote>(.*?)<\/blockquote>',
+    re.DOTALL,
+)
+
+whitespace_pattern = PatternManager.getOrCompilePattern("whitespace")
 
 
 def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
@@ -33,12 +44,14 @@ def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
 
     messages = []
 
-    for message in fullMessagePattern.finditer(html):
+    for message in full_message_pattern.finditer(html):
         messageId = int(message.group(1))
         userId = int(message.group(2))
         userName = message.group(3).strip()
 
         dateStr = message.group(4).strip()
+
+        date = ""  # type: Union[datetime, str]
         try:
             date = datetime.strptime(dateStr, "%A, %B %d, %Y, %I:%M%p")
         except ValueError:
@@ -53,7 +66,7 @@ def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
 
         # Get rid of extraneous spaces, tabs, or new lines.
         text = text.replace("\r\n", "\n")
-        text = whitespacePattern.sub(" ", text)
+        text = whitespace_pattern.sub(" ", text)
         text = text.replace("<br />\n", "\n")
         text = text.replace("<br/>\n", "\n")
         text = text.replace("<br>\n", "\n")
@@ -83,11 +96,11 @@ def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
         m["meat"] = parsing.meat(rawText)
 
         # Handle special messages.
-        if brickPattern.search(rawText):
+        if brick_message_pattern.search(rawText):
             m["messageType"] = "brick"
-        elif coffeePattern.search(rawText):
+        elif coffee_message_pattern.search(rawText):
             m["messageType"] = "coffeeCup"
-        elif candyHeartPattern.search(rawText):
+        elif candy_heart_message_pattern.search(rawText):
             m["messageType"] = "candyHeart"
         else:
             m["messageType"] = "normal"
@@ -101,9 +114,9 @@ def kmail_get(
     session: "Session",
     box: str = "Inbox",
     page: int = 0,
-    messages_per_page: int = None,
+    messages_per_page: int = 100,
     oldest_first: bool = False,
-) -> ClientResponse:
+) -> Coroutine[Any, Any, ClientResponse]:
     """
     This request gets a list of kmails from the server.
     Due to a bug in KoL,
@@ -115,17 +128,14 @@ def kmail_get(
     and make multiple requests. KoL is nice enough to remember the
     values you last used for both messagesPerPage and oldestFirst.
     """
-    params = {"box": box}
-    if page > 1:
-        params["begin"] = page
+    if messages_per_page not in [10, 20, 50, 100]:
+        raise ValueError("messages_per_page can only be 10, 20, 50 or 100")
 
-    if messages_per_page:
-        if messages_per_page not in [10, 20, 50, 100]:
-            raise ValueError("messages_per_page can only be 10, 20, 50 or 100")
-
-        params["per_page"] = messages_per_page / 10
-
-    if oldest_first:
-        params["order"] = 1
+    params = {
+        "box": box,
+        "begin": str(page),
+        "order": 1 if oldest_first else 0,
+        "per_page": messages_per_page / 10,
+    }
 
     return session.request("messages.php", params=params, parse=parse)

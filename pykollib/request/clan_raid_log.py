@@ -1,14 +1,16 @@
 from aiohttp import ClientResponse
 from yarl import URL
 from bs4 import BeautifulSoup
-from typing import Dict, Any, TYPE_CHECKING
+from typing import Dict, Any, TYPE_CHECKING, Coroutine
 import re
-import itertools
 
 if TYPE_CHECKING:
     from ..Session import Session
 
-previousRunPattern = re.compile(r"^(.+?) run, ([A-Za-z]+) ([0-9]{2}), ([0-9]{4})$")
+from ..Error import UnknownError
+from ..util import parsing
+
+previous_run_pattern = re.compile(r"^(.+?) run, ([A-Za-z]+) ([0-9]{2}), ([0-9]{4})$")
 
 
 def center_with_no_link(tag):
@@ -43,10 +45,7 @@ def parse_raid_log(name: str, id: int, raid: BeautifulSoup) -> Dict[str, Any]:
         # breaking it up by <br /> tag
         logs = [
             "".join([e.text if e.name else e for e in g])
-            for k, g in itertools.groupby(
-                section.children, key=lambda e: e.name != "br"
-            )
-            if k
+            for g in parsing.split_by_br(section)
         ]
 
         events.append((title, logs))
@@ -64,8 +63,14 @@ def parse_raid_log(name: str, id: int, raid: BeautifulSoup) -> Dict[str, Any]:
 def parse(html: str, url: URL, **kwargs) -> Dict[str, Any]:
     soup = BeautifulSoup(html, "html.parser")
 
-    title = soup.find("b", text=previousRunPattern)
-    name = previousRunPattern.match(title.text).group(1)
+    title = soup.find("b", text=previous_run_pattern)
+
+    m = previous_run_pattern.match(title.text)
+
+    if m is None:
+        raise UnknownError("Cannot parse previous run")
+
+    name = m.group(1)
     id = int(url.query["viewlog"])
     first = title.parent
     raid = first.parent
@@ -73,7 +78,9 @@ def parse(html: str, url: URL, **kwargs) -> Dict[str, Any]:
     return parse_raid_log(name, id, raid)
 
 
-def clan_raid_log(session: "Session", raid_id: int) -> ClientResponse:
+def clan_raid_log(
+    session: "Session", raid_id: int
+) -> Coroutine[Any, Any, ClientResponse]:
     """
     Retrieves on a previous raid.
     """
