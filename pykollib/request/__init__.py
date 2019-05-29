@@ -66,6 +66,7 @@ from .mall_search import mall_search
 from .mall_search_price import mall_search_price
 from .npc_buy import npc_buy
 from .player_profile import player_profile
+from .player_search import player_search
 from .pulverize import pulverize
 from .questlog import questlog
 from .skill_use import skill_use
@@ -153,6 +154,7 @@ __all__ = [
     mall_search,
     npc_buy,
     player_profile,
+    player_search,
     pulverize,
     questlog,
     skill_use,
