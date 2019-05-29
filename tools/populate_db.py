@@ -1,3 +1,4 @@
+from html import unescape
 from urllib import request
 import re
 
@@ -63,6 +64,10 @@ range_pattern = re.compile(r"(-?[0-9]+)(?:-(-?[0-9]+))?")
 
 def split_range(range: str):
     m = range_pattern.match(range)
+
+    if m is None:
+        raise ValueError("Cannot split range: {}".format(range))
+
     start = int(m.group(1))
     return start, int(m.group(2)) if m.group(2) else start
 
@@ -72,6 +77,10 @@ id_duplicate_pattern = re.compile(r"\[([0-9]+)\].+")
 
 def get_id_from_duplicate(name: str):
     m = id_duplicate_pattern.match(name)
+
+    if m is None:
+        raise ValueError("Cannot extract id from duplicate item name: {}".format(name))
+
     return int(m.group(1))
 
 
@@ -80,7 +89,7 @@ def load_mafia_zapgroups():
     items = []
 
     for line in request.urlopen(ZAP_GROUPS_FILE):
-        line = line.decode("utf-8")
+        line = unescape(line.decode("utf-8"))
         if len(line) < 2 or line[0] == "#":
             continue
 
@@ -100,7 +109,7 @@ def load_mafia_foldgroups():
     items = []
 
     for line in request.urlopen(FOLD_GROUPS_FILE):
-        line = line.decode("utf-8")
+        line = unescape(line.decode("utf-8"))
 
         if len(line) < 2 or line[0] == "#":
             continue
@@ -125,7 +134,7 @@ def load_mafia_items():
     items = []
 
     for line in request.urlopen(ITEMS_FILE):
-        line = line.decode("utf-8")
+        line = unescape(line.decode("utf-8"))
 
         if len(line) == 0 or line[0] == "#":
             continue
@@ -202,7 +211,7 @@ def load_mafia_equipment():
     items = []
 
     for line in request.urlopen(EQUIPMENT_FILE):
-        line = line.decode("utf-8")
+        line = unescape(line.decode("utf-8"))
         if len(line) == 0:
             continue
 
@@ -294,7 +303,7 @@ def load_mafia_consumables(consumable_type):
     items = []
 
     for line in request.urlopen("{}{}.txt".format(mafia_data, consumable_type)):
-        line = line.decode("utf-8")
+        line = unescape(line.decode("utf-8"))
 
         if len(line) == 0 or line[0] == "#":
             continue
