@@ -36,55 +36,43 @@ from .clan_vip_lookingglass import clan_vip_lookingglass
 from .clan_whitelist import clan_whitelist
 from .clan_whitelist_add import clan_whitelist_add
 from .clan_whitelist_remove import clan_whitelist_remove
-from .ClanLogRequest import ClanLogRequest
 from .closet_item_add import closet_item_add
 from .closet_meat_add import closet_meat_add
 from .closet_meat_remove import closet_meat_remove
 from .combat import combat
 from .craft import craft
-from .CurrentEquipmentRequest import CurrentEquipmentRequest
 from .curse import curse
 from .display_case_add_items import display_case_add_items
-from .DrinkBoozeRequest import DrinkBoozeRequest
-from .DynamicRequest import DynamicRequest
-from .EatFoodRequest import EatFoodRequest
+from .drink import drink
+from .eat import eat
 from .equip import equip
-from .GenericAdventuringRequest import GenericAdventuringRequest
-from .GenericRequest import GenericRequest
-from .GuildTrainRequest import GuildTrainRequest
-from .HermitRequest import HermitRequest
+from .equipment import equipment
+from .guild_train import guild_train
+from .hermit_menu import hermit_menu
+from .hermit_trade import hermit_trade
 from .homepage import homepage
 from .inventory import inventory
 from .item_discard import item_discard
 from .item_information import item_information
 from .item_multi_use import item_multi_use
 from .item_use import item_use
-from .ItemDescriptionRequest import ItemDescriptionRequest
 from .kmail_delete import kmail_delete
 from .kmail_get import kmail_get
 from .kmail_send import kmail_send
-from .LoadClanAdminRequest import LoadClanAdminRequest
 from .login import login
 from .logout import logout
 from .main import main
-from .MakePasteRequest import MakePasteRequest
 from .mall_search import mall_search
-from .MallItemPriceSearchRequest import MallItemPriceSearchRequest
-from .MallItemPurchaseRequest import MallItemPurchaseRequest
-from .MalusRequest import MalusRequest
-from .NashCrosbysStillRequest import NashCrosbysStillRequest
+from .mall_search_price import mall_search_price
+from .npc_buy import npc_buy
 from .pulverize import pulverize
 from .questlog import questlog
-from .SearchPlayerRequest import SearchPlayerRequest
-from .SendChatRequest import SendChatRequest
 from .skill_use import skill_use
 from .status import status
 from .store_inventory import store_inventory
 from .store_item_add import store_item_add
 from .store_item_remove import store_item_remove
 from .store_item_update import store_item_update
-from .StoreGetTransactionsRequest import StoreGetTransactionsRequest
-from .StoreRequest import StoreRequest
 from .trade_cancel import trade_cancel
 from .trade_offer_decline import trade_offer_decline
 from .trade_pending import trade_pending
@@ -92,11 +80,9 @@ from .trade_propose import trade_propose
 from .trade_respond import trade_respond
 from .trade_response_accept import trade_response_accept
 from .trade_response_decline import trade_response_decline
-from .TravelingTraderRequest import TravelingTraderRequest
 from .uneffect import uneffect
 from .unequip import unequip
 from .user_profile import user_profile
-from .WokRequest import WokRequest
 
 __all__ = [
     adventure,
@@ -137,55 +123,43 @@ __all__ = [
     clan_whitelist_add,
     clan_whitelist_remove,
     clan_whitelist,
-    ClanLogRequest,
     closet_item_add,
     closet_meat_add,
     closet_meat_remove,
     combat,
     craft,
-    CurrentEquipmentRequest,
     curse,
     display_case_add_items,
-    DrinkBoozeRequest,
-    DynamicRequest,
-    EatFoodRequest,
+    drink,
+    eat,
     equip,
-    GenericAdventuringRequest,
-    GenericRequest,
-    GuildTrainRequest,
-    HermitRequest,
+    equipment,
+    guild_train,
+    hermit_menu,
+    hermit_trade,
     homepage,
     inventory,
     item_discard,
     item_information,
     item_multi_use,
     item_use,
-    ItemDescriptionRequest,
     kmail_delete,
     kmail_get,
     kmail_send,
-    LoadClanAdminRequest,
     login,
     logout,
     main,
-    MakePasteRequest,
     mall_search,
-    MallItemPriceSearchRequest,
-    MallItemPurchaseRequest,
-    MalusRequest,
-    NashCrosbysStillRequest,
+    mall_search_price,
+    npc_buy,
     pulverize,
     questlog,
-    SearchPlayerRequest,
-    SendChatRequest,
     skill_use,
     status,
     store_inventory,
     store_item_add,
     store_item_remove,
     store_item_update,
-    StoreGetTransactionsRequest,
-    StoreRequest,
     trade_cancel,
     trade_offer_decline,
     trade_pending,
@@ -193,9 +167,7 @@ __all__ = [
     trade_respond,
     trade_response_accept,
     trade_response_decline,
-    TravelingTraderRequest,
     uneffect,
     unequip,
     user_profile,
-    WokRequest,
 ]
