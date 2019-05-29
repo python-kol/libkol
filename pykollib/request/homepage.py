@@ -1,4 +1,5 @@
 from aiohttp import ClientResponse
+from bs4 import BeautifulSoup
 from typing import TYPE_CHECKING, NamedTuple
 from yarl import URL
 
@@ -8,10 +9,16 @@ if TYPE_CHECKING:
 
 class Response(NamedTuple):
     server_url: str
+    challenge: str
 
 
-def parse(url: URL, **kwargs) -> Response:
-    return Response(str(url.origin()))
+def parse(html: str, url: URL, **kwargs) -> Response:
+    soup = BeautifulSoup(html, "html.parser")
+
+    challenge_input = soup.find("input", name="challenge")
+    challenge = challenge_input["value"] if challenge_input else None
+
+    return Response(str(url.origin()), challenge)
 
 
 def homepage(session: "Session", server_number: int = 0) -> ClientResponse:

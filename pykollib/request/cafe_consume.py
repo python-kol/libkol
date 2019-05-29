@@ -7,20 +7,18 @@ if TYPE_CHECKING:
 from .cafe_menu import Cafe
 from ..pattern import PatternManager
 from ..util import parsing
-from ..Error import InvalidLocationError, ItemNotFoundError, NotEnoughMeatError
+from ..Error import InvalidLocationError, WrongKindOfItemError, NotEnoughMeatError
 from ..Item import Item
 
-not_enough_meat_pattern = PatternManager.getOrCompilePattern("noMeatForStore")
 cannot_go_pattern = PatternManager.getOrCompilePattern("userShouldNotBeHere")
-not_sold_pattern = PatternManager.getOrCompilePattern("notSoldHere")
 
 
 def parse(html: str, **kwargs) -> parsing.ResourceGain:
     if cannot_go_pattern.search(html):
         raise InvalidLocationError("You cannot reach that cafe.")
-    if not_sold_pattern.search(html):
-        raise ItemNotFoundError("This cafe doesn't carry that item.")
-    if not_enough_meat_pattern.search(html):
+    if "This store doesn't sell that item" in html or "Invalid item selected" in html:
+        raise WrongKindOfItemError("This cafe doesn't carry that item.")
+    if "You can't afford " in html:
         raise NotEnoughMeatError("You do not have enough meat to purchase the item(s).")
 
     return parsing.resource_gain(html)

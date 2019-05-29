@@ -1,5 +1,5 @@
 from aiohttp import ClientResponse
-from typing import NamedTuple, TYPE_CHECKING
+from typing import NamedTuple, TYPE_CHECKING, Coroutine, Any
 
 from ..Error import CannotChangeClanError
 
@@ -33,7 +33,7 @@ def parse(html: str, session: "Session", **kwargs) -> Response:
     return Response(accepted or already_member, already_member)
 
 
-def clan_apply(session: "Session", clan_id: int) -> ClientResponse:
+def clan_apply(session: "Session", clan_id: int) -> Coroutine[Any, Any, ClientResponse]:
     """
     Apply to a clan
 

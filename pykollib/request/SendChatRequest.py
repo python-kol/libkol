@@ -1,7 +1,6 @@
 from .GenericRequest import GenericRequest
 from pykollib.util import ChatUtils
 
-import time
 import unicodedata
 import urllib.request, urllib.parse, urllib.error
 

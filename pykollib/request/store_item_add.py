@@ -1,6 +1,5 @@
 from aiohttp import ClientResponse
 from typing import TYPE_CHECKING
-from time import time
 
 from ..Error import ItemNotFoundError
 from ..pattern import PatternManager
@@ -51,12 +50,12 @@ def store_item_add(
 
     params = {
         "action": "additem",
-        "_": int(time() * 1000),
-        "ajax": 1,
         "itemid": item.id if from_hangks is False else "h{}".format(item.id),
         "price": price,
         "limit": limit,
         "quantity": quantity,
     }
 
-    return session.request("backoffice.php", pwd=True, params=params, parse=parse)
+    return session.request(
+        "backoffice.php", ajax=True, pwd=True, params=params, parse=parse
+    )

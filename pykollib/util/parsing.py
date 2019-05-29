@@ -1,17 +1,37 @@
 import re
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from typing import List, Dict, Any, NamedTuple
-from pykollib.pattern import PatternManager
+from itertools import groupby
+from copy import copy
 
+from ..pattern import PatternManager
 from ..Item import Item, ItemQuantity
 from ..Stat import Stat
 
 
-def panel(html: str, title: str = "Results:") -> BeautifulSoup:
+def panel(html: str, title: str = "Results:") -> Tag:
     soup = BeautifulSoup(html, "html.parser")
     headers = soup.find_all("b", text=title)
-    header = next((h for h in headers), None)
+    header = next(h for h in headers)
     return header.parent.parent.next_sibling.td
+
+
+def wrap_elements(wrapper: Tag, elements: List[Tag]):
+    w = copy(wrapper)
+    elements[0].wrap(w)
+    for e in elements[1:]:
+        w.append(e)
+    return w
+
+
+def split_by_br(element: Tag, wrapper: Tag = None):
+    return [
+        wrap_elements(wrapper, g) if wrapper is not None else g
+        for g in (
+            list(g) for k, g in groupby(element.children, key=lambda e: e.name != "br")
+        )
+        if g[0].name != "br"
+    ]
 
 
 single_item_pattern = re.compile(
@@ -21,9 +41,14 @@ multi_item_pattern = re.compile(
     r"<td[^>]*><img src=\"[^\"]*\" alt=\"[^\"]*\" title=\"[^\"]*\"[^>]*descitem\(([0-9]+)\)[^>]*><\/td><td[^>]*>You acquire <b>([0-9,]*)"
 )
 
+gain_meat_pattern = re.compile(
+    r"<td><img src=\"[^\"]*meat\.gif\"[^>]*><\/td><td[^>]*>You gain ([0-9,]*?) Meat\.<\/td>"
+)
+lose_meat_pattern = re.compile(r"You (?:lose|spent) ([0-9,]+) Meat")
+
 
 def item(text: str) -> List[ItemQuantity]:
-    item_quantities = []
+    item_quantities = []  # type: List[ItemQuantity]
 
     for match in single_item_pattern.finditer(text):
         item = Item.get_or_none(desc_id=int(match.group(1)))
@@ -38,12 +63,11 @@ def item(text: str) -> List[ItemQuantity]:
 
 
 def meat(text) -> int:
-    meatPattern = PatternManager.getOrCompilePattern("gainMeat")
-    match = meatPattern.search(text)
+    match = gain_meat_pattern.search(text)
     if match:
         return int(match.group(1).replace(",", ""))
-    meatPattern = PatternManager.getOrCompilePattern("loseMeat")
-    match = meatPattern.search(text)
+
+    match = lose_meat_pattern.search(text)
     if match:
         return -1 * int(match.group(1).replace(",", ""))
 
@@ -175,7 +199,7 @@ def adventures(text: str) -> int:
 
 
 def effects(text: str) -> List[Dict[str, Any]]:
-    effects = []
+    effects = []  # type: List[Dict[str, Any]]
     effectPattern = PatternManager.getOrCompilePattern("gainEffect")
     for match in effectPattern.finditer(text):
         effects += [
@@ -191,7 +215,7 @@ class ResourceGain(NamedTuple):
     substats: Dict[str, int]
     stats: Dict[str, int]
     level: int
-    effects: List[Dict[str, any]]
+    effects: List[Dict[str, Any]]
     hp: int
     mp: int
 
