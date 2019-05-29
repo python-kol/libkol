@@ -1,10 +1,19 @@
+from typing import Optional
+
+
 class Error(Exception):
-    def __init__(self, message, wait=None):
+    def __init__(self, message: str, wait: Optional[int] = None) -> None:
         self.message = message
         self.wait = wait
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.message
+
+
+class ItemError(Error):
+    def __init__(self, *args, item: Optional[int] = None, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.item = item
 
 
 class LoginFailedGenericError(Error):
@@ -47,7 +56,7 @@ class InvalidUserError(Error):
     pass
 
 
-class ItemNotFoundError(Error):
+class ItemNotFoundError(ItemError):
     pass
 
 
