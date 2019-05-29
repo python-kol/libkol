@@ -65,6 +65,7 @@ from .main import main
 from .mall_search import mall_search
 from .mall_search_price import mall_search_price
 from .npc_buy import npc_buy
+from .player_profile import player_profile
 from .pulverize import pulverize
 from .questlog import questlog
 from .skill_use import skill_use
@@ -82,7 +83,6 @@ from .trade_response_accept import trade_response_accept
 from .trade_response_decline import trade_response_decline
 from .uneffect import uneffect
 from .unequip import unequip
-from .user_profile import user_profile
 
 __all__ = [
     adventure,
@@ -149,9 +149,10 @@ __all__ = [
     login,
     logout,
     main,
-    mall_search,
     mall_search_price,
+    mall_search,
     npc_buy,
+    player_profile,
     pulverize,
     questlog,
     skill_use,
@@ -169,5 +170,4 @@ __all__ = [
     trade_response_decline,
     uneffect,
     unequip,
-    user_profile,
 ]
