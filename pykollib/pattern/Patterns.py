@@ -6,23 +6,14 @@ then the first element of the tuple should be the pattern while the second eleme
 to pass to re.compile (like re.DOTALL).
 """
 
-import re
-
 patterns = {
     # General patterns.
     "whitespace": r"([\t ]+)",
     "results": r"<b>Results:<\/b><\/td><\/tr><tr><td[^<>]*><center><table><tr><td>(.*?)</td></tr></table></center></td></tr>",
     "htmlComment": r"<!--.*?-->",
     "htmlTag": r"<[^>]*?>",
-    # Login-related patterns.
-    "accountPwd": r'var pwdhash = "([0-9a-f]+)";',
-    "accountId": r"var playerid = ([0-9]+);",
-    "accountName": r'<a [^<>]*href="charsheet\.php">(?:<b>)?([^<>]+)<',
-    "loginChallenge": r'name="?challenge"?\s+value="?([0-9a-f]+)"?',
     # Item-related patterns.
     "menuItem": r'<input type=radio name=whichitem value="?(-?[0-9]+)"?></td><td><img .*? onclick=\'descitem\("?([^"]+)"?\);\'>',
-    "gainMeat": r'<td><img src="[^"]*meat\.gif"[^>]*><\/td><td[^>]*>You gain ([0-9,]*?) Meat\.<\/td>',
-    "loseMeat": r"You lose ([0-9,]*?) Meat",
     "isCocktailcraftingIngredient": (r"<br>\(Cocktailcrafting ingredient\)<br>"),
     "isCookingIngredient": r"<br>\(Cooking ingredient\)<br>",
     "isJewelrymakingComponent": r"<br>\(Jewelrymaking component\)<br>",
@@ -33,18 +24,6 @@ patterns = {
     "itemImage": r'\/images\.kingdomofloathing\.com\/itemimages\/(.*?)"',
     "itemName": r"<b>(.+?)<\/b>",
     "itemType": r"<br>Type: <b>([^<]*)<.*\/b><br>",
-    "tooFull": r"You're too full to eat that\.",
-    "tooDrunk": r"You're way too drunk already\.",
-    "notBooze": r"That's not booze\.",
-    "notFood": r"That's not something you can eat\.",
-    # Message-related patterns.
-    "brickMessage": r"\/\/images\.kingdomofloathing\.com\/adventureimages\/(brokewin|bigbrick)\.gif",
-    "candyHeartMessage": r"\/\/images\.kingdomofloathing\.com\/otherimages\/heart\/hearttop\.gif",
-    "coffeeMessage": r"\/\/images\.kingdomofloathing\.com\/otherimages\/heart\/cuptop\.gif",
-    "fullMessage": (
-        '<tr><td[^>]*><input type=checkbox name="sel([0-9]+)".*?<b>[^<]*<\/b> <a href="showplayer\.php\?who=([0-9]+)">([^<]*)<\/a>.*?<b>Date:<\/b>([^<]*?)</b>.*?<blockquote>(.*?)<\/blockquote>',
-        re.DOTALL,
-    ),
     # Error patterns.
     "notEnoughItems": r"(?:<td>You haven't got that many\.<\/td>)|(?:You don't have the item you're trying to use\.)|(?:You don't have the item you're trying to equip\.)",
     # Chat patterns.
@@ -97,16 +76,7 @@ patterns = {
     # Meatpasting patterns.
     "noMeatForMeatpasting": r"<td>You don't have enough Meat to make that many\.</td>",
     # Store patterns.
-    "meatSpent": r"You spent ([0-9,]+) Meat",
-    "noMeatForStore": r"(?:You can't afford that many of that item)|(?:You can't afford that item)|(?:You can't afford to purchase that)",
-    "invalidStore": r"You've been sent back here by some kind of bug",
-    "notSoldHere": r"(?:This store doesn't sell that item)|(?:Invalid item selected)",
     "storeInventory": r'<tr class="deets" rel="([0-9]+)" after="([0-9]+)">(.*?)<b>(.*?)</b></td><td valign="center" align="center">([0-9]+)</td(.*?)name="price\[([0-9]+)\]" value="([0-9,]+)"(.*?)name="limit\[[0-9]+\]" value="([0-9]+)"(.*?)cheapest: ([0-9]+)</span>',
-    # Hermit patterns.
-    "noTrinkets": r"You don't have enough stuff",
-    "noHermitPermits": r"You don't have enough Hermit Permits to trade for that many",
-    "notEnoughClovers": r"you are able to infer that he doesn't have enough clovers to make that trade",
-    "notHermitItem": r"The Hermit doesn't have that item",
     # Adventure patterns.
     "twiddlingThumbs": r"You twiddle your thumbs\.",
     "userShouldNotBeHere": r"(?:>You shouldn't be here\.<)|(?:)>This is not currently available to you\.<",
@@ -118,8 +88,6 @@ patterns = {
     "fightLost": r"<p>You lose\. +You slink away, dejected and defeated\.<p>",
     "usedBarrel": r"KOMPRESSOR does not smash",
     "noAdventures": r"You're out of adventures",
-    # Rumpus Room patterns.
-    "rumpusRoomFurniture": r"rump([0-9])_([0-9])\.gif",
     # Mall search patterns.
     "mallItemSearchResult": r'<tr class="graybelow(.*?)<\/tr>',
     "mallItemSearchDetails": r'<a[^<>]*href="mallstore\.php\?whichstore=(?P<storeId>[0-9]+)&searchitem=(?P<itemId>[0-9]+)&searchprice=(?P<price>[0-9]+)"><b>(?P<storeName>.*?)<\/b><\/a>[^<>]*<\/td><td[^<>]*>(?P<quantity>[0-9,]+)<\/td><td[^<>]*>(?:&nbsp;)*(?P<limit>[0-9,]*)[^<>]*<\/td>',
@@ -133,27 +101,6 @@ patterns = {
     # Canadia patterns.
     "noAdvInstitue": r">You don't have that many Adventures\.  Take off, eh\?<",
     "invalidAdvInstitute": r">That doesn't make any sense, you hoser\.<",
-    # Guild patterns.
-    "skillNotTrainable": r">Invalid skill selected\.<",
-    "skillTooWeak": r">You're not powerful enough to train that skill\.<",
-    "skillTooPoor": r">You can't afford to train that skill\.<",
-    "skillLearned": r">You learn a new skill: <b>(.*?)</b>",
-    "skillHaveAlready": r">You've already got that skill\.<",
-    # Equipment patterns
-    "currentHat": r"Hat</a>:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    "currentWeapon": r"Weapon</a>:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    "currentOffhand": r"Offhand</a>:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    "currentShirt": r"Shirt</a>:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    "currentPants": r"Pants</a>:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    "currentAcc": r"Accessory</a>:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    "currentAcc1": r"Accessory</a>&nbsp;1:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    "currentAcc2": r"Accessory</a>&nbsp;2:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    "currentAcc3": r"Accessory</a>&nbsp;3:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    "currentFam": r"Familiar</a>:</td><td><img src=\"[^\"]+\" class=hand onClick='descitem\(([0-9]+)\)'",
-    # Ascension History patterns.
-    "fullAscension": r'</tr><td[^>]*>([0-9]+).*?</td><td[^>]*>([0-9/]+).*?</td><td[^>]*><span[^>]*>([0-9,]+).*?</span>.*?</td><td[^>]*><img [^>]*title="(.*?)"[^>]*></td><td[^>]*>(.*?)</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(?:<img [^>]*title="(.*?)"[^>]*>)?</td><td[^>]*>(<img [^>]*title="(.*?)"[^>]*>|<img src="http://images\.kingdomofloathing\.com/otherimages/spacer.gif" width=30 height=30>)(<img [^>]*title="(.*?)"[^>]*>|</td>)',
-    "familiarAscension": r"^(.*?) \(([0-9.]+)%\)",
-    "playerName": r"Ascension History \(<a[^>]*><font[^>]*>(.*?)<\/font><\/a>\)",
     # Clan patterns.
     "clanName": r'<a href="clan_hall\.php">([^<>]*)<\/a>',
     "clanCredo": r"<textarea name=newcredo[^<>]*>([^<>]*)</textarea>",
@@ -210,10 +157,7 @@ patterns = {
     "itemAddedSuccessfully": r"<td>\(([0-9]+)\) (.*) for ([0-9,]+) meat each",
     "dontHaveThatManyInStore": "You don't have that many in your store.",
     "itemTakenSuccessfully": "You acquire",
-    "mallPricesUnlimited": r"<tr><td>unlimited:</td><td><b>([0-9,]+)</b> x([0-9]+).*?</td><td><b>([0-9,]+)</b> x([0-9]+).*?</td><td><b>([0-9,]+)</b> x([0-9]+).*?</td><td><b>([0-9,]+)</b> x([0-9]+).*?</td></tr>",
-    "mallPricesLimited": r"<tr><td>limited:</td><td><b>([0-9,]+)</b>\(([0-9]+)/day\) x([0-9]+).*?</td><td><b>([0-9,]+)</b>\(([0-9]+)/day\) x([0-9]+).*?</td><td><b>([0-9,]+)</b>\(([0-9]+)/day\) x([0-9]+).*?</td></tr>",
     "mallPriceNotUpdated": "Nothing updated",
-    "mallTransactions": r"([1-9][1-9]/[1-9][1-9]/[1-9][1-9] [1-9][1-9]:[1-9][1-9]:[1-9][1-9]) <a class=nounder href=\"showplayer.php\?who=([0-9]+)\"><b>(.*?)<\/b><\/a> bought ([0-9]+) \((.*?)\) for ([0-9]+) Meat.<br>",
     # Trade related patterns
     "traderIgnoringUs": r"<td>You can't make an offer to a player who has placed you on his or her ignore list\.",
     "traderIsInRoninHC": r"<td>That player cannot receive Meat or items from other players\.",
