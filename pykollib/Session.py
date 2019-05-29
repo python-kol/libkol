@@ -1,6 +1,7 @@
 from aiohttp import ClientSession, ClientResponse
 from functools import partial
 from os import path
+from time import time
 from typing import Callable, Dict, Any, Union, Optional
 from urllib.parse import urlparse
 import asyncio
@@ -70,18 +71,24 @@ class Session:
         self,
         url: str,
         method: str = "POST",
-        parse: Callable[..., Dict[str, Any]] = lambda html, **kwargs: html,
+        parse: Callable[..., Any] = lambda html, **kwargs: html,
         pwd: bool = False,
+        ajax: bool = False,
         json: bool = False,
         **kwargs
-    ):
+    ) -> ClientResponse:
         if urlparse(url).netloc == "":
             url = "{}/{}".format(self.server_url, url)
 
+        if "params" not in kwargs:
+            kwargs["params"] = {}
+
         if pwd:
-            if "params" not in kwargs:
-                kwargs["params"] = {}
             kwargs["params"]["pwd"] = self.pwd
+
+        if ajax:
+            kwargs["params"]["_"] = int(time() * 1000)
+            kwargs["params"]["ajax"] = 1
 
         request = self.client.request(method, url, **kwargs)
 
