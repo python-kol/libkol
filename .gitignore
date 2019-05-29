@@ -3,3 +3,4 @@ src/.pydevproject
 *.egg-info/
 build/
 dist/
+.mypy_cache/
