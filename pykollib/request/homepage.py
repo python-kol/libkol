@@ -1,10 +1,10 @@
+from typing import Any, Coroutine, NamedTuple
+
 from aiohttp import ClientResponse
 from bs4 import BeautifulSoup
-from typing import TYPE_CHECKING, NamedTuple
 from yarl import URL
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 
 class Response(NamedTuple):
@@ -21,7 +21,7 @@ def parse(html: str, url: URL, **kwargs) -> Response:
     return Response(str(url.origin()), challenge)
 
 
-def homepage(session: "Session", server_number: int = 0) -> ClientResponse:
+def homepage(session: "pykollib.Session", server_number: int = 0) -> Coroutine[Any, Any, ClientResponse]:
     """
     This request is most often used before logging in. It allows the KoL servers to assign a
     particular server number to the user. In addition, it gives us the user's login challenge

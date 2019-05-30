@@ -1,10 +1,10 @@
+from typing import Any, Coroutine, List
+
 from aiohttp import ClientResponse
-from typing import List, Coroutine, Any, TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from ..Error import ItemNotFoundError, WrongKindOfItemError, UnknownError
+from ..Error import ItemNotFoundError, UnknownError, WrongKindOfItemError
 from ..Item import Item, ItemQuantity
 from ..util import parsing
 
@@ -38,7 +38,7 @@ def parse(html: str, **kwargs) -> List[ItemQuantity]:
 
 
 def hermit_trade(
-    session: "Session", item: Item, quantity: int = 1
+    session: "pykollib.Session", item: Item, quantity: int = 1
 ) -> Coroutine[Any, Any, ClientResponse]:
     data = {"action": "trade", "quantity": quantity, "whichitem": item.id}
     return session.request("hermit.php", data=data, parse=parse)

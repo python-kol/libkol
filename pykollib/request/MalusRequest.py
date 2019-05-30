@@ -1,6 +1,7 @@
-from .GenericRequest import GenericRequest
 from pykollib.old_database import ItemDatabase
 from pykollib.pattern import PatternManager
+
+from .GenericRequest import GenericRequest
 
 
 class MalusRequest(GenericRequest):

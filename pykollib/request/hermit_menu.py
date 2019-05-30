@@ -1,9 +1,9 @@
-from bs4 import BeautifulSoup
-from aiohttp import ClientResponse
-from typing import List, Coroutine, Any, TYPE_CHECKING
+from typing import Any, Coroutine, List
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+from bs4 import BeautifulSoup
+
+import pykollib
 
 from ..Item import Item, ItemQuantity
 
@@ -26,5 +26,5 @@ def parse(html: str, **kwargs) -> List[ItemQuantity]:
     return menu
 
 
-def hermit_menu(session: "Session") -> Coroutine[Any, Any, ClientResponse]:
+def hermit_menu(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     return session.request("hermit.php", parse=parse)

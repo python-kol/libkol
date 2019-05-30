@@ -1,13 +1,13 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, List
+from typing import Any, Coroutine, List
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 
 def kmail_delete(
-    session: "Session", message_ids: List[int], box: str = "Inbox"
-) -> ClientResponse:
+    session: "pykollib.Session", message_ids: List[int], box: str = "Inbox"
+) -> Coroutine[Any, Any, ClientResponse]:
     params = {"the_action": "delete", "box": box}
 
     for message_id in message_ids:

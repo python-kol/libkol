@@ -1,8 +1,8 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, Union, NamedTuple
+from typing import Any, Coroutine, NamedTuple, Union
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 
 class Response(NamedTuple):
@@ -18,7 +18,7 @@ def parse(html: str, **kwargs) -> Response:
 
 
 def clan_whitelist_add(
-    session: "Session", user: Union[int, str], rank: int = 0, title: str = ""
-) -> ClientResponse:
+    session: "pykollib.Session", user: Union[int, str], rank: int = 0, title: str = ""
+) -> Coroutine[Any, Any, ClientResponse]:
     payload = {"action": "add", "addwho": user, "level": rank, "title": title}
     return session.request("clan_whitelist.php", data=payload, pwd=True, parse=parse)

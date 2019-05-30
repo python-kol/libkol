@@ -1,8 +1,8 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, Union
+from typing import Any, Coroutine, Union
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..old_database import SkillDatabase
 from ..pattern import PatternManager
@@ -20,8 +20,8 @@ def parse(html: str, **kwargs) -> str:
 
 
 def skill_use(
-    session: "Session", skill_id: int, times: int = 1, target: Union[int, str] = None
-) -> ClientResponse:
+    session: "pykollib.Session", skill_id: int, times: int = 1, target: Union[int, str] = None
+) -> Coroutine[Any, Any, ClientResponse]:
     skill = SkillDatabase.getSkillFromId(skill_id)
     params = {"action": "Skillz", "whichskill": skill["id"]}
 

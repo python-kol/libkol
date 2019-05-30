@@ -1,12 +1,12 @@
-from aiohttp import ClientResponse
-from typing import Union, List, TYPE_CHECKING
 from enum import Enum
+from typing import Any, Coroutine, List, Union
 
-from ..Item import Item
+from aiohttp import ClientResponse
+
+import pykollib
+
 from ..Error import InvalidActionError
-
-if TYPE_CHECKING:
-    from ..Session import Session
+from ..Item import Item
 
 
 class Action(Enum):
@@ -18,11 +18,11 @@ class Action(Enum):
 
 
 def combat(
-    session: "Session",
+    session: "pykollib.Session",
     action: Action,
     skill: int = None,
     item: Union[Item, List[Item]] = None,
-) -> ClientResponse:
+) -> Coroutine[Any, Any, ClientResponse]:
     """
     A request used for a single round of combat. The user may attack, use an item or skill, or
     attempt to run away.
@@ -41,17 +41,18 @@ def combat(
     :param item: If the action is Action.Item, either specifies an item to use, or an array of
                  items to funksling
     """
-    params = {"action": action}
+    params = {"action": action.value}
 
     if action == Action.Item:
+        if item is None or len(item) == 0:
+            raise InvalidActionError("You must specify an item(s) to use")
+
         if isinstance(item, Item):
             params["whichitem"] = item.id
-        elif len(item) > 0:
+        else:
             params["whichitem"] = item[0].id
             if item[1]:
                 params["whichitem2"] = item[1].id
-        else:
-            raise InvalidActionError("You must specify an item(s) to use")
 
     if action == Action.Skill:
         if skill is None:

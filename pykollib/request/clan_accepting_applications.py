@@ -1,8 +1,8 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Error import UnknownError
 from ..util import parsing
@@ -20,7 +20,7 @@ def parse(html: str, **kwargs) -> bool:
     raise UnknownError("Unknown response")
 
 
-def clan_accepting_applications(session: "Session") -> ClientResponse:
+def clan_accepting_applications(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     "Toggle whether or not the clan accepts new applications."
 
     params = {"action": "noapp"}

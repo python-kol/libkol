@@ -1,10 +1,9 @@
 import re
+from typing import Any, Coroutine, Dict
+
 from aiohttp import ClientResponse
 
-from typing import Dict, Any, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 accountPwd = re.compile(r"var pwdhash = \"([0-9a-f]+)\";")
 accountId = re.compile(r"var playerid = ([0-9]+);")
@@ -165,7 +164,7 @@ def titleToClass(title: str) -> str:
     return None
 
 
-def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
+def parse(html: str, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
     data = {
         "pwd": accountPwd.search(html).group(1),
         "userName": accountName.search(html).group(1),
@@ -246,6 +245,6 @@ def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
     return data
 
 
-def charpane(session: "Session") -> ClientResponse:
+def charpane(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     "Requests the user's character pane."
     return session.request("charpane.php", parse=parse)

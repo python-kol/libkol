@@ -1,12 +1,12 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, Coroutine, Any
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Error import ItemNotFoundError
-from ..pattern import PatternManager
 from ..Item import Item
+from ..pattern import PatternManager
 
 
 def parse(html: str, **kwargs) -> bool:
@@ -24,7 +24,7 @@ def parse(html: str, **kwargs) -> bool:
 
 
 def store_item_remove(
-    session: "Session", item: Item, quantity: int = 1
+    session: "pykollib.Session", item: Item, quantity: int = 1
 ) -> Coroutine[Any, Any, ClientResponse]:
     """
     Take a single item from your store using the new Mall interface from Sep 2013

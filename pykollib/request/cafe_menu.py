@@ -1,12 +1,12 @@
-from aiohttp import ClientResponse
-from typing import List, TYPE_CHECKING
 from enum import Enum
+from typing import Any, Coroutine, List
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
 
-from ..Item import Item
+import pykollib
+
 from ..Error import InvalidLocationError, RequestGenericError
+from ..Item import Item
 from ..pattern import PatternManager
 
 menu_item_pattern = PatternManager.getOrCompilePattern("menuItem")
@@ -37,7 +37,7 @@ class Cafe(Enum):
     HellsKitchen = 3
 
 
-def cafe_menu(session: "Session", cafe: Cafe) -> ClientResponse:
+def cafe_menu(session: "pykollib.Session", cafe: Cafe) -> Coroutine[Any, Any, ClientResponse]:
     """
     Check the current menu at a cafe.
 

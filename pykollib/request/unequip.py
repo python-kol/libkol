@@ -1,15 +1,15 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from .equip import Slot
 
 
 def unequip(
-    session: "Session", slot: "Slot" = None, all: bool = False
-) -> ClientResponse:
+    session: "pykollib.Session", slot: "Slot" = None, all: bool = False
+) -> Coroutine[Any, Any, ClientResponse]:
     """
     Unequips the equipment in the designated slot.
 

@@ -1,7 +1,8 @@
 import pykollib.Error as Error
-from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
 from pykollib.util import parsing
+
+from .GenericRequest import GenericRequest
 
 
 class MallItemPurchaseRequest(GenericRequest):

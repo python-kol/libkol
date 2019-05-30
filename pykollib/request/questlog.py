@@ -1,10 +1,10 @@
 import re
 from enum import Enum
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, Dict
+from typing import Any, Coroutine, Dict
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 
 class QuestPage(Enum):
@@ -28,7 +28,7 @@ def parse(html: str, **kwargs) -> Dict[str, str]:
     }
 
 
-def questlog(session: "Session", page: QuestPage = QuestPage.Current) -> ClientResponse:
+def questlog(session: "pykollib.Session", page: QuestPage = QuestPage.Current) -> Coroutine[Any, Any, ClientResponse]:
     """
     Get info from the quest log about which quests are completed and which stage of each uncompleted quest the player is on
     """

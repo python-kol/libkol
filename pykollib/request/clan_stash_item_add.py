@@ -1,20 +1,20 @@
-from aiohttp import ClientResponse
-from typing import List, TYPE_CHECKING
+from typing import Any, Coroutine, List
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Item import ItemQuantity
 
 
 def clan_stash_item_add(
-    session: "Session", items: List[ItemQuantity]
-) -> ClientResponse:
+    session: "pykollib.Session", items: List[ItemQuantity]
+) -> Coroutine[Any, Any, ClientResponse]:
     "Adds items to the clan's stash."
 
     params = {"action": "addgoodies"}
 
-    for i, iq in items.enumerate():
+    for i, iq in enumerate(items):
         params["item{}".format(i)] = iq["item"].id
         params["qty{}".format(i)] = iq["quantity"]
 

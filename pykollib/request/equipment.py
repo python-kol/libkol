@@ -1,12 +1,12 @@
+from typing import Any, Coroutine, Dict, Optional
+
 from aiohttp import ClientResponse
 from bs4 import BeautifulSoup, Tag
-from typing import TYPE_CHECKING, Dict, Optional, Coroutine, Any
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from .equip import Slot
 from ..Item import Item
+from .equip import Slot
 
 
 def slot_to_item(soup: Tag, link: str, index: int = 0) -> Optional[Item]:
@@ -37,7 +37,7 @@ def parse(html: str, **kwargs) -> Dict[Slot, Optional[Item]]:
     }
 
 
-def equipment(session: "Session") -> Coroutine[Any, Any, ClientResponse]:
+def equipment(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     """
     Gets info on all equipment currently equipped.
     Returns a lookup from the item database for each item equipped.

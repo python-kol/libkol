@@ -1,11 +1,11 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 
-def choice(session: "Session", choice: int, option: int) -> ClientResponse:
+def choice(session: "pykollib.Session", choice: int, option: int) -> Coroutine[Any, Any, ClientResponse]:
     """
     Submit a given option in response to a give choice
 

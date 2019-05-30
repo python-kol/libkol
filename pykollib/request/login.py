@@ -1,12 +1,12 @@
-import re
-from aiohttp import ClientResponse
 import hashlib
+import re
+from typing import Any, Coroutine
+
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Error import LoginFailedBadPasswordError, LoginFailedGenericError
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from ..Session import Session
 
 mainFrameset = re.compile(r'<frameset id="?rootset"?')
 rateLimit = re.compile(r"wait (.+?) minutes?")
@@ -42,12 +42,12 @@ def parse(html: str, **kwargs) -> bool:
 
 
 def login(
-    session: "Session",
+    session: "pykollib.Session",
     username: str,
     password: str,
     challenge: str = None,
     stealth: bool = False,
-) -> ClientResponse:
+) -> Coroutine[Any, Any, ClientResponse]:
     payload = {
         "loggingin": "Yup.",
         "loginname": username + (stealth and "/q"),

@@ -1,12 +1,12 @@
+import re
+from datetime import datetime
+from typing import Any, Coroutine, List, NamedTuple
+
 from aiohttp import ClientResponse
 from bs4 import BeautifulSoup
-from datetime import datetime
-from typing import TYPE_CHECKING, Coroutine, Any, NamedTuple, List
 from yarl import URL
-import re
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 from ..Error import UnknownError
 from ..Item import Item
@@ -58,7 +58,7 @@ def parse(html: str, **kwargs) -> List[Transaction]:
     return transactions
 
 
-def mall_transactions(session: "Session") -> Coroutine[Any, Any, ClientResponse]:
+def mall_transactions(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     """
 	Get the last 2 weeks of transactions from your store.
 	"""

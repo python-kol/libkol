@@ -1,13 +1,13 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 
 def clan_stash_item_remove(
-    session: "Session", item_id: int = 0, quantity: int = 0
-) -> ClientResponse:
+    session: "pykollib.Session", item_id: int = 0, quantity: int = 0
+) -> Coroutine[Any, Any, ClientResponse]:
     "Take items from the player's clan stash."
 
     params = {"action": "takegoodies", "whichitem": item_id, "quantity": quantity}

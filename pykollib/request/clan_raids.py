@@ -1,13 +1,13 @@
+from typing import Any, Coroutine, Dict, List, Tuple
+
 from aiohttp import ClientResponse
-from yarl import URL
 from bs4 import BeautifulSoup, PageElement
-from typing import Tuple, Dict, List, Any, TYPE_CHECKING
+from yarl import URL
+
+import pykollib
 
 from ..Error import ClanPermissionsError
 from .clan_raid_log import parse_raid_log
-
-if TYPE_CHECKING:
-    from ..Session import Session
 
 
 def dungeon_name_id_from_title(comment: List[PageElement]) -> Tuple[str, int]:
@@ -35,7 +35,7 @@ def parse(html: str, url: URL, **kwargs) -> Dict[str, Any]:
     ]
 
 
-def clan_raids(session: "Session") -> ClientResponse:
+def clan_raids(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     """
     Retrieves information on all active raids
     """

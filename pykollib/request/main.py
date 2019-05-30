@@ -1,9 +1,9 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 
-def main(session: "Session") -> ClientResponse:
+def main(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     return session.request("main.php")

@@ -1,13 +1,13 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Item import Item
 
 
-def closet_item_add(session: "Session", item: Item, quantity: int) -> ClientResponse:
+def closet_item_add(session: "pykollib.Session", item: Item, quantity: int) -> Coroutine[Any, Any, ClientResponse]:
     "Adds items to the player's closet."
 
     params = {"action": "closetpush", "whichitem": item.id, "qty": quantity, "ajax": 1}

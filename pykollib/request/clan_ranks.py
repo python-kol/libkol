@@ -1,9 +1,9 @@
+from typing import Any, Coroutine, Dict, List
+
 from aiohttp import ClientResponse
 from bs4 import BeautifulSoup
-from typing import TYPE_CHECKING, Dict, List, Any
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 
 def parse_privileges(container: BeautifulSoup) -> Dict[str, Any]:
@@ -44,5 +44,5 @@ def parse(html: str, **kwargs) -> List[Dict[str, Any]]:
     return ranks
 
 
-def clan_ranks(session: "Session") -> ClientResponse:
+def clan_ranks(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     return session.request("clan_editranks.php", parse=parse)

@@ -1,10 +1,9 @@
 import re
+from typing import Any, Coroutine, Dict
+
 from aiohttp import ClientResponse
 
-from typing import Dict, Any, TYPE_CHECKING, Coroutine, Any
-
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 from .. import Clan
 from ..Error import UnknownError
@@ -20,7 +19,7 @@ numTrophies = re.compile(r"Trophies Collected:<\/b><\/td><td>([0-9,]+)<\/td>")
 numTattoos = re.compile(r"Tattoos Collected:<\/b><\/td><td>([0-9,]+)<\/td>")
 
 
-def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
+def parse(html: str, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
     username_match = username.search(html)
     ascensions_match = numAscensions.search(html)
     trophies_match = numTrophies.search(html)
@@ -48,7 +47,7 @@ def parse(html: str, session: "Session", **kwargs) -> Dict[str, Any]:
 
 
 def player_profile(
-    session: "Session", player_id: int
+    session: "pykollib.Session", player_id: int
 ) -> Coroutine[Any, Any, ClientResponse]:
     payload = {"who": player_id}
     return session.request("showplayer.php", data=payload, parse=parse)

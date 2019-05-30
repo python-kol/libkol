@@ -1,19 +1,13 @@
+from typing import Any, Coroutine, Union
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, Union
 from yarl import URL
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from ..Error import (
-    WrongKindOfItemError,
-    ItemNotFoundError,
-    UserNotFoundError,
-    UserInHardcoreRoninError,
-    AlreadyCompletedError,
-    InvalidUserError,
-    UnknownError,
-)
+from ..Error import (AlreadyCompletedError, InvalidUserError,
+                     ItemNotFoundError, UnknownError, UserInHardcoreRoninError,
+                     UserNotFoundError, WrongKindOfItemError)
 from ..Item import Item
 
 
@@ -79,7 +73,7 @@ def parse(html: str, url: URL, **kwargs) -> bool:
     return True
 
 
-def curse(session: "Session", player: Union[str, int], item: Item) -> ClientResponse:
+def curse(session: "pykollib.Session", player: Union[str, int], item: Item) -> Coroutine[Any, Any, ClientResponse]:
     params = {"action": "use", "whichitem": item.id, "targetplayer": player}
 
     return session.request("curse.php", pwd=True, params=params, parse=parse)

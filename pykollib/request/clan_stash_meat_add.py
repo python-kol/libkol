@@ -1,11 +1,11 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 
-def clan_stash_meat_add(session: "Session", quantity: int) -> ClientResponse:
+def clan_stash_meat_add(session: "pykollib.Session", quantity: int) -> Coroutine[Any, Any, ClientResponse]:
     "Adds meat to the player's clan stash."
 
     params = {"action": "contribute", "howmuch": quantity}

@@ -1,13 +1,13 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from .trade_pending import Status
 
 
-def trade_cancel(session: "Session", id: int, status: Status) -> ClientResponse:
+def trade_cancel(session: "pykollib.Session", id: int, status: Status) -> Coroutine[Any, Any, ClientResponse]:
     """
     Cancel a trade request.
 

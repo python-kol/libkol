@@ -1,13 +1,11 @@
-from bs4 import BeautifulSoup
 import re
+from datetime import datetime, timedelta
+from typing import Any, Coroutine, List, NamedTuple
+
 from aiohttp import ClientResponse
+from bs4 import BeautifulSoup
 
-from typing import List, NamedTuple, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from ..Session import Session
-
-from datetime import timedelta, datetime
+import pykollib
 
 
 class Ascension(NamedTuple):
@@ -46,7 +44,7 @@ def parse(html: str, **kwargs) -> List[Ascension]:
     soup = BeautifulSoup(html, "html.parser")
     end_dates = soup.find_all("td", height="30")
 
-    ascensions = []
+    ascensions = [] # type: List[Ascension]
 
     for end in end_dates:
         id = end.previous_sibling
@@ -92,8 +90,8 @@ def parse(html: str, **kwargs) -> List[Ascension]:
 
 
 def ascension_history(
-    session: "Session", player_id: int, pre_ns13: bool = False
-) -> ClientResponse:
+    session: "pykollib.Session", player_id: int, pre_ns13: bool = False
+) -> Coroutine[Any, Any, ClientResponse]:
     """
     Fetches ascension history for a player
 

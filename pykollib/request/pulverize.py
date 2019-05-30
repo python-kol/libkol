@@ -1,10 +1,10 @@
+from typing import Any, Coroutine, List
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, List
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from ..Error import WrongKindOfItemError, ItemNotFoundError
+from ..Error import ItemNotFoundError, WrongKindOfItemError
 from ..Item import Item, ItemQuantity
 from ..util import parsing
 
@@ -19,7 +19,7 @@ def parse(html: str, **yargs) -> List[ItemQuantity]:
     return parsing.item(html)
 
 
-def pulverize(session: "Session", item: Item, quantity: int = 1) -> ClientResponse:
+def pulverize(session: "pykollib.Session", item: Item, quantity: int = 1) -> Coroutine[Any, Any, ClientResponse]:
     params = {
         "action": "pulverize",
         "mode": "smith",

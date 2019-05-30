@@ -1,18 +1,14 @@
 from enum import Enum
+from typing import Any, Coroutine, List, NamedTuple
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, Coroutine, Any, NamedTuple, List
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from ..Error import (
-    InvalidLocationError,
-    WrongKindOfItemError,
-    NotEnoughMeatError,
-    UnknownError,
-)
-from ..util import parsing
+from ..Error import (InvalidLocationError, NotEnoughMeatError, UnknownError,
+                     WrongKindOfItemError)
 from ..Item import Item, ItemQuantity
+from ..util import parsing
 
 
 class Store(Enum):
@@ -65,7 +61,7 @@ def parse(html: str, **kwargs) -> Response:
 
 
 def npc_buy(
-    session: "Session", store: Store, item: Item, quantity: int = 1
+    session: "pykollib.Session", store: Store, item: Item, quantity: int = 1
 ) -> Coroutine[Any, Any, ClientResponse]:
     "Purchases items from an NPC store."
     data = {

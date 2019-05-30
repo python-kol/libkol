@@ -1,14 +1,14 @@
+import re
+from datetime import datetime
+from typing import Any, Coroutine, Dict
+from urllib.parse import parse_qs, urlparse
+
 from aiohttp import ClientResponse
 from bs4 import BeautifulSoup
-from datetime import datetime
-from typing import Dict, Any, TYPE_CHECKING
-from urllib.parse import urlparse, parse_qs
-import re
+
+import pykollib
 
 from ..Error import ClanRaidsNotFoundError
-
-if TYPE_CHECKING:
-    from ..Session import Session
 
 pageSummary = re.compile(r"Showing [0-9]+-[0-9]+ of ([0-9]+)")
 notFound = re.compile(r"\(No previous Clan Dungeon records found\)")
@@ -38,7 +38,7 @@ def parse(html: str, **kwargs) -> Dict[str, Any]:
     return {"total": total, "raids": raids}
 
 
-def clan_raids_previous(session: "Session", page: int = 0) -> ClientResponse:
+def clan_raids_previous(session: "pykollib.Session", page: int = 0) -> Coroutine[Any, Any, ClientResponse]:
     """
     Retrieves a list of old raid logs, in pages of length 10
     """

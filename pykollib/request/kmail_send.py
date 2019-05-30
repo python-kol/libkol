@@ -1,17 +1,12 @@
+from typing import Any, Coroutine, List, Union
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, Union, List
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
+from ..Error import (ItemNotFoundError, UnknownError, UserInHardcoreRoninError,
+                     UserIsIgnoringError, UserNotFoundError)
 from ..Item import ItemQuantity
-from ..Error import (
-    UserNotFoundError,
-    UserInHardcoreRoninError,
-    UserIsIgnoringError,
-    ItemNotFoundError,
-    UnknownError,
-)
 
 
 def parse(html: str, **kwargs) -> bool:
@@ -63,12 +58,12 @@ def parse(html: str, **kwargs) -> bool:
 
 
 def kmail_send(
-    session: "Session",
+    session: "pykollib.Session",
     recipient: Union[int, str],
     message: str = "",
     items: List[ItemQuantity] = [],
     meat: int = 0,
-) -> ClientResponse:
+) -> Coroutine[Any, Any, ClientResponse]:
     params = {"toid": ""}
     data = {"action": "send", "towho": recipient, "message": message, "sendmeat": meat}
 

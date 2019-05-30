@@ -1,13 +1,14 @@
+from typing import Any, Coroutine, NamedTuple
+
 from aiohttp import ClientResponse
-from typing import NamedTuple, TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
+from ..Error import (InvalidLocationError, NotEnoughAdventuresError,
+                     RequestGenericError)
 from ..pattern import PatternManager
-from ..Error import InvalidLocationError, NotEnoughAdventuresError, RequestGenericError
-from ..util import parsing
 from ..Stat import Stat
+from ..util import parsing
 
 
 class Response(NamedTuple):
@@ -42,6 +43,6 @@ def parse(html: str, **kwargs) -> Response:
     )
 
 
-def canadia_gym(session: "Session", turns: int) -> ClientResponse:
+def canadia_gym(session: "pykollib.Session", turns: int) -> Coroutine[Any, Any, ClientResponse]:
     params = {"action": "institute", "numturns": turns}
     return session.request("canadia.php", params=params, parse=parse)

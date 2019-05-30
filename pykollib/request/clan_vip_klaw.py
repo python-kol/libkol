@@ -1,8 +1,8 @@
-from aiohttp import ClientResponse
-from typing import List, TYPE_CHECKING
+from typing import Any, Coroutine, List
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Item import Item
 from ..util import parsing
@@ -12,7 +12,7 @@ def parse(html: str, **kwargs) -> List[Item]:
     return parsing.item(html)
 
 
-def clan_vip_klaw(session: "Session") -> ClientResponse:
+def clan_vip_klaw(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     """
     Uses the Deluxe Mr. Klaw in the clan VIP room.
     """

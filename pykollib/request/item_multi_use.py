@@ -1,8 +1,8 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Error import NotEnoughItemsError, WrongKindOfItemError
 from ..Item import Item
@@ -23,7 +23,7 @@ def parse(html: str, **kwargs) -> parsing.ResourceGain:
     return parsing.resource_gain(html)
 
 
-def item_multi_use(session: "Session", item: Item, quantity: int) -> ClientResponse:
+def item_multi_use(session: "pykollib.Session", item: Item, quantity: int) -> Coroutine[Any, Any, ClientResponse]:
     "Uses multiple items at once"
 
     params = {"action": "useitem", "whichitem": item.id, "quantity": quantity}

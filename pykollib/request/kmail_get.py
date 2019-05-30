@@ -1,14 +1,14 @@
-from aiohttp import ClientResponse
-from datetime import datetime
-from typing import List, Dict, Any, TYPE_CHECKING, Union, Coroutine
-from html import unescape
 import re
+from datetime import datetime
+from html import unescape
+from typing import Any, Coroutine, Dict, List, Union
 
-from ..util import parsing
+from aiohttp import ClientResponse
+
+import pykollib
+
 from ..pattern import PatternManager
-
-if TYPE_CHECKING:
-    from ..Session import Session
+from ..util import parsing
 
 brick_message_pattern = re.compile(
     r"\/\/images\.kingdomofloathing\.com\/adventureimages\/(brokewin|bigbrick)\.gif"
@@ -27,7 +27,7 @@ full_message_pattern = re.compile(
 whitespace_pattern = PatternManager.getOrCompilePattern("whitespace")
 
 
-def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
+def parse(session: "pykollib.Session", html: str, **kwargs) -> List[Dict[str, Any]]:
     """
     Parses through the response and constructs an array of messages.
     Each message is represented as a dictionary with the following
@@ -111,7 +111,7 @@ def parse(session: "Session", html: str, **kwargs) -> List[Dict[str, Any]]:
 
 
 def kmail_get(
-    session: "Session",
+    session: "pykollib.Session",
     box: str = "Inbox",
     page: int = 0,
     messages_per_page: int = 100,

@@ -1,9 +1,9 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
 from enum import Enum
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Error import ItemNotFoundError, WrongKindOfItemError
 from ..Item import Item
@@ -34,7 +34,7 @@ def parse(html: str, **kwargs) -> bool:
     return True
 
 
-def equip(session: "Session", item: Item, slot: Slot) -> ClientResponse:
+def equip(session: "pykollib.Session", item: Item, slot: Slot) -> Coroutine[Any, Any, ClientResponse]:
     """
     Equips items from the inventory passed by itemId.  If a slot is specified, it will attempt to equip accessories into that slot.
     """

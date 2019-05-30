@@ -1,8 +1,8 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Error import EffectNotFoundError, ItemNotFoundError, UnknownError
 
@@ -24,7 +24,7 @@ def parse(html: str, **kwargs) -> bool:
     return True
 
 
-def uneffect(session: "Session", effect_id: int) -> ClientResponse:
+def uneffect(session: "pykollib.Session", effect_id: int) -> Coroutine[Any, Any, ClientResponse]:
     params = {"using": "Yep.", "whicheffect": effect_id}
 
     return session.request("uneffect.php", pwd=True, params=params, parse=parse)

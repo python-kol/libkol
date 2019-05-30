@@ -1,9 +1,9 @@
 from enum import Enum
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..util import parsing
 from .clan_rumpus import Furniture
@@ -19,7 +19,7 @@ def parse(html: str, **kwargs):
     return parsing.item(html)
 
 
-def clan_rumpus_item(session: "Session", furniture: ItemFurniture) -> ClientResponse:
+def clan_rumpus_item(session: "pykollib.Session", furniture: ItemFurniture) -> Coroutine[Any, Any, ClientResponse]:
     "Uses the item dispensing machines in the clan rumpus room."
     spot, furni = furniture.value
 

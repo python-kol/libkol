@@ -1,5 +1,6 @@
-from .GenericRequest import GenericRequest
 from pykollib.pattern import PatternManager
+
+from .GenericRequest import GenericRequest
 
 
 class ItemDescriptionRequest(GenericRequest):

@@ -1,9 +1,9 @@
-from typing import Dict, Any, TYPE_CHECKING
-from yarl import URL
-from bs4 import BeautifulSoup
+from typing import Any, Coroutine, Dict
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from bs4 import BeautifulSoup
+from yarl import URL
+
+import pykollib
 
 
 def parse(html: str, **kwargs) -> Dict[str, Any]:
@@ -20,7 +20,7 @@ def parse(html: str, **kwargs) -> Dict[str, Any]:
     }
 
 
-def clan_show(session: "Session", id: int):
+def clan_show(session: "pykollib.Session", id: int):
     "Get information about a clan"
 
     params = {"recruiter": 1, "whichclan": id}

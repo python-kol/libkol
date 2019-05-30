@@ -1,8 +1,9 @@
-from .GenericRequest import GenericRequest
+from datetime import datetime
+
 from pykollib.pattern import PatternManager
 from pykollib.util import Report
 
-from datetime import datetime
+from .GenericRequest import GenericRequest
 
 CLAN_LOG_UNKNOWN = 0
 CLAN_LOG_FAX = 1

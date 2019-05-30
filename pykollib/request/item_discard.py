@@ -1,12 +1,14 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Item import Item
 
 
-def item_discard(session: "Session", item: Item) -> ClientResponse:
+def item_discard(
+    session: "pykollib.Session", item: Item
+) -> Coroutine[Any, Any, ClientResponse]:
     params = {"action": "discard", "whichitem": item.id}
     return session.request("inventory.php", params=params)

@@ -1,11 +1,11 @@
 from enum import Enum
-from yarl import URL
-from bs4 import BeautifulSoup
-from aiohttp import ClientResponse
-from typing import List, Any, TYPE_CHECKING, Coroutine, NamedTuple
+from typing import Any, Coroutine, List, NamedTuple
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+from bs4 import BeautifulSoup
+from yarl import URL
+
+import pykollib
 
 from ..Item import Item
 
@@ -113,7 +113,7 @@ def parse(html: str, **kwargs) -> List[Listing]:
 
 
 def mall_search(
-    session: "Session",
+    session: "pykollib.Session",
     query: str,
     category: Category = Category.All,
     no_limits: bool = False,

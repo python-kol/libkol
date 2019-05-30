@@ -1,14 +1,15 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from .cafe_menu import Cafe
+from ..Error import (InvalidLocationError, NotEnoughMeatError,
+                     WrongKindOfItemError)
+from ..Item import Item
 from ..pattern import PatternManager
 from ..util import parsing
-from ..Error import InvalidLocationError, WrongKindOfItemError, NotEnoughMeatError
-from ..Item import Item
+from .cafe_menu import Cafe
 
 cannot_go_pattern = PatternManager.getOrCompilePattern("userShouldNotBeHere")
 
@@ -24,7 +25,7 @@ def parse(html: str, **kwargs) -> parsing.ResourceGain:
     return parsing.resource_gain(html)
 
 
-def cafe_consume(session: "Session", cafe: Cafe, item: Item) -> ClientResponse:
+def cafe_consume(session: "pykollib.Session", cafe: Cafe, item: Item) -> Coroutine[Any, Any, ClientResponse]:
     """
     Purchases items from a cafe.
 

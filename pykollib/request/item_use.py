@@ -1,13 +1,13 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Item import Item
 
 
-def item_use(session: "Session", item: Item) -> ClientResponse:
+def item_use(session: "pykollib.Session", item: Item) -> Coroutine[Any, Any, ClientResponse]:
     """
     Uses the requested item.
     """
