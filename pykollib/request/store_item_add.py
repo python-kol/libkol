@@ -1,13 +1,12 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+
+import pykollib
 
 from ..Error import ItemNotFoundError
-from ..pattern import PatternManager
-
-if TYPE_CHECKING:
-    from ..Session import Session
-
 from ..Item import Item
+from ..pattern import PatternManager
 
 
 def parse(html: str, **kwargs) -> bool:
@@ -29,13 +28,13 @@ def parse(html: str, **kwargs) -> bool:
 
 
 def store_item_add(
-    session: "Session",
+    session: "pykollib.Session",
     item: Item,
     quantity: int = 1,
     limit: int = "",
     price: int = 999999999,
     from_hangks: bool = False,
-) -> ClientResponse:
+) -> Coroutine[Any, Any, ClientResponse]:
     """
     Add a single item to your store. The interface to the mall was updated on Sept 13, 2013.
     It looks like items are now added only one at a time.

@@ -1,7 +1,9 @@
 import re
 from enum import Enum
-from typing import List, NamedTuple
+from typing import Any, Coroutine, List, NamedTuple
+
 from aiohttp import ClientResponse
+import pykollib
 
 from ..Item import Item, ItemQuantity
 
@@ -14,19 +16,17 @@ class Response(NamedTuple):
 
 
 def parse(html: str, items: List[Item] = [], **kwargs) -> Response:
-    response = Response([], 0)
-
     response_match = response_pattern.search(html)
 
     if response_match is None:
-        return response
+        return Response([], 0)
 
-    response.meat_gained = int(response_match.group(2).replace(",", ""))
+    item_quantities = [] # type: List[ItemQuantity]
 
     for item in items:
-        pattern = r"(?:(?:([0-9,]+) {})|{})(?:,|$)".format(
+        pattern = re.compile(r"(?:(?:([0-9,]+) {})|{})(?:,|$)".format(
             re.escape(item.pluralize()), re.escape(item.name)
-        )
+        ))
         match = pattern.search(response_match.group(1))
         quantity = (
             0
@@ -35,9 +35,12 @@ def parse(html: str, items: List[Item] = [], **kwargs) -> Response:
             if match.group(1) is None
             else int(match.group(1).replace(",", ""))
         )
-        response.items += [ItemQuantity(item, quantity)]
+        item_quantities += [ItemQuantity(item, quantity)]
 
-    return response
+    return Response(
+        items=item_quantities,
+        meat_gained=int(response_match.group(2).replace(",", ""))
+    )
 
 
 class AutosellMode(Enum):
@@ -47,23 +50,23 @@ class AutosellMode(Enum):
 
 
 def autosell_items(
-    session,
+    session: "pykollib.Session",
     items: List[Item],
     quantity: int = 1,
     all: bool = False,
     keep_one: bool = False,
-) -> ClientResponse:
+) -> Coroutine[Any, Any, ClientResponse]:
     "Sells items via the autosell system"
 
     params = {"action": "sell"}
 
     if keep_one:
-        params["mode"] = AutosellMode.AllButOne
+        params["mode"] = AutosellMode.AllButOne.value
     elif all:
-        params["mode"] = AutosellMode.All
+        params["mode"] = AutosellMode.All.value
     else:
-        params["mode"] = AutosellMode.Quantity
-        params["quantity"] = quantity
+        params["mode"] = AutosellMode.Quantity.value
+        params["quantity"] = str(quantity)
 
     for item in items:
         params["item{}".format(item.id)] = item.id

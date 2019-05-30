@@ -1,10 +1,9 @@
 import re
+from typing import Any, Coroutine, Dict, List
+
 from aiohttp import ClientResponse
 
-from typing import List, Dict, Any, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 clan_search_result_pattern = re.compile(
     r"<b><a href=\"showclan\.php\?recruiter=1&whichclan=([0-9]+)\">([^<>]*)</a></b>"
@@ -19,8 +18,8 @@ def parse(html: str) -> List[Dict[str, Any]]:
 
 
 def clan_search(
-    session: "Session", query: str, nameonly: bool = True
-) -> ClientResponse:
+    session: "pykollib.Session", query: str, nameonly: bool = True
+) -> Coroutine[Any, Any, ClientResponse]:
     data = {
         "action": "search",
         "searchstring": query,

@@ -1,11 +1,11 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 
-def adventure(session: "Session", location_id: int) -> ClientResponse:
+def adventure(session: "pykollib.Session", location_id: int) -> Coroutine[Any, Any, ClientResponse]:
     "A request used to initiate an adventure at any location."
     params = {"snarfblat": location_id}
 

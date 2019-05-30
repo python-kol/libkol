@@ -1,10 +1,10 @@
+from typing import Any, Coroutine, NamedTuple
+
 from aiohttp import ClientResponse
-from typing import NamedTuple, TYPE_CHECKING, Coroutine, Any
+
+import pykollib
 
 from ..Error import CannotChangeClanError
-
-if TYPE_CHECKING:
-    from ..Session import Session
 
 
 class Response(NamedTuple):
@@ -12,7 +12,7 @@ class Response(NamedTuple):
     already_member: bool
 
 
-def parse(html: str, session: "Session", **kwargs) -> Response:
+def parse(html: str, session: "pykollib.Session", **kwargs) -> Response:
     """
     Formats the clan application response
     """
@@ -33,7 +33,7 @@ def parse(html: str, session: "Session", **kwargs) -> Response:
     return Response(accepted or already_member, already_member)
 
 
-def clan_apply(session: "Session", clan_id: int) -> Coroutine[Any, Any, ClientResponse]:
+def clan_apply(session: "pykollib.Session", clan_id: int) -> Coroutine[Any, Any, ClientResponse]:
     """
     Apply to a clan
 

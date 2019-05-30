@@ -1,12 +1,12 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
 from yarl import URL
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from ..pattern import PatternManager
 from ..Error import RequestGenericError
+from ..pattern import PatternManager
 
 success_pattern = PatternManager.getOrCompilePattern("tradeCancelledSuccessfully")
 
@@ -22,6 +22,6 @@ def parse(html: str, url: URL, **kwargs) -> bool:
     return True
 
 
-def trade_offer_decline(session: "Session", trade_id: int) -> ClientResponse:
+def trade_offer_decline(session: "pykollib.Session", trade_id: int) -> Coroutine[Any, Any, ClientResponse]:
     params = {"action": "decline", "whichoffer": trade_id}
     return session.request("makeoffer.php", pwd=True, params=params, parse=parse)

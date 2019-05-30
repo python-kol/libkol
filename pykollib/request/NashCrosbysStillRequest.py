@@ -1,7 +1,8 @@
-from .GenericRequest import GenericRequest
-from pykollib.pattern import PatternManager
-from pykollib.old_database import ItemDatabase
 import pykollib.Error as Error
+from pykollib.old_database import ItemDatabase
+from pykollib.pattern import PatternManager
+
+from .GenericRequest import GenericRequest
 
 
 class NashCrosbysStillRequest(GenericRequest):

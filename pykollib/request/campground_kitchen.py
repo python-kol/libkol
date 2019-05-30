@@ -1,8 +1,8 @@
-from aiohttp import ClientResponse
-from typing import NamedTuple, TYPE_CHECKING
+from typing import Any, Coroutine, NamedTuple
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 
 class Response(NamedTuple):
@@ -38,7 +38,7 @@ def parse(html: str, **kwargs) -> Response:
     return Response(**response)
 
 
-def campground_kitchen(session: "Session") -> ClientResponse:
+def campground_kitchen(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     """
     Checks state of the kitchen. (Did you wash the dishes?)
     """

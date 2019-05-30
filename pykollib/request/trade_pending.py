@@ -1,10 +1,10 @@
 import re
-from aiohttp import ClientResponse
 from enum import Enum
-from typing import TYPE_CHECKING, NamedTuple, List
+from typing import Any, Coroutine, List, NamedTuple
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Item import Item, ItemQuantity
 
@@ -124,5 +124,5 @@ def parse(html: str, **kwargs) -> List[Trade]:
     return trades
 
 
-def trade_pending(session: "Session") -> ClientResponse:
+def trade_pending(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     return session.request("makeoffer.php", parse=parse)

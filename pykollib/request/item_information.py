@@ -1,8 +1,8 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 
 def parse(json, **kwargs):
@@ -52,7 +52,7 @@ def parse(json, **kwargs):
     }
 
 
-def item_information(session: "Session", item_id) -> ClientResponse:
+def item_information(session: "pykollib.Session", item_id) -> Coroutine[Any, Any, ClientResponse]:
     "This class is used to get information about a particular item."
 
     data = {"what": "item", "id": item_id}

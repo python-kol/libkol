@@ -1,8 +1,11 @@
-from .GenericRequest import GenericRequest
+import unicodedata
+import urllib.error
+import urllib.parse
+import urllib.request
+
 from pykollib.util import ChatUtils
 
-import unicodedata
-import urllib.request, urllib.parse, urllib.error
+from .GenericRequest import GenericRequest
 
 
 class SendChatRequest(GenericRequest):

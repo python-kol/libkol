@@ -1,17 +1,13 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, Tuple, List, NamedTuple
 from enum import Enum
+from typing import Any, Coroutine, List, NamedTuple, Tuple
+
+from aiohttp import ClientResponse
 from yarl import URL
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from ..Error import (
-    RecipeNotFoundError,
-    SkillNotFoundError,
-    ItemNotFoundError,
-    NotEnoughAdventuresError,
-)
+from ..Error import (ItemNotFoundError, NotEnoughAdventuresError,
+                     RecipeNotFoundError, SkillNotFoundError)
 from ..Item import Item, ItemQuantity
 from ..util import parsing
 
@@ -57,12 +53,12 @@ def parse(html: str, url: URL, **kwargs) -> Response:
 
 
 def craft(
-    session: "Session",
+    session: "pykollib.Session",
     mode: Mode,
     ingredients: Tuple[Item, Item],
     quantity: int = 1,
     max: bool = False,
-) -> ClientResponse:
+) -> Coroutine[Any, Any, ClientResponse]:
     params = {
         "action": "craft",
         "mode": mode,

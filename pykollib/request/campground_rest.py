@@ -1,11 +1,11 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 
-def campground_rest(session: "Session") -> ClientResponse:
+def campground_rest(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     """
     Rests at the user's campground.
     """

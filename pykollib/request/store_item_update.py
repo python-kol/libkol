@@ -1,12 +1,10 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, List
-
-if TYPE_CHECKING:
-    from ..Session import Session
-
-from pykollib.pattern import PatternManager
-
 import time
+from typing import Any, Coroutine, List
+
+from aiohttp import ClientResponse
+
+import pykollib
+from pykollib.pattern import PatternManager
 
 from .store_inventory import Listing
 
@@ -17,7 +15,7 @@ def parse(html: str, **kwargs) -> bool:
     return price_not_updated_pattern.search(html) is not None
 
 
-def store_item_update(session: "Session", listings: List[Listing]) -> ClientResponse:
+def store_item_update(session: "pykollib.Session", listings: List[Listing]) -> Coroutine[Any, Any, ClientResponse]:
     params = {"action": "updateinv", "ajax": 1, "_": int(time.time() * 1000)}
 
     for listing in listings:

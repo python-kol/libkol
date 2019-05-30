@@ -1,11 +1,11 @@
-from bs4 import BeautifulSoup
 from enum import Enum
-from aiohttp import ClientResponse
-from yarl import URL
-from typing import TYPE_CHECKING, Coroutine, Any, Optional, NamedTuple, List
+from typing import Any, Coroutine, List, NamedTuple, Optional
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+from bs4 import BeautifulSoup
+from yarl import URL
+
+import pykollib
 
 
 class QueryType(Enum):
@@ -55,7 +55,7 @@ def parse(html: str, **kwargs) -> List[Result]:
 
 
 def player_search(
-    session: "Session",
+    session: "pykollib.Session",
     query: str,
     query_type: QueryType = QueryType.StartsWith,
     pvp_only: bool = False,

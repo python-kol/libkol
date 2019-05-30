@@ -1,9 +1,9 @@
+from typing import Any, Coroutine, List, NamedTuple
+
 from aiohttp import ClientResponse
 from bs4 import BeautifulSoup
-from typing import List, Any, TYPE_CHECKING, Coroutine, NamedTuple
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 from ..Item import Item
 
@@ -44,7 +44,7 @@ def parse(html: str, **kwargs):
 
 
 def mall_search_price(
-    session: "Session", item: Item
+    session: "pykollib.Session", item: Item
 ) -> Coroutine[Any, Any, ClientResponse]:
     """
     Search the mall for the lowest prices of an item. This will return the

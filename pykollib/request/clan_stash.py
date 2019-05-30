@@ -1,10 +1,9 @@
-from typing import List, Dict, Any, TYPE_CHECKING
 import re
+from typing import Any, Coroutine, Dict, List
+
+import pykollib
 
 from ..Item import Item
-
-if TYPE_CHECKING:
-    from ..Session import Session
 
 stashItemsPattern = re.compile(
     r"<option value=(?P<id>\d*) descid=\d*>(?P<name>.*?)(?: \((?P<quantity>\d*)\))?(?: \(-(?P<cost>\d*)\))?</option>"
@@ -22,6 +21,6 @@ def parse(html: str, **kwargs) -> List[Dict[str, Any]]:
     ]
 
 
-def clan_stash(session: "Session"):
+def clan_stash(session: "pykollib.Session"):
     "This class is used to get a list of items in the user's clan stash."
     return session.request("clan_stash.php", parse=parse, pwd=True)

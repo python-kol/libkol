@@ -1,13 +1,13 @@
-from aiohttp import ClientResponse
-from typing import Union, List, TYPE_CHECKING
+from typing import Any, Coroutine, List, Union
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 
 def clan_member_boot(
-    session: "Session", user_id: Union[int, List[int]]
-) -> ClientResponse:
+    session: "pykollib.Session", user_id: Union[int, List[int]]
+) -> Coroutine[Any, Any, ClientResponse]:
     """
     Boot member from clan (also removes their whitelist)
     """

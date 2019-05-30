@@ -1,8 +1,8 @@
-from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from typing import Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Error import InvalidLocationError
 
@@ -12,6 +12,6 @@ def parse(html: str, **kwargs) -> None:
         raise InvalidLocationError("You cannot use the Mind Control Device yet.")
 
 
-def canadia_mindcontrol(session: "Session", level: int) -> ClientResponse:
+def canadia_mindcontrol(session: "pykollib.Session", level: int) -> Coroutine[Any, Any, ClientResponse]:
     params = {"action": "changedial", "whichlevel": level}
     return session.request("canadia.php", params=params, parse=parse)

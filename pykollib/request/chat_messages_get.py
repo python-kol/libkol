@@ -1,9 +1,9 @@
-from aiohttp import ClientResponse
-from typing import NamedTuple, TYPE_CHECKING, Dict, Any, List
 import re
+from typing import Any, Coroutine, Dict, List, NamedTuple
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..util import ChatUtils
 
@@ -24,6 +24,6 @@ def parse(html: str, **kwargs) -> Dict[str, Any]:
     return Response(last_seen, ChatUtils.parseIncomingChatMessage(html))
 
 
-def chat_messages_get(session: "Session", since: int = 0) -> ClientResponse:
+def chat_messages_get(session: "pykollib.Session", since: int = 0) -> Coroutine[Any, Any, ClientResponse]:
     params = {"lasttime": since}
     return session.request("newchatmessages.php", params=params, parse=parse)

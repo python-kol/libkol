@@ -1,11 +1,10 @@
 import re
-from bs4 import BeautifulSoup
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
+from bs4 import BeautifulSoup
 
-
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 rankNameAndNumber = re.compile(r"(.*?) \(°([0-9]+)\)")
 
@@ -69,7 +68,7 @@ def parse(html: str, include_rank: bool = False, only_rank: bool = False, **kwar
     return members
 
 
-def clan_whitelist(session: "Session") -> ClientResponse:
+def clan_whitelist(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     "Retrieves information from the clan whitelist page."
 
     return session.request("clan_whitelist.php", parse=parse)

@@ -1,15 +1,15 @@
-from aiohttp import ClientResponse
-from typing import List, TYPE_CHECKING
+from typing import Any, Coroutine, List
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..Item import ItemQuantity
 
 
 def display_case_add_items(
-    session: "Session", items: List[ItemQuantity]
-) -> ClientResponse:
+    session: "pykollib.Session", items: List[ItemQuantity]
+) -> Coroutine[Any, Any, ClientResponse]:
     "Adds items to the player's display case."
     params = {"action": "put"}
 

@@ -1,16 +1,11 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, Any, Coroutine
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from ..Error import (
-    UserIsLowLevelError,
-    SkillNotFoundError,
-    NotEnoughMeatError,
-    AlreadyCompletedError,
-    UnknownError,
-)
+from ..Error import (AlreadyCompletedError, NotEnoughMeatError,
+                     SkillNotFoundError, UnknownError, UserIsLowLevelError)
 from ..Skill import Skill
 
 
@@ -34,7 +29,7 @@ def parse(html: str, **kwargs: Any) -> bool:
 
 
 def guild_train(
-    session: "Session", skill: Skill
+    session: "pykollib.Session", skill: Skill
 ) -> Coroutine[Any, Any, ClientResponse]:
     data = {"action": "train", "whichskill": skill.id}
 

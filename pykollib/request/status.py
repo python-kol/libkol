@@ -1,11 +1,11 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 
-def status(session: "Session") -> ClientResponse:
+def status(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     payload = {"for": session.state.get("user_agent", "pykollib"), "what": "status"}
 
     return session.request("api.php", json=True, data=payload)

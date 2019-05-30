@@ -1,18 +1,18 @@
+from typing import Any, Coroutine, List
+
 from aiohttp import ClientResponse
-from typing import List, TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from ..util import parsing
 from ..Item import Item
+from ..util import parsing
 
 
 def parse(html: str, **kwargs) -> List[Item]:
     return parsing.item(html)
 
 
-def clan_vip_crimbotree(session: "Session") -> ClientResponse:
+def clan_vip_crimbotree(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     "Uses the Crimbo Tree in the clan VIP room."
 
     params = {"action": "crimbotree"}

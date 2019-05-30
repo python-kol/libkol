@@ -1,11 +1,11 @@
+from typing import Any, Coroutine, List, NamedTuple
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, NamedTuple, List
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
-from ..pattern import PatternManager
 from ..Item import Item
+from ..pattern import PatternManager
 
 store_inventory_pattern = PatternManager.getOrCompilePattern("storeInventory")
 
@@ -39,7 +39,7 @@ def parse(html: str, **kwargs) -> List[Listing]:
     ]
 
 
-def store_inventory(session: "Session") -> ClientResponse:
+def store_inventory(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
     """
     This class is used to get a list of items currently in a user's store
     """

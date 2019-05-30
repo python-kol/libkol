@@ -1,8 +1,8 @@
-from aiohttp import ClientResponse
-from typing import NamedTuple, TYPE_CHECKING
+from typing import Any, Coroutine, NamedTuple
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+
+import pykollib
 
 from ..util import parsing
 
@@ -16,7 +16,7 @@ def parse(html: str, **kwargs) -> Response:
     return Response(parsing.mp(html), parsing.hp(html))
 
 
-def clan_rumpus_sofa(session: "Session", turns: int = 0) -> ClientResponse:
+def clan_rumpus_sofa(session: "pykollib.Session", turns: int = 0) -> Coroutine[Any, Any, ClientResponse]:
     """
     Uses the comfy sofa in the clan rumpus room.
     """

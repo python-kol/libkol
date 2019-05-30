@@ -1,19 +1,14 @@
+from typing import Any, Coroutine, List
+
 from aiohttp import ClientResponse
-from typing import List, TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
+from ..Error import (BannedFromChatError, NotEnoughItemsError,
+                     NotEnoughMeatError, RequestGenericError,
+                     UserInHardcoreRoninError, UserIsIgnoringError)
 from ..Item import ItemQuantity
 from ..pattern import PatternManager
-from ..Error import (
-    UserIsIgnoringError,
-    UserInHardcoreRoninError,
-    NotEnoughItemsError,
-    NotEnoughMeatError,
-    BannedFromChatError,
-    RequestGenericError,
-)
 
 
 def parse(html: str, **kwargs) -> bool:
@@ -53,12 +48,12 @@ def parse(html: str, **kwargs) -> bool:
 
 
 def trade_propose(
-    session: "Session",
+    session: "pykollib.Session",
     user_id: int,
     item_quantities: List[ItemQuantity] = [],
     meat: int = 0,
     message: str = "",
-) -> ClientResponse:
+) -> Coroutine[Any, Any, ClientResponse]:
     params = {
         "action": "proposeoffer",
         "towho": user_id,
@@ -66,7 +61,7 @@ def trade_propose(
         "memo": message,
     }
 
-    for i, iq in item_quantities.enumerate():
+    for i, iq in enumerate(item_quantities):
         params["howmany{}".format(i)] = iq.quantity
         params["whichitem{}".format(i)] = iq.item.id
 

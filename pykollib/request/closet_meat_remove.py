@@ -1,11 +1,11 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
 
-def closet_meat_remove(session: "Session", amount: int = 0) -> ClientResponse:
+def closet_meat_remove(session: "pykollib.Session", amount: int = 0) -> Coroutine[Any, Any, ClientResponse]:
     "Takes meat from the player's closet."
 
     params = {"action": "takemeat", "amt": amount}

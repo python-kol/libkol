@@ -1,11 +1,11 @@
+from typing import Any, Coroutine
+
 from aiohttp import ClientResponse
-from typing import TYPE_CHECKING, Coroutine, Any
 
-if TYPE_CHECKING:
-    from ..Session import Session
+import pykollib
 
+from ..Error import ItemNotFoundError, UserIsDrunkError, WrongKindOfItemError
 from ..Item import Item
-from ..Error import UserIsDrunkError, WrongKindOfItemError, ItemNotFoundError
 from ..util import parsing
 
 
@@ -23,7 +23,7 @@ def parse(html: str, **kwargs) -> parsing.ResourceGain:
     return parsing.resource_gain(html)
 
 
-def drink(session: "Session", item: Item) -> Coroutine[Any, Any, ClientResponse]:
+def drink(session: "pykollib.Session", item: Item) -> Coroutine[Any, Any, ClientResponse]:
     """
     This request is for drinking booze from the inventory.
     It accepts the current session and the ID number of the booze to be drank.

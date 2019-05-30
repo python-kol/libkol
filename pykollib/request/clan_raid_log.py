@@ -1,11 +1,11 @@
-from aiohttp import ClientResponse
-from yarl import URL
-from bs4 import BeautifulSoup
-from typing import Dict, Any, TYPE_CHECKING, Coroutine
 import re
+from typing import Any, Coroutine, Dict
 
-if TYPE_CHECKING:
-    from ..Session import Session
+from aiohttp import ClientResponse
+from bs4 import BeautifulSoup
+from yarl import URL
+
+import pykollib
 
 from ..Error import UnknownError
 from ..util import parsing
@@ -79,7 +79,7 @@ def parse(html: str, url: URL, **kwargs) -> Dict[str, Any]:
 
 
 def clan_raid_log(
-    session: "Session", raid_id: int
+    session: "pykollib.Session", raid_id: int
 ) -> Coroutine[Any, Any, ClientResponse]:
     """
     Retrieves on a previous raid.
