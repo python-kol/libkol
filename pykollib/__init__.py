@@ -7,4 +7,4 @@ from .FoldGroup import FoldGroup
 from .ZapGroup import ZapGroup
 from .database import db
 
-__all__ = [db, Clan, Error, Session, Kmail, Item, FoldGroup, ZapGroup]
+__all__ = ["db", "Clan", "Error", "Session", "Kmail", "Item", "FoldGroup", "ZapGroup"]
