@@ -2,7 +2,7 @@ from aiohttp import ClientSession, ClientResponse
 from functools import partial
 from os import path
 from time import time
-from typing import Callable, Dict, Any, Union, Optional
+from typing import Callable, Coroutine, Dict, Any, Union, Optional
 from urllib.parse import urlparse
 import asyncio
 
@@ -77,6 +77,16 @@ class Session:
         json: bool = False,
         **kwargs
     ) -> ClientResponse:
+        """
+        Make an HTTP request. This is mostly proxied through to ClientRequest
+
+        :param url: URL to request. If no host is specified, the current KoL server URL is used.
+        :param method: HTTP method to use
+        :param parse: Parse function to attach to the ClientResponse
+        :param pwd: Whether to inject the pwd into the request
+        :param ajax: Whether to inject the necessary ajax params into the request
+        :param json: Whether to parse the response as JSON instead of HTML
+        """
         if urlparse(url).netloc == "":
             url = "{}/{}".format(self.server_url, url)
 
@@ -115,6 +125,11 @@ class Session:
         Perform a KoL login given a username and password. A server number may also be specified
         to ensure that the user logs in using that particular server. This can be helpful
         if the user continues to be redirected to a server that is down.
+
+        :param username: Your username
+        :param password: Your password
+        :param server_number: Which server number to use
+        :param stealth: Whether to announce your login
         """
 
         # Grab the KoL homepage.
@@ -137,24 +152,42 @@ class Session:
         return True
 
     @logged_in
-    async def join_clan(self, id: int = None, name: str = None):
+    async def join_clan(self, id: int = None, name: str = None) -> bool:
+        """
+        Join a clan. Either id or name must be specified.
+
+        :param id: id of the clan to join
+        :param name: Name of the clan to join
+        """
         return await Clan(self, id=id, name=name).join()
 
-    def get_username(self):
+    def get_username(self) -> Optional[str]:
+        """
+        Returns the current player's username
+        """
         return self.state.get("username", None)
 
-    def get_user_id(self):
+    def get_user_id(self) -> Optional[int]:
+        """
+        Returns the current player's user id
+        """
         return self.state.get("user_id", None)
 
     @logged_in
     async def get_status(self):
+        """
+        Load the current username, user_id, pwd and rollover time into the state
+        """
         data = await (await status(self)).json(content_type=None)
         self.pwd = data["pwd"]
         self.state["username"] = data["name"]
         self.state["user_id"] = int(data["playerid"])
         self.state["rollover"] = int(data["rollover"])
 
-    async def get_profile(self):
+    async def get_profile(self) -> Dict[str, Any]:
+        """
+        Return information from the player's profile
+        """
         return await self.parse(player_profile, self.get_user_id())
 
     @logged_in
@@ -164,10 +197,22 @@ class Session:
         choices: Union[Dict[str, int], Callable[[str], int]] = {},
         combat: Callable = None,
     ):
+        """
+        Run adventure in a location
+
+        .. warning:: This method is experimental
+
+        :param location_id: The id of the location to visit
+        :param choices: Either a dictionary of choices to make, or a callable that can make that
+                        decision
+        :param combat: A function that carries out combat
+        """
         location = Location(self, id=location_id)
         return await (await location.visit()).text()
 
     @logged_in
     async def logout(self):
-        "Performs a logut request, closing the session."
+        """"
+        Performs a logut request, closing the session.
+        """
         await self.parse(logout)
