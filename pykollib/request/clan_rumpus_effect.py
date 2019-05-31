@@ -1,15 +1,11 @@
 from enum import Enum
-from typing import Any, Coroutine, Dict, List
+from typing import Any, Dict, List
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
 from ..util import parsing
-
-
-def parse(html: str, **kwargs) -> List[Dict[str, Any]]:
-    return parsing.effects(html)
 
 
 class Type(Enum):
@@ -17,8 +13,17 @@ class Type(Enum):
     Radio = (4, 1)
 
 
-def clan_rumpus_effect(session: "pykollib.Session", type: Type) -> Coroutine[Any, Any, ClientResponse]:
-    "Uses an effect giver in the clan rumpus room."
+class clan_rumpus_effect(Request):
+    def __init__(self, session: "pykollib.Session", type: Type) -> None:
+        """
+        Uses an effect giver in the clan rumpus room.
+        """
 
-    params = {"action": "click", "spot": type.value[0], "furni": type.value[1]}
-    return session.request("clan_rumpus.php", params=params, parse=parse)
+        super().__init__(session)
+
+        params = {"action": "click", "spot": type.value[0], "furni": type.value[1]}
+        self.request = session.request("clan_rumpus.php", params=params)
+
+    @staticmethod
+    def parser(html: str, **kwargs) -> List[Dict[str, Any]]:
+        return parsing.effects(html)

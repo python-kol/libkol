@@ -1,27 +1,30 @@
-from typing import Any, Coroutine
 
-from aiohttp import ClientResponse
+
+from .request import Request
 
 import pykollib
 
 from ..Error import UnknownError
 from ..util import parsing
 
+class clan_accepting_applications(Request):
+    def __init__(self, session: "pykollib.Session") -> None:
+        """
+        Toggle whether or not the clan accepts new applications.
+        """
+        super().__init__(session)
 
-def parse(html: str, **kwargs) -> bool:
-    results = parsing.panel(html)
+        params = {"action": "noapp"}
+        self.request = session.request("clan_admin.php", params=params)
 
-    if results.string == "Applications turned on.":
-        return True
+    @staticmethod
+    def parser(html: str, **kwargs) -> bool:
+        results = parsing.panel(html)
 
-    if results.string == "Applications turned off.":
-        return False
+        if results.string == "Applications turned on.":
+            return True
 
-    raise UnknownError("Unknown response")
+        if results.string == "Applications turned off.":
+            return False
 
-
-def clan_accepting_applications(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    "Toggle whether or not the clan accepts new applications."
-
-    params = {"action": "noapp"}
-    return session.request("clan_admin.php", params=params, parse=parse)
+        raise UnknownError("Unknown response")

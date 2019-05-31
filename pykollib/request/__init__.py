@@ -64,6 +64,7 @@ from .logout import logout
 from .main import main
 from .mall_search import mall_search
 from .mall_search_price import mall_search_price
+from .mall_transactions import mall_transactions
 from .npc_buy import npc_buy
 from .player_profile import player_profile
 from .player_search import player_search
@@ -152,6 +153,7 @@ __all__ = [
     "main",
     "mall_search_price",
     "mall_search",
+    "mall_transactions",
     "npc_buy",
     "player_profile",
     "player_search",

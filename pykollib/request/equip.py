@@ -1,7 +1,7 @@
 from enum import Enum
-from typing import Any, Coroutine
 
-from aiohttp import ClientResponse
+
+from .request import Request
 
 import pykollib
 
@@ -21,26 +21,27 @@ class Slot(Enum):
     Acc3 = "acc3"
     Familiar = "familiarequip"
 
+class equip(Request):
+    def __init__(self, session: "pykollib.Session", item: Item, slot: Slot) -> None:
+        """
+        Equips items from the inventory passed by itemId.  If a slot is specified, it will attempt to equip accessories into that slot.
+        """
+        super().__init__(session)
 
-def parse(html: str, **kwargs) -> bool:
-    "Checks for errors due to equipping items you don't have, or equipping items that aren't equippable."
+        params = {"action": "equip", "which": 2, "whichitem": item.id}
+        data = {"slot": slot}
+        self.request = session.request(
+            "inv_equip.php", pwd=True, params=params, data=data
+        )
 
-    if "You don't have the item you're trying to equip." in html:
-        raise ItemNotFoundError("That item is not in your inventory.")
+    @staticmethod
+    def parser(html: str, **kwargs) -> bool:
+        "Checks for errors due to equipping items you don't have, or equipping items that aren't equippable."
 
-    if "That's not something you can equip.  And stop screwing with the URLs." in html:
-        raise WrongKindOfItemError("That is not an equippable item.")
+        if "You don't have the item you're trying to equip." in html:
+            raise ItemNotFoundError("That item is not in your inventory.")
 
-    return True
+        if "That's not something you can equip.  And stop screwing with the URLs." in html:
+            raise WrongKindOfItemError("That is not an equippable item.")
 
-
-def equip(session: "pykollib.Session", item: Item, slot: Slot) -> Coroutine[Any, Any, ClientResponse]:
-    """
-    Equips items from the inventory passed by itemId.  If a slot is specified, it will attempt to equip accessories into that slot.
-    """
-
-    params = {"action": "equip", "which": 2, "whichitem": item.id}
-    data = {"slot": slot}
-    return session.request(
-        "inv_equip.php", pwd=True, params=params, data=data, parse=parse
-    )
+        return True

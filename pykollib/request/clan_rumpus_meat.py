@@ -1,7 +1,7 @@
 from enum import Enum
-from typing import Any, Coroutine
 
-from aiohttp import ClientResponse
+
+from .request import Request
 
 import pykollib
 
@@ -15,13 +15,17 @@ class MeatFurniture(Enum):
     Bush = Furniture.MeatBush
 
 
-def parse(html: str) -> int:
-    return parsing.meat(html)
+class clan_rumpus_meat(Request):
+    def __init__(self, session: "pykollib.Session", furniture: MeatFurniture) -> None:
+        """
+            Uses the meat bush in the clan rumpus room.
+        """
+        super().__init__(session)
+        spot, furni = furniture.value
 
+        params = {"action": "click", "spot": spot, "furni": furni}
+        self.request = session.request("clan_rumpus.php", params=params)
 
-def clan_rumpus_meat(session: "pykollib.Session", furniture: MeatFurniture) -> Coroutine[Any, Any, ClientResponse]:
-    "Uses the meat bush in the clan rumpus room."
-    spot, furni = furniture.value
-
-    params = {"action": "click", "spot": spot, "furni": furni}
-    return session.request("clan_rumpus.php", params=params, parse=parse)
+    @staticmethod
+    def parser(html: str, **kwargs) -> int:
+        return parsing.meat(html)

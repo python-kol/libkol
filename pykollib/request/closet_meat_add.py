@@ -1,12 +1,16 @@
-from typing import Any, Coroutine
 
-from aiohttp import ClientResponse
+
+from .request import Request
 
 import pykollib
 
 
-def closet_meat_add(session: "pykollib.Session", quantity: int) -> Coroutine[Any, Any, ClientResponse]:
-    "Adds meat to the player's closet."
+class closet_meat_add(Request):
+    def __init__(self, session: "pykollib.Session", quantity: int) -> None:
+        """
+        Adds meat to the player's closet.
+        """
+        super().__init__(session)
 
-    params = {"action": "addmeat", "amt": quantity}
-    return session.request("closet.php", pwd=True, params=params)
+        params = {"action": "addmeat", "amt": quantity}
+        self.request = session.request("closet.php", pwd=True, params=params)

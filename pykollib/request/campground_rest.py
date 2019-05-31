@@ -1,14 +1,15 @@
-from typing import Any, Coroutine
-
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
 
-def campground_rest(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    """
-    Rests at the user's campground.
-    """
+class campground_rest(Request):
+    def __init__(self, session: "pykollib.Session"):
+        """
+        Rests at the player's campground.
 
-    params = {"action": "rest"}
-    return session.request("campground.php", params=params)
+        :param session: Active session
+        """
+
+        params = {"action": "rest"}
+        self.request = session.request("campground.php", params=params)

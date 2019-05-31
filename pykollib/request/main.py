@@ -1,9 +1,11 @@
-from typing import Any, Coroutine
 
-from aiohttp import ClientResponse
+
+from .request import Request
 
 import pykollib
 
 
-def main(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    return session.request("main.php")
+class main(Request):
+    def __init__(self, session: "pykollib.Session") -> None:
+        super().__init__(session)
+        self.request = session.request("main.php")

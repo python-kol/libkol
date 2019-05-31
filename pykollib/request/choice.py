@@ -1,17 +1,19 @@
-from typing import Any, Coroutine
 
-from aiohttp import ClientResponse
+
+from .request import Request
 
 import pykollib
 
 
-def choice(session: "pykollib.Session", choice: int, option: int) -> Coroutine[Any, Any, ClientResponse]:
-    """
-    Submit a given option in response to a give choice
+class choice(Request):
+    def __init__(self, session: "pykollib.Session", choice: int, option: int) -> None:
+        """
+        Submit a given option in response to a give choice
 
-    :param session: KoL session
-    :param choice: The id of the choice
-    :param option: The number option to submit
-    """
-    params = {"whichchoce": choice, "option": option}
-    return session.request("choice.php", params=params, pwd=True)
+        :param session: KoL session
+        :param choice: The id of the choice
+        :param option: The number option to submit
+        """
+        super().__init__(session)
+        params = {"whichchoce": choice, "option": option}
+        self.request = session.request("choice.php", params=params, pwd=True)

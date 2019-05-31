@@ -1,18 +1,24 @@
-from typing import Any, Coroutine, List
+from typing import Any, Dict, List
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
 from ..Item import Item, ItemQuantity
 
 
-def parse(json) -> List[ItemQuantity]:
-    return [ItemQuantity(Item[id], quantity) for id, quantity in json.items()]
+class inventory(Request):
+    returns_json = True
 
+    def __init__(self, session: "pykollib.Session") -> None:
+        """
+        Get a list of items in the user's inventory.
+        """
+        super().__init__(session)
+        data = {"for": session.state.get("user_agent", "pykollib"), "what": "inventory"}
 
-def inventory(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    "This class is used to get a list of items in the user's inventory."
-    data = {"for": session.state.get("user_agent", "pykollib"), "what": "inventory"}
+        self.request = session.request("api.php", json=True, data=data)
 
-    return session.request("api.php", json=True, data=data, parse=parse)
+    @staticmethod
+    def parser(json: Dict[str, Any], **kwargs) -> List[ItemQuantity]:
+        return [ItemQuantity(Item[id], quantity) for id, quantity in json.items()]

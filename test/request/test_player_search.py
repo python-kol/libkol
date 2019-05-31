@@ -1,13 +1,13 @@
 from .test_base import TestCase
-from ...request.player_search import parse
+from pykollib.request import player_search
 
 
-class MallTransactionsTestCase(TestCase):
+class PlayerSearchTestCase(TestCase):
     request = "player_search"
 
     def test_player_search_basic(self):
         with self.open_test_data("basic") as file:
-            players = parse(file.read())
+            players = player_search.parser(file)
             self.assertEqual(len(players), 1000)
             self.assertEqual(players[50].clan_id, None)
             self.assertEqual(players[13].clan_name, None)
@@ -15,7 +15,7 @@ class MallTransactionsTestCase(TestCase):
 
     def test_player_search_pvp(self):
         with self.open_test_data("pvp") as file:
-            players = parse(file.read())
+            players = player_search.parser(file)
             self.assertEqual(len(players), 676)
             self.assertEqual(players[50].clan_id, 82072)
             self.assertEqual(players[13].clan_name, "Tainted Meat AIliance")

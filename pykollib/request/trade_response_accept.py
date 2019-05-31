@@ -1,15 +1,14 @@
-from typing import Any, Coroutine
-
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
 
-def parse(html: str, **kwargs) -> bool:
-    return "Offer Accepted." in html
+class trade_response_accept(Request):
+    def __init__(self, session: "pykollib.Session", trade_id: int) -> None:
+        super().__init__(session)
+        params = {"action": "accept", "whichoffer": trade_id}
+        self.request = session.request("makeoffer.php", pwd=True, params=params)
 
-
-def trade_response_accept(session: "pykollib.Session", trade_id: int) -> Coroutine[Any, Any, ClientResponse]:
-    params = {"action": "accept", "whichoffer": trade_id}
-
-    return session.request("makeoffer.php", pwd=True, params=params, parse=parse)
+    @staticmethod
+    def parser(html: str, **kwargs) -> bool:
+        return "Offer Accepted." in html

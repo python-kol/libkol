@@ -1,8 +1,8 @@
 import re
 from datetime import datetime
-from typing import Any, Coroutine, List, NamedTuple
+from typing import List, NamedTuple
 
-from aiohttp import ClientResponse
+from .request import Request
 from bs4 import BeautifulSoup
 from yarl import URL
 
@@ -24,43 +24,49 @@ class Transaction(NamedTuple):
     meat: int
 
 
-def parse(html: str, **kwargs) -> List[Transaction]:
-    soup = BeautifulSoup(html, "html.parser")
+class mall_transactions(Request):
+    def __init__(self, session: "pykollib.Session") -> None:
+        """
+    	Get the last 2 weeks of transactions from your store.
 
-    container = soup.find("span", class_="small")
+        :param session: Active session
+    	"""
+        super().__init__(session)
 
-    lines = parsing.split_by_br(container)[:-1]
+        params = {"which": 3}
+        self.request = session.request("backoffice.php", pwd=True, params=params)
 
-    transactions = []  # type: List[Transaction]
+    @staticmethod
+    def parser(html: str, **kwargs) -> List[Transaction]:
+        soup = BeautifulSoup(html, "html.parser")
 
-    for l in lines:
-        match = details_pattern.match(l[2])
+        container = soup.find("span", class_="small")
 
-        if match is None:
-            raise UnknownError("Parsing transaction failed")
+        lines = parsing.split_by_br(container)[:-1]
 
-        item = Item.get_or_none(name=match.group(2))
+        transactions = []  # type: List[Transaction]
 
-        if item is None:
-            print("Item not recognised: {}".format(match.group(2)))
+        for l in lines:
+            match = details_pattern.match(l[2])
 
-        transactions += [
-            Transaction(
-                datetime.strptime(l[0], "%m/%d/%y %H:%M:%S "),
-                l[1].string,
-                int(URL(l[1]["href"]).query["who"]),
-                int(match.group(1)),
-                item,
-                int(match.group(3)),
-            )
-        ]
+            if match is None:
+                raise UnknownError("Parsing transaction failed")
 
-    return transactions
+            item = Item.get_or_none(name=match.group(2))
 
+            if item is None:
+                print("Item not recognised: {}".format(match.group(2)))
+                continue
 
-def mall_transactions(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    """
-	Get the last 2 weeks of transactions from your store.
-	"""
-    params = {"which": 3}
-    return session.request("backoffice.php", pwd=True, params=params, parse=parse)
+            transactions += [
+                Transaction(
+                    datetime.strptime(l[0], "%m/%d/%y %H:%M:%S "),
+                    l[1].string,
+                    int(URL(l[1]["href"]).query["who"]),
+                    int(match.group(1)),
+                    item,
+                    int(match.group(3)),
+                )
+            ]
+
+        return transactions

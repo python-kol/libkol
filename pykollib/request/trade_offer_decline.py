@@ -1,27 +1,26 @@
-from typing import Any, Coroutine
 
-from aiohttp import ClientResponse
 from yarl import URL
+from .request import Request
 
 import pykollib
 
-from ..Error import RequestGenericError
+from ..Error import UnknownError
 from ..pattern import PatternManager
 
 success_pattern = PatternManager.getOrCompilePattern("tradeCancelledSuccessfully")
 
+class trade_offer_decline(Request):
+    def __init__(self, session: "pykollib.Session", trade_id: int) -> None:
+        params = {"action": "decline", "whichoffer": trade_id}
+        self.request = session.request("makeoffer.php", pwd=True, params=params)
 
-def parse(html: str, url: URL, **kwargs) -> bool:
-    if success_pattern.search(html) is None:
-        raise RequestGenericError(
-            "Unknown error declining trade offer for trade {}".format(
-                url.query["whichoffer"]
+    @staticmethod
+    def parser(html: str, url: URL, **kwargs) -> bool:
+        if success_pattern.search(html) is None:
+            raise UnknownError(
+                "Unknown error declining trade offer for trade {}".format(
+                    url.query["whichoffer"]
+                )
             )
-        )
 
-    return True
-
-
-def trade_offer_decline(session: "pykollib.Session", trade_id: int) -> Coroutine[Any, Any, ClientResponse]:
-    params = {"action": "decline", "whichoffer": trade_id}
-    return session.request("makeoffer.php", pwd=True, params=params, parse=parse)
+        return True

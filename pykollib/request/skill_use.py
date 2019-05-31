@@ -1,34 +1,32 @@
-from typing import Any, Coroutine, Union
+from typing import Union
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
-from ..old_database import SkillDatabase
+from ..Skill import Skill
 from ..pattern import PatternManager
+from ..Error import UnknownError
 
 results_pattern = PatternManager.getOrCompilePattern("results")
 
+class skill_use(Request):
+    def __init__(self, session: "pykollib.Session", skill: Skill, times: int = 1, target: Union[int, str] = None) -> None:
+        params = {"action": "Skillz", "whichskill": skill.id}
 
-def parse(html: str, **kwargs) -> str:
-    match = results_pattern.search(html)
+        params["bufftimes" if skill.buff else "quantity"] = times
 
-    if match is None:
-        return ""
+        if skill.buff:
+            params["specificplayer"] = "" if target is None else target
+            params["targetplayer"] = session.get_user_id() if target is None else ""
 
-    return match.group(1)
+        self.request = session.request("skills.php", pwd=True, params=params)
 
+    @staticmethod
+    def parser(html: str, **kwargs) -> str:
+        match = results_pattern.search(html)
 
-def skill_use(
-    session: "pykollib.Session", skill_id: int, times: int = 1, target: Union[int, str] = None
-) -> Coroutine[Any, Any, ClientResponse]:
-    skill = SkillDatabase.getSkillFromId(skill_id)
-    params = {"action": "Skillz", "whichskill": skill["id"]}
+        if match is None:
+            raise UnknownError("Couldn't parse response from use skill")
 
-    params["bufftimes" if skill["type"] == "Buff" else "quantity"] = times
-
-    if skill["type"] == "Buff":
-        params["specificplayer"] = "" if target is None else target
-        params["targetplayer"] = session.get_user_id() if target is None else ""
-
-    return session.request("skills.php", pwd=True, params=params, parse=parse)
+        return match.group(1)

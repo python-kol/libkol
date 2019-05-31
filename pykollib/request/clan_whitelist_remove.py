@@ -1,14 +1,14 @@
-from typing import Any, Coroutine, Union
+from typing import Union
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
+class clan_whitelist_remove(Request):
+    def __init__(self, session: "pykollib.Session", user: Union[int, str]) -> None:
+        payload = {"action": "updatewl", "who": user, "remove": "Remove"}
+        self.request = session.request("clan_whitelist.php", data=payload, pwd=True)
 
-def parse(html: str, **kwargs) -> bool:
-    return "<td>Whitelist updated.</td>" in html
-
-
-def clan_whitelist_remove(session: "pykollib.Session", user: Union[int, str]) -> Coroutine[Any, Any, ClientResponse]:
-    payload = {"action": "updatewl", "who": user, "remove": "Remove"}
-    return session.request("clan_whitelist.php", data=payload, pwd=True, parse=parse)
+    @staticmethod
+    def parser(html: str, **kwargs) -> bool:
+        return "<td>Whitelist updated.</td>" in html

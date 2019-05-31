@@ -1,21 +1,23 @@
-from typing import Any, Coroutine, List
+from typing import List
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
-from ..Item import Item
+from ..Item import ItemQuantity
 from ..util import parsing
 
 
-def parse(html: str, **kwargs) -> List[Item]:
-    return parsing.item(html)
+class clan_vip_klaw(Request):
+    def __init__(self, session: "pykollib.Session") -> None:
+        """
+        Uses the Deluxe Mr. Klaw in the clan VIP room.
+        """
+        super().__init__(session)
 
+        params = {"action": "klaw"}
+        self.request = session.request("clan_viplounge.php", params=params)
 
-def clan_vip_klaw(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    """
-    Uses the Deluxe Mr. Klaw in the clan VIP room.
-    """
-
-    params = {"action": "klaw"}
-    return session.request("clan_viplounge.php", params, parse=parse)
+    @staticmethod
+    def parser(html: str, **kwargs) -> List[ItemQuantity]:
+        return parsing.item(html)

@@ -1,6 +1,9 @@
-import re
 from enum import Enum
+from typing import List
+import re
+import pykollib
 
+from .request import Request
 
 class Furniture(Enum):
     Nail = (1, 0)
@@ -37,15 +40,17 @@ class Furniture(Enum):
 furniture_pattern = re.compile(r"rump([0-9])_([0-9])\.gif")
 
 
-def parse(html: str, **kwargs):
-    return [
-        Furniture(coords)
-        for coords in (
-            (f.group(1), f.group(2)) for f in furniture_pattern.finditer(html)
-        )
-        if Furniture.has_value(coords)
-    ]
+class clan_rumpus(Request):
+    def __init__(self, session: "pykollib.Session"):
+        super().__init__(session)
+        self.request = session.request("clan_rumpus.php")
 
-
-def clan_rumpus(session):
-    return session.request("clan_rumpus.php")
+    @staticmethod
+    def parser(html: str, **kwargs) -> List[Furniture]:
+        return [
+            Furniture(coords)
+            for coords in (
+                (f.group(1), f.group(2)) for f in furniture_pattern.finditer(html)
+            )
+            if Furniture.has_value(coords)
+        ]

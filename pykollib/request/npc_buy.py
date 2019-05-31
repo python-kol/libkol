@@ -1,7 +1,7 @@
 from enum import Enum
-from typing import Any, Coroutine, List, NamedTuple
+from typing import List, NamedTuple
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
@@ -36,39 +36,50 @@ class Response(NamedTuple):
     items: List[ItemQuantity]
     meat_gained: int
 
+class npc_buy(Request):
+    def __init__(
+        self,
+        session: "pykollib.Session",
+        store: Store,
+        item: Item,
+        quantity: int = 1,
+    ) -> None:
+        """
+        Purchases items from an NPC store.
 
-def parse(html: str, **kwargs) -> Response:
-    if len(html) == 0:
-        raise InvalidLocationError("You cannot visit that store yet.")
+        :param session: Active session
+        :param store: NPC store to buy from
+        :param item: Item to buy
+        :param quantity: Quantity of said item to buy
+        """
+        data = {
+            "phash": session.pwd,
+            "whichstore": store.value,
+            "buying": "Yep.",
+            "howmany": quantity,
+            "whichitem": item,
+        }
+        self.request = session.request("store.php", data=data)
 
-    if "You've been sent back here by some kind of bug" in html:
-        raise InvalidLocationError("The store you tried to visit doesn't exist.")
+    @staticmethod
+    def parser(html: str, **kwargs) -> Response:
+        if len(html) == 0:
+            raise InvalidLocationError("You cannot visit that store yet.")
 
-    if "This store doesn't sell that item" in html or "Invalid item selected" in html:
-        raise WrongKindOfItemError("This store doesn't carry that item.")
+        if "You've been sent back here by some kind of bug" in html:
+            raise InvalidLocationError("The store you tried to visit doesn't exist.")
 
-    if "You can't afford " in html:
-        raise NotEnoughMeatError("You do not have enough meat to purchase the item(s).")
+        if "This store doesn't sell that item" in html or "Invalid item selected" in html:
+            raise WrongKindOfItemError("This store doesn't carry that item.")
 
-    items = parsing.item(html)
+        if "You can't afford " in html:
+            raise NotEnoughMeatError("You do not have enough meat to purchase the item(s).")
 
-    if len(items) == 0:
-        raise UnknownError("Unknown error. No items received.")
+        items = parsing.item(html)
 
-    meat = parsing.meat(html)
+        if len(items) == 0:
+            raise UnknownError("Unknown error. No items received.")
 
-    return Response(items, meat)
+        meat = parsing.meat(html)
 
-
-def npc_buy(
-    session: "pykollib.Session", store: Store, item: Item, quantity: int = 1
-) -> Coroutine[Any, Any, ClientResponse]:
-    "Purchases items from an NPC store."
-    data = {
-        "phash": session.pwd,
-        "whichstore": store.value,
-        "buying": "Yep.",
-        "howmany": quantity,
-        "whichitem": item,
-    }
-    return session.request("store.php", data=data, parse=parse)
+        return Response(items, meat)

@@ -1,11 +1,12 @@
 from enum import Enum
-from typing import Any, Coroutine
+from typing import List
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
 from ..util import parsing
+from ..Item import ItemQuantity
 from .clan_rumpus import Furniture
 
 
@@ -15,13 +16,17 @@ class ItemFurniture(Enum):
     MrKlaw = Furniture.MrKlaw
 
 
-def parse(html: str, **kwargs):
-    return parsing.item(html)
+class clan_rumpus_item(Request):
+    def __init__(self, session: "pykollib.Session", furniture: ItemFurniture) -> None:
+        """
+        Uses the item dispensing machines in the clan rumpus room.
+        """
+        super().__init__(session)
+        spot, furni = furniture.value
 
+        params = {"action": "click", "spot": spot, "furni": furni}
+        self.request = session.request("clan_rumpus.php", params=params)
 
-def clan_rumpus_item(session: "pykollib.Session", furniture: ItemFurniture) -> Coroutine[Any, Any, ClientResponse]:
-    "Uses the item dispensing machines in the clan rumpus room."
-    spot, furni = furniture.value
-
-    params = {"action": "click", "spot": spot, "furni": furni}
-    return session.request("clan_rumpus.php", params=params, parse=parse)
+    @staticmethod
+    def parser(html: str, **kwargs) -> List[ItemQuantity]:
+        return parsing.item(html)
