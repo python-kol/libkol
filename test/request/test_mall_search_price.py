@@ -1,5 +1,6 @@
-from .test_base import TestCase
 from pykollib.request import mall_search_price
+
+from .test_base import TestCase
 
 
 class MallSearchPriceTestCase(TestCase):

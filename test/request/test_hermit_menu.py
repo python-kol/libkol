@@ -1,5 +1,6 @@
-from .test_base import TestCase
 from pykollib.request import hermit_menu
+
+from .test_base import TestCase
 
 
 class HermitMenuTestCase(TestCase):

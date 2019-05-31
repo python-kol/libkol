@@ -1,5 +1,6 @@
-from .test_base import TestCase
 from pykollib.request import mall_transactions
+
+from .test_base import TestCase
 
 
 class MallTransactionsTestCase(TestCase):

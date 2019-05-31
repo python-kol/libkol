@@ -1,8 +1,7 @@
-from os import path
 import unittest
+from os import path
 
 from pykollib.database import db
-
 
 TEST_DATA = path.join(path.dirname(path.abspath(__file__)), "test_data")
 

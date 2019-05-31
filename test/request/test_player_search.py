@@ -1,5 +1,6 @@
-from .test_base import TestCase
 from pykollib.request import player_search
+
+from .test_base import TestCase
 
 
 class PlayerSearchTestCase(TestCase):
