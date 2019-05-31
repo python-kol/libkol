@@ -11,6 +11,7 @@ However, in the case of a bug or to capture something not covered by the parse f
 it is possible to carry out these two operations separately.
 
 .. code-block:: python
+
    async def spend_ten_turns_in_canadia_gym():
      response = await canadia_gym(session, 10)
      # do something else with response
