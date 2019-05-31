@@ -6,6 +6,7 @@ pykollib documentation
    :caption: Contents:
 
    api/index
+   requests/index
 
 
 Indices and tables
