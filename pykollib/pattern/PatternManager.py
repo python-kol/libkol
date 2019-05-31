@@ -6,10 +6,11 @@ copies in each class.
 """
 
 from pykollib.pattern import Patterns
+from typing import Dict, Pattern
 
 import re
 
-__compiledPatterns = {}
+__compiledPatterns = {} # type: Dict[str, Pattern]
 
 
 def getOrCompilePattern(patternId):
