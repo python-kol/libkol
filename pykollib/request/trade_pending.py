@@ -2,12 +2,11 @@ import re
 from enum import Enum
 from typing import List, NamedTuple
 
-from .request import Request
-
 import pykollib
 
 from ..Error import UnknownError
 from ..Item import Item, ItemQuantity
+from .request import Request
 
 item_pattern = re.compile(
     r"<tr><td><img onclick\='descitem\((?P<itemdescid>[0-9]+)\).*?<b>(?P<itemname>.*?)\((?P<quantity>[0-9,]+])\)</td>'",
@@ -75,7 +74,10 @@ class trade_pending(Request):
         return [
             ItemQuantity(item, quantity)
             for item, quantity in (
-                (Item.get_or_none(desc_id=int(i.group("itemdescid"))), int(i.group("quantity")))
+                (
+                    Item.get_or_none(desc_id=int(i.group("itemdescid"))),
+                    int(i.group("quantity")),
+                )
                 for i in item_pattern.finditer(html)
             )
             if item is not None
@@ -93,7 +95,7 @@ class trade_pending(Request):
             (Status.OutgoingResponse, outgoing_response_pattern.finditer(html)),
         ]
 
-        trades = [] # type: List[Trade]
+        trades = []  # type: List[Trade]
 
         for status, match_group in statuses:
             for trade in match_group:

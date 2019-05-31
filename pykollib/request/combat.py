@@ -1,13 +1,12 @@
 from enum import Enum
 from typing import List, Optional, Union
 
-from .request import Request
-
 import pykollib
 
 from ..Error import InvalidActionError
 from ..Item import Item
 from ..Skill import Skill
+from .request import Request
 
 
 class Action(Enum):
@@ -54,7 +53,9 @@ class combat(Request):
                 params["whichitem"] = item.id
             else:
                 if len(item) == 0:
-                    raise InvalidActionError("You must specify at least one item to use")
+                    raise InvalidActionError(
+                        "You must specify at least one item to use"
+                    )
 
                 params["whichitem"] = item[0].id
                 if item[1]:

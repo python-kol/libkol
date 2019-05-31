@@ -1,12 +1,10 @@
 import hashlib
 import re
 
-
-from .request import Request
-
 import pykollib
 
 from ..Error import LoginFailedBadPasswordError, LoginFailedGenericError, UnknownError
+from .request import Request
 
 mainFrameset = re.compile(r'<frameset id="?rootset"?')
 rateLimit = re.compile(r"wait (.+?) minutes?")

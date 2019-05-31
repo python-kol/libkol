@@ -4,6 +4,7 @@ import pykollib
 
 from .request import Request
 
+
 class Response(NamedTuple):
     oven: bool
     range: bool
@@ -28,7 +29,8 @@ class campground_kitchen(Request):
     @staticmethod
     def parser(html: str, **kwargs) -> Response:
         response = {
-            "oven": "You've got an E-Z Cook&trade; oven installed in your kitchen." in html,
+            "oven": "You've got an E-Z Cook&trade; oven installed in your kitchen."
+            in html,
             "shaker": "You've got a My First Shaker&trade; cocktailcrafting kit in your kitchen."
             in html,
             "chef": "He'll help you cook fancy dishes, and make it so cooking doesn't cost an Adventure!"

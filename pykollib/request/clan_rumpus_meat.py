@@ -1,12 +1,10 @@
 from enum import Enum
 
-
-from .request import Request
-
 import pykollib
 
 from ..util import parsing
 from .clan_rumpus import Furniture
+from .request import Request
 
 
 class MeatFurniture(Enum):

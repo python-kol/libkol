@@ -1,11 +1,13 @@
 import asyncio
+from typing import Any, Coroutine, Dict, Optional, Tuple, Union
+
 from aiohttp import ClientResponse
 from yarl import URL
-from typing import Any, Coroutine, Dict, Optional, Tuple, Union
 
 import pykollib
 
-class Request():
+
+class Request:
     session: "pykollib.Session"
     request: Coroutine[Any, Any, ClientResponse]
     returns_json: bool = False
@@ -46,4 +48,6 @@ class Request():
             return content
 
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(self.parser(content, request.url, self.session, **kwargs))
+        return await loop.run_in_executor(
+            self.parser(content, request.url, self.session, **kwargs)
+        )

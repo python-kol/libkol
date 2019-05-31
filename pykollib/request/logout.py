@@ -1,5 +1,7 @@
-from .request import Request
 import pykollib
+
+from .request import Request
+
 
 class logout(Request):
     def __init__(self, session: "pykollib.Session") -> None:

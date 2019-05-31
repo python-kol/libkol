@@ -1,11 +1,11 @@
-from .request import Request
-
 import pykollib
 from pykollib.pattern import PatternManager
 
 from ..Error import UnknownError
+from .request import Request
 
 success_pattern = PatternManager.getOrCompilePattern("tradeCancelledSuccessfully")
+
 
 class trade_response_decline(Request):
     def __init__(self, session: "pykollib.Session", trade_id: int) -> None:

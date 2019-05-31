@@ -1,13 +1,12 @@
 from enum import Enum
 from typing import List
 
-from .request import Request
-
 import pykollib
 
-from ..util import parsing
 from ..Item import ItemQuantity
+from ..util import parsing
 from .clan_rumpus import Furniture
+from .request import Request
 
 
 class ItemFurniture(Enum):

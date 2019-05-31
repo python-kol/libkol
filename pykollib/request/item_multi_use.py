@@ -1,12 +1,9 @@
-
-
-from .request import Request
-
 import pykollib
 
 from ..Error import NotEnoughItemsError, WrongKindOfItemError
 from ..Item import Item
 from ..util import parsing
+from .request import Request
 
 
 class item_multi_use(Request):
@@ -27,7 +24,10 @@ class item_multi_use(Request):
         ):
             raise NotEnoughItemsError("You don't have that many of that item.")
 
-        if "<table><tr><td>That item isn't usable in quantity.</td></tr></table>" in html:
+        if (
+            "<table><tr><td>That item isn't usable in quantity.</td></tr></table>"
+            in html
+        ):
             raise WrongKindOfItemError("You cannot multi-use that item.")
 
         # Find out what happened

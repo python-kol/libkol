@@ -1,4 +1,5 @@
 import re
+
 import pykollib
 
 from ..Error import UnknownError
@@ -7,6 +8,7 @@ from .request import Request
 current_channel_pattern = re.compile(
     '<font color="?#?\w+"?>Currently in channel: ([^<>]+)<'
 )
+
 
 class chat_channel(Request):
     def __init__(self, session: "pykollib.Session") -> None:

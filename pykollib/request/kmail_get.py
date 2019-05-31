@@ -3,15 +3,13 @@ from datetime import datetime
 from html import unescape
 from typing import List, NamedTuple
 
-from .request import Request
-
 import pykollib
 
 from ..Error import UnknownError
+from ..Item import ItemQuantity
 from ..pattern import PatternManager
 from ..util import parsing
-from ..Item import ItemQuantity
-
+from .request import Request
 
 full_message_pattern = re.compile(
     '<tr><td[^>]*><input type=checkbox name="sel([0-9]+)".*?<b>[^<]*<\/b> <a href="showplayer\.php\?who=([0-9]+)">([^<]*)<\/a>.*?<b>Date:<\/b>([^<]*?)</b>.*?<blockquote>(.*?)<\/blockquote>',
@@ -20,15 +18,17 @@ full_message_pattern = re.compile(
 
 whitespace_pattern = PatternManager.getOrCompilePattern("whitespace")
 
+
 class Message(NamedTuple):
-    id: int # The integer identifier for the message.
-    user_id: int # The ID of the user who sent or received this message.
-    username: str # The name of the user who sent or received this message.
-    date: datetime # The date the message was sent.
-    text: str # The contents of the message.
-    items: List[ItemQuantity] # Items attached to the message.
-    meat: int # The amount of meat sent with the message.
-    type: str # Type of message (coffee, candy, normal etc)
+    id: int  # The integer identifier for the message.
+    user_id: int  # The ID of the user who sent or received this message.
+    username: str  # The name of the user who sent or received this message.
+    date: datetime  # The date the message was sent.
+    text: str  # The contents of the message.
+    items: List[ItemQuantity]  # Items attached to the message.
+    meat: int  # The amount of meat sent with the message.
+    type: str  # Type of message (coffee, candy, normal etc)
+
 
 class kmail_get(Request):
     def __init__(
@@ -71,7 +71,7 @@ class kmail_get(Request):
         Parses through the response and constructs an array of messages.
         """
 
-        messages = [] # type: List[Message]
+        messages = []  # type: List[Message]
 
         for message in full_message_pattern.finditer(html):
             messageId = int(message.group(1))
@@ -119,15 +119,17 @@ class kmail_get(Request):
             else:
                 type = "normal"
 
-            messages += [Message(
-                id=messageId,
-                user_id=userId,
-                username=userName,
-                date=date,
-                text=text,
-                items=parsing.item(rawText),
-                meat=parsing.meat(rawText),
-                type=type
-            )]
+            messages += [
+                Message(
+                    id=messageId,
+                    user_id=userId,
+                    username=userName,
+                    date=date,
+                    text=text,
+                    items=parsing.item(rawText),
+                    meat=parsing.meat(rawText),
+                    type=type,
+                )
+            ]
 
         return messages

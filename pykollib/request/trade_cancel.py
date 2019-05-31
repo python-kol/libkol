@@ -1,9 +1,6 @@
-
-
-from .request import Request
-
 import pykollib
 
+from .request import Request
 from .trade_pending import Status
 
 

@@ -1,13 +1,13 @@
 from enum import Enum
 from typing import List, NamedTuple
 
-from .request import Request
 from bs4 import BeautifulSoup
 from yarl import URL
 
 import pykollib
 
 from ..Item import Item
+from .request import Request
 
 
 class Category(Enum):
@@ -75,6 +75,7 @@ class Listing(NamedTuple):
     store_name: str
     stock: int
     limit: int
+
 
 class mall_search(Request):
     def __init__(
@@ -152,7 +153,9 @@ class mall_search(Request):
 
         if category in ["food", "booze"]:
             for tier in Tier:
-                params["consumable_tier_{}".format(tier.value)] = 1 if tier in tiers else 0
+                params["consumable_tier_{}".format(tier.value)] = (
+                    1 if tier in tiers else 0
+                )
 
         self.request = session.request("mall.php", params=params)
 
@@ -164,7 +167,9 @@ class mall_search(Request):
         if len(rows) == 0:
             return [
                 Item[int(str(item["id"])[5:])]
-                for item in soup.find_all("tr", id=lambda i: i and i.startswith("item_"))
+                for item in soup.find_all(
+                    "tr", id=lambda i: i and i.startswith("item_")
+                )
             ]
 
         return [

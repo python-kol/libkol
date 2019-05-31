@@ -1,15 +1,17 @@
 from typing import NamedTuple, Optional
 
-from .request import Request
 from bs4 import BeautifulSoup
 from yarl import URL
 
 import pykollib
 
+from .request import Request
+
 
 class Response(NamedTuple):
     server_url: str
     challenge: Optional[str]
+
 
 class homepage(Request):
     def __init__(self, session: "pykollib.Session", server_number: int = 0) -> None:

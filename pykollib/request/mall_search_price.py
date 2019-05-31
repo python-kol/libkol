@@ -1,11 +1,11 @@
 from typing import List, NamedTuple
 
-from .request import Request
 from bs4 import BeautifulSoup
 
 import pykollib
 
 from ..Item import Item
+from .request import Request
 
 
 class Listing(NamedTuple):
@@ -20,11 +20,7 @@ class Response(NamedTuple):
 
 
 class mall_search_price(Request):
-    def __init__(
-        self,
-        session: "pykollib.Session",
-        item: Item
-    ) -> None:
+    def __init__(self, session: "pykollib.Session", item: Item) -> None:
         """
         Search the mall for the lowest prices of an item. This will return the
         4 lowest unlimited prices, and if applicable, the 3 lowest limited

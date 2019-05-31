@@ -1,11 +1,10 @@
 from typing import List
 
-from .request import Request
-
 import pykollib
 
 from ..Item import ItemQuantity
 from ..util import parsing
+from .request import Request
 
 
 class clan_vip_klaw(Request):

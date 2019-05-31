@@ -2,9 +2,9 @@ import re
 from enum import Enum
 from typing import Dict
 
-from .request import Request
-
 import pykollib
+
+from .request import Request
 
 
 class QuestPage(Enum):
@@ -22,7 +22,9 @@ quests_completed_pattern = re.compile(
 
 
 class questlog(Request):
-    def __init__(self, session: "pykollib.Session", page: QuestPage = QuestPage.Current) -> None:
+    def __init__(
+        self, session: "pykollib.Session", page: QuestPage = QuestPage.Current
+    ) -> None:
         """
         Get info from the quest log about which quests are completed and which stage of each uncompleted quest the player is on
 

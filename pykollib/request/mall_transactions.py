@@ -2,7 +2,6 @@ import re
 from datetime import datetime
 from typing import List, NamedTuple
 
-from .request import Request
 from bs4 import BeautifulSoup
 from yarl import URL
 
@@ -11,6 +10,7 @@ import pykollib
 from ..Error import UnknownError
 from ..Item import Item
 from ..util import parsing
+from .request import Request
 
 details_pattern = re.compile(r"^ bought ([0-9]+) \((.*)\) for ([0-9]+) Meat.$")
 

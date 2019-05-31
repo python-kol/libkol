@@ -1,14 +1,19 @@
 from enum import Enum
 from typing import List, NamedTuple, Tuple
+
 from yarl import URL
-from .request import Request
 
 import pykollib
 
-from ..Error import (ItemNotFoundError, NotEnoughAdventuresError,
-                     RecipeNotFoundError, SkillNotFoundError)
+from ..Error import (
+    ItemNotFoundError,
+    NotEnoughAdventuresError,
+    RecipeNotFoundError,
+    SkillNotFoundError,
+)
 from ..Item import Item, ItemQuantity
 from ..util import parsing
+from .request import Request
 
 
 class Mode(Enum):

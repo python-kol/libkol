@@ -1,6 +1,6 @@
-from .request import Request
-
 import pykollib
+
+from .request import Request
 
 
 class trade_response_accept(Request):

@@ -1,11 +1,12 @@
-from typing import Optional, NamedTuple
+from typing import NamedTuple, Optional
 
-from .request import Request
 from bs4 import BeautifulSoup, Tag
 
 import pykollib
 
 from ..Item import Item
+from .request import Request
+
 
 class Outfit(NamedTuple):
     hat: Optional[Item]
@@ -18,6 +19,7 @@ class Outfit(NamedTuple):
     acc2: Optional[Item]
     acc3: Optional[Item]
     familiar: Optional[Item]
+
 
 class equipment(Request):
     def __init__(self, session: "pykollib.Session") -> None:

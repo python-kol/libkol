@@ -1,12 +1,11 @@
 import re
 from typing import Any, Dict
 
-from .request import Request
-
 import pykollib
 
 from .. import Clan
 from ..Error import UnknownError
+from .request import Request
 
 username = re.compile(
     r"<td valign=\"?center\"?>(?:<center>)?(?:<span [^>]+>)?<b>([^<>]+)<\/b> \(#[0-9]+\)<br>"
@@ -17,6 +16,7 @@ clan = re.compile(
 numAscensions = re.compile(r"Ascensions<\/a>:<\/b><\/td><td>([0-9,]+)<\/td>")
 numTrophies = re.compile(r"Trophies Collected:<\/b><\/td><td>([0-9,]+)<\/td>")
 numTattoos = re.compile(r"Tattoos Collected:<\/b><\/td><td>([0-9,]+)<\/td>")
+
 
 class player_profile(Request):
     def __init__(self, session: "pykollib.Session", player_id: int) -> None:

@@ -1,4 +1,4 @@
-from .request import kmail_send, kmail_get
+from .request import kmail_get, kmail_send
 from .util.decorators import logged_in
 
 

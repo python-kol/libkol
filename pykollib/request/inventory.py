@@ -1,10 +1,9 @@
 from typing import Any, Dict, List
 
-from .request import Request
-
 import pykollib
 
 from ..Item import Item, ItemQuantity
+from .request import Request
 
 
 class inventory(Request):

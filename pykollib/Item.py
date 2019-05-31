@@ -1,5 +1,6 @@
 from typing import NamedTuple
-from peewee import IntegerField, CharField, BooleanField, ForeignKeyField
+
+from peewee import BooleanField, CharField, ForeignKeyField, IntegerField
 
 from .database import BaseModel
 from .FoldGroup import FoldGroup

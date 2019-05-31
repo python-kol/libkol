@@ -1,11 +1,9 @@
-
-
-from .request import Request
-
 import pykollib
 
 from ..Error import UnknownError
 from ..util import parsing
+from .request import Request
+
 
 class clan_accepting_applications(Request):
     def __init__(self, session: "pykollib.Session") -> None:

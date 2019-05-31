@@ -1,15 +1,16 @@
 from typing import Any, Dict, List
 
-from .request import Request
 from bs4 import BeautifulSoup, Tag
 
 import pykollib
+
+from .request import Request
+
 
 class clan_ranks(Request):
     def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
         self.request = session.request("clan_editranks.php")
-
 
     @staticmethod
     def parse_privileges(container: Tag) -> Dict[str, Any]:
@@ -19,7 +20,8 @@ class clan_ranks(Request):
         }
 
         inputs = {
-            str(c["name"]): int(c["value"]) for c in container.find_all("input", type="text")
+            str(c["name"]): int(c["value"])
+            for c in container.find_all("input", type="text")
         }
 
         return {

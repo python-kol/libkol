@@ -1,8 +1,8 @@
 from typing import NamedTuple, Union
 
-from .request import Request
-
 import pykollib
+
+from .request import Request
 
 
 class Response(NamedTuple):
@@ -11,7 +11,13 @@ class Response(NamedTuple):
 
 
 class clan_whitelist_add(Request):
-    def __init__(self, session: "pykollib.Session", user: Union[int, str], rank: int = 0, title: str = "") -> None:
+    def __init__(
+        self,
+        session: "pykollib.Session",
+        user: Union[int, str],
+        rank: int = 0,
+        title: str = "",
+    ) -> None:
         payload = {"action": "add", "addwho": user, "level": rank, "title": title}
         self.request = session.request("clan_whitelist.php", data=payload, pwd=True)
 

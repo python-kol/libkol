@@ -1,13 +1,12 @@
 from enum import Enum
 from typing import List
 
-from .request import Request
-
 import pykollib
 
 from ..Error import InvalidLocationError, RequestGenericError
 from ..Item import Item
 from ..pattern import PatternManager
+from .request import Request
 
 menu_item_pattern = PatternManager.getOrCompilePattern("menuItem")
 cannot_go_pattern = PatternManager.getOrCompilePattern("userShouldNotBeHere")
@@ -36,7 +35,7 @@ class cafe_menu(Request):
         if cannot_go_pattern.search(html):
             raise InvalidLocationError("You cannot reach that cafe.")
 
-        items = [] # type: List[Item]
+        items = []  # type: List[Item]
         for match in menu_item_pattern.finditer(html):
             desc_id = match.group(2)
             if desc_id.isdigit() is False:

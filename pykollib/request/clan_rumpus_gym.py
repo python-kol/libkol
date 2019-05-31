@@ -1,12 +1,12 @@
-from typing import NamedTuple, Dict
-from yarl import URL
+from typing import Dict, NamedTuple
 
-from .request import Request
+from yarl import URL
 
 import pykollib
 
 from ..Stat import Stat
 from ..util import parsing
+from .request import Request
 
 gym_stat_mapping = {
     Stat.Mysticality: 1,
@@ -34,7 +34,11 @@ class clan_rumpus_gym(Request):
         """
         super().__init__(session)
 
-        params = {"preaction": "gym", "whichgym": gym_stat_mapping[stat], "numturns": turns}
+        params = {
+            "preaction": "gym",
+            "whichgym": gym_stat_mapping[stat],
+            "numturns": turns,
+        }
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod

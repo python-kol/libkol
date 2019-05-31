@@ -1,23 +1,22 @@
-from math import ceil
 import asyncio
-from typing import List, Dict, Any
+from math import ceil
+from typing import Any, Dict, List
 
-from .util.decorators import logged_in
 from .request import (
     clan_apply,
     clan_raid_log,
+    clan_raids,
+    clan_raids_previous,
+    clan_ranks,
     clan_search,
     clan_show,
-    clan_raids,
-    clan_ranks,
-    clan_whitelist,
-    clan_raids_previous,
     clan_stash,
+    clan_whitelist,
     clan_whitelist_add,
     clan_whitelist_remove,
 )
-
 from .request.clan_raids_previous import Raid
+from .util.decorators import logged_in
 
 
 class Clan(object):
@@ -62,7 +61,9 @@ class Clan(object):
 
     @logged_in
     async def add_user_to_whitelist(self, user, rank: int = 0, title: str = "") -> bool:
-        return (await clan_whitelist_add(self.session, user, rank, title).parse()).success
+        return (
+            await clan_whitelist_add(self.session, user, rank, title).parse()
+        ).success
 
     @logged_in
     async def remove_user_from_whitelist(self, user) -> bool:
@@ -84,7 +85,7 @@ class Clan(object):
     async def get_previous_raids(self, limit: int = None) -> List[Raid]:
         s = self.session
 
-        raids = [] # type: List[Raid]
+        raids = []  # type: List[Raid]
 
         if limit is None:
             first_page = await s.parse(clan_raids_previous, page=0)

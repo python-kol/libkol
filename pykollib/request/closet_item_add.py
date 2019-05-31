@@ -1,10 +1,7 @@
-
-
-from .request import Request
-
 import pykollib
 
 from ..Item import Item
+from .request import Request
 
 
 class closet_item_add(Request):
@@ -14,5 +11,10 @@ class closet_item_add(Request):
         """
         super().__init__(session)
 
-        params = {"action": "closetpush", "whichitem": item.id, "qty": quantity, "ajax": 1}
+        params = {
+            "action": "closetpush",
+            "whichitem": item.id,
+            "qty": quantity,
+            "ajax": 1,
+        }
         self.request = session.request("fillcloset.php", pwd=True, params=params)

@@ -1,17 +1,26 @@
 from typing import Union
+
 from yarl import URL
-from .request import Request
 
 import pykollib
 
-from ..Error import (AlreadyCompletedError, InvalidUserError,
-                     ItemNotFoundError, UnknownError, UserInHardcoreRoninError,
-                     UserNotFoundError, WrongKindOfItemError)
+from ..Error import (
+    AlreadyCompletedError,
+    InvalidUserError,
+    ItemNotFoundError,
+    UnknownError,
+    UserInHardcoreRoninError,
+    UserNotFoundError,
+    WrongKindOfItemError,
+)
 from ..Item import Item
+from .request import Request
 
 
 class curse(Request):
-    def __init__(self, session: "pykollib.Session", player: Union[str, int], item: Item) -> None:
+    def __init__(
+        self, session: "pykollib.Session", player: Union[str, int], item: Item
+    ) -> None:
         params = {"action": "use", "whichitem": item.id, "targetplayer": player}
 
         self.request = session.request("curse.php", pwd=True, params=params)
@@ -46,7 +55,9 @@ class curse(Request):
                 "<td>That player has already been hit with a time's arrow today.</td>"
                 in html
             ):
-                raise AlreadyCompletedError("That person has already been arrowed today.")
+                raise AlreadyCompletedError(
+                    "That person has already been arrowed today."
+                )
 
             if "It hits with a satisfying <i>thwock</i>" not in html:
                 raise UnknownError("Using Time's Arrow failed")

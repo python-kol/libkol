@@ -1,13 +1,14 @@
-from aiohttp import ClientSession, ClientResponse
 from os import path
 from time import time
-from typing import Callable, Dict, Any, Union, Optional
+from typing import Any, Callable, Dict, Optional, Union
 from urllib.parse import urlparse
 
-from .request import homepage, player_profile, login, logout, main, status, charpane
-from . import Kmail, Clan
+from aiohttp import ClientResponse, ClientSession
+
+from . import Clan, Kmail
 from .database import db, db_kol
 from .Location import Location
+from .request import charpane, homepage, login, logout, main, player_profile, status
 from .util.decorators import logged_in
 
 

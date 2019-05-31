@@ -1,17 +1,23 @@
 from typing import Union
 
-from .request import Request
-
 import pykollib
 
-from ..Skill import Skill
-from ..pattern import PatternManager
 from ..Error import UnknownError
+from ..pattern import PatternManager
+from ..Skill import Skill
+from .request import Request
 
 results_pattern = PatternManager.getOrCompilePattern("results")
 
+
 class skill_use(Request):
-    def __init__(self, session: "pykollib.Session", skill: Skill, times: int = 1, target: Union[int, str] = None) -> None:
+    def __init__(
+        self,
+        session: "pykollib.Session",
+        skill: Skill,
+        times: int = 1,
+        target: Union[int, str] = None,
+    ) -> None:
         params = {"action": "Skillz", "whichskill": skill.id}
 
         params["bufftimes" if skill.buff else "quantity"] = times
