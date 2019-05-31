@@ -1,9 +1,11 @@
+import re
 from enum import Enum
 from typing import List
-import re
+
 import pykollib
 
 from .request import Request
+
 
 class Furniture(Enum):
     Nail = (1, 0)

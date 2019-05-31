@@ -1,8 +1,9 @@
 from typing import Union
 
+import pykollib
+
 from .request import Request
 
-import pykollib
 
 class clan_whitelist_remove(Request):
     def __init__(self, session: "pykollib.Session", user: Union[int, str]) -> None:

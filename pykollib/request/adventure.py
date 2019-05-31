@@ -2,6 +2,7 @@ import pykollib
 
 from .request import Request
 
+
 class adventure(Request):
     def __init__(self, session: "pykollib.Session", location_id: int):
         """

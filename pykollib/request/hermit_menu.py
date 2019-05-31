@@ -1,11 +1,11 @@
 from typing import List
 
-from .request import Request
 from bs4 import BeautifulSoup
 
 import pykollib
 
 from ..Item import Item, ItemQuantity
+from .request import Request
 
 
 class hermit_menu(Request):
@@ -26,7 +26,9 @@ class hermit_menu(Request):
                 continue
 
             item_name = item_image.parent.next_sibling.contents
-            stock = int(item_name[1].string[2:].split(" ")[0]) if len(item_name) > 1 else 0
+            stock = (
+                int(item_name[1].string[2:].split(" ")[0]) if len(item_name) > 1 else 0
+            )
             menu += [ItemQuantity(item, stock)]
 
         return menu

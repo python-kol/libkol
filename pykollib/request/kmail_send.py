@@ -1,12 +1,17 @@
 from typing import List, Union
 
-from .request import Request
-
 import pykollib
 
-from ..Error import (ItemNotFoundError, UnknownError, UserInHardcoreRoninError,
-                     UserIsIgnoringError, UserNotFoundError)
+from ..Error import (
+    ItemNotFoundError,
+    UnknownError,
+    UserInHardcoreRoninError,
+    UserIsIgnoringError,
+    UserNotFoundError,
+)
 from ..Item import ItemQuantity
+from .request import Request
+
 
 class kmail_send(Request):
     def __init__(
@@ -18,7 +23,12 @@ class kmail_send(Request):
         meat: int = 0,
     ) -> None:
         params = {"toid": ""}
-        data = {"action": "send", "towho": recipient, "message": message, "sendmeat": meat}
+        data = {
+            "action": "send",
+            "towho": recipient,
+            "message": message,
+            "sendmeat": meat,
+        }
 
         self.request = session.request(
             "sendmessage.php", params=params, data=data, pwdt=True

@@ -4,8 +4,8 @@ from typing import List, NamedTuple
 
 import pykollib
 
-from .request import Request
 from ..Item import Item, ItemQuantity
+from .request import Request
 
 response_pattern = re.compile(r"You sell your (.*?) to (?:.*?) for ([0-9,]+) Meat.")
 
@@ -13,6 +13,7 @@ response_pattern = re.compile(r"You sell your (.*?) to (?:.*?) for ([0-9,]+) Mea
 class Response(NamedTuple):
     items: List[ItemQuantity]
     meat_gained: int
+
 
 class AutosellMode(Enum):
     All = 1
@@ -55,12 +56,14 @@ class autosell_items(Request):
         if response_match is None:
             return Response([], 0)
 
-        item_quantities = [] # type: List[ItemQuantity]
+        item_quantities = []  # type: List[ItemQuantity]
 
         for item in items:
-            pattern = re.compile(r"(?:(?:([0-9,]+) {})|{})(?:,|$)".format(
-                re.escape(item.pluralize()), re.escape(item.name)
-            ))
+            pattern = re.compile(
+                r"(?:(?:([0-9,]+) {})|{})(?:,|$)".format(
+                    re.escape(item.pluralize()), re.escape(item.name)
+                )
+            )
             match = pattern.search(response_match.group(1))
             quantity = (
                 0
@@ -73,5 +76,5 @@ class autosell_items(Request):
 
         return Response(
             items=item_quantities,
-            meat_gained=int(response_match.group(2).replace(",", ""))
+            meat_gained=int(response_match.group(2).replace(",", "")),
         )

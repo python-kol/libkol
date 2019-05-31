@@ -1,12 +1,12 @@
-
+import pykollib
 
 from .request import Request
 
-import pykollib
-
 
 class clan_stash_item_remove(Request):
-    def __init__(self, session: "pykollib.Session", item_id: int = 0, quantity: int = 0) -> None:
+    def __init__(
+        self, session: "pykollib.Session", item_id: int = 0, quantity: int = 0
+    ) -> None:
         """
         Take items from the player's clan stash.
         """

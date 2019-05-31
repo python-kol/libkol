@@ -1,15 +1,15 @@
 from typing import NamedTuple
 
-from .request import Request
-
 import pykollib
 
 from ..Error import CannotChangeClanError
+from .request import Request
 
 
 class Response(NamedTuple):
     success: bool
     already_member: bool
+
 
 class clan_apply(Request):
     def __init__(self, session: "pykollib.Session", clan_id: int) -> None:
@@ -36,7 +36,6 @@ class clan_apply(Request):
         """
         Formats the clan application response
         """
-
 
         if (
             "You can't apply to a new clan when you're the leader of an existing clan."

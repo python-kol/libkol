@@ -1,8 +1,8 @@
-from .request import Request
-
 import pykollib
 
 from ..Error import InvalidLocationError
+from .request import Request
+
 
 class canadia_mindcontrol(Request):
     def __init__(self, session: "pykollib.Session", level: int) -> None:

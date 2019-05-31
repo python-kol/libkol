@@ -1,4 +1,4 @@
-class Skill():
+class Skill:
     id: int
     buff: bool
 

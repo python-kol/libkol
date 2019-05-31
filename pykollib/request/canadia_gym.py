@@ -1,14 +1,12 @@
 from typing import Dict, NamedTuple
 
-from .request import Request
-
 import pykollib
 
-from ..Error import (InvalidLocationError, NotEnoughAdventuresError,
-                     RequestGenericError)
+from ..Error import InvalidLocationError, NotEnoughAdventuresError, RequestGenericError
 from ..pattern import PatternManager
 from ..Stat import Stat
 from ..util import parsing
+from .request import Request
 
 
 class Response(NamedTuple):
@@ -38,7 +36,9 @@ class canadia_gym(Request):
                 "You don't have enough adventures to study at the institute."
             )
         if invalid_turns_pattern.search(html):
-            raise RequestGenericError("That is an invalid number of turns for studying.")
+            raise RequestGenericError(
+                "That is an invalid number of turns for studying."
+            )
 
         return Response(
             substats=parsing.substat(html, stat=Stat.Mysticality),

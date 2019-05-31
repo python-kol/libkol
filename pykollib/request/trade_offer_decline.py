@@ -1,13 +1,13 @@
-
 from yarl import URL
-from .request import Request
 
 import pykollib
 
 from ..Error import UnknownError
 from ..pattern import PatternManager
+from .request import Request
 
 success_pattern = PatternManager.getOrCompilePattern("tradeCancelledSuccessfully")
+
 
 class trade_offer_decline(Request):
     def __init__(self, session: "pykollib.Session", trade_id: int) -> None:

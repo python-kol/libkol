@@ -1,9 +1,11 @@
 import re
 from typing import Any, Dict, List
-from .request import Request
+
 from bs4 import BeautifulSoup
 
 import pykollib
+
+from .request import Request
 
 rank_pattern = re.compile(r"(.*?) \(°([0-9]+)\)")
 
@@ -18,7 +20,9 @@ class clan_whitelist(Request):
         self.request = session.request("clan_whitelist.php")
 
     @staticmethod
-    def parser(html: str, include_rank: bool = False, only_rank: bool = False, **kwargs) -> List[Dict[str, Any]]:
+    def parser(
+        html: str, include_rank: bool = False, only_rank: bool = False, **kwargs
+    ) -> List[Dict[str, Any]]:
         soup = BeautifulSoup(html, "html.parser")
 
         # Get rid of stupid forms everywhere
@@ -34,7 +38,8 @@ class clan_whitelist(Request):
                     for o, rank_matcher in (
                         (o, rank_pattern.match(o.string))
                         for o in soup.find(
-                            "select", attrs={"name": lambda n: n and n.startswith("level")}
+                            "select",
+                            attrs={"name": lambda n: n and n.startswith("level")},
                         ).children
                     )
                     if rank_matcher is not None

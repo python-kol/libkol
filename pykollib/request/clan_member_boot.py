@@ -1,13 +1,16 @@
 from typing import List, Union
-from multidict import MultiDict
 
-from .request import Request
+from multidict import MultiDict
 
 import pykollib
 
+from .request import Request
+
 
 class clan_member_boot(Request):
-    def __init__(self, session: "pykollib.Session", user_id: Union[int, List[int]]) -> None:
+    def __init__(
+        self, session: "pykollib.Session", user_id: Union[int, List[int]]
+    ) -> None:
         """
         Boot member from clan (also removes their whitelist)
         """

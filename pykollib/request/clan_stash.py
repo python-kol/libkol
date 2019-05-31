@@ -3,8 +3,8 @@ from typing import Any, Dict, List
 
 import pykollib
 
-from .request import Request
 from ..Item import Item
+from .request import Request
 
 stashItemsPattern = re.compile(
     r"<option value=(?P<id>\d*) descid=\d*>(?P<name>.*?)(?: \((?P<quantity>\d*)\))?(?: \(-(?P<cost>\d*)\))?</option>"

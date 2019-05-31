@@ -1,14 +1,14 @@
 import time
 from typing import List
 
-from .request import Request
-
 import pykollib
 from pykollib.pattern import PatternManager
 
+from .request import Request
 from .store_inventory import Listing
 
 price_not_updated_pattern = PatternManager.getOrCompilePattern("mallPriceNotUpdated")
+
 
 class store_item_update(Request):
     def __init__(self, session: "pykollib.Session", listings: List[Listing]) -> None:

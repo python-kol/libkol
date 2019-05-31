@@ -1,11 +1,10 @@
 from enum import Enum
 from typing import Any, Dict, List
 
-from .request import Request
-
 import pykollib
 
 from ..util import parsing
+from .request import Request
 
 
 class Type(Enum):

@@ -1,10 +1,7 @@
-
-
-from .request import Request
-
 import pykollib
 
 from .equip import Slot
+from .request import Request
 
 
 class unequip(Request):

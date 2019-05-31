@@ -1,11 +1,12 @@
 from typing import Any, Dict
 
-from .request import Request
-
 from bs4 import BeautifulSoup
 from yarl import URL
 
 import pykollib
+
+from .request import Request
+
 
 class clan_show(Request):
     def __init__(self, session: "pykollib.Session", id: int):

@@ -1,8 +1,6 @@
-
+import pykollib
 
 from .request import Request
-
-import pykollib
 
 
 class closet_meat_remove(Request):

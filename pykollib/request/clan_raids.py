@@ -1,6 +1,5 @@
 from typing import Any, Dict, List, Tuple
 
-from .request import Request
 from bs4 import BeautifulSoup, Tag
 from yarl import URL
 
@@ -8,6 +7,8 @@ import pykollib
 
 from ..Error import ClanPermissionsError
 from .clan_raid_log import clan_raid_log
+from .request import Request
+
 
 class clan_raids(Request):
     def __init__(self, session: "pykollib.Session") -> None:
@@ -39,6 +40,8 @@ class clan_raids(Request):
 
         raids = current.next_sibling.find_all("div")
         return [
-            clan_raid_log.parse_raid_log(*cls.dungeon_name_id_from_title(d.find("b").contents), d.find("td"))
+            clan_raid_log.parse_raid_log(
+                *cls.dungeon_name_id_from_title(d.find("b").contents), d.find("td")
+            )
             for d in raids
         ]

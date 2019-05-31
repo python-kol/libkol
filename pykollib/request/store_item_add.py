@@ -1,10 +1,10 @@
-from .request import Request
-
 import pykollib
 
 from ..Error import ItemNotFoundError, UnknownError
 from ..Item import Item
 from ..pattern import PatternManager
+from .request import Request
+
 
 class store_item_add(Request):
     def __init__(
@@ -53,7 +53,9 @@ class store_item_add(Request):
             raise ItemNotFoundError("You don't have that item.")
 
         # Check if responseText matches the success pattern. If not, raise error.
-        itemAddedSuccessfully = PatternManager.getOrCompilePattern("itemAddedSuccessfully")
+        itemAddedSuccessfully = PatternManager.getOrCompilePattern(
+            "itemAddedSuccessfully"
+        )
         if itemAddedSuccessfully.search(html) is None:
             raise UnknownError("Something went wrong with the adding.")
 

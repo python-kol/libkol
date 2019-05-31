@@ -1,15 +1,15 @@
 from typing import NamedTuple
 
-from .request import Request
-
 import pykollib
 
 from ..util import parsing
+from .request import Request
 
 
 class Response(NamedTuple):
     mp: int
     hp: int
+
 
 class clan_rumpus_sofa(Request):
     def __init__(self, session: "pykollib.Session", turns: int = 0) -> None:

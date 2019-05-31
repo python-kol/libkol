@@ -1,10 +1,9 @@
 from typing import List
 
-from .request import Request
-
 import pykollib
 
 from ..Item import ItemQuantity
+from .request import Request
 
 
 class clan_stash_item_add(Request):

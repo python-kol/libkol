@@ -1,12 +1,10 @@
 from enum import Enum
 
-
-from .request import Request
-
 import pykollib
 
 from ..Error import ItemNotFoundError, WrongKindOfItemError
 from ..Item import Item
+from .request import Request
 
 
 class Slot(Enum):
@@ -20,6 +18,7 @@ class Slot(Enum):
     Acc2 = "acc2"
     Acc3 = "acc3"
     Familiar = "familiarequip"
+
 
 class equip(Request):
     def __init__(self, session: "pykollib.Session", item: Item, slot: Slot) -> None:
@@ -41,7 +40,10 @@ class equip(Request):
         if "You don't have the item you're trying to equip." in html:
             raise ItemNotFoundError("That item is not in your inventory.")
 
-        if "That's not something you can equip.  And stop screwing with the URLs." in html:
+        if (
+            "That's not something you can equip.  And stop screwing with the URLs."
+            in html
+        ):
             raise WrongKindOfItemError("That is not an equippable item.")
 
         return True

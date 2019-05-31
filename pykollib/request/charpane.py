@@ -1,10 +1,10 @@
 import re
 from typing import Any, Dict
 
-from .request import Request
-from ..Error import UnknownError
-
 import pykollib
+
+from ..Error import UnknownError
+from .request import Request
 
 pwd_pattern = re.compile(r"var pwdhash = \"([0-9a-f]+)\";")
 user_id_pattern = re.compile(r"var playerid = ([0-9]+);")
@@ -164,6 +164,7 @@ def titleToClass(title: str) -> str:
 
     raise UnknownError("Did not recognise player class {}".format(title))
 
+
 class charpane(Request):
     def __init__(self, session: "pykollib.Session") -> None:
         """
@@ -172,7 +173,6 @@ class charpane(Request):
         super().__init__(session)
 
         self.request = session.request("charpane.php")
-
 
     @staticmethod
     def parser(html: str, url, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
@@ -229,9 +229,7 @@ class charpane(Request):
         data["effects"] = [
             {"name": str(match.group(1)), "turns": int(match.group(2))}
             for match in (
-                match
-                for match in characterEffect.finditer(html)
-                if match is not None
+                match for match in characterEffect.finditer(html) if match is not None
             )
         ]
 

@@ -2,6 +2,7 @@ from pykollib.request import clan_accepting_applications
 
 from .test_base import TestCase
 
+
 class ClanAcceptingApplicationsTestCase(TestCase):
     request = "clan_accepting_applications"
 

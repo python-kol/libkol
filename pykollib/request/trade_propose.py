@@ -1,14 +1,18 @@
 from typing import List
 
-from .request import Request
-
 import pykollib
 
-from ..Error import (BannedFromChatError, NotEnoughItemsError,
-                     NotEnoughMeatError, RequestGenericError,
-                     UserInHardcoreRoninError, UserIsIgnoringError)
+from ..Error import (
+    BannedFromChatError,
+    NotEnoughItemsError,
+    NotEnoughMeatError,
+    RequestGenericError,
+    UserInHardcoreRoninError,
+    UserIsIgnoringError,
+)
 from ..Item import ItemQuantity
 from ..pattern import PatternManager
+from .request import Request
 
 
 class trade_propose(Request):

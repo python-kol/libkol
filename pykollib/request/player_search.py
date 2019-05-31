@@ -1,11 +1,12 @@
 from enum import Enum
 from typing import List, NamedTuple, Optional
 
-from .request import Request
 from bs4 import BeautifulSoup
 from yarl import URL
 
 import pykollib
+
+from .request import Request
 
 
 class QueryType(Enum):
@@ -22,6 +23,7 @@ class Result(NamedTuple):
     clan_id: Optional[int] = None
     clan_name: Optional[str] = None
     fame: Optional[int] = None
+
 
 class player_search(Request):
     def __init__(
@@ -67,7 +69,9 @@ class player_search(Request):
                     int(row.contents[1].get_text()),
                     int(row.contents[2].get_text()),
                     row.contents[3].get_text(),
-                    int(URL(str(row.contents[0].contents[4]["href"])).query["whichclan"])
+                    int(
+                        URL(str(row.contents[0].contents[4]["href"])).query["whichclan"]
+                    )
                     if len(row.contents[0].contents) > 4
                     else None,
                     row.contents[0].contents[4].string

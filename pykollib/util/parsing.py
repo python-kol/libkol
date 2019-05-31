@@ -1,11 +1,12 @@
 import re
-from bs4 import BeautifulSoup, Tag
-from typing import List, Dict, Any, NamedTuple
-from itertools import groupby
 from copy import copy
+from itertools import groupby
+from typing import Any, Dict, List, NamedTuple
 
-from ..pattern import PatternManager
+from bs4 import BeautifulSoup, Tag
+
 from ..Item import Item, ItemQuantity
+from ..pattern import PatternManager
 from ..Stat import Stat
 
 

@@ -1,11 +1,10 @@
 from typing import List, NamedTuple
 
-from .request import Request
-
 import pykollib
 
 from ..Item import Item
 from ..pattern import PatternManager
+from .request import Request
 
 store_inventory_pattern = PatternManager.getOrCompilePattern("storeInventory")
 

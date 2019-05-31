@@ -1,13 +1,11 @@
 from typing import List
 
-from .request import Request
-
 import pykollib
 
-from ..Error import (NotEnoughItemsError, NotEnoughMeatError,
-                     UnknownError)
+from ..Error import NotEnoughItemsError, NotEnoughMeatError, UnknownError
 from ..Item import ItemQuantity
 from ..pattern import PatternManager
+from .request import Request
 
 
 class trade_respond(Request):
@@ -40,11 +38,15 @@ class trade_respond(Request):
 
         noItemsPattern = PatternManager.getOrCompilePattern("traderHasNotEnoughItems")
         if noItemsPattern.search(html):
-            raise NotEnoughItemsError("You don't have as many items as you're promising.")
+            raise NotEnoughItemsError(
+                "You don't have as many items as you're promising."
+            )
 
         # Not testing for an offer being cancelled due to a bug in KoL - space reserved
 
-        successPattern = PatternManager.getOrCompilePattern("tradeResponseSentSuccessfully")
+        successPattern = PatternManager.getOrCompilePattern(
+            "tradeResponseSentSuccessfully"
+        )
         if successPattern.search(html) is None:
             raise UnknownError("Unknown error sending response to trade")
 

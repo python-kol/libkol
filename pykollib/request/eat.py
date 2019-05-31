@@ -1,12 +1,10 @@
-
-
-from .request import Request
-
 import pykollib
 
 from ..Error import ItemNotFoundError, UserIsDrunkError, WrongKindOfItemError
 from ..Item import Item
 from ..util import parsing
+from .request import Request
+
 
 class eat(Request):
     def __init__(self, session: "pykollib.Session", item: Item) -> None:

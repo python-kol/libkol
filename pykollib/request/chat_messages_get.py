@@ -1,12 +1,11 @@
 import re
 from typing import Any, Dict, List, NamedTuple
 
-from .request import Request
-
 import pykollib
 
 from ..Error import UnknownError
 from ..util import ChatUtils
+from .request import Request
 
 last_seen_pattern = re.compile(r"lastseen:([0-9]+)")
 
@@ -14,6 +13,7 @@ last_seen_pattern = re.compile(r"lastseen:([0-9]+)")
 class Response(NamedTuple):
     last_seen: int
     messages: List[Dict[str, Any]]
+
 
 class chat_messages_get(Request):
     def __init__(self, session: "pykollib.Session", since: int = 0) -> None:
