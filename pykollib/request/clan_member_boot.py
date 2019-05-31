@@ -1,24 +1,27 @@
-from typing import Any, Coroutine, List, Union
+from typing import List, Union
+from multidict import MultiDict
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
 
-def clan_member_boot(
-    session: "pykollib.Session", user_id: Union[int, List[int]]
-) -> Coroutine[Any, Any, ClientResponse]:
-    """
-    Boot member from clan (also removes their whitelist)
-    """
-    params = {"action": "modify", "begin": 1}
+class clan_member_boot(Request):
+    def __init__(self, session: "pykollib.Session", user_id: Union[int, List[int]]) -> None:
+        """
+        Boot member from clan (also removes their whitelist)
+        """
+        super().__init__(session)
 
-    # Wrap user_id in array if a single was supplied
-    user_ids = [user_id] if isinstance(user_id, int) else user_id
+        params = {"action": "modify", "begin": 1}
 
-    # Move to a list of tuples so we can have duplicate keys, then build the request
-    params = params.items()
-    for user_id in user_ids:
-        params += [("pids[]", user_id), ("boot{}".format(user_id), "on")]
+        # Wrap user_id in array if a single was supplied
+        user_ids = [user_id] if isinstance(user_id, int) else user_id
 
-    return session.request("clan_members.php", pwd=True, params=params)
+        # Move to a list of tuples so we can have duplicate keys, then build the request
+        multidict = MultiDict(params.items())
+        for user_id in user_ids:
+            multidict.add("pids[]", user_id)
+            multidict.add("boot{}".format(user_id), "on")
+
+        self.request = session.request("clan_members.php", pwd=True, params=multidict)

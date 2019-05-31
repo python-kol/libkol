@@ -1,27 +1,31 @@
-from typing import Any, Coroutine, Dict
+from typing import Any, Dict
+
+from .request import Request
 
 from bs4 import BeautifulSoup
 from yarl import URL
 
 import pykollib
 
+class clan_show(Request):
+    def __init__(self, session: "pykollib.Session", id: int):
+        """
+        Get information about a clan
+        """
 
-def parse(html: str, **kwargs) -> Dict[str, Any]:
-    soup = BeautifulSoup(html, "html.parser")
-    leader_link = soup.find("a")
-    return {
-        "name": soup.find("td", bgcolor="blue").string,
-        "leader": {
-            "id": int(URL(leader_link["href"]).query["who"]),
-            "username": leader_link.string,
-        },
-        "website": soup.find("a", target="_blank")["href"],
-        "credo": soup.find("table", cellpadding=5).get_text()[6:],
-    }
+        params = {"recruiter": 1, "whichclan": id}
+        self.request = session.request("showclan.php", params=params)
 
-
-def clan_show(session: "pykollib.Session", id: int):
-    "Get information about a clan"
-
-    params = {"recruiter": 1, "whichclan": id}
-    return session.request("showclan.php", parse=parse, params=params)
+    @staticmethod
+    def parser(html: str, **kwargs) -> Dict[str, Any]:
+        soup = BeautifulSoup(html, "html.parser")
+        leader_link = soup.find("a")
+        return {
+            "name": soup.find("td", bgcolor="blue").string,
+            "leader": {
+                "id": int(URL(str(leader_link["href"])).query["who"]),
+                "username": leader_link.string,
+            },
+            "website": soup.find("a", target="_blank")["href"],
+            "credo": soup.find("table", cellpadding=5).get_text()[6:],
+        }

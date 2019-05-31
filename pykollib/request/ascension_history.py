@@ -1,12 +1,12 @@
 import re
 from datetime import datetime, timedelta
-from typing import Any, Coroutine, List, NamedTuple
+from typing import List, NamedTuple, Optional
 
-from aiohttp import ClientResponse
 from bs4 import BeautifulSoup
 
 import pykollib
 
+from .request import Request
 
 class Ascension(NamedTuple):
     id: int  # The ascension id
@@ -15,12 +15,12 @@ class Ascension(NamedTuple):
     player_class: str  # The class the player was during the ascension
     moon: str  # The moonsign of the ascension
     turns: int  # The total number of turns the ascension lasted
-    familiar: str  # The most used familiar in-run this ascension, or None if there was no familiar
-    familiar_percentage: float  # The percentage of turns the most used familiar in-run was used
-    total_familiar: str  # The most used familiar overall this ascension
-    total_familiar_percentage: float  # The percentage of turns the most used familiar overall was used
+    familiar: Optional[str]  # The most used familiar in-run this ascension, or None if there was no familiar
+    familiar_percentage: Optional[float]  # The percentage of turns the most used familiar in-run was used
+    total_familiar: Optional[str]  # The most used familiar overall this ascension
+    total_familiar_percentage: Optional[float]  # The percentage of turns the most used familiar overall was used
     restriction: str  # The restriction in place for this ascension (hardcore, normal, casual etc)
-    path: str  # The path in place for this ascension (teetolar, oxygenarian, Avatar of Jarlsberg etc)
+    path: Optional[str]  # The path in place for this ascension (teetolar, oxygenarian, Avatar of Jarlsberg etc)
     start: datetime  # The start date of the run
     end: datetime  # The end date of the run
 
@@ -34,70 +34,75 @@ familiar_pattern = re.compile(
 )
 
 
-def parse(html: str, **kwargs) -> List[Ascension]:
-    """
-    Parses through the response and constructs an array of ascensions.
-    Each ascension is represented as a dictionary with the following
-    keys:
-    """
+class ascension_history(Request):
+    def __init__(
+        self,
+        session: "pykollib.Session",
+        player_id: int,
+        pre_ns13: bool = False,
+    ) -> None:
+        """
+        Fetches ascension history for a player
 
-    soup = BeautifulSoup(html, "html.parser")
-    end_dates = soup.find_all("td", height="30")
+        :params player_id: Player for whom to fetch ascension history
+        :params pre_ns13: Whether to include pre NS13 ascension history
+        """
 
-    ascensions = [] # type: List[Ascension]
+        params = {"back": "other", "who": player_id, "prens13": 1 if pre_ns13 else 0}
+        self.request = session.request("ascensionhistory.php", params=params)
 
-    for end in end_dates:
-        id = end.previous_sibling
-        level, cl, moon, turns, days, familiar, info = end.find_next_siblings("td")[0:7]
+    @staticmethod
+    def parser(html: str, **kwargs) -> List[Ascension]:
+        """
+        Parses through the response and constructs an array of ascensions.
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        end_dates = soup.find_all("td", height="30")
 
-        info = info.find_all("img")
+        ascensions = [] # type: List[Ascension]
 
-        path = None if len(info) < 2 else info[1]["title"]
-        if path and path.endswith(")"):
-            path = path[0 : path.find("(") - 1]
+        for end in end_dates:
+            id = end.previous_sibling
+            level, cl, moon, turns, days, familiar, info = end.find_next_siblings("td")[0:7]
 
-        id_string = id.string.strip()
-        end_date = datetime.strptime(end.string.strip(), "%m/%d/%y")
-        fam_data = familiar.img["alt"] if familiar.img else None
-        fam_match = None if fam_data is None else familiar_pattern.match(fam_data)
+            info = info.find_all("img")
 
-        ascensions += Ascension(
-            **{
-                "id": int(id_string.strip("*")),
-                "dropped_path": id_string.endswith("*"),
-                "level": int(level.span.string),
-                "class": cl.img["alt"],
-                "moon": moon.string.strip().lower(),
-                "turns": get_int_cell(turns),
-                "familiar": None if fam_match is None else fam_match.group(1),
-                "familiar_percentage": None
-                if fam_match is None
-                else float(fam_match.group(2)),
-                "total_familiar": None if fam_match is None else fam_match.group(3),
-                "total_familiar_percentage": None
-                if fam_match is None or fam_match.group(4) is None
-                else float(fam_match.group(4)),
-                "restriction": info[0]["title"].lower()
-                if info[0].has_attr("title")
-                else None,
-                "path": path,
-                "start": end_date - timedelta(days=get_int_cell(days)),
-                "end": end_date,
-            }
-        )
+            path = None if len(info) < 2 else info[1]["title"]
+            if path and path.endswith(")"):
+                path = path[0 : path.find("(") - 1]
 
-    return ascensions
+            id_string = id.string.strip()
+            end_date = datetime.strptime(end.string.strip(), "%m/%d/%y")
+            fam_data = familiar.img["alt"] if familiar.img else None
+            fam_match = None if fam_data is None else familiar_pattern.match(fam_data)
 
+            ascensions += [Ascension(
+                id=int(id_string.strip("*")),
+                dropped_path=id_string.endswith("*"),
+                level=int(level.span.string),
+                player_class=cl.img["alt"],
+                moon=moon.string.strip().lower(),
+                turns=get_int_cell(turns),
+                familiar=None if fam_match is None else fam_match.group(1),
+                familiar_percentage=(
+                    None
+                    if fam_match is None
+                    else float(fam_match.group(2))
+                ),
+                total_familiar=None if fam_match is None else fam_match.group(3),
+                total_familiar_percentage=(
+                    None
+                    if fam_match is None or fam_match.group(4) is None
+                    else float(fam_match.group(4))
+                ),
+                restriction=(
+                    info[0]["title"].lower()
+                    if info[0].has_attr("title")
+                    else None
+                ),
+                path=path,
+                start=end_date - timedelta(days=get_int_cell(days)),
+                end=end_date,
+            )]
 
-def ascension_history(
-    session: "pykollib.Session", player_id: int, pre_ns13: bool = False
-) -> Coroutine[Any, Any, ClientResponse]:
-    """
-    Fetches ascension history for a player
-
-    :params player_id: Player for whom to fetch ascension history
-    :params pre_ns13: Whether to include pre NS13 ascension history
-    """
-
-    params = {"back": "other", "who": player_id, "prens13": 1 if pre_ns13 else 0}
-    return session.request("ascensionhistory.php", params=params, parse=parse)
+        return ascensions

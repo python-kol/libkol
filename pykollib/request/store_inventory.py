@@ -1,6 +1,6 @@
-from typing import Any, Coroutine, List, NamedTuple
+from typing import List, NamedTuple
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
@@ -19,30 +19,29 @@ class Listing(NamedTuple):
     cheapest: int  # The cheapest in mall. This includes limited items, use at own risk.
 
 
-def parse(html: str, **kwargs) -> List[Listing]:
-    """
-    Searches backoffice.php for item name, quantity, price, limit, and ID.
-    """
+class store_inventory(Request):
+    def __init__(self, session: "pykollib.Session") -> None:
+        """
+        Get a list of items currently in a user's store
+        """
+        super().__init__(session)
 
-    return [
-        Listing(
-            **{
-                "item": Item[int(match.group(7))],
-                "order": int(match.group(2)),
-                "quantity": int(match.group(5)),
-                "price": int(match.group(8)),
-                "limit": int(match.group(10)),
-                "cheapest": int(match.group(12)),
-            }
-        )
-        for match in store_inventory_pattern.finditer(html)
-    ]
+        params = {"which": 1}
+        self.request = session.request("backoffice.php", params=params)
 
-
-def store_inventory(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    """
-    This class is used to get a list of items currently in a user's store
-    """
-
-    params = {"which": 1}
-    return session.request("backoffice.php", params=params, parse=parse)
+    @staticmethod
+    def parser(html: str, **kwargs) -> List[Listing]:
+        """
+        Searches backoffice.php for item name, quantity, price, limit, and ID.
+        """
+        return [
+            Listing(
+                item=Item[int(match.group(7))],
+                order=int(match.group(2)),
+                quantity=int(match.group(5)),
+                price=int(match.group(8)),
+                limit=int(match.group(10)),
+                cheapest=int(match.group(12)),
+            )
+            for match in store_inventory_pattern.finditer(html)
+        ]

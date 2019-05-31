@@ -1,7 +1,7 @@
-from typing import Any, Coroutine, NamedTuple, Dict
-
-from aiohttp import ClientResponse
+from typing import NamedTuple, Dict
 from yarl import URL
+
+from .request import Request
 
 import pykollib
 
@@ -24,24 +24,26 @@ class Response(NamedTuple):
     level: int
 
 
-def parse(url: URL, html: str, **kwargs) -> Response:
-    stat = gym_stat_mapping[int(url.query["whichgym"])]
-    assert isinstance(stat, Stat)
+class clan_rumpus_gym(Request):
+    def __init__(self, session: "pykollib.Session", stat: Stat, turns: int) -> None:
+        """
+        Visits the a gym in the clan rumpus room for a specified number of turns
 
-    return Response(
-        substats=parsing.substat(html, stat=stat),
-        stats=parsing.stat(html, stat=stat),
-        level=parsing.level(html),
-    )
+        :param stat: The stat to train
+        :param turns: The number of turns to train for
+        """
+        super().__init__(session)
 
+        params = {"preaction": "gym", "whichgym": gym_stat_mapping[stat], "numturns": turns}
+        self.request = session.request("clan_rumpus.php", params=params)
 
-def clan_rumpus_gym(session: "pykollib.Session", stat: Stat, turns: int) -> Coroutine[Any, Any, ClientResponse]:
-    """
-    Visits the a gym in the clan rumpus room for a specified number of turns
+    @staticmethod
+    def parser(html: str, url: URL, **kwargs) -> Response:
+        stat = gym_stat_mapping[int(url.query["whichgym"])]
+        assert isinstance(stat, Stat)
 
-    :param stat: The stat to train
-    :param turns: The number of turns to train for
-    """
-
-    params = {"preaction": "gym", "whichgym": gym_stat_mapping[stat], "numturns": turns}
-    return session.request("clan_rumpus.php", params=params, parse=parse)
+        return Response(
+            substats=parsing.substat(html, stat=stat),
+            stats=parsing.stat(html, stat=stat),
+            level=parsing.level(html),
+        )

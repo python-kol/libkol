@@ -1,8 +1,8 @@
 from yarl import URL
 
 from .test_base import TestCase
-from ...request.craft import parse
-from ...Error import ItemNotFoundError, RecipeNotFoundError
+from pykollib.request import craft
+from pykollib.Error import ItemNotFoundError, RecipeNotFoundError
 
 
 class CraftTestCase(TestCase):
@@ -13,7 +13,7 @@ class CraftTestCase(TestCase):
 
         with self.open_test_data("combine_meatpaste_error") as file:
             try:
-                parse(file.read(), url=url)
+                craft.parser(file.read(), url=url)
             except ItemNotFoundError:
                 assert True
                 return
@@ -25,7 +25,7 @@ class CraftTestCase(TestCase):
 
         with self.open_test_data("cook_recipe_error") as file:
             try:
-                parse(file.read(), url=url)
+                craft.parser(file.read(), url=url)
             except RecipeNotFoundError:
                 assert True
                 return

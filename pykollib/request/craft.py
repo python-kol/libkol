@@ -1,8 +1,7 @@
 from enum import Enum
-from typing import Any, Coroutine, List, NamedTuple, Tuple
-
-from aiohttp import ClientResponse
+from typing import List, NamedTuple, Tuple
 from yarl import URL
+from .request import Request
 
 import pykollib
 
@@ -23,49 +22,51 @@ class Response(NamedTuple):
     explosion: bool
 
 
-def parse(html: str, url: URL, **kwargs) -> Response:
-    mode = Mode(url.query["mode"])
+class craft(Request):
+    def __init__(
+        self,
+        session: "pykollib.Session",
+        mode: Mode,
+        ingredients: Tuple[Item, Item],
+        quantity: int = 1,
+        max: bool = False,
+    ) -> None:
+        params = {
+            "action": "craft",
+            "mode": mode,
+            "qty": quantity,
+            "a": ingredients[0].id,
+            "b": ingredients[1].id,
+            "max": "on" if max else "off",
+        }
 
-    if "<td>Those two items don't combine to make" in html:
-        raise RecipeNotFoundError("Unable to craft. Does not match any recipe.")
+        self.request = session.request("craft.php", pwd=True, params=params)
 
-    if (
-        mode in [Mode.Cocktail, Mode.Cook]
-        and "<td>You don't have the skill necessary to " in html
-    ):
-        raise SkillNotFoundError("Unable to craft. We are not skilled enough.")
+    @staticmethod
+    def parser(html: str, url: URL, **kwargs) -> Response:
+        mode = Mode(url.query["mode"])
 
-    if "<td>You don't have enough of one the " in html:
-        raise ItemNotFoundError("Unable to craft. You don't have all of the items.")
+        if "<td>Those two items don't combine to make" in html:
+            raise RecipeNotFoundError("Unable to craft. Does not match any recipe.")
 
-    if "<td>You don't have that many adventures left." in html:
-        raise NotEnoughAdventuresError("Unable to craft. Not enough adventures.")
+        if (
+            mode in [Mode.Cocktail, Mode.Cook]
+            and "<td>You don't have the skill necessary to " in html
+        ):
+            raise SkillNotFoundError("Unable to craft. We are not skilled enough.")
 
-    if (
-        mode is Mode.Combine
-        and '<div style="text-align:left">You don\'t have any meat paste.' in html
-    ):
-        raise ItemNotFoundError("Unable to craft. You need sufficient meatpaste")
+        if "<td>You don't have enough of one the " in html:
+            raise ItemNotFoundError("Unable to craft. You don't have all of the items.")
 
-    explosion = "Smoke begins to pour from the head of your" in html
+        if "<td>You don't have that many adventures left." in html:
+            raise NotEnoughAdventuresError("Unable to craft. Not enough adventures.")
 
-    return Response(parsing.item(html), explosion)
+        if (
+            mode is Mode.Combine
+            and '<div style="text-align:left">You don\'t have any meat paste.' in html
+        ):
+            raise ItemNotFoundError("Unable to craft. You need sufficient meatpaste")
 
+        explosion = "Smoke begins to pour from the head of your" in html
 
-def craft(
-    session: "pykollib.Session",
-    mode: Mode,
-    ingredients: Tuple[Item, Item],
-    quantity: int = 1,
-    max: bool = False,
-) -> Coroutine[Any, Any, ClientResponse]:
-    params = {
-        "action": "craft",
-        "mode": mode,
-        "qty": quantity,
-        "a": ingredients[0].id,
-        "b": ingredients[1].id,
-        "max": "on" if max else "off",
-    }
-
-    return session.request("craft.php", pwd=True, params=params, parse=parse)
+        return Response(parsing.item(html), explosion)

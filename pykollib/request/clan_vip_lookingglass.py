@@ -1,6 +1,6 @@
-from typing import Any, Coroutine, List
+from typing import List
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
@@ -8,12 +8,16 @@ from ..Item import ItemQuantity
 from ..util import parsing
 
 
-def parse(html: str, **kwargs) -> List[ItemQuantity]:
-    return parsing.item(html)
+class clan_vip_lookingglass(Request):
+    def __init__(self, session: "pykollib.Session") -> None:
+        """
+        Uses the Looking Glass in the clan VIP room.
+        """
+        super().__init__(session)
 
+        params = {"action": "lookingglass"}
+        self.request = session.request("clan_viplounge.php", params=params)
 
-def clan_vip_lookingglass(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    "Uses the Looking Glass in the clan VIP room."
-
-    params = {"action": "lookingglass"}
-    return session.request("clan_viplounge.php", params=params, parse=parse)
+    @staticmethod
+    def parser(html: str, **kwargs) -> List[ItemQuantity]:
+        return parsing.item(html)

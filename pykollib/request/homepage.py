@@ -1,6 +1,6 @@
-from typing import Any, Coroutine, NamedTuple
+from typing import NamedTuple, Optional
 
-from aiohttp import ClientResponse
+from .request import Request
 from bs4 import BeautifulSoup
 from yarl import URL
 
@@ -9,27 +9,29 @@ import pykollib
 
 class Response(NamedTuple):
     server_url: str
-    challenge: str
+    challenge: Optional[str]
 
+class homepage(Request):
+    def __init__(self, session: "pykollib.Session", server_number: int = 0) -> None:
+        """
+        This request is most often used before logging in. It allows the KoL servers to assign a
+        particular server number to the user. In addition, it gives us the user's login challenge
+        so that we might login to the server in a more secure fashion.
+        """
+        super().__init__(session)
 
-def parse(html: str, url: URL, **kwargs) -> Response:
-    soup = BeautifulSoup(html, "html.parser")
+        if server_number > 0:
+            url = "https://www{}.kingdomofloathing.com/main.php".format(server_number)
+        else:
+            url = "https://www.kingdomofloathing.com/"
 
-    challenge_input = soup.find("input", attrs={"name": "challenge"})
-    challenge = challenge_input["value"] if challenge_input else None
+        self.request = session.request(url)
 
-    return Response(str(url.origin()), challenge)
+    @staticmethod
+    def parser(html: str, url: URL, **kwargs) -> Response:
+        soup = BeautifulSoup(html, "html.parser")
 
+        challenge_input = soup.find("input", attrs={"name": "challenge"})
+        challenge = str(challenge_input["value"]) if challenge_input else None
 
-def homepage(session: "pykollib.Session", server_number: int = 0) -> Coroutine[Any, Any, ClientResponse]:
-    """
-    This request is most often used before logging in. It allows the KoL servers to assign a
-    particular server number to the user. In addition, it gives us the user's login challenge
-    so that we might login to the server in a more secure fashion.
-    """
-    if server_number > 0:
-        url = "https://www{}.kingdomofloathing.com/main.php".format(server_number)
-    else:
-        url = "https://www.kingdomofloathing.com/"
-
-    return session.request(url, parse=parse)
+        return Response(str(url.origin()), challenge)

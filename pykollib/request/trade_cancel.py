@@ -1,22 +1,24 @@
-from typing import Any, Coroutine
 
-from aiohttp import ClientResponse
+
+from .request import Request
 
 import pykollib
 
 from .trade_pending import Status
 
 
-def trade_cancel(session: "pykollib.Session", id: int, status: Status) -> Coroutine[Any, Any, ClientResponse]:
-    """
-    Cancel a trade request.
+class trade_cancel(Request):
+    def __init__(self, session: "pykollib.Session", id: int, status: Status) -> None:
+        """
+        Cancel a trade request.
 
-    :param trade_id: the ID of the trade being cancelled
-    :param trade_type: the type of the trade being cancelled
-    """
+        :param id: Identifier of the trade to be cancelled
+        :param status: Status of the trade to be cancelled
+        """
+        super().__init__(session)
 
-    params = {
-        "whichoffer": id,
-        "action": "cancel2" if status == Status.OutgoingResponse else "cancel1",
-    }
-    return session.request("makeoffer.php", pwd=True, params=params)
+        params = {
+            "whichoffer": id,
+            "action": "cancel2" if status == Status.OutgoingResponse else "cancel1",
+        }
+        self.request = session.request("makeoffer.php", pwd=True, params=params)

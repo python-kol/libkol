@@ -1,10 +1,11 @@
 import re
-from typing import Any, Coroutine, Dict, List, NamedTuple
+from typing import Any, Dict, List, NamedTuple
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
+from ..Error import UnknownError
 from ..util import ChatUtils
 
 last_seen_pattern = re.compile(r"lastseen:([0-9]+)")
@@ -14,16 +15,21 @@ class Response(NamedTuple):
     last_seen: int
     messages: List[Dict[str, Any]]
 
+class chat_messages_get(Request):
+    def __init__(self, session: "pykollib.Session", since: int = 0) -> None:
+        super().__init__(session)
+        params = {"lasttime": since}
+        self.request = session.request("newchatmessages.php", params=params)
 
-def parse(html: str, **kwargs) -> Dict[str, Any]:
-    # Get the timestamp we should send to the server next time we make a request.
-    last_seen_matcher = last_seen_pattern.search(html)
-    last_seen = int(last_seen_matcher.group(1))
+    @staticmethod
+    def parser(html: str, **kwargs) -> Response:
+        # Get the timestamp we should send to the server next time we make a request.
+        last_seen_matcher = last_seen_pattern.search(html)
 
-    html = html[: html.find("<!--lastseen")]
-    return Response(last_seen, ChatUtils.parseIncomingChatMessage(html))
+        if last_seen_matcher is None:
+            raise UnknownError("Could not parse last seen comment in chat")
 
+        last_seen = int(last_seen_matcher.group(1))
 
-def chat_messages_get(session: "pykollib.Session", since: int = 0) -> Coroutine[Any, Any, ClientResponse]:
-    params = {"lasttime": since}
-    return session.request("newchatmessages.php", params=params, parse=parse)
+        html = html[: html.find("<!--lastseen")]
+        return Response(last_seen, ChatUtils.parseIncomingChatMessage(html))

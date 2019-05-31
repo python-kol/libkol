@@ -1,11 +1,16 @@
-from typing import Any, Coroutine
-
-from aiohttp import ClientResponse
+from typing import Any, Dict
+from .request import Request
 
 import pykollib
 
 
-def status(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    payload = {"for": session.state.get("user_agent", "pykollib"), "what": "status"}
+class status(Request):
+    returns_json = True
 
-    return session.request("api.php", json=True, data=payload)
+    def __init__(self, session: "pykollib.Session") -> None:
+        payload = {"for": session.state.get("user_agent", "pykollib"), "what": "status"}
+        self.request = session.request("api.php", json=True, data=payload)
+
+    @staticmethod
+    def parser(json: Dict[str, Any], **kwargs) -> Dict[str, Any]:
+        return json

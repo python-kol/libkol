@@ -1,43 +1,44 @@
-from typing import Any, Coroutine, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
-from aiohttp import ClientResponse
-from bs4 import BeautifulSoup, PageElement
+from .request import Request
+from bs4 import BeautifulSoup, Tag
 from yarl import URL
 
 import pykollib
 
 from ..Error import ClanPermissionsError
-from .clan_raid_log import parse_raid_log
+from .clan_raid_log import clan_raid_log
 
+class clan_raids(Request):
+    def __init__(self, session: "pykollib.Session") -> None:
+        """
+        Retrieves information on all active raids
+        """
+        super().__init__(session)
 
-def dungeon_name_id_from_title(comment: List[PageElement]) -> Tuple[str, int]:
-    return (comment[0][:-1].lower(), int(comment[1].split(":")[-1]))
+        self.request = session.request("clan_raidlogs.php")
 
+    @staticmethod
+    def dungeon_name_id_from_title(comment: List[Tag]) -> Tuple[str, int]:
+        return (comment[0].string[:-1].lower(), int(comment[1].string.split(":")[-1]))
 
-def parse(html: str, url: URL, **kwargs) -> Dict[str, Any]:
-    if (
-        "Your clan has a basement, but you are not allowed to enter clan dungeons, "
-        "so this is as far as you're going, Gilbert."
-    ) in html or html == "":
-        raise ClanPermissionsError("You do not have dungeon access for this clan")
+    @classmethod
+    def parser(cls, html: str, url: URL, **kwargs) -> List[Dict[str, Any]]:
+        if (
+            "Your clan has a basement, but you are not allowed to enter clan dungeons, "
+            "so this is as far as you're going, Gilbert."
+        ) in html or html == "":
+            raise ClanPermissionsError("You do not have dungeon access for this clan")
 
-    soup = BeautifulSoup(html, "html.parser")
+        soup = BeautifulSoup(html, "html.parser")
 
-    current = soup.find("b", text="Current Clan Dungeons:")
+        current = soup.find("b", text="Current Clan Dungeons:")
 
-    if current is None:
-        raise ClanPermissionsError("You cannot see any current clan dungeons")
+        if current is None:
+            raise ClanPermissionsError("You cannot see any current clan dungeons")
 
-    raids = current.next_sibling.find_all("div")
-    return [
-        parse_raid_log(*dungeon_name_id_from_title(d.find("b").contents), d.find("td"))
-        for d in raids
-    ]
-
-
-def clan_raids(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    """
-    Retrieves information on all active raids
-    """
-
-    return session.request("clan_raidlogs.php", parse=parse)
+        raids = current.next_sibling.find_all("div")
+        return [
+            clan_raid_log.parse_raid_log(*cls.dungeon_name_id_from_title(d.find("b").contents), d.find("td"))
+            for d in raids
+        ]

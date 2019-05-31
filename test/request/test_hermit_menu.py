@@ -1,5 +1,5 @@
 from .test_base import TestCase
-from ...request.hermit_menu import parse
+from pykollib.request import hermit_menu
 
 
 class HermitMenuTestCase(TestCase):
@@ -7,7 +7,7 @@ class HermitMenuTestCase(TestCase):
 
     def test_hermit_menu_clovers(self):
         with self.open_test_data("clovers") as file:
-            menu = parse(file.read())
+            menu = hermit_menu.parser(file.read())
             self.assertEqual([menu[0].item.id, menu[0].quantity], [2, 0])
             self.assertEqual([menu[1].item.id, menu[1].quantity], [2285, 0])
             self.assertEqual([menu[2].item.id, menu[2].quantity], [2284, 0])

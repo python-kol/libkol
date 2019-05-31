@@ -1,11 +1,11 @@
-from typing import Any, Coroutine
-
-from aiohttp import ClientResponse
-
+from .request import Request
 import pykollib
 
+class logout(Request):
+    def __init__(self, session: "pykollib.Session") -> None:
+        super().__init__(session)
+        self.request = session.request("logout.php")
 
-async def logout(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    response = await session.request("logout.php")
-    session.is_connected = False
-    return response
+    @staticmethod
+    def parser(html: str, url, session: "pykollib.Session", **kwargs) -> None:
+        session.is_connected = False

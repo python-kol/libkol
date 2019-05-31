@@ -1,5 +1,5 @@
 from .test_base import TestCase
-from ...request.mall_transactions import parse
+from pykollib.request import mall_transactions
 
 
 class MallTransactionsTestCase(TestCase):
@@ -7,7 +7,7 @@ class MallTransactionsTestCase(TestCase):
 
     def test_mall_transactions_short(self):
         with self.open_test_data("short") as file:
-            logs = parse(file.read())
+            logs = mall_transactions.parser(file)
             self.assertEqual(len(logs), 24)
 
             # Ensure we got the one with the internal brackets

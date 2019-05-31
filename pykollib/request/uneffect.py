@@ -1,30 +1,31 @@
-from typing import Any, Coroutine
 
-from aiohttp import ClientResponse
+
+from .request import Request
 
 import pykollib
 
 from ..Error import EffectNotFoundError, ItemNotFoundError, UnknownError
 
+class uneffect(Request):
+    def __init__(self, session: "pykollib.Session", effect_id: int) -> None:
+        super().__init__(session)
+        params = {"using": "Yep.", "whicheffect": effect_id}
 
-def parse(html: str, **kwargs) -> bool:
-    if "<td>You don't have that effect." in html:
-        raise EffectNotFoundError(
-            "Unable to remove effect. The user does not have that effect."
-        )
+        self.request = session.request("uneffect.php", pwd=True, params=params)
 
-    if "<td>You don't have a green soft eyedrop echo antidote." in html:
-        raise ItemNotFoundError(
-            "Unable to remove effect. You do not have a soft green echo eyedrop antidote."
-        )
+    @staticmethod
+    def parser(html: str, **kwargs) -> bool:
+        if "<td>You don't have that effect." in html:
+            raise EffectNotFoundError(
+                "Unable to remove effect. The user does not have that effect."
+            )
 
-    if "<td>Effect removed.</td>" not in html:
-        raise UnknownError("Unable to remove effect")
+        if "<td>You don't have a green soft eyedrop echo antidote." in html:
+            raise ItemNotFoundError(
+                "Unable to remove effect. You do not have a soft green echo eyedrop antidote."
+            )
 
-    return True
+        if "<td>Effect removed.</td>" not in html:
+            raise UnknownError("Unable to remove effect")
 
-
-def uneffect(session: "pykollib.Session", effect_id: int) -> Coroutine[Any, Any, ClientResponse]:
-    params = {"using": "Yep.", "whicheffect": effect_id}
-
-    return session.request("uneffect.php", pwd=True, params=params, parse=parse)
+        return True

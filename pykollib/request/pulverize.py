@@ -1,6 +1,6 @@
-from typing import Any, Coroutine, List
+from typing import List
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
@@ -8,23 +8,23 @@ from ..Error import ItemNotFoundError, WrongKindOfItemError
 from ..Item import Item, ItemQuantity
 from ..util import parsing
 
+class pulverize(Request):
+    def __init__(self, session: "pykollib.Session", item: Item, quantity: int = 1) -> None:
+        params = {
+            "action": "pulverize",
+            "mode": "smith",
+            "smashitem": item.id,
+            "qty": quantity,
+        }
 
-def parse(html: str, **yargs) -> List[ItemQuantity]:
-    if "<td>That's not something you can pulverize.</td>" in html:
-        raise WrongKindOfItemError("That item cannot be pulverized")
+        self.request = session.request("craft.php", pwd=True, params=params)
 
-    if "<td>You haven't got that many" in html:
-        raise ItemNotFoundError("Not enough of that item")
+    @staticmethod
+    def parser(html: str, **kwargs) -> List[ItemQuantity]:
+        if "<td>That's not something you can pulverize.</td>" in html:
+            raise WrongKindOfItemError("That item cannot be pulverized")
 
-    return parsing.item(html)
+        if "<td>You haven't got that many" in html:
+            raise ItemNotFoundError("Not enough of that item")
 
-
-def pulverize(session: "pykollib.Session", item: Item, quantity: int = 1) -> Coroutine[Any, Any, ClientResponse]:
-    params = {
-        "action": "pulverize",
-        "mode": "smith",
-        "smashitem": item.id,
-        "qty": quantity,
-    }
-
-    return session.request("craft.php", pwd=True, params=params, parse=parse)
+        return parsing.item(html)

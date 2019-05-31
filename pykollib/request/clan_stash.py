@@ -1,8 +1,9 @@
 import re
-from typing import Any, Coroutine, Dict, List
+from typing import Any, Dict, List
 
 import pykollib
 
+from .request import Request
 from ..Item import Item
 
 stashItemsPattern = re.compile(
@@ -10,17 +11,22 @@ stashItemsPattern = re.compile(
 )
 
 
-def parse(html: str, **kwargs) -> List[Dict[str, Any]]:
-    return [
-        {
-            "item": Item[int(i["id"])],
-            "quantity": int(i["quantity"] or 1),
-            "cost": int(i["cost"] or 0),
-        }
-        for i in (m.groupdict() for m in stashItemsPattern.finditer(html))
-    ]
+class clan_stash(Request):
+    def __init__(self, session: "pykollib.Session"):
+        """
+        This class is used to get a list of items in the user's clan stash.
+        """
+        super().__init__(session)
 
+        self.request = session.request("clan_stash.php", pwd=True)
 
-def clan_stash(session: "pykollib.Session"):
-    "This class is used to get a list of items in the user's clan stash."
-    return session.request("clan_stash.php", parse=parse, pwd=True)
+    @staticmethod
+    def parser(html: str, **kwargs) -> List[Dict[str, Any]]:
+        return [
+            {
+                "item": Item[int(i["id"])],
+                "quantity": int(i["quantity"] or 1),
+                "cost": int(i["cost"] or 0),
+            }
+            for i in (m.groupdict() for m in stashItemsPattern.finditer(html))
+        ]

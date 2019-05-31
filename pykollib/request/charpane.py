@@ -1,13 +1,14 @@
 import re
-from typing import Any, Coroutine, Dict
+from typing import Any, Dict
 
-from aiohttp import ClientResponse
+from .request import Request
+from ..Error import UnknownError
 
 import pykollib
 
-accountPwd = re.compile(r"var pwdhash = \"([0-9a-f]+)\";")
-accountId = re.compile(r"var playerid = ([0-9]+);")
-accountName = re.compile(r"<a [^<>]*href=\"charsheet\.php\">(?:<b>)?([^<>]+)<")
+pwd_pattern = re.compile(r"var pwdhash = \"([0-9a-f]+)\";")
+user_id_pattern = re.compile(r"var playerid = ([0-9]+);")
+username_pattern = re.compile(r"<a [^<>]*href=\"charsheet\.php\">(?:<b>)?([^<>]+)<")
 characterLevel = re.compile(r"<br>Level ([0-9]+)<br>(.*?)<table")
 characterMuscle = re.compile(
     r"Muscle:</td><td align=left><b>(?:<font color=blue>([0-9]+)</font>)?(?:&nbsp;)?\(?([0-9]+)\)?</b>"
@@ -161,90 +162,105 @@ def titleToClass(title: str) -> str:
     ]:
         return "Accordion Thief"
 
-    return None
+    raise UnknownError("Did not recognise player class {}".format(title))
+
+class charpane(Request):
+    def __init__(self, session: "pykollib.Session") -> None:
+        """
+        Requests the user's character pane.
+        """
+        super().__init__(session)
+
+        self.request = session.request("charpane.php")
 
 
-def parse(html: str, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
-    data = {
-        "pwd": accountPwd.search(html).group(1),
-        "userName": accountName.search(html).group(1),
-        "userId": int(accountId.search(html).group(1)),
-    }
+    @staticmethod
+    def parser(html: str, url, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
+        pwd_matcher = pwd_pattern.search(html)
+        username_matcher = username_pattern.search(html)
+        user_id_matcher = user_id_pattern.search(html)
 
-    match = characterLevel.search(html)
-    if match:
-        title = str(match.group(2))
-        data["level"] = int(match.group(1))
-        data["levelTitle"] = title
-        data["class"] = titleToClass(title)
+        if pwd_matcher is None or username_matcher is None or user_id_matcher is None:
+            raise UnknownError("Failed to parse basic information from charpane")
 
-    match = characterHP.search(html)
-    if match:
-        data["currentHP"] = int(match.group(1))
-        data["maxHP"] = int(match.group(2))
-
-    match = characterMP.search(html)
-    if match:
-        data["currentMP"] = int(match.group(1))
-        data["maxMP"] = int(match.group(2))
-
-    match = characterMeat.search(html)
-    if match:
-        data["meat"] = int(match.group(1).replace(",", ""))
-
-    match = characterAdventures.search(html)
-    if match:
-        data["adventures"] = int(match.group(1))
-
-    match = characterDrunk.search(html)
-    if match:
-        data["drunkenness"] = int(match.group(1))
-
-    match = currentFamiliar.search(html)
-    if match:
-        data["familiar"] = {
-            "name": str(match.group(1)),
-            "type": str(match.group(3)),
-            "weight": int(match.group(2)),
+        data = {
+            "pwd": pwd_matcher.group(1),
+            "userName": username_matcher.group(1),
+            "userId": int(user_id_matcher.group(1)),
         }
 
-    data["effects"] = []
-    for match in characterEffect.finditer(html):
-        data["effects"].append(
+        match = characterLevel.search(html)
+        if match:
+            title = str(match.group(2))
+            data["level"] = int(match.group(1))
+            data["levelTitle"] = title
+            data["class"] = titleToClass(title)
+
+        match = characterHP.search(html)
+        if match:
+            data["currentHP"] = int(match.group(1))
+            data["maxHP"] = int(match.group(2))
+
+        match = characterMP.search(html)
+        if match:
+            data["currentMP"] = int(match.group(1))
+            data["maxMP"] = int(match.group(2))
+
+        match = characterMeat.search(html)
+        if match:
+            data["meat"] = int(match.group(1).replace(",", ""))
+
+        match = characterAdventures.search(html)
+        if match:
+            data["adventures"] = int(match.group(1))
+
+        match = characterDrunk.search(html)
+        if match:
+            data["drunkenness"] = int(match.group(1))
+
+        match = currentFamiliar.search(html)
+        if match:
+            data["familiar"] = {
+                "name": str(match.group(1)),
+                "type": str(match.group(3)),
+                "weight": int(match.group(2)),
+            }
+
+        data["effects"] = [
             {"name": str(match.group(1)), "turns": int(match.group(2))}
-        )
+            for match in (
+                match
+                for match in characterEffect.finditer(html)
+                if match is not None
+            )
+        ]
 
-    match = characterMuscle.search(html)
-    if match:
-        if match.group(1) and len(str(match.group(1))) > 0:
-            data["buffedMuscle"] = int(match.group(1))
-        data["baseMuscle"] = int(match.group(2))
+        match = characterMuscle.search(html)
+        if match:
+            if match.group(1) and len(str(match.group(1))) > 0:
+                data["buffedMuscle"] = int(match.group(1))
+            data["baseMuscle"] = int(match.group(2))
 
-    match = characterMoxie.search(html)
-    if match:
-        if match.group(1) and len(str(match.group(1))) > 0:
-            data["buffedMoxie"] = int(match.group(1))
-        data["baseMoxie"] = int(match.group(2))
+        match = characterMoxie.search(html)
+        if match:
+            if match.group(1) and len(str(match.group(1))) > 0:
+                data["buffedMoxie"] = int(match.group(1))
+            data["baseMoxie"] = int(match.group(2))
 
-    match = characterMysticality.search(html)
-    if match:
-        if match.group(1) and len(str(match.group(1))) > 0:
-            data["buffedMysticality"] = int(match.group(1))
-        data["baseMysticality"] = int(match.group(2))
+        match = characterMysticality.search(html)
+        if match:
+            if match.group(1) and len(str(match.group(1))) > 0:
+                data["buffedMysticality"] = int(match.group(1))
+            data["baseMysticality"] = int(match.group(2))
 
-    match = characterRonin.search(html)
-    if match:
-        data["roninLeft"] = int(match.group(1))
+        match = characterRonin.search(html)
+        if match:
+            data["roninLeft"] = int(match.group(1))
 
-    match = characterMindControl.search(html)
-    if match:
-        data["mindControl"] = int(match.group(1))
+        match = characterMindControl.search(html)
+        if match:
+            data["mindControl"] = int(match.group(1))
 
-    session.state.update(data)
+        session.state.update(data)
 
-    return data
-
-
-def charpane(session: "pykollib.Session") -> Coroutine[Any, Any, ClientResponse]:
-    "Requests the user's character pane."
-    return session.request("charpane.php", parse=parse)
+        return data

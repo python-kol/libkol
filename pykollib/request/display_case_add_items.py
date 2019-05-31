@@ -1,20 +1,29 @@
-from typing import Any, Coroutine, List
+from typing import List
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
 from ..Item import ItemQuantity
 
 
-def display_case_add_items(
-    session: "pykollib.Session", items: List[ItemQuantity]
-) -> Coroutine[Any, Any, ClientResponse]:
-    "Adds items to the player's display case."
-    params = {"action": "put"}
+class display_case_add_items(Request):
+    def __init__(
+        self,
+        session: "pykollib.Session", items: List[ItemQuantity]
+    ) -> None:
+        """
+        Adds items to the player's display case.
 
-    for i, iq in items.enumerate():
-        params["whichitem{}".format(i)] = iq["item"].id
-        params["howmany{}".format(i)] = iq["quantity"]
+        :param session: Active session
+        :param items: List of items and their quantities to add to the case
+        """
+        super().__init__(session)
 
-    return session.request("managecollection.php", pwd=True, params=params)
+        params = {"action": "put"}
+
+        for i, iq in enumerate(items):
+            params["whichitem{}".format(i)] = str(iq.item.id)
+            params["howmany{}".format(i)] = str(iq.quantity)
+
+        self.request = session.request("managecollection.php", pwd=True, params=params)

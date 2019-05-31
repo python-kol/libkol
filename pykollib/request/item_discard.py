@@ -1,14 +1,16 @@
-from typing import Any, Coroutine
 
-from aiohttp import ClientResponse
+
+from .request import Request
 
 import pykollib
 
 from ..Item import Item
 
 
-def item_discard(
-    session: "pykollib.Session", item: Item
-) -> Coroutine[Any, Any, ClientResponse]:
-    params = {"action": "discard", "whichitem": item.id}
-    return session.request("inventory.php", params=params)
+class item_discard(Request):
+    def __init__(
+        self,
+        session: "pykollib.Session", item: Item
+    ) -> None:
+        params = {"action": "discard", "whichitem": item.id}
+        self.request = session.request("inventory.php", params=params)

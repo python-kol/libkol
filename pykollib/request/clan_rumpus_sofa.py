@@ -1,6 +1,6 @@
-from typing import Any, Coroutine, NamedTuple
+from typing import NamedTuple
 
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
@@ -11,15 +11,17 @@ class Response(NamedTuple):
     mp: int
     hp: int
 
+class clan_rumpus_sofa(Request):
+    def __init__(self, session: "pykollib.Session", turns: int = 0) -> None:
+        """
+        Uses the comfy sofa in the clan rumpus room.
+        """
 
-def parse(html: str, **kwargs) -> Response:
-    return Response(parsing.mp(html), parsing.hp(html))
+        super().__init__(session)
 
+        params = {"preaction": "nap", "numturns": turns}
+        self.request = session.request("clan_rumpus.php", params=params)
 
-def clan_rumpus_sofa(session: "pykollib.Session", turns: int = 0) -> Coroutine[Any, Any, ClientResponse]:
-    """
-    Uses the comfy sofa in the clan rumpus room.
-    """
-
-    params = {"preaction": "nap", "numturns": turns}
-    return session.request("clan_rumpus.php", params=params, parse=parse)
+    @staticmethod
+    def parser(html: str, **kwargs) -> Response:
+        return Response(parsing.mp(html), parsing.hp(html))

@@ -1,6 +1,8 @@
 from os import path
-from ...database import db
 import unittest
+
+from pykollib.database import db
+
 
 TEST_DATA = path.join(path.dirname(path.abspath(__file__)), "test_data")
 
@@ -10,7 +12,7 @@ class TestCase(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestCase, self).__init__(*args, **kwargs)
-        db_file = path.join(path.dirname(__file__), "../../pykollib.db")
+        db_file = path.join(path.dirname(__file__), "../../pykollib/pykollib.db")
         db.init(db_file)
         db.connect()
 

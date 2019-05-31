@@ -1,17 +1,15 @@
-from typing import Any, Coroutine
-
-from aiohttp import ClientResponse
+from .request import Request
 
 import pykollib
 
 from ..Error import InvalidLocationError
 
+class canadia_mindcontrol(Request):
+    def __init__(self, session: "pykollib.Session", level: int) -> None:
+        params = {"action": "changedial", "whichlevel": level}
+        self.request = session.request("canadia.php", params=params)
 
-def parse(html: str, **kwargs) -> None:
-    if len(html) == 0:
-        raise InvalidLocationError("You cannot use the Mind Control Device yet.")
-
-
-def canadia_mindcontrol(session: "pykollib.Session", level: int) -> Coroutine[Any, Any, ClientResponse]:
-    params = {"action": "changedial", "whichlevel": level}
-    return session.request("canadia.php", params=params, parse=parse)
+    @staticmethod
+    def parser(html: str, **kwargs) -> None:
+        if len(html) == 0:
+            raise InvalidLocationError("You cannot use the Mind Control Device yet.")
