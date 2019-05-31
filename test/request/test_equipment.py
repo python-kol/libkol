@@ -1,8 +1,9 @@
 from collections import Counter
 
-from .test_base import TestCase
 from pykollib.request import equipment
 from pykollib.request.equip import Slot
+
+from .test_base import TestCase
 
 
 class EquipmentTestCase(TestCase):
