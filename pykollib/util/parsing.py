@@ -52,12 +52,22 @@ def item(text: str) -> List[ItemQuantity]:
 
     for match in single_item_pattern.finditer(text):
         item = Item.get_or_none(desc_id=int(match.group(1)))
-        item_quantities += [ItemQuantity(item, 1)]
+
+        if item is None:
+            print("Could not find item with desc_id {}".format(match.group(1)))
+            continue
+        else:
+            item_quantities += [ItemQuantity(item, 1)]
 
     for match in multi_item_pattern.finditer(text):
         quantity = int(match.group(2).replace(",", ""))
         item = Item.get_or_none(desc_id=int(match.group(1)))
-        item_quantities += [ItemQuantity(item, quantity)]
+
+        if item is None:
+            print("Could not find item with desc_id {}".format(match.group(1)))
+            continue
+        else:
+            item_quantities += [ItemQuantity(item, quantity)]
 
     return item_quantities
 

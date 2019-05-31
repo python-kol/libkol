@@ -1,40 +1,14 @@
 from aiohttp import ClientSession, ClientResponse
-from functools import partial
 from os import path
 from time import time
-from typing import Callable, Coroutine, Dict, Any, Union, Optional
+from typing import Callable, Dict, Any, Union, Optional
 from urllib.parse import urlparse
-import asyncio
 
 from .request import homepage, player_profile, login, logout, main, status, charpane
 from . import Kmail, Clan
 from .database import db, db_kol
 from .Location import Location
 from .util.decorators import logged_in
-
-
-async def parse_method(
-    self: ClientResponse, encoding: Optional[str] = None, **kwargs
-) -> Any:
-    """This method is patched into ClientResponses"""
-    if self.content is None:
-        await self.read()
-
-    if encoding is None:
-        encoding = self.get_encoding()
-
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(
-        None,
-        partial(
-            self._kol_parse,
-            html=(await self.text(encoding)) if self._kol_json is False else None,
-            json=(await self.json()) if self._kol_json is True else None,
-            url=self.url,
-            session=self._kol_session,
-            **kwargs
-        ),
-    )
 
 
 class Session:
@@ -100,23 +74,7 @@ class Session:
             kwargs["params"]["_"] = int(time() * 1000)
             kwargs["params"]["ajax"] = 1
 
-        request = self.client.request(method, url, **kwargs)
-
-        response = await request
-        response._kol_parse = parse
-        response._kol_json = json
-        response._kol_session = self
-        response.parse = parse_method.__get__(response, response.__class__)
-
-        return response
-
-    async def parse(self, request: Callable, *args, parse_args={}, **kwargs):
-        response = await request(self, *args, **kwargs)
-        try:
-            return await response.parse(**parse_args)
-        except Exception as e:
-            print(request.__name__)
-            raise e
+        return await self.client.request(method, url, **kwargs)
 
     async def login(
         self, username: str, password: str, server_number: int = 0, stealth: bool = True
@@ -134,17 +92,17 @@ class Session:
 
         # Grab the KoL homepage.
         self.server_url = (
-            await self.parse(homepage, server_number=server_number)
+            await homepage(self, server_number=server_number).parse()
         ).server_url
 
         # Perform the login.
-        logged_in = await self.parse(login, username, password, stealth=stealth)
+        logged_in = await login(self, username, password, stealth=stealth).parse()
         self.is_connected = logged_in
         self.state["username"] = username
 
         # Loading these both makes various things work
-        await self.parse(main)
-        await self.parse(charpane)
+        await main(self).parse()
+        await charpane(self).parse()
 
         await self.get_status()
         await self.get_profile()
@@ -178,17 +136,23 @@ class Session:
         """
         Load the current username, user_id, pwd and rollover time into the state
         """
-        data = await (await status(self)).json(content_type=None)
+        data = await status(self).parse()
         self.pwd = data["pwd"]
         self.state["username"] = data["name"]
         self.state["user_id"] = int(data["playerid"])
         self.state["rollover"] = int(data["rollover"])
 
+    @logged_in
     async def get_profile(self) -> Dict[str, Any]:
         """
         Return information from the player's profile
         """
-        return await self.parse(player_profile, self.get_user_id())
+        user_id = self.get_user_id()
+
+        if user_id is None:
+            return {}
+
+        return await player_profile(self, user_id).parse()
 
     @logged_in
     async def adventure(

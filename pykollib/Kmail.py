@@ -10,8 +10,8 @@ class Kmail(object):
 
     @logged_in
     async def get(self):
-        return await self.session.parse(kmail_get)
+        return await kmail_get(self.session)
 
     @logged_in
     async def send(self, recipient, message=""):
-        await self.session.parse(kmail_send, recipient, message=message)
+        await kmail_send(self.session, recipient, message=message).parse()
