@@ -4,4 +4,4 @@ src/.pydevproject
 build/
 dist/
 .mypy_cache/
-docs/_build
+docs_source/_build
