@@ -19,14 +19,14 @@ class Cafe(Enum):
 
 
 class cafe_menu(Request):
+    """
+    Check the current menu at a given cafe.
+
+    :params session: KoL session
+    :params cafe: The Cafe from which to get the menu
+    """
+
     def __init__(self, session: "pykollib.Session", cafe: Cafe):
-        """
-        Check the current menu at a cafe.
-
-        :params session: KoL session
-        :params cafe: The Cafe from which to get the menu
-        """
-
         params = {"cafeid": cafe}
         self.request = session.request("cafe.php", pwd=True, params=params)
 

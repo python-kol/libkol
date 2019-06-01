@@ -7,11 +7,10 @@ from .request import Request
 
 
 class clan_stash_item_add(Request):
+    """
+    Adds items to the clan's stash.
+    """
     def __init__(self, session: "pykollib.Session", items: List[ItemQuantity]) -> None:
-        """
-        Adds items to the clan's stash.
-        """
-
         params = {"action": "addgoodies"}
 
         for i, iq in enumerate(items):

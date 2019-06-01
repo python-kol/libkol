@@ -8,12 +8,12 @@ from .request import Request
 
 
 class clan_member_boot(Request):
+    """
+    Boot member from clan (also removes their whitelist)
+    """
     def __init__(
         self, session: "pykollib.Session", user_id: Union[int, List[int]]
     ) -> None:
-        """
-        Boot member from clan (also removes their whitelist)
-        """
         super().__init__(session)
 
         params = {"action": "modify", "begin": 1}

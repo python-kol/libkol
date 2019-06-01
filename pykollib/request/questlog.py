@@ -22,15 +22,14 @@ quests_completed_pattern = re.compile(
 
 
 class questlog(Request):
+    """
+    Get info from the quest log about which quests are completed and which stage of each uncompleted quest the player is on
+
+    :param page: Page of the quest log to request
+    """
     def __init__(
         self, session: "pykollib.Session", page: QuestPage = QuestPage.Current
     ) -> None:
-        """
-        Get info from the quest log about which quests are completed and which stage of each uncompleted quest the player is on
-
-        :param page: Page of the quest log to request
-        """
-
         params = {"which": page.value}
         self.request = session.request("questlog.php", params=params)
 

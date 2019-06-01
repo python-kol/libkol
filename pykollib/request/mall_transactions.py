@@ -25,12 +25,12 @@ class Transaction(NamedTuple):
 
 
 class mall_transactions(Request):
-    def __init__(self, session: "pykollib.Session") -> None:
-        """
-    	Get the last 2 weeks of transactions from your store.
+    """
+	Get the last 2 weeks of transactions from your store.
 
-        :param session: Active session
-    	"""
+    :param session: Active session
+	"""
+    def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
 
         params = {"which": 3}

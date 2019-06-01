@@ -13,11 +13,10 @@ class Type(Enum):
 
 
 class clan_rumpus_effect(Request):
+    """
+    Uses an effect giver in the clan rumpus room.
+    """
     def __init__(self, session: "pykollib.Session", type: Type) -> None:
-        """
-        Uses an effect giver in the clan rumpus room.
-        """
-
         super().__init__(session)
 
         params = {"action": "click", "spot": type.value[0], "furni": type.value[1]}

@@ -7,13 +7,13 @@ from .request import Request
 
 
 class drink(Request):
+    """
+    This request is for drinking booze from the inventory.
+    It accepts the current session and the ID number of the booze to be drank.
+    It returns the results, including and stat gain, adventure gain,
+    effect gain, or drunkenness gain.
+    """
     def __init__(self, session: "pykollib.Session", item: Item) -> None:
-        """
-        This request is for drinking booze from the inventory.
-        It accepts the current session and the ID number of the booze to be drank.
-        It returns the results, including and stat gain, adventure gain,
-        effect gain, or drunkenness gain.
-        """
         super().__init__(session)
 
         params = {"which": 1, "whichitem": item.id}

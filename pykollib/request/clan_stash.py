@@ -12,10 +12,10 @@ stashItemsPattern = re.compile(
 
 
 class clan_stash(Request):
+    """
+    This class is used to get a list of items in the user's clan stash.
+    """
     def __init__(self, session: "pykollib.Session"):
-        """
-        This class is used to get a list of items in the user's clan stash.
-        """
         super().__init__(session)
 
         self.request = session.request("clan_stash.php", pwd=True)

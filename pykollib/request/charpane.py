@@ -166,10 +166,10 @@ def titleToClass(title: str) -> str:
 
 
 class charpane(Request):
+    """
+    Requests the user's character pane.
+    """
     def __init__(self, session: "pykollib.Session") -> None:
-        """
-        Requests the user's character pane.
-        """
         super().__init__(session)
 
         self.request = session.request("charpane.php")

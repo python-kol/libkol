@@ -11,14 +11,14 @@ cannot_go_pattern = PatternManager.getOrCompilePattern("userShouldNotBeHere")
 
 
 class cafe_consume(Request):
+    """
+    Purchases items from a cafe.
+
+    :param cafe: Cafe to use
+    :param item: Item to consume
+    """
+
     def __init__(self, session: "pykollib.Session", cafe: Cafe, item: Item) -> None:
-        """
-        Purchases items from a cafe.
-
-        :param cafe: Cafe to use
-        :param item: Item to consume
-        """
-
         params = {"action": "CONSUME!", "cafeid": cafe, "whichitem": item.id}
         self.request = session.request("cafe.php", pwd=True, params=params)
 

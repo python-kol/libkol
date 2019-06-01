@@ -11,10 +11,10 @@ from .request import Request
 
 
 class clan_raids(Request):
+    """
+    Retrieves information on all active raids
+    """
     def __init__(self, session: "pykollib.Session") -> None:
-        """
-        Retrieves information on all active raids
-        """
         super().__init__(session)
 
         self.request = session.request("clan_raidlogs.php")

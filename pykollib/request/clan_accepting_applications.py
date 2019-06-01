@@ -6,10 +6,10 @@ from .request import Request
 
 
 class clan_accepting_applications(Request):
+    """
+    Toggle whether or not the clan accepts new applications.
+    """
     def __init__(self, session: "pykollib.Session") -> None:
-        """
-        Toggle whether or not the clan accepts new applications.
-        """
         super().__init__(session)
 
         params = {"action": "noapp"}

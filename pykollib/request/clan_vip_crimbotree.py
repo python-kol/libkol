@@ -8,10 +8,10 @@ from .request import Request
 
 
 class clan_vip_crimbotree(Request):
+    """
+    Uses the Crimbo Tree in the clan VIP room.
+    """
     def __init__(self, session: "pykollib.Session") -> None:
-        """
-        Uses the Crimbo Tree in the clan VIP room.
-        """
         super().__init__(session)
 
         params = {"action": "crimbotree"}

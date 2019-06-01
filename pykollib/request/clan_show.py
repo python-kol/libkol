@@ -9,11 +9,10 @@ from .request import Request
 
 
 class clan_show(Request):
+    """
+    Get information about a clan
+    """
     def __init__(self, session: "pykollib.Session", id: int):
-        """
-        Get information about a clan
-        """
-
         params = {"recruiter": 1, "whichclan": id}
         self.request = session.request("showclan.php", params=params)
 

@@ -16,10 +16,10 @@ class ItemFurniture(Enum):
 
 
 class clan_rumpus_item(Request):
+    """
+    Uses an item dispenser in the clan rumpus room.
+    """
     def __init__(self, session: "pykollib.Session", furniture: ItemFurniture) -> None:
-        """
-        Uses the item dispensing machines in the clan rumpus room.
-        """
         super().__init__(session)
         spot, furni = furniture.value
 

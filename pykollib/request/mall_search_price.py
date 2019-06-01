@@ -20,17 +20,17 @@ class Response(NamedTuple):
 
 
 class mall_search_price(Request):
+    """
+    Search the mall for the lowest prices of an item. This will return the
+    4 lowest unlimited prices, and if applicable, the 3 lowest limited
+    prices with their limit amount per day.
+
+    I'm not sure what the counts when doing a search are, but I'm including it anyways.
+
+    :param session: Active session
+    :param item: Item for which to get prices
+    """
     def __init__(self, session: "pykollib.Session", item: Item) -> None:
-        """
-        Search the mall for the lowest prices of an item. This will return the
-        4 lowest unlimited prices, and if applicable, the 3 lowest limited
-        prices with their limit amount per day.
-
-        I'm not sure what the counts when doing a search are, but I'm including it anyways.
-
-        :param session: Active session
-        :param item: Item for which to get prices
-        """
         super().__init__(session)
 
         data = {"action": "prices", "iid": item.id}

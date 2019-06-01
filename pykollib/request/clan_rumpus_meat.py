@@ -14,10 +14,10 @@ class MeatFurniture(Enum):
 
 
 class clan_rumpus_meat(Request):
+    """
+    Uses a meat dispenser in the clan rumpus room.
+    """
     def __init__(self, session: "pykollib.Session", furniture: MeatFurniture) -> None:
-        """
-            Uses the meat bush in the clan rumpus room.
-        """
         super().__init__(session)
         spot, furni = furniture.value
 
