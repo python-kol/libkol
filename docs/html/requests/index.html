@@ -34,7 +34,8 @@
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Session" href="../api/session.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -79,8 +80,9 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Request Reference</a></li>
 </ul>
 
             
@@ -162,20 +164,23 @@ it is possible to carry out these two operations separately.</p>
 </div>
 <p>As the parsed return type is a result of a different function, the documentation is
 currently not displaying it, but we’re working on it!</p>
-<span class="target" id="module-pykollib.request"></span><dl class="function">
+<span class="target" id="module-pykollib.request"></span><dl class="class">
 <dt id="pykollib.request.adventure">
-<code class="descclassname">pykollib.request.</code><code class="descname">adventure</code><span class="sig-paren">(</span><em>session</em>, <em>location_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.adventure" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">adventure</code><span class="sig-paren">(</span><em>session</em>, <em>location_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.adventure" title="Permalink to this definition">¶</a></dt>
 <dd><p>A request used to initiate an adventure at any location.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active Session</p></li>
+<li><p><strong>location_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Id of the location in which to adventure</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
 <dt id="pykollib.request.ascension_history">
-<code class="descclassname">pykollib.request.</code><code class="descname">ascension_history</code><span class="sig-paren">(</span><em>session</em>, <em>player_id</em>, <em>pre_ns13=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.ascension_history" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">ascension_history</code><span class="sig-paren">(</span><em>session</em>, <em>player_id</em>, <em>pre_ns13=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.ascension_history" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetches ascension history for a player</p>
 <dl class="field-list simple">
 <dt class="field-odd">Params player_id</dt>
@@ -184,26 +189,39 @@ currently not displaying it, but we’re working on it!</p>
 <dt class="field-even">Params pre_ns13</dt>
 <dd class="field-even"><p>Whether to include pre NS13 ascension history</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
-</dd>
 </dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="pykollib.request.autosell_items">
-<code class="descclassname">pykollib.request.</code><code class="descname">autosell_items</code><span class="sig-paren">(</span><em>session</em>, <em>items</em>, <em>quantity=1</em>, <em>all=False</em>, <em>keep_one=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.autosell_items" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sells items via the autosell system</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.ascension_history.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.ascension_history.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses through the response and constructs an array of ascensions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Ascension</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.autosell_items">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">autosell_items</code><span class="sig-paren">(</span><em>session</em>, <em>items</em>, <em>quantity=1</em>, <em>all=False</em>, <em>keep_one=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.autosell_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sells items via the autosell system</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.autosell_items.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>items=[]</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.autosell_items.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.cafe_consume">
-<code class="descclassname">pykollib.request.</code><code class="descname">cafe_consume</code><span class="sig-paren">(</span><em>session</em>, <em>cafe</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.cafe_consume" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">cafe_consume</code><span class="sig-paren">(</span><em>session</em>, <em>cafe</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.cafe_consume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Purchases items from a cafe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -212,16 +230,23 @@ currently not displaying it, but we’re working on it!</p>
 <li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>) – Item to consume</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.cafe_consume.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.cafe_consume.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceGain</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.cafe_menu">
-<code class="descclassname">pykollib.request.</code><code class="descname">cafe_menu</code><span class="sig-paren">(</span><em>session</em>, <em>cafe</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.cafe_menu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check the current menu at a cafe.</p>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">cafe_menu</code><span class="sig-paren">(</span><em>session</em>, <em>cafe</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.cafe_menu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the current menu at a given cafe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Params session</dt>
 <dd class="field-odd"><p>KoL session</p>
@@ -229,48 +254,130 @@ currently not displaying it, but we’re working on it!</p>
 <dt class="field-even">Params cafe</dt>
 <dd class="field-even"><p>The Cafe from which to get the menu</p>
 </dd>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.cafe_menu.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.cafe_menu.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.campground_kitchen">
-<code class="descclassname">pykollib.request.</code><code class="descname">campground_kitchen</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.campground_kitchen" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">campground_kitchen</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.campground_kitchen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks state of the kitchen. (Did you wash the dishes?)</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p>
+</dd>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.campground_kitchen.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.campground_kitchen.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.campground_rest">
-<code class="descclassname">pykollib.request.</code><code class="descname">campground_rest</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.campground_rest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rests at the user’s campground.</p>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">campground_rest</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.campground_rest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rests at the player’s campground.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
+<dt id="pykollib.request.canadia_gym">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">canadia_gym</code><span class="sig-paren">(</span><em>session</em>, <em>turns</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.canadia_gym" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.canadia_gym.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.canadia_gym.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.canadia_mindcontrol">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">canadia_mindcontrol</code><span class="sig-paren">(</span><em>session</em>, <em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.canadia_mindcontrol" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.canadia_mindcontrol.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.canadia_mindcontrol.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.charpane">
-<code class="descclassname">pykollib.request.</code><code class="descname">charpane</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.charpane" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">charpane</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.charpane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Requests the user’s character pane.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.charpane.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>session</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.charpane.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.chat_channel">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">chat_channel</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.chat_channel" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.chat_channel.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.chat_channel.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.chat_messages_get">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">chat_messages_get</code><span class="sig-paren">(</span><em>session</em>, <em>since=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.chat_messages_get" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.chat_messages_get.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.chat_messages_get.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.choice">
-<code class="descclassname">pykollib.request.</code><code class="descname">choice</code><span class="sig-paren">(</span><em>session</em>, <em>choice</em>, <em>option</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.choice" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">choice</code><span class="sig-paren">(</span><em>session</em>, <em>choice</em>, <em>option</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.choice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Submit a given option in response to a give choice</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -280,95 +387,171 @@ currently not displaying it, but we’re working on it!</p>
 <li><p><strong>option</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number option to submit</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
-</dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
 <dt id="pykollib.request.clan_accepting_applications">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_accepting_applications</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_accepting_applications" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_accepting_applications</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_accepting_applications" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle whether or not the clan accepts new applications.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_accepting_applications.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_accepting_applications.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_apply">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_apply</code><span class="sig-paren">(</span><em>session</em>, <em>clan_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_apply" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_apply</code><span class="sig-paren">(</span><em>session</em>, <em>clan_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply to a clan</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>clan_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – id of clan</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_apply.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_apply.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formats the clan application response</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_member_boot">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_member_boot</code><span class="sig-paren">(</span><em>session</em>, <em>user_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_member_boot" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_member_boot</code><span class="sig-paren">(</span><em>session</em>, <em>user_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_member_boot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Boot member from clan (also removes their whitelist)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
 <dt id="pykollib.request.clan_raid_log">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_raid_log</code><span class="sig-paren">(</span><em>session</em>, <em>raid_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raid_log" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_raid_log</code><span class="sig-paren">(</span><em>session</em>, <em>raid_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raid_log" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves on a previous raid.</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_raid_log.center_with_no_link">
+<em class="property">static </em><code class="descname">center_with_no_link</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raid_log.center_with_no_link" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_raid_log.parse_raid_log">
+<em class="property">static </em><code class="descname">parse_raid_log</code><span class="sig-paren">(</span><em>name</em>, <em>id</em>, <em>raid</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raid_log.parse_raid_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a single raid’s HTML tree</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="classmethod">
+<dt id="pykollib.request.clan_raid_log.parser">
+<em class="property">classmethod </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raid_log.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_raids_previous">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_raids_previous</code><span class="sig-paren">(</span><em>session</em>, <em>page=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raids_previous" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_raids_previous</code><span class="sig-paren">(</span><em>session</em>, <em>page=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raids_previous" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves a list of old raid logs, in pages of length 10</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_raids_previous.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raids_previous.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_raids">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_raids</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raids" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_raids</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves information on all active raids</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_raids.dungeon_name_id_from_title">
+<em class="property">static </em><code class="descname">dungeon_name_id_from_title</code><span class="sig-paren">(</span><em>comment</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raids.dungeon_name_id_from_title" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="classmethod">
+<dt id="pykollib.request.clan_raids.parser">
+<em class="property">classmethod </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_raids.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.clan_ranks">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_ranks</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_ranks" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.clan_ranks.parse_privileges">
+<em class="property">static </em><code class="descname">parse_privileges</code><span class="sig-paren">(</span><em>container</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_ranks.parse_privileges" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="pykollib.request.clan_ranks.parser">
+<em class="property">classmethod </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_ranks.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_rumpus_effect">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus_effect</code><span class="sig-paren">(</span><em>session</em>, <em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_effect" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus_effect</code><span class="sig-paren">(</span><em>session</em>, <em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_effect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses an effect giver in the clan rumpus room.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_rumpus_effect.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_effect.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_rumpus_gym">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus_gym</code><span class="sig-paren">(</span><em>session</em>, <em>stat</em>, <em>turns</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_gym" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus_gym</code><span class="sig-paren">(</span><em>session</em>, <em>stat</em>, <em>turns</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_gym" title="Permalink to this definition">¶</a></dt>
 <dd><p>Visits the a gym in the clan rumpus room for a specified number of turns</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -377,338 +560,637 @@ currently not displaying it, but we’re working on it!</p>
 <li><p><strong>turns</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of turns to train for</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_rumpus_gym.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_gym.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_rumpus_item">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus_item</code><span class="sig-paren">(</span><em>session</em>, <em>furniture</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_item" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the item dispensing machines in the clan rumpus room.</p>
-<dl class="field-list simple">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus_item</code><span class="sig-paren">(</span><em>session</em>, <em>furniture</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses an item dispenser in the clan rumpus room.</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_rumpus_item.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_item.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_rumpus_meat">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus_meat</code><span class="sig-paren">(</span><em>session</em>, <em>furniture</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_meat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses the meat bush in the clan rumpus room.</p>
-<dl class="field-list simple">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus_meat</code><span class="sig-paren">(</span><em>session</em>, <em>furniture</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_meat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses a meat dispenser in the clan rumpus room.</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_rumpus_meat.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_meat.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_rumpus_sofa">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus_sofa</code><span class="sig-paren">(</span><em>session</em>, <em>turns=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_sofa" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus_sofa</code><span class="sig-paren">(</span><em>session</em>, <em>turns=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_sofa" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses the comfy sofa in the clan rumpus room.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_rumpus_sofa.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_sofa.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.clan_rumpus">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_rumpus</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.clan_rumpus.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Furniture</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.clan_search">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_search</code><span class="sig-paren">(</span><em>session</em>, <em>query</em>, <em>nameonly=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_search" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.clan_search.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>session</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_search.parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_show">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_show</code><span class="sig-paren">(</span><em>session</em>, <em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_show" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_show</code><span class="sig-paren">(</span><em>session</em>, <em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get information about a clan</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_show.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_show.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_stash_item_add">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_stash_item_add</code><span class="sig-paren">(</span><em>session</em>, <em>items</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_stash_item_add" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_stash_item_add</code><span class="sig-paren">(</span><em>session</em>, <em>items</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_stash_item_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds items to the clan’s stash.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
 <dt id="pykollib.request.clan_stash_item_remove">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_stash_item_remove</code><span class="sig-paren">(</span><em>session</em>, <em>item_id=0</em>, <em>quantity=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_stash_item_remove" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_stash_item_remove</code><span class="sig-paren">(</span><em>session</em>, <em>item_id=0</em>, <em>quantity=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_stash_item_remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take items from the player’s clan stash.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
 <dt id="pykollib.request.clan_stash_meat_add">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_stash_meat_add</code><span class="sig-paren">(</span><em>session</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_stash_meat_add" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_stash_meat_add</code><span class="sig-paren">(</span><em>session</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_stash_meat_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds meat to the player’s clan stash.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
 <dt id="pykollib.request.clan_stash">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_stash</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_stash" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_stash</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_stash" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class is used to get a list of items in the user’s clan stash.</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_stash.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_stash.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_vip_crimbotree">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_vip_crimbotree</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_crimbotree" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_vip_crimbotree</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_crimbotree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses the Crimbo Tree in the clan VIP room.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_vip_crimbotree.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_crimbotree.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_vip_klaw">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_vip_klaw</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_klaw" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_vip_klaw</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_klaw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses the Deluxe Mr. Klaw in the clan VIP room.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_vip_klaw.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_klaw.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_vip_lookingglass">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_vip_lookingglass</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_lookingglass" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_vip_lookingglass</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_lookingglass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses the Looking Glass in the clan VIP room.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_vip_lookingglass.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_lookingglass.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.clan_whitelist_add">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_whitelist_add</code><span class="sig-paren">(</span><em>session</em>, <em>user</em>, <em>rank=0</em>, <em>title=''</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_whitelist_add" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.clan_whitelist_add.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_whitelist_add.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.clan_whitelist_remove">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_whitelist_remove</code><span class="sig-paren">(</span><em>session</em>, <em>user</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_whitelist_remove" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.clan_whitelist_remove.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_whitelist_remove.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.clan_whitelist">
-<code class="descclassname">pykollib.request.</code><code class="descname">clan_whitelist</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_whitelist" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">clan_whitelist</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_whitelist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves information from the clan whitelist page.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.clan_whitelist.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>include_rank=False</em>, <em>only_rank=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_whitelist.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.closet_item_add">
-<code class="descclassname">pykollib.request.</code><code class="descname">closet_item_add</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.closet_item_add" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">closet_item_add</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.closet_item_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds items to the player’s closet.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
 <dt id="pykollib.request.closet_meat_add">
-<code class="descclassname">pykollib.request.</code><code class="descname">closet_meat_add</code><span class="sig-paren">(</span><em>session</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.closet_meat_add" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">closet_meat_add</code><span class="sig-paren">(</span><em>session</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.closet_meat_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds meat to the player’s closet.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
 <dt id="pykollib.request.closet_meat_remove">
-<code class="descclassname">pykollib.request.</code><code class="descname">closet_meat_remove</code><span class="sig-paren">(</span><em>session</em>, <em>amount=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.closet_meat_remove" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">closet_meat_remove</code><span class="sig-paren">(</span><em>session</em>, <em>amount=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.closet_meat_remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes meat from the player’s closet.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
 <dt id="pykollib.request.combat">
-<code class="descclassname">pykollib.request.</code><code class="descname">combat</code><span class="sig-paren">(</span><em>session</em>, <em>action</em>, <em>skill=None</em>, <em>item=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.combat" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">combat</code><span class="sig-paren">(</span><em>session</em>, <em>action</em>, <em>skill=None</em>, <em>item=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.combat" title="Permalink to this definition">¶</a></dt>
 <dd><p>A request used for a single round of combat. The user may attack, use an item or skill, or
 attempt to run away.</p>
 <p>In this constructor, action should be set to CombatRequest.ATTACK, CombatRequest.USE_ITEM,
 CombatRequest.USE_SKILL, CombatRequest.RUN_AWAY, or CombatRequest.PICK_POCKET. If a skill
 or item is to be used, the caller should also specify param to be the number of the item or
 skill the user wishes to use.</p>
+<p>Submit a given option in response to a give choice</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – KoL session</p></li>
+<li><p><strong>action</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code>) – The Action to carry out in this combat round</p></li>
+<li><p><strong>skill</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Skill</span></code>]) – If the action is Action.Skill, specifies the skill to use</p></li>
+<li><p><strong>item</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – If the action is Action.Item, either specifies an item to use, or an array of
+items to funksling</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
+<dt id="pykollib.request.craft">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">craft</code><span class="sig-paren">(</span><em>session</em>, <em>mode</em>, <em>ingredients</em>, <em>quantity=1</em>, <em>max=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.craft" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.craft.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.craft.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.curse">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">curse</code><span class="sig-paren">(</span><em>session</em>, <em>player</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.curse" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.curse.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.curse.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.display_case_add_items">
-<code class="descclassname">pykollib.request.</code><code class="descname">display_case_add_items</code><span class="sig-paren">(</span><em>session</em>, <em>items</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.display_case_add_items" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">display_case_add_items</code><span class="sig-paren">(</span><em>session</em>, <em>items</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.display_case_add_items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds items to the player’s display case.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p></li>
+<li><p><strong>items</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code>]) – List of items and their quantities to add to the case</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
 <dt id="pykollib.request.drink">
-<code class="descclassname">pykollib.request.</code><code class="descname">drink</code><span class="sig-paren">(</span><em>session</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.drink" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">drink</code><span class="sig-paren">(</span><em>session</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.drink" title="Permalink to this definition">¶</a></dt>
 <dd><p>This request is for drinking booze from the inventory.
 It accepts the current session and the ID number of the booze to be drank.
 It returns the results, including and stat gain, adventure gain,
 effect gain, or drunkenness gain.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.drink.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.drink.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceGain</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.eat">
-<code class="descclassname">pykollib.request.</code><code class="descname">eat</code><span class="sig-paren">(</span><em>session</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.eat" title="Permalink to this definition">¶</a></dt>
-<dd><p>This request is for eating food from the inventory.
-It accepts the current session and the ID number of the food to eat.
-It returns the results, including and stat gain, adventure gain, or effect gain.</p>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">eat</code><span class="sig-paren">(</span><em>session</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.eat" title="Permalink to this definition">¶</a></dt>
+<dd><p>This request is for eating food from the inventory.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p></li>
+<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>) – Consumable to eat</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.eat.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.eat.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceGain</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.equip">
-<code class="descclassname">pykollib.request.</code><code class="descname">equip</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>slot</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.equip" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">equip</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>slot</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.equip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Equips items from the inventory passed by itemId.  If a slot is specified, it will attempt to equip accessories into that slot.</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.equip.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.equip.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks for errors due to equipping items you don’t have, or equipping items that aren’t equippable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.equipment">
-<code class="descclassname">pykollib.request.</code><code class="descname">equipment</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.equipment" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">equipment</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.equipment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets info on all equipment currently equipped.
 Returns a lookup from the item database for each item equipped.
 For accessories, two possibilities are present.  If equipping each slot seperately is enabled, each item’s dictionary will contain an attribute “slot” with the number of the slot it occupies.  Otherwise, the “slot” attribute will have the value 0 for all equipped accessories.</p>
-<dl class="field-list simple">
+<dl class="classmethod">
+<dt id="pykollib.request.equipment.parser">
+<em class="property">classmethod </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.equipment.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Outfit</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="staticmethod">
+<dt id="pykollib.request.equipment.slot_to_item">
+<em class="property">static </em><code class="descname">slot_to_item</code><span class="sig-paren">(</span><em>soup</em>, <em>link</em>, <em>index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.equipment.slot_to_item" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.guild_train">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">guild_train</code><span class="sig-paren">(</span><em>session</em>, <em>skill</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.guild_train" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.guild_train.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.guild_train.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.hermit_menu">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">hermit_menu</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.hermit_menu" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.hermit_menu.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.hermit_menu.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.hermit_trade">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">hermit_trade</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>quantity=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.hermit_trade" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.hermit_trade.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.hermit_trade.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.homepage">
-<code class="descclassname">pykollib.request.</code><code class="descname">homepage</code><span class="sig-paren">(</span><em>session</em>, <em>server_number=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.homepage" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">homepage</code><span class="sig-paren">(</span><em>session</em>, <em>server_number=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.homepage" title="Permalink to this definition">¶</a></dt>
 <dd><p>This request is most often used before logging in. It allows the KoL servers to assign a
 particular server number to the user. In addition, it gives us the user’s login challenge
 so that we might login to the server in a more secure fashion.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.homepage.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.homepage.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.inventory">
-<code class="descclassname">pykollib.request.</code><code class="descname">inventory</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.inventory" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class is used to get a list of items in the user’s inventory.</p>
-<dl class="field-list simple">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">inventory</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.inventory" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.inventory.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>json</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.inventory.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="attribute">
+<dt id="pykollib.request.inventory.returns_json">
+<code class="descname">returns_json</code><em class="property"> = True</em><a class="headerlink" href="#pykollib.request.inventory.returns_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of items in the user’s inventory.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.item_discard">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">item_discard</code><span class="sig-paren">(</span><em>session</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_discard" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.item_information">
-<code class="descclassname">pykollib.request.</code><code class="descname">item_information</code><span class="sig-paren">(</span><em>session</em>, <em>item_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_information" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class is used to get information about a particular item.</p>
-<dl class="field-list simple">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">item_information</code><span class="sig-paren">(</span><em>session</em>, <em>item_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_information" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get information about a particular item.</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.item_information.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>json</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_information.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.item_multi_use">
-<code class="descclassname">pykollib.request.</code><code class="descname">item_multi_use</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_multi_use" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">item_multi_use</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_multi_use" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses multiple items at once</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.item_multi_use.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_multi_use.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceGain</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.item_use">
-<code class="descclassname">pykollib.request.</code><code class="descname">item_use</code><span class="sig-paren">(</span><em>session</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_use" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">item_use</code><span class="sig-paren">(</span><em>session</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_use" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses the requested item.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
+<dt id="pykollib.request.kmail_delete">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">kmail_delete</code><span class="sig-paren">(</span><em>session</em>, <em>message_ids</em>, <em>box='Inbox'</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.kmail_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.kmail_get">
-<code class="descclassname">pykollib.request.</code><code class="descname">kmail_get</code><span class="sig-paren">(</span><em>session</em>, <em>box='Inbox'</em>, <em>page=0</em>, <em>messages_per_page=100</em>, <em>oldest_first=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.kmail_get" title="Permalink to this definition">¶</a></dt>
-<dd><p>This request gets a list of kmails from the server.
-Due to a bug in KoL,
-it is highly recommended that you do not specify more than one
-of pageNumber, messagesPerPage, and oldestFirst in the same
-request. Doing so can cause the server to take up to 5 minutes
-to respond to your request. For now, if you want to specify two
-or three of these parameters, you should specify one at a time
-and make multiple requests. KoL is nice enough to remember the
-values you last used for both messagesPerPage and oldestFirst.</p>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">kmail_get</code><span class="sig-paren">(</span><em>session</em>, <em>box='Inbox'</em>, <em>page=0</em>, <em>messages_per_page=100</em>, <em>oldest_first=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.kmail_get" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.kmail_get.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.kmail_get.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses through the response and constructs an array of messages.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Message</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.kmail_send">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">kmail_send</code><span class="sig-paren">(</span><em>session</em>, <em>recipient</em>, <em>message=''</em>, <em>items=[]</em>, <em>meat=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.kmail_send" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.kmail_send.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.kmail_send.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.login">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">login</code><span class="sig-paren">(</span><em>session</em>, <em>username</em>, <em>password</em>, <em>challenge=None</em>, <em>stealth=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.login" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.login.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.login.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.logout">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">logout</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.logout" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.logout.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>session</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.logout.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.main">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">main</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.mall_search_price">
-<code class="descclassname">pykollib.request.</code><code class="descname">mall_search_price</code><span class="sig-paren">(</span><em>session</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.mall_search_price" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">mall_search_price</code><span class="sig-paren">(</span><em>session</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.mall_search_price" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search the mall for the lowest prices of an item. This will return the
 4 lowest unlimited prices, and if applicable, the 3 lowest limited
 prices with their limit amount per day.</p>
 <p>I’m not sure what the counts when doing a search are, but I’m including it anyways.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p></li>
+<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>) – Item for which to get prices</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.mall_search_price.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.mall_search_price.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.mall_search">
-<code class="descclassname">pykollib.request.</code><code class="descname">mall_search</code><span class="sig-paren">(</span><em>session, query, category=&lt;Category.All: 'allitems'&gt;, no_limits=False, max_price=0, num_results=0, sort_items_by=&lt;SortBy.Name: 'name'&gt;, sort_shops_by=&lt;SortBy.Price: 'price'&gt;, just_items=False, tiers=[&lt;Tier.Crappy: 1&gt;, &lt;Tier.Decent: 2&gt;, &lt;Tier.Good: 3&gt;, &lt;Tier.Awesome: 4&gt;, &lt;Tier.Epic: 5&gt;], consumable_by_me=False, weapon_attribute=3, weapon_hands=3, wearable_by_me=False, start=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.mall_search" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">mall_search</code><span class="sig-paren">(</span><em>session, query, category=&lt;Category.All: 'allitems'&gt;, no_limits=False, max_price=0, num_results=0, sort_items_by=&lt;SortBy.Name: 'name'&gt;, sort_shops_by=&lt;SortBy.Price: 'price'&gt;, just_items=False, tiers=[&lt;Tier.Crappy: 1&gt;, &lt;Tier.Decent: 2&gt;, &lt;Tier.Good: 3&gt;, &lt;Tier.Awesome: 4&gt;, &lt;Tier.Epic: 5&gt;], consumable_by_me=False, weapon_attribute=3, weapon_hands=3, wearable_by_me=False, start=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.mall_search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Searches for an item at the mall</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -738,52 +1220,193 @@ only ranged weapons, or 3 to list all weapons.</p></li>
 list only 2-handed weapons, or 3 to list all weapons.</p></li>
 <li><p><strong>wearable_by_me</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – For wearable items, whether to list only items that can
 be worn by the session’s character.</p></li>
-<li><p><strong>start</strong> – Not usually needed by the user. Tells which item in the list
+<li><p><strong>start</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Not usually needed by the user. Tells which item in the list
 of results is to be returned first.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.mall_search.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.mall_search.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Listing</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.mall_transactions">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">mall_transactions</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.mall_transactions" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Get the last 2 weeks of transactions from your store.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p>
+</dd>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.mall_transactions.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.mall_transactions.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Transaction</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.npc_buy">
-<code class="descclassname">pykollib.request.</code><code class="descname">npc_buy</code><span class="sig-paren">(</span><em>session</em>, <em>store</em>, <em>item</em>, <em>quantity=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.npc_buy" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">npc_buy</code><span class="sig-paren">(</span><em>session</em>, <em>store</em>, <em>item</em>, <em>quantity=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.npc_buy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Purchases items from an NPC store.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p></li>
+<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Store</span></code>) – NPC store to buy from</p></li>
+<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>) – Item to buy</p></li>
+<li><p><strong>quantity</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Quantity of said item to buy</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.npc_buy.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.npc_buy.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.player_profile">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">player_profile</code><span class="sig-paren">(</span><em>session</em>, <em>player_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.player_profile" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.player_profile.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>session</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.player_profile.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.player_search">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">player_search</code><span class="sig-paren">(</span><em>session</em>, <em>query</em>, <em>query_type=&lt;QueryType.StartsWith: 1&gt;</em>, <em>pvp_only=False</em>, <em>hardcore_only=None</em>, <em>level=0</em>, <em>fame=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.player_search" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.player_search.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.player_search.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.pulverize">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">pulverize</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>quantity=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.pulverize" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.pulverize.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.pulverize.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.questlog">
-<code class="descclassname">pykollib.request.</code><code class="descname">questlog</code><span class="sig-paren">(</span><em>session</em>, <em>page=&lt;QuestPage.Current: 1&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.questlog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">questlog</code><span class="sig-paren">(</span><em>session</em>, <em>page=&lt;QuestPage.Current: 1&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.questlog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get info from the quest log about which quests are completed and which stage of each uncompleted quest the player is on</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>page</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">QuestPage</span></code>) – Page of the quest log to request</p>
+</dd>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.questlog.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.questlog.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.skill_use">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">skill_use</code><span class="sig-paren">(</span><em>session</em>, <em>skill</em>, <em>times=1</em>, <em>target=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.skill_use" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.skill_use.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.skill_use.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.status">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">status</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.status" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.status.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>json</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.status.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pykollib.request.status.returns_json">
+<code class="descname">returns_json</code><em class="property"> = True</em><a class="headerlink" href="#pykollib.request.status.returns_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.store_inventory">
-<code class="descclassname">pykollib.request.</code><code class="descname">store_inventory</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_inventory" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class is used to get a list of items currently in a user’s store</p>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">store_inventory</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_inventory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of items currently in a user’s store</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.store_inventory.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_inventory.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches backoffice.php for item name, quantity, price, limit, and ID.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Listing</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.store_item_add">
-<code class="descclassname">pykollib.request.</code><code class="descname">store_item_add</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>quantity=1</em>, <em>limit=''</em>, <em>price=999999999</em>, <em>from_hangks=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_item_add" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">store_item_add</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>quantity=1</em>, <em>limit=0</em>, <em>price=999999999</em>, <em>from_hangks=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_item_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a single item to your store. The interface to the mall was updated on Sept 13, 2013.
 It looks like items are now added only one at a time.</p>
 <p>Notes about new URL: <a class="reference external" href="http://www.kingdomofloathing.com/backoffice.php">http://www.kingdomofloathing.com/backoffice.php</a>
@@ -791,16 +1414,21 @@ itemid: this will contain an “h” in front of it if the item is in Hangk’s<
 <p>There is now a submitted field name ‘_’. This appears to be the milliseconds since epoch.
 Testing will need to be done to see how important this is. Presumably you could just append
 000 after the current seconds since epoch.</p>
-<dl class="field-list simple">
+<dl class="staticmethod">
+<dt id="pykollib.request.store_item_add.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_item_add.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.store_item_remove">
-<code class="descclassname">pykollib.request.</code><code class="descname">store_item_remove</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>quantity=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_item_remove" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">store_item_remove</code><span class="sig-paren">(</span><em>session</em>, <em>item</em>, <em>quantity=1</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_item_remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take a single item from your store using the new Mall interface from Sep 2013</p>
 <p>Class expects at least an itemId. If no quantity is given, a quantity of 1 is assumed</p>
 <p>Todo: add option to remove all of an item. This will require calling StoreInventoryRequest
@@ -808,46 +1436,176 @@ and figuring out how many of the item there are.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p></li>
 <li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>) – Item to remove</p></li>
 <li><p><strong>quantity</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Amount of that item to remove</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+</dl>
+<dl class="staticmethod">
+<dt id="pykollib.request.store_item_remove.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_item_remove.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.store_item_update">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">store_item_update</code><span class="sig-paren">(</span><em>session</em>, <em>listings</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_item_update" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.store_item_update.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.store_item_update.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.trade_cancel">
-<code class="descclassname">pykollib.request.</code><code class="descname">trade_cancel</code><span class="sig-paren">(</span><em>session</em>, <em>id</em>, <em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_cancel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">trade_cancel</code><span class="sig-paren">(</span><em>session</em>, <em>id</em>, <em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_cancel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancel a trade request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>trade_id</strong> – the ID of the trade being cancelled</p></li>
-<li><p><strong>trade_type</strong> – the type of the trade being cancelled</p></li>
+<li><p><strong>id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Identifier of the trade to be cancelled</p></li>
+<li><p><strong>status</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Status</span></code>) – Status of the trade to be cancelled</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="class">
+<dt id="pykollib.request.trade_offer_decline">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">trade_offer_decline</code><span class="sig-paren">(</span><em>session</em>, <em>trade_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_offer_decline" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.trade_offer_decline.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_offer_decline.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.trade_pending">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">trade_pending</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_pending" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.trade_pending.parse_trade_items">
+<em class="property">static </em><code class="descname">parse_trade_items</code><span class="sig-paren">(</span><em>html</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_pending.parse_trade_items" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="pykollib.request.trade_pending.parser">
+<em class="property">classmethod </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_pending.parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse each different kind of trade.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Trade</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.trade_propose">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">trade_propose</code><span class="sig-paren">(</span><em>session</em>, <em>user_id</em>, <em>item_quantities=[]</em>, <em>meat=0</em>, <em>message=''</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_propose" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.trade_propose.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_propose.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.trade_respond">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">trade_respond</code><span class="sig-paren">(</span><em>session</em>, <em>trade_id</em>, <em>item_quantities=[]</em>, <em>meat=0</em>, <em>message=''</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_respond" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.trade_respond.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_respond.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.trade_response_accept">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">trade_response_accept</code><span class="sig-paren">(</span><em>session</em>, <em>trade_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_response_accept" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.trade_response_accept.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_response_accept.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.trade_response_decline">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">trade_response_decline</code><span class="sig-paren">(</span><em>session</em>, <em>trade_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_response_decline" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.trade_response_decline.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_response_decline.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.uneffect">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">uneffect</code><span class="sig-paren">(</span><em>session</em>, <em>effect_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.uneffect" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="pykollib.request.uneffect.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.uneffect.parser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pykollib.request.unequip">
-<code class="descclassname">pykollib.request.</code><code class="descname">unequip</code><span class="sig-paren">(</span><em>session</em>, <em>slot=None</em>, <em>all=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.unequip" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">unequip</code><span class="sig-paren">(</span><em>session</em>, <em>slot=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.unequip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unequips the equipment in the designated slot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>slot</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Slot</span></code>]) – Will remove item from the specified Slot</p></li>
-<li><p><strong>all</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Will remove everything regardless of slot</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Coroutine</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code>]</p>
+<dd class="field-odd"><p><strong>slot</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Slot</span></code>]) – Will unequip item from the specified Slot, or completely undress if <cite>slot</cite> is None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -859,6 +1617,13 @@ and figuring out how many of the item there are.</p>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../api/session.html" class="btn btn-neutral float-left" title="Session" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
