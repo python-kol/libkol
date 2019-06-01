@@ -1,8 +1,9 @@
 import pykollib.Error as Error
-from .GenericRequest import GenericRequest
-from pykollib.database import ItemDatabase
+from pykollib.old_database import ItemDatabase
 from pykollib.pattern import PatternManager
-from pykollib.util import ParseResponseUtils
+from pykollib.util import parsing
+
+from .GenericRequest import GenericRequest
 
 
 class MakePasteRequest(GenericRequest):
@@ -10,7 +11,7 @@ class MakePasteRequest(GenericRequest):
 
     def __init__(self, session, itemId, quantity=1):
         super(MakePasteRequest, self).__init__(session)
-        self.url = session.serverURL + "craft.php"
+        self.url = session.server_url + "craft.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "makepaste"
         self.requestData["qty"] = quantity
@@ -27,7 +28,7 @@ class MakePasteRequest(GenericRequest):
             )
 
         # Get the item(s) we received.
-        items = ParseResponseUtils.parseItemsReceived(self.responseText, self.session)
+        items = parsing.parseItemsReceived(self.responseText, self.session)
         if len(items) > 0:
             self.responseData["items"] = items
         else:

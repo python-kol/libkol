@@ -1,0 +1,406 @@
+<body>
+<script type="text/javascript">
+window.dontscroll = 1;
+document.write('<style type="text/css">.hideit { display: none }</style>');
+var pwd = "";
+var playerid = 0;
+function changeshk(select)
+{
+	var which = $(':input[name="shkpic"]').val();
+	var img = $('#shkpicture')[0];
+	if (which > 0)
+		img.src = "https://s3.amazonaws.com/images.kingdomofloathing.com/otherimages/mall/keeper" + which + ".gif";
+	else
+	{
+		which = -which;
+		if (which == 1)
+			img.src = "https://s3.amazonaws.com/images.kingdomofloathing.com/otherimages/cavs/" + playerid + ".gif";
+		else
+			img.src = "https://s3.amazonaws.com/images.kingdomofloathing.com/otherimages/cavs/" + playerid + "_" + which + ".gif";
+	}
+}
+
+function dohelp() {
+	$('.helpbox').remove();
+	var $sp = $(this);
+	var info = $sp.attr('info');
+	var pos = $sp.parents('div.opt:first').offset();
+
+	var $div = $('<div><span></span></div>')
+		.addClass('helpbox')
+		.css({
+			'position': 'absolute',
+			'text-align': 'left',
+			'background-color': 'white',
+			'border': '1px solid black',
+			'top': pos.top + 20,
+			'left': pos.left + 30,
+			'width': '330px',
+			'padding': '.5em'
+		});
+	$div.find('span').html(info);
+	$('body').append($div);
+	if ($div.width() + $div.offset().left > $(window).width()) {
+		$div.css('left', $div.offset().left - (($div.width() + $div.offset().left) - $(window).width()));
+	}
+
+}
+
+jQuery(function($) {
+	$('.setp').live('click',function (e) {
+		e.preventDefault();
+		var p =$(this).parents('.deets:first').find('.price');
+		var val;
+		if ($(this).text().match(/min/)) {
+			val = $(this).text().replace(/.*;/, '');
+		}
+		else {
+			val = $(this).text().replace(/.* /, '').replace(/[^0-9]/g, '');;
+			try {
+				val = parseInt(val);
+				val -= 1;
+			} catch (e) {
+				return;
+			}
+			if (parseInt(p.attr('rel')) > parseInt(val)) val = p.attr('rel');
+			val += "";
+		}
+		p.val(number_format(val.replace(/[^0-9]/g, '')));
+	});
+	$('.stockcheck').click(function (e) {
+		e.preventDefault();
+		$('#stockcheck').empty();
+		$.get('/backoffice.php?pwd='+pwd+'&ajax=1&action=prices&iid='+$('#stock select').val().replace('h',''), function (res) {
+			$('#stockcheck').append($(res).find('.res'));
+		});
+	});
+	$('#itemid').change(function (e) {
+		e.preventDefault();
+		var val = $(this).val();
+		var opt = $(this).find('option[value="'+val+'"]');
+		var det = opt.attr('rel').split(',');
+		$('#stockcheck').empty();
+		$('#stock img').show().attr('src', 'https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/'+det[0]+'.gif').unbind('click').bind('click',function (e) {
+			e.preventDefault();
+			descitem(det[1]);
+		});
+		$('#stock .min').text('min. price: '+ number_format(det[2]) + ' meat');
+
+	}).change();;
+	$('.help').hover(dohelp, function () {$('.helpbox').remove(); });
+	$('#sellit').submit(function (e) {
+		return confirm("Click OK to sell your store.");
+	});
+	$('#inv img, #inv b').live('click',function (e) {
+		var descid = $(this).parents('tr:first').attr('rel');
+		descitem(descid);
+	}).css('cursor', 'pointer');
+
+
+	function updateRows(json) {
+		try {
+			var tr, td, updates = $.parseJSON(json);
+			for (var descid in updates) {
+				tr = $('tr[rel="'+descid+'"]');
+				if (tr.length) {
+					td  = tr.find('.price').parents('td:first');
+					if (td.length) {
+						td.find('span').text(number_format(updates[descid]['price']));
+						td.find('input[type="text"]').val(number_format(updates[descid]['price']));
+					}
+					td  = tr.find('.lim').parents('td:first');
+					if (td.length) {
+						var pretty = number_format(updates[descid]['lim']);
+						if (pretty != '0') pretty += '/day';
+						else pretty = '&infin;';
+						td.find('span').html(pretty);
+						td.find('input[type="text"]').val(number_format(updates[descid]['lim']));
+					}
+				}
+			}
+			var next = lastch.next();
+			if (next.hasClass('pres')) next = next.next();
+			next = next.find('input[type="text"]');
+			if (next.length) next[0].focus();
+		} catch (e) { /* foo */ }
+	}
+
+	$('.pricejax').live('click',function (e) {
+		e.preventDefault();
+		var tr =$(this).parents('tr:first');
+		var lastch = tr;
+		var iid = tr.attr('rel');
+		var url = '/backoffice.php?';
+		url += escape(tr.find('.price').attr('name')) + '=' +  escape(tr.find('.price').val()) + '&';
+		url += escape(tr.find('.lim').attr('name')) + '=' +  escape(tr.find('.lim').val()) + '&';
+		url += 'ajax=1&action=updateinv&pwd=' + pwd;
+		dojax(url, function (res) {
+			if (m = res.match(/<!-- U:([^>]*) -->/)) {
+				updateRows(m[1]);
+			}
+		});
+		tr.find('.update').click();
+		return false;
+	});
+	$('.update').live('click',function (e) {
+		e.preventDefault();
+		if ($(this).text() == 'update') {
+			$(this).parents('tr:first').find('.hideit').show();
+			$(this).parents('tr:first').find('.tohide').hide();
+			$(this).parents('tr:first').find('input')[0].focus();
+			$(this).text('cancel');
+		} else {
+			$(this).parents('tr:first').find('.hideit').hide();
+			$(this).parents('tr:first').find('.tohide').show();
+			$(this).text('update');
+		}
+	});
+
+	$('tr input[type="text"]').live('keydown', function (e) {
+		if (e.keyCode == 13) {
+		   	var foo = $(this).parents('tr:first').find('.pricejax');
+			if (foo.length) {
+				foo[0].click();
+				e.preventDefault();
+			}
+		}
+		else if (e.keyCode == 9) {
+			if ($(this).hasClass('lim')) {
+				e.preventDefault();
+				var tr = $(this).parents('.deets:first');
+				var nxt = tr.next();
+				if (!nxt.hasClass('deets')) nxt = nxt.next();
+				if (nxt.length) nxt.find('input[type="text"]')[0].focus();
+				else $('.updateall')[0].focus();
+			}
+		}
+	});
+
+	$('.prices').live('click',function (e) {
+		e.preventDefault();
+		if ($(this).text() == 'prices') {
+			$(this).text('dismiss');
+			var tr = $(this).parents('tr:first');
+			showPrices($(this).attr('href'), tr);
+		} else {
+			$(this).text('prices');
+			var tr = $(this).parents('tr:first');
+			var after = tr.next();
+			if (after.hasClass('pres')) {
+				after.remove();
+			}
+		}
+	});
+
+	$('.take').bind('contextmenu', function (e) {
+		e.preventDefault();
+		var l = $(this);
+		pop_query(l, 'How Many?', 'Take', function (num) {
+			l.data('qty', num);
+			l.click();
+		});
+	});
+
+	$('.take').live('click', function (e) {
+		e.preventDefault();
+		var tr = $(this).parents('tr:first');
+		var descid = tr.attr('rel');
+		var url = $(this).attr('href') + '&ajax=1';
+		if ($(this).data('qty')) {
+			url = url.replace(/qty=\d*/, 'qty=' + $(this).data('qty'));
+		}
+		dojax(url, function (res) {
+			res = res.replace(/.*<!-- TBL:/, '');
+			res = res.replace(/:TBL -->.*/, '');
+			var res = $(res);
+			var rep = res.find('tr[rel="'+descid+'"]')
+			if (rep.length) {
+				tr.replaceWith(rep);
+			}
+			else {
+				var nxt = tr.next();
+				if ($(tr.next()).hasClass('pres')) {
+					$(tr.next()).remove();
+				}
+				tr.remove();
+				if ($('#inv tr').length == 1) {
+					$('#inv').append(res.find('tr.nothing'));
+				}
+			}
+		});
+	});
+
+	$('#stock').submit(function (e) {
+		e.preventDefault();
+		var frm = $(this);
+		var data = frm.serialize();
+		var num = frm.find('input[name="quantity"]').val();
+		dojax('/backoffice.php?'+data+'&ajax=1', function (ores) {
+			if (ores.match(/Are you sure/)) {
+				return;
+			}
+			res = ores.replace(/.*<!-- TBL:/, '');
+			res = res.replace(/:TBL -->.*/, '');
+			var res = $(res);
+			var tr = res.find('tr[rel]');
+			if ($('#inv').find('tr[rel="'+tr.attr('rel')+'"]').length) {
+				$('#inv').find('tr[rel="'+tr.attr('rel')+'"]').replaceWith(tr);
+			}
+			else {
+				var spot = tr.attr('after');
+				$('#inv tr:eq('+spot+')').after(tr);
+			}
+			tr.addClass('justadded');
+			setTimeout(function () {
+				tr.addClass('oldadded');
+			}, 500);
+			//window.scrollTo(0,tr.offset().top);
+
+			if ($('#inv tr[rel]').length) {
+				$('#inv .nothing').remove();
+			}
+		    var opt = $('#stock select option:selected');
+			var det = opt.attr('rel').split(',');
+			var had;
+			if (!ores.match(/You don't have/)) {
+				try {
+					had = parseInt(det[3]);
+					if (num == '*') num = had;
+					else num = parseInt(num);
+				} catch (e) { }
+				if (num >= had || num == '*') {
+					opt.remove();
+				}
+				else {
+					if (num < 1) num = num * -1;
+					det[3] = had - num;
+					opt.attr('rel', det.join(','));
+					var txt = opt.text();
+					txt = txt.replace('('+had+' ', '('+det[3]+' ');
+					txt = txt.replace('('+had+')', '('+det[3]+')');
+					opt.text(txt);
+				}
+			}
+			frm[0].reset();
+			$('#priceok').val(0);
+			$('#neveragain').val(0);
+			$('select', frm).change();
+		});
+	});
+
+	$('.updateall').click(function (e) {
+		e.preventDefault();
+		if ($(this).text() == 'update all') {
+			$('.hideit').show();
+			$('.tohide').hide();
+			$('.update').text('cancel');
+			$('#inv input[type="text"]')[0].focus();
+			$(this).html('<b>save changes</b>');
+		} else {
+			var i;
+			var params = {
+				ajax: 1,
+				action: 'updateinv',
+				pwd: pwd
+			};
+			$('.deets').each(function (e){
+				i = $(this).find('.price');
+				params[i.attr('name')] = i.val();
+				i = $(this).find('.lim');
+				params[i.attr('name')] = i.val();
+			});
+
+			var lnk = $(this);
+			dojax('/backoffice.php', function (res){
+				lnk.html('update all');
+				if (m = res.match(/<!-- U:([^>]*) -->/)) {
+					updateRows(m[1]);
+				}
+				$('.hideit').hide();
+				$('.tohide').show();
+				$('.update').text('update');
+			}, null, null, 'POST', params);
+		}
+	});
+
+	$('.allprices').click(function (e) {
+		if ($(this).text().match(/dismiss/)) {
+			$(this).text('check all prices');
+			$('.prices').each(function () {
+				if ($(this).text() == 'dismiss') $(this).click();
+			});
+		} else {
+			$(this).text('dismiss all prices');
+			$('.prices').each(function () {
+				if ($(this).text() == 'prices') $(this).click();
+			});
+		}
+	});
+});
+
+function showPrices(url, tr) {
+	url += '&ajax=1';
+	$.get(url, function (res) {
+		var res = $(res).find('.res').html();;
+		var cols = tr.find('td').length;
+		var after = tr.next();
+		var td;
+		if (after.hasClass('pres')) {
+			td = after.find('td').html('');
+		}
+		else {
+			var after = $('<tr class="pres"><td colspan="'+cols+'"></td></tr>');
+			tr.after(after);
+			td = after.find('td');
+		}
+		td.html(res);
+	});
+}
+</script>
+<style type="text/css">
+	.setp {
+		cursor: pointer;
+		text-decoration: underline;
+	}
+	.deets td {
+		font-size: .8em;
+	}
+	.deets input {
+		font-size: 11px;
+	}
+	#stock label {
+		font-size: .8em;
+	}
+	#stock .small td {
+		font-size: 0.8em;
+		padding: 0;
+		margin: 0;
+	}
+	.justadded {
+		background-color: #ccf;
+		transition: background-color 1000ms linear;
+	}
+	.oldadded {
+		background-color: #fff;
+		transition: background-color 2500ms linear;
+	}
+	/* .stockcheck { font-size: 0.8em } */
+	.pres td { font-size: 0.8em; }
+	.pres > td { padding-left: 2em; background-color: #eee; border: 1px solid black; border-width: 0px 1px 1px 1px }
+	div.indent { padding-left: 1em; }
+	.help {
+		cursor: help;
+		padding-left: .5em;
+		font-size: .6em;
+		vertical-align: top;
+	}
+
+	.subhead {
+		font-size: 1.2em;
+		font-weight: bold;
+		display: block;
+		padding-top: .5em;
+	}
+
+</style>
+<center><table width="95%" cellspacing=0 cellpadding=0><tr><td style="color: white;" align=center bgcolor=blue><b>Sales Activity</b></td></tr><tr><td style="padding: 5px; border: 1px solid blue;"><center><table width="100%"><tr><td><center>[<a href="backoffice.php?which=1">inventory management</a>]&nbsp;&nbsp;[<a href="backoffice.php?which=2">store management</a>]&nbsp;&nbsp;[sales activity]</center><p><b>Recent Store Activity (past 2 weeks)</b><br /><span class=small>05/29/19 11:22:43 <a class=nounder href="showplayer.php?who=1836774"><b>Mistress Darkmoon</b></a> bought 1 (plaid swatch) for 2013 Meat.<br>05/28/19 20:22:07 <a class=nounder href="showplayer.php?who=868604"><b>puddin_up</b></a> bought 5 (bottle of whiskey) for 500 Meat.<br>05/28/19 11:52:02 <a class=nounder href="showplayer.php?who=2875704"><b>Solohan50</b></a> bought 1 (bubblin' crude) for 120 Meat.<br>05/27/19 06:18:41 <a class=nounder href="showplayer.php?who=2125770"><b>Smiling Spectre</b></a> bought 1 (happiness) for 1072 Meat.<br>05/27/19 06:13:13 <a class=nounder href="showplayer.php?who=2125770"><b>Smiling Spectre</b></a> bought 1 (fire poi) for 1720 Meat.<br>05/27/19 06:11:11 <a class=nounder href="showplayer.php?who=2125770"><b>Smiling Spectre</b></a> bought 1 (coal shovel) for 1110 Meat.<br>05/26/19 23:34:18 <a class=nounder href="showplayer.php?who=1321271"><b>Hugbert</b></a> bought 1 (eyepatch) for 100 Meat.<br>05/26/19 06:53:06 <a class=nounder href="showplayer.php?who=156860"><b>kirByllAmA</b></a> bought 1 (bubblin' crude) for 120 Meat.<br>05/26/19 01:06:09 <a class=nounder href="showplayer.php?who=1767256"><b>Argluar</b></a> bought 7 (ruby W) for 700 Meat.<br>05/25/19 08:08:24 <a class=nounder href="showplayer.php?who=156860"><b>kirByllAmA</b></a> bought 1 (bubblin' crude) for 120 Meat.<br>05/23/19 22:40:37 <a class=nounder href="showplayer.php?who=3146545"><b>Doctor Claw</b></a> bought 12 (handful of sand) for 1200 Meat.<br>05/23/19 16:32:38 <a class=nounder href="showplayer.php?who=3288986"><b>Michelangelooo</b></a> bought 3 (one pill) for 300 Meat.<br>05/22/19 14:23:11 <a class=nounder href="showplayer.php?who=22185"><b>eav</b></a> bought 4 (chef's hat) for 1980 Meat.<br>05/22/19 02:48:02 <a class=nounder href="showplayer.php?who=1321271"><b>Hugbert</b></a> bought 2 (sommelier's towel) for 688 Meat.<br>05/21/19 10:03:59 <a class=nounder href="showplayer.php?who=3305109"><b>SarnokDeathlord</b></a> bought 1 (can of black paint) for 900 Meat.<br>05/21/19 06:49:43 <a class=nounder href="showplayer.php?who=2567144"><b>MetallicaRTL</b></a> bought 2 (metallic A) for 516 Meat.<br>05/21/19 05:10:01 <a class=nounder href="showplayer.php?who=3258127"><b>Felix Alvarez</b></a> bought 2 (roll of toilet paper) for 780 Meat.<br>05/20/19 22:57:43 <a class=nounder href="showplayer.php?who=657500"><b>donnie darko 1</b></a> bought 1 (cheap cigar butt) for 103 Meat.<br>05/20/19 21:30:57 <a class=nounder href="showplayer.php?who=688802"><b>kutzputter</b></a> bought 2 (filet of tangy gnat (&quot;fotelif&quot;)) for 4830 Meat.<br>05/19/19 13:16:06 <a class=nounder href="showplayer.php?who=1775888"><b>yojimboS_LAW</b></a> bought 1 (grumpy old man charrrm bracelet) for 420 Meat.<br>05/17/19 19:43:48 <a class=nounder href="showplayer.php?who=486552"><b>Pastahead</b></a> bought 66 (star) for 6600 Meat.<br>05/17/19 16:05:46 <a class=nounder href="showplayer.php?who=3243309"><b>Celestial Wizard</b></a> bought 1 (bowling ball) for 1200 Meat.<br>05/16/19 21:11:41 <a class=nounder href="showplayer.php?who=3309268"><b>Indignaphyria</b></a> bought 1 (ninja carabiner) for 100 Meat.<br>05/16/19 09:21:51 <a class=nounder href="showplayer.php?who=2067582"><b>IMTEHWALRUS</b></a> bought 75 (bubblin' crude) for 9000 Meat.<br><p>Total income: 36,192 Meat.</span><center><p><a href="mall.php">Back to the Mall</a></p></center></td></tr></table></center></td></tr><tr><td height=4></td></tr></table></center></body>

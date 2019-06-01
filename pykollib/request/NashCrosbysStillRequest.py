@@ -1,13 +1,14 @@
-from .GenericRequest import GenericRequest
-from pykollib.pattern import PatternManager
-from pykollib.database import ItemDatabase
 import pykollib.Error as Error
+from pykollib.old_database import ItemDatabase
+from pykollib.pattern import PatternManager
+
+from .GenericRequest import GenericRequest
 
 
 class NashCrosbysStillRequest(GenericRequest):
     def __init__(self, session, itemId, qty):
         super(NashCrosbysStillRequest, self).__init__(session)
-        self.url = session.serverURL + "guild.php"
+        self.url = session.server_url + "guild.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "stillbooze"
         self.requestData["whichitem"] = itemId

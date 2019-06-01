@@ -1,3 +1,7 @@
 src/.pydevproject
 *.pyc
 *.egg-info/
+build/
+dist/
+.mypy_cache/
+docs_source/_build

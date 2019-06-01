@@ -1,8 +1,9 @@
-from .GenericRequest import GenericRequest
+from datetime import datetime
+
 from pykollib.pattern import PatternManager
 from pykollib.util import Report
 
-from datetime import datetime
+from .GenericRequest import GenericRequest
 
 CLAN_LOG_UNKNOWN = 0
 CLAN_LOG_FAX = 1
@@ -22,7 +23,7 @@ class ClanLogRequest(GenericRequest):
 
     def __init__(self, session):
         super(ClanLogRequest, self).__init__(session)
-        self.url = session.serverURL + "clan_log.php"
+        self.url = session.server_url + "clan_log.php"
 
     def parseResponse(self):
         entries = []

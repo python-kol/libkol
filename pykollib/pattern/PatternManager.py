@@ -5,11 +5,12 @@ request types, so it makes sense to have a central location to store them instea
 copies in each class.
 """
 
+import re
+from typing import Dict, Pattern
+
 from pykollib.pattern import Patterns
 
-import re
-
-__compiledPatterns = {}
+__compiledPatterns = {}  # type: Dict[str, Pattern]
 
 
 def getOrCompilePattern(patternId):
