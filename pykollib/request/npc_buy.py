@@ -41,17 +41,17 @@ class Response(NamedTuple):
 
 
 class npc_buy(Request):
+    """
+    Purchases items from an NPC store.
+
+    :param session: Active session
+    :param store: NPC store to buy from
+    :param item: Item to buy
+    :param quantity: Quantity of said item to buy
+    """
     def __init__(
         self, session: "pykollib.Session", store: Store, item: Item, quantity: int = 1
     ) -> None:
-        """
-        Purchases items from an NPC store.
-
-        :param session: Active session
-        :param store: NPC store to buy from
-        :param item: Item to buy
-        :param quantity: Quantity of said item to buy
-        """
         data = {
             "phash": session.pwd,
             "whichstore": store.value,

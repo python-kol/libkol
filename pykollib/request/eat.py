@@ -7,13 +7,13 @@ from .request import Request
 
 
 class eat(Request):
-    def __init__(self, session: "pykollib.Session", item: Item) -> None:
-        """
-        This request is for eating food from the inventory.
+    """
+    This request is for eating food from the inventory.
 
-        :param session: Active session
-        :param item: Consumable to eat
-        """
+    :param session: Active session
+    :param item: Consumable to eat
+    """
+    def __init__(self, session: "pykollib.Session", item: Item) -> None:
         super().__init__(session)
 
         params = {"which": 1, "whichitem": item.id}

@@ -22,12 +22,12 @@ class Outfit(NamedTuple):
 
 
 class equipment(Request):
+    """
+    Gets info on all equipment currently equipped.
+    Returns a lookup from the item database for each item equipped.
+    For accessories, two possibilities are present.  If equipping each slot seperately is enabled, each item's dictionary will contain an attribute "slot" with the number of the slot it occupies.  Otherwise, the "slot" attribute will have the value 0 for all equipped accessories.
+    """
     def __init__(self, session: "pykollib.Session") -> None:
-        """
-        Gets info on all equipment currently equipped.
-        Returns a lookup from the item database for each item equipped.
-        For accessories, two possibilities are present.  If equipping each slot seperately is enabled, each item's dictionary will contain an attribute "slot" with the number of the slot it occupies.  Otherwise, the "slot" attribute will have the value 0 for all equipped accessories.
-        """
         super().__init__(session)
 
         params = {"which": 2}

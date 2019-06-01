@@ -11,10 +11,10 @@ rank_pattern = re.compile(r"(.*?) \(°([0-9]+)\)")
 
 
 class clan_whitelist(Request):
+    """
+    Retrieves information from the clan whitelist page.
+    """
     def __init__(self, session: "pykollib.Session") -> None:
-        """
-        Retrieves information from the clan whitelist page.
-        """
         super().__init__(session)
 
         self.request = session.request("clan_whitelist.php")

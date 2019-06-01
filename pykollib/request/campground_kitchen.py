@@ -16,13 +16,12 @@ class Response(NamedTuple):
 
 
 class campground_kitchen(Request):
+    """
+    Checks state of the kitchen. (Did you wash the dishes?)
+
+    :param session: Active session
+    """
     def __init__(self, session: "pykollib.Session"):
-        """
-        Checks state of the kitchen. (Did you wash the dishes?)
-
-        :param session: Active session
-        """
-
         params = {"action": "inspectkitchen"}
         self.request = session.request("campground.php", pwd=True, params=params)
 

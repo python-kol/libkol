@@ -7,6 +7,17 @@ from .request import Request
 
 
 class store_item_add(Request):
+    """
+    Add a single item to your store. The interface to the mall was updated on Sept 13, 2013.
+    It looks like items are now added only one at a time.
+
+    Notes about new URL: http://www.kingdomofloathing.com/backoffice.php
+    itemid: this will contain an "h" in front of it if the item is in Hangk's
+
+    There is now a submitted field name '_'. This appears to be the milliseconds since epoch.
+    Testing will need to be done to see how important this is. Presumably you could just append
+    000 after the current seconds since epoch.
+    """
     def __init__(
         self,
         session: "pykollib.Session",
@@ -16,17 +27,6 @@ class store_item_add(Request):
         price: int = 999999999,
         from_hangks: bool = False,
     ) -> None:
-        """
-        Add a single item to your store. The interface to the mall was updated on Sept 13, 2013.
-        It looks like items are now added only one at a time.
-
-        Notes about new URL: http://www.kingdomofloathing.com/backoffice.php
-        itemid: this will contain an "h" in front of it if the item is in Hangk's
-
-        There is now a submitted field name '_'. This appears to be the milliseconds since epoch.
-        Testing will need to be done to see how important this is. Presumably you could just append
-        000 after the current seconds since epoch.
-        """
         super().__init__(session)
 
         params = {

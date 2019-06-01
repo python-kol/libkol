@@ -49,5 +49,5 @@ class Request:
 
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(
-            self.parser(content, request.url, self.session, **kwargs)
+            self.parser(content, self.request.url, self.session, **kwargs)
         )

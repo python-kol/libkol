@@ -5,10 +5,10 @@ from .request import Request
 
 
 class item_use(Request):
+    """
+    Uses the requested item.
+    """
     def __init__(self, session: "pykollib.Session", item: Item) -> None:
-        """
-        Uses the requested item.
-        """
         super().__init__(session)
 
         params = {"whichitem": item.id}

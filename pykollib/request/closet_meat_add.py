@@ -4,10 +4,10 @@ from .request import Request
 
 
 class closet_meat_add(Request):
+    """
+    Adds meat to the player's closet.
+    """
     def __init__(self, session: "pykollib.Session", quantity: int) -> None:
-        """
-        Adds meat to the player's closet.
-        """
         super().__init__(session)
 
         params = {"action": "addmeat", "amt": quantity}

@@ -25,13 +25,13 @@ class Response(NamedTuple):
 
 
 class clan_rumpus_gym(Request):
-    def __init__(self, session: "pykollib.Session", stat: Stat, turns: int) -> None:
-        """
-        Visits the a gym in the clan rumpus room for a specified number of turns
+    """
+    Visits the a gym in the clan rumpus room for a specified number of turns
 
-        :param stat: The stat to train
-        :param turns: The number of turns to train for
-        """
+    :param stat: The stat to train
+    :param turns: The number of turns to train for
+    """
+    def __init__(self, session: "pykollib.Session", stat: Stat, turns: int) -> None:
         super().__init__(session)
 
         params = {

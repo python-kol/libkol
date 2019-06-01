@@ -14,10 +14,10 @@ previous_run_pattern = re.compile(r"^(.+?) run, ([A-Za-z]+) ([0-9]{2}), ([0-9]{4
 
 
 class clan_raid_log(Request):
+    """
+    Retrieves on a previous raid.
+    """
     def __init__(self, session: "pykollib.Session", raid_id: int) -> None:
-        """
-        Retrieves on a previous raid.
-        """
         super().__init__(session)
 
         params = {"viewlog": raid_id}

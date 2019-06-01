@@ -22,6 +22,9 @@ class AutosellMode(Enum):
 
 
 class autosell_items(Request):
+    """
+    Sells items via the autosell system
+    """
     def __init__(
         self,
         session: "pykollib.Session",
@@ -30,10 +33,6 @@ class autosell_items(Request):
         all: bool = False,
         keep_one: bool = False,
     ):
-        """
-        Sells items via the autosell system
-        """
-
         params = {"action": "sell"}
 
         if keep_one:

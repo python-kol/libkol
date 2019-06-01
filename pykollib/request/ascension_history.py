@@ -44,16 +44,15 @@ familiar_pattern = re.compile(
 
 
 class ascension_history(Request):
+    """
+    Fetches ascension history for a player
+
+    :params player_id: Player for whom to fetch ascension history
+    :params pre_ns13: Whether to include pre NS13 ascension history
+    """
     def __init__(
         self, session: "pykollib.Session", player_id: int, pre_ns13: bool = False
     ) -> None:
-        """
-        Fetches ascension history for a player
-
-        :params player_id: Player for whom to fetch ascension history
-        :params pre_ns13: Whether to include pre NS13 ascension history
-        """
-
         params = {"back": "other", "who": player_id, "prens13": 1 if pre_ns13 else 0}
         self.request = session.request("ascensionhistory.php", params=params)
 

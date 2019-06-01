@@ -78,6 +78,37 @@ class Listing(NamedTuple):
 
 
 class mall_search(Request):
+    """
+    Searches for an item at the mall
+
+    :param session: The Pykol session
+    :param query: The string to search for.  You can use % for a wildca:param d
+    :param category: The category to search in, such as 'food'.  The default is
+                     to search in all categories.  Note the convenience constants
+                     above.
+    :param no_limits: Whether to exclude shops that have daily purchase limits.
+    :param max_price: The maximum price to show.  Defaults to 0, which shows all
+                      prices.
+    :param num_results: The number of shops to show per item.  The default is 0,
+                        which shows a number of shops depending on the number of items
+                        returned.
+    :param sort_items_by: How to sort the items listed in the output. Depending on the other
+                          search parameters, not all of the possible values will be maningful.
+    :param sort_shops_by: How to sort the shops within each individual item.
+    :param just_items: Whether to suppress the shops and just show a list of items.
+    :param tiers: For food and booze, an array listing which quality levels to
+                  include in the search results.
+    :param consumable_by_me: For consumable items, whether to list only items that
+                             are consumable by the session's character.
+    :param weapon_attribute: For weapons, 1 to list only melee weapons, 2 to list
+                             only ranged weapons, or 3 to list all weapons.
+    :param weapon_hands: For weapons, 1 to list only one-handed weapons, 2 to
+                         list only 2-handed weapons, or 3 to list all weapons.
+    :param wearable_by_me: For wearable items, whether to list only items that can
+                           be worn by the session's character.
+    :param start: Not usually needed by the user. Tells which item in the list
+                  of results is to be returned first.
+    """
     def __init__(
         self,
         session: "pykollib.Session",
@@ -96,37 +127,6 @@ class mall_search(Request):
         wearable_by_me: bool = False,
         start: int = 0,
     ) -> None:
-        """
-        Searches for an item at the mall
-
-        :param session: The Pykol session
-        :param query: The string to search for.  You can use % for a wildca:param d
-        :param category: The category to search in, such as 'food'.  The default is
-                         to search in all categories.  Note the convenience constants
-                         above.
-        :param no_limits: Whether to exclude shops that have daily purchase limits.
-        :param max_price: The maximum price to show.  Defaults to 0, which shows all
-                          prices.
-        :param num_results: The number of shops to show per item.  The default is 0,
-                            which shows a number of shops depending on the number of items
-                            returned.
-        :param sort_items_by: How to sort the items listed in the output. Depending on the other
-                              search parameters, not all of the possible values will be maningful.
-        :param sort_shops_by: How to sort the shops within each individual item.
-        :param just_items: Whether to suppress the shops and just show a list of items.
-        :param tiers: For food and booze, an array listing which quality levels to
-                      include in the search results.
-        :param consumable_by_me: For consumable items, whether to list only items that
-                                 are consumable by the session's character.
-        :param weapon_attribute: For weapons, 1 to list only melee weapons, 2 to list
-                                 only ranged weapons, or 3 to list all weapons.
-        :param weapon_hands: For weapons, 1 to list only one-handed weapons, 2 to
-                             list only 2-handed weapons, or 3 to list all weapons.
-        :param wearable_by_me: For wearable items, whether to list only items that can
-                               be worn by the session's character.
-        :param start: Not usually needed by the user. Tells which item in the list
-                      of results is to be returned first.
-        """
         super().__init__(session)
 
         params = {

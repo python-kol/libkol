@@ -24,12 +24,12 @@ class Response(NamedTuple):
     total: int
     raids: List[Raid]
 
-
 class clan_raids_previous(Request):
+    """
+    Retrieves a list of old raid logs, in pages of length 10
+    """
     def __init__(self, session: "pykollib.Session", page: int = 0) -> None:
-        """
-        Retrieves a list of old raid logs, in pages of length 10
-        """
+
         super().__init__(session)
         params = {"startrow": page * 10}
 

@@ -7,21 +7,21 @@ from .request import Request
 
 
 class store_item_remove(Request):
+    """
+    Take a single item from your store using the new Mall interface from Sep 2013
+
+    Class expects at least an itemId. If no quantity is given, a quantity of 1 is assumed
+
+    Todo: add option to remove all of an item. This will require calling StoreInventoryRequest
+    and figuring out how many of the item there are.
+
+    :param session: Active session
+    :param item: Item to remove
+    :param quantity: Amount of that item to remove
+    """
     def __init__(
         self, session: "pykollib.Session", item: Item, quantity: int = 1
     ) -> None:
-        """
-        Take a single item from your store using the new Mall interface from Sep 2013
-
-        Class expects at least an itemId. If no quantity is given, a quantity of 1 is assumed
-
-        Todo: add option to remove all of an item. This will require calling StoreInventoryRequest
-        and figuring out how many of the item there are.
-
-        :param session: Active session
-        :param item: Item to remove
-        :param quantity: Amount of that item to remove
-        """
         super().__init__(session)
 
         params = {"action": "removeitem", "itemid": item.id, "qty": quantity}

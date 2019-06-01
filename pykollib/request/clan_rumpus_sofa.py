@@ -12,11 +12,10 @@ class Response(NamedTuple):
 
 
 class clan_rumpus_sofa(Request):
+    """
+    Uses the comfy sofa in the clan rumpus room.
+    """
     def __init__(self, session: "pykollib.Session", turns: int = 0) -> None:
-        """
-        Uses the comfy sofa in the clan rumpus room.
-        """
-
         super().__init__(session)
 
         params = {"preaction": "nap", "numturns": turns}

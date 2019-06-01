@@ -27,10 +27,10 @@ class Response(NamedTuple):
 
 
 class item_information(Request):
+    """
+    Get information about a particular item.
+    """
     def __init__(self, session: "pykollib.Session", item_id) -> None:
-        """
-        Get information about a particular item.
-        """
         super().__init__(session)
 
         data = {"what": "item", "id": item_id}
