@@ -1,6 +1,7 @@
+from html import unescape
+
 from pykollib.pattern import PatternManager
 from pykollib.util import Report
-from pykollib.util import StringUtils
 
 CHAT_CHANNELS = [
     "clan",
@@ -326,7 +327,7 @@ def parseChatMessages(text, isIncoming):
             # Any other case we aren't prepared to handle
             Report.error("bot", "Unknown message.  ResponseText = %s" % text)
             chat["type"] = "unknown"
-            chat["text"] = StringUtils.htmlEntityDecode(line)
+            chat["text"] = unescape(line)
 
         chats.append(chat)
 
@@ -408,7 +409,7 @@ def cleanChatText(dirtyText):
         match = linkPattern.search(text)
 
     # Decode HTML entities.
-    text = StringUtils.htmlEntityDecode(text)
+    text = unescape(text)
 
     # Clean up the text.
     text = htmlTagPattern.sub("", text)

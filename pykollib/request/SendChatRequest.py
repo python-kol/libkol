@@ -1,17 +1,19 @@
-from .GenericRequest import GenericRequest
+import unicodedata
+import urllib.error
+import urllib.parse
+import urllib.request
+
 from pykollib.util import ChatUtils
 
-import time
-import unicodedata
-import urllib.request, urllib.parse, urllib.error
+from .GenericRequest import GenericRequest
 
 
 class SendChatRequest(GenericRequest):
     def __init__(self, session, text):
         super(SendChatRequest, self).__init__(session)
         self.text = text.strip()
-        self.url = session.serverURL + "submitnewchat.php?playerid=%s&pwd=%s" % (
-            session.userId,
+        self.url = session.server_url + "submitnewchat.php?playerid=%s&pwd=%s" % (
+            session.user_id,
             session.pwd,
         )
         self.url += "&%s" % urllib.parse.urlencode(

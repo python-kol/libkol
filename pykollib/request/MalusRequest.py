@@ -1,12 +1,13 @@
-from .GenericRequest import GenericRequest
-from pykollib.database import ItemDatabase
+from pykollib.old_database import ItemDatabase
 from pykollib.pattern import PatternManager
+
+from .GenericRequest import GenericRequest
 
 
 class MalusRequest(GenericRequest):
     def __init__(self, session, itemId, numTimes):
         super(MalusRequest, self).__init__(session)
-        self.url = session.serverURL + "guild.php"
+        self.url = session.server_url + "guild.php"
         self.requestData["pwd"] = session.pwd
         self.requestData["action"] = "malussmash"
         self.requestData["whichitem"] = itemId

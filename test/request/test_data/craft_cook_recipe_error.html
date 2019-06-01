@@ -1,0 +1,33 @@
+<body>
+<center>
+	<table  width=95%  cellspacing=0 cellpadding=0><tr><td style="color: white;" align=center bgcolor=blue><b>Crafting:</b></td></tr><tr><td style="padding: 5px; border: 1px solid blue;"><center><table><tr><td><center><font size=2>[<a href="craft.php?mode=combine">combine items</a>]&nbsp;[cook stuff]&nbsp;[<a href="craft.php?mode=smith">smith stuff</a>]&nbsp;[<a href="craft.php?mode=cocktail">make cocktails</a>]&nbsp;[<a href="craft.php?mode=discoveries&what=cook">discoveries</a>]</font></center></td></tr></table></center></td></tr><tr><td height=4></td></tr></table>	<center><table  width=95%  cellspacing=0 cellpadding=0><tr><td style="color: white;" align=center bgcolor=blue><b>Results:</b></td></tr><tr><td style="padding: 5px; border: 1px solid blue;"><center><table><tr><td>Those two items don't combine to make anything tasty.</td></tr></table></center></td></tr><tr><td height=4></td></tr></table></center>	<table  width=95%  cellspacing=0 cellpadding=0><tr><td style="color: white;" align=center bgcolor=blue><b>Cook Stuff:</b></td></tr><tr><td style="padding: 5px; border: 1px solid blue;"><center><table><tr><td>	<center>
+
+				<form method="post" name="master">
+			<input type="hidden" name="mode" value="cook">
+			<input type="hidden" name="pwd" value="">
+			<input type="hidden" name="action" value="craft">
+
+
+				Cook<br />
+				<select name="a" id="a" onchange="showqty()"><option value="0" qty="0">-select an item-</option><option value="761"  qty="15" fancy="0">brine (15)</option><option value="1356" selected qty="15" fancy="0">bunny liver (15)</option><option value="634"  qty="1" fancy="0">cool whip (1)</option><option value="759"  qty="46" fancy="0">dill (46)</option><option value="2402"  qty="6" fancy="0">gauze garter (6)</option><option value="758"  qty="34" fancy="0">ghost cucumber (34)</option><option value="6275"  qty="1" fancy="0">giant turkey leg (1)</option><option value="3682"  qty="1" fancy="1">globe of Deep Sauce (1)</option><option value="333"  qty="7" fancy="0">lime (7)</option><option value="2532"  qty="1" fancy="0">long pork (1)</option><option value="10038"  qty="19" fancy="0">mooseflank (19)</option><option value="357"  qty="4" fancy="0">Mountain Stream soda (4)</option><option value="830"  qty="3" fancy="0">royal jelly (3)</option><option value="346"  qty="278" fancy="1">scrumptious reagent (278)</option><option value="1003"  qty="2" fancy="0">soda water (2)</option><option value="6293"  qty="8" fancy="0">stolen sushi (8)</option><option value="760"  qty="22" fancy="0">vinegar (22)</option></select>
+				<br />with <br />
+				<select name="b" id="b" onchange="showqty()"><option value="0" qty="0">-select an item-</option><option value="761"  qty="15" fancy="0">brine (15)</option><option value="1356" selected qty="15" fancy="0">bunny liver (15)</option><option value="634"  qty="1" fancy="0">cool whip (1)</option><option value="759"  qty="46" fancy="0">dill (46)</option><option value="2402"  qty="6" fancy="0">gauze garter (6)</option><option value="758"  qty="34" fancy="0">ghost cucumber (34)</option><option value="6275"  qty="1" fancy="0">giant turkey leg (1)</option><option value="3682"  qty="1" fancy="1">globe of Deep Sauce (1)</option><option value="333"  qty="7" fancy="0">lime (7)</option><option value="2532"  qty="1" fancy="0">long pork (1)</option><option value="10038"  qty="19" fancy="0">mooseflank (19)</option><option value="357"  qty="4" fancy="0">Mountain Stream soda (4)</option><option value="830"  qty="3" fancy="0">royal jelly (3)</option><option value="346"  qty="278" fancy="1">scrumptious reagent (278)</option><option value="1003"  qty="2" fancy="0">soda water (2)</option><option value="6293"  qty="8" fancy="0">stolen sushi (8)</option><option value="760"  qty="22" fancy="0">vinegar (22)</option></select>
+				<div id="qtybox">
+				<p>Make <input class="text" size="5" value="1" name="qty" id="qtyentry">
+					<br><input type=checkbox name=max>Make as many as possible
+				</p>
+				</div>
+						<p>
+			<input id="goer" type="submit" class="button" value="Bake!">
+			<div id="servant" style="display: none">(Using Chef-in-the-Box)</div>
+			<script type='text/javascript'>$(document).ready(function () { hideqty(); showqty(); });
+				turns = 0;</script>
+			</p>
+					</form>
+
+
+		<p><a href="inventory.php">Back to Inventory</a></p>
+	</center>
+	</td></tr></table></center></td></tr><tr><td height=4></td></tr></table>
+	</center>
+</body>
