@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/danheath/pykollib",
     packages=setuptools.find_packages(),
-    install_requires=["requests", "pickledb"],
+    install_requires=["aiohttp", "beautifulsoup4", "multidict", "peewee", "typing", "yarl"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
