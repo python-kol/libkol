@@ -34,7 +34,7 @@ class equip(Request):
         )
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         "Checks for errors due to equipping items you don't have, or equipping items that aren't equippable."
 
         if "You don't have the item you're trying to equip." in html:

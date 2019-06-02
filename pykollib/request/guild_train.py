@@ -19,7 +19,7 @@ class guild_train(Request):
         self.request = session.request("guild.php", pwd=True, data=data)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         if ">You're not powerful enough to train that skill.<" in html:
             raise UserIsLowLevelError(
                 "You aren't a high enough level to learn that skill."

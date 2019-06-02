@@ -2,7 +2,8 @@ from typing import Any, Dict, List
 
 import pykollib
 
-from ..Item import Item, ItemQuantity
+from ..types import ItemQuantity
+from ..Item import Item
 from .request import Request
 
 
@@ -19,5 +20,8 @@ class inventory(Request):
         self.request = session.request("api.php", json=True, data=data)
 
     @staticmethod
-    def parser(json: Dict[str, Any], **kwargs) -> List[ItemQuantity]:
-        return [ItemQuantity(Item[id], quantity) for id, quantity in json.items()]
+    async def parser(json: Dict[str, Any], **kwargs) -> List[ItemQuantity]:
+        return [
+            ItemQuantity(await Item.get_or_discover(id=id), quantity)
+            for id, quantity in json.items()
+        ]

@@ -16,7 +16,7 @@ class chat_channel(Request):
         self.request = session.request("lchat.php")
 
     @staticmethod
-    def parser(html: str, **kwargs) -> str:
+    async def parser(html: str, **kwargs) -> str:
         match = current_channel_pattern.search(html)
 
         if match is None:

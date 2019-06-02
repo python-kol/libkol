@@ -36,7 +36,7 @@ class clan_raids_previous(Request):
         self.request = session.request("clan_oldraidlogs.php", params=params)
 
     @staticmethod
-    def parser(html: str, url: URL, **kwargs) -> Response:
+    async def parser(html: str, url: URL, **kwargs) -> Response:
         if "(No previous Clan Dungeon records found)" in html:
             raise ClanRaidsNotFoundError("Page of old clan raids not found")
 

@@ -23,5 +23,5 @@ class clan_rumpus_effect(Request):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[Dict[str, Any]]:
+    async def parser(html: str, **kwargs) -> List[Dict[str, Any]]:
         return parsing.effects(html)

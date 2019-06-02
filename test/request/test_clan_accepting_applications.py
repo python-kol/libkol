@@ -7,13 +7,16 @@ class ClanAcceptingApplicationsTestCase(TestCase):
     request = "clan_accepting_applications"
 
     def test_clan_accepting_applications_on(self):
-        with self.open_test_data("on") as file:
-            parsed = clan_accepting_applications.parser(file.read())
-
+        async def run_test(file):
+            parsed = await clan_accepting_applications.parser(file.read())
             assert parsed is True
 
-    def test_clan_accepting_applications_off(self):
-        with self.open_test_data("off") as file:
-            parsed = clan_accepting_applications.parser(file.read())
+        self.run_async("on", run_test)
 
+
+    def test_clan_accepting_applications_off(self):
+        async def run_test(file):
+            parsed = await clan_accepting_applications.parser(file.read())
             assert parsed is False
+
+        self.run_async("off", run_test)

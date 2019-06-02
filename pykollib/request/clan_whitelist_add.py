@@ -22,7 +22,7 @@ class clan_whitelist_add(Request):
         self.request = session.request("clan_whitelist.php", data=payload, pwd=True)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> Response:
+    async def parser(html: str, **kwargs) -> Response:
         success = " added to whitelist.</td>" in html
         already = "<td>That player is already on the whitelist.</td>" in html
 

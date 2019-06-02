@@ -26,7 +26,7 @@ class curse(Request):
         self.request = session.request("curse.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, url: URL, **kwargs) -> bool:
+    async def parser(html: str, url: URL, **kwargs) -> bool:
         if len(html) < 10:
             raise WrongKindOfItemError("You can't curse with that item.")
 

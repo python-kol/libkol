@@ -25,5 +25,5 @@ class clan_rumpus_meat(Request):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> int:
+    async def parser(html: str, **kwargs) -> int:
         return parsing.meat(html)

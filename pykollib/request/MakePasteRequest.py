@@ -16,7 +16,7 @@ class MakePasteRequest(GenericRequest):
         self.requestData["action"] = "makepaste"
         self.requestData["qty"] = quantity
 
-    def parseResponse(self):
+    async def parseresponse(self):
         # Check for errors.
         noMeatForPastePattern = PatternManager.getOrCompilePattern(
             "noMeatForMeatpasting"

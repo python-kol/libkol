@@ -30,7 +30,7 @@ class homepage(Request):
         self.request = session.request(url)
 
     @staticmethod
-    def parser(html: str, url: URL, **kwargs) -> Response:
+    async def parser(html: str, url: URL, **kwargs) -> Response:
         soup = BeautifulSoup(html, "html.parser")
 
         challenge_input = soup.find("input", attrs={"name": "challenge"})

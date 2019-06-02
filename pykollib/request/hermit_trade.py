@@ -3,7 +3,8 @@ from typing import List
 import pykollib
 
 from ..Error import ItemNotFoundError, UnknownError, WrongKindOfItemError
-from ..Item import Item, ItemQuantity
+from ..types import ItemQuantity
+from ..Item import Item
 from ..util import parsing
 from .request import Request
 
@@ -16,7 +17,7 @@ class hermit_trade(Request):
         self.request = session.request("hermit.php", data=data)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[ItemQuantity]:
+    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
         if (
             "you are able to infer that he doesn't have enough clovers to make that trade"
             in html
@@ -41,4 +42,4 @@ class hermit_trade(Request):
         if "You make a trade with the Hermit." not in html:
             raise UnknownError("Unknown error")
 
-        return parsing.item(html)
+        return await parsing.item(html)

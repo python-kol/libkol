@@ -25,7 +25,7 @@ class ClanLogRequest(GenericRequest):
         super(ClanLogRequest, self).__init__(session)
         self.url = session.server_url + "clan_log.php"
 
-    def parseResponse(self):
+    async def parseresponse(self):
         entries = []
         entryPattern = PatternManager.getOrCompilePattern("clanLogEntry")
         for entryMatch in entryPattern.finditer(self.responseText):

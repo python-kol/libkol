@@ -11,7 +11,7 @@ class GenericAdventuringRequest(GenericRequest):
     adventuring should probably extend this one.
     """
 
-    def parseResponse(self):
+    async def parseresponse(self):
         """
         Default response method for adventuring.
         """

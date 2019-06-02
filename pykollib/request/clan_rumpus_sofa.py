@@ -22,5 +22,5 @@ class clan_rumpus_sofa(Request):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> Response:
+    async def parser(html: str, **kwargs) -> Response:
         return Response(parsing.mp(html), parsing.hp(html))

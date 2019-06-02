@@ -175,7 +175,7 @@ class charpane(Request):
         self.request = session.request("charpane.php")
 
     @staticmethod
-    def parser(html: str, url, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
+    async def parser(html: str, url, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
         pwd_matcher = pwd_pattern.search(html)
         username_matcher = username_pattern.search(html)
         user_id_matcher = user_id_pattern.search(html)

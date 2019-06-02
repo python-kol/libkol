@@ -2,7 +2,7 @@ from typing import List
 
 import pykollib
 
-from ..Item import ItemQuantity
+from ..types import ItemQuantity
 from ..util import parsing
 from .request import Request
 
@@ -18,5 +18,5 @@ class clan_vip_crimbotree(Request):
         self.request = session.request("clan_viplounge.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[ItemQuantity]:
-        return parsing.item(html)
+    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
+        return await parsing.item(html)

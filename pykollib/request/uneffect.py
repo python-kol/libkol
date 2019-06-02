@@ -12,7 +12,7 @@ class uneffect(Request):
         self.request = session.request("uneffect.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         if "<td>You don't have that effect." in html:
             raise EffectNotFoundError(
                 "Unable to remove effect. The user does not have that effect."

@@ -5,10 +5,9 @@ from typing import Any, Dict, List, NamedTuple
 
 from bs4 import BeautifulSoup, Tag
 
-from ..Item import Item, ItemQuantity
+from .. import types
 from ..pattern import PatternManager
 from ..Stat import Stat
-
 
 def panel(html: str, title: str = "Results:") -> Tag:
     soup = BeautifulSoup(html, "html.parser")
@@ -48,27 +47,19 @@ gain_meat_pattern = re.compile(
 lose_meat_pattern = re.compile(r"You (?:lose|spent) ([0-9,]+) Meat")
 
 
-def item(text: str) -> List[ItemQuantity]:
-    item_quantities = []  # type: List[ItemQuantity]
+async def item(text: str) -> List["types.ItemQuantity"]:
+    from .. import Item
+
+    item_quantities = []  # type: List[types.ItemQuantity]
 
     for match in single_item_pattern.finditer(text):
-        item = Item.get_or_none(desc_id=int(match.group(1)))
-
-        if item is None:
-            print("Could not find item with desc_id {}".format(match.group(1)))
-            continue
-        else:
-            item_quantities += [ItemQuantity(item, 1)]
+        item = await Item.get_or_discover(desc_id=int(match.group(1)))
+        item_quantities += [types.ItemQuantity(item, 1)]
 
     for match in multi_item_pattern.finditer(text):
         quantity = int(match.group(2).replace(",", ""))
-        item = Item.get_or_none(desc_id=int(match.group(1)))
-
-        if item is None:
-            print("Could not find item with desc_id {}".format(match.group(1)))
-            continue
-        else:
-            item_quantities += [ItemQuantity(item, quantity)]
+        item = await Item.get_or_discover(desc_id=int(match.group(1)))
+        item_quantities += [types.ItemQuantity(item, quantity)]
 
     return item_quantities
 

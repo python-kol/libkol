@@ -37,7 +37,7 @@ class mall_search_price(Request):
         self.request = session.request("backoffice.php", data=data, pwd=True)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> Response:
+    async def parser(html: str, **kwargs) -> Response:
         soup = BeautifulSoup(html, "html.parser")
 
         unlimited = soup.find("td", text="unlimited:")

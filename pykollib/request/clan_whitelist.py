@@ -20,7 +20,7 @@ class clan_whitelist(Request):
         self.request = session.request("clan_whitelist.php")
 
     @staticmethod
-    def parser(
+    async def parser(
         html: str, include_rank: bool = False, only_rank: bool = False, **kwargs
     ) -> List[Dict[str, Any]]:
         soup = BeautifulSoup(html, "html.parser")

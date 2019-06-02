@@ -4,7 +4,8 @@ from bs4 import BeautifulSoup
 
 import pykollib
 
-from ..Item import Item, ItemQuantity
+from ..types import ItemQuantity
+from ..Item import Item
 from .request import Request
 
 
@@ -13,13 +14,13 @@ class hermit_menu(Request):
         self.request = session.request("hermit.php")
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[ItemQuantity]:
+    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
         soup = BeautifulSoup(html, "html.parser")
 
         menu = []  # type: List[ItemQuantity]
         for item_image in soup.find_all("img", class_="hand"):
             desc_id = str(item_image["onclick"])[16:-1]
-            item = Item.get_or_none(desc_id=desc_id)
+            item = await Item.get_or_discover(desc_id=desc_id)
 
             if item is None:
                 print("Item in {} not recognised".format(item_image))
