@@ -1,6 +1,7 @@
 import re
 from datetime import datetime, timedelta
-from typing import List, NamedTuple, Optional
+from typing import List, Optional
+from dataclasses import dataclass
 
 from bs4 import BeautifulSoup
 
@@ -8,8 +9,11 @@ import pykollib
 
 from .request import Request
 
-
-class Ascension(NamedTuple):
+@dataclass
+class Ascension:
+    """
+    Ascension
+    """
     id: int  # The ascension id
     dropped_path: bool  # Whether the path was dropped in-run
     level: int  # The level at which the user broke the prism
