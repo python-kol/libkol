@@ -1,37 +1,36 @@
-from typing import NamedTuple
+from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 
-from peewee import BooleanField, CharField, ForeignKeyField, IntegerField
+from .Model import Model
+from .Error import ItemNotFoundError
+from .request import item_information, item_description as item_description_module
 
-from .database import BaseModel
-from .FoldGroup import FoldGroup
-from .ZapGroup import ZapGroup
+item_description = item_description_module.item_description # type: ignore
 
-
-class Item(BaseModel):
-    id = IntegerField(primary_key=True)
-    name = CharField()
-    desc_id = IntegerField()
-    plural = CharField(null=True)
-    image = CharField()
-    autosell = IntegerField(default=0)
-    level_required = IntegerField(default=0)  # Level required
+class Item(Model):
+    id = IntField(primary_key=True)
+    name = CharField(max_length=255)
+    desc_id = IntField()
+    plural = CharField(max_length=255, null=True)
+    image = CharField(max_length=255)
+    autosell = IntField(default=0)
+    level_required = IntField(default=0)  # Level required
 
     # Consumables
     food = BooleanField(default=False)
-    fullness = IntegerField(default=0)
+    fullness = IntField(default=0)
     booze = BooleanField(default=False)
-    inebriety = IntegerField(default=0)
+    inebriety = IntField(default=0)
     spleen = BooleanField(default=False)
-    spleenhit = IntegerField(default=0)
-    quality = CharField(null=True)
-    gained_adventures_min = IntegerField(default=0)
-    gained_adventures_max = IntegerField(default=0)
-    gained_muscle_min = IntegerField(default=0)
-    gained_muscle_max = IntegerField(default=0)
-    gained_mysticality_min = IntegerField(default=0)
-    gained_mysticality_max = IntegerField(default=0)
-    gained_moxie_min = IntegerField(default=0)
-    gained_moxie_max = IntegerField(default=0)
+    spleenhit = IntField(default=0)
+    quality = CharField(max_length=255, null=True)
+    gained_adventures_min = IntField(default=0)
+    gained_adventures_max = IntField(default=0)
+    gained_muscle_min = IntField(default=0)
+    gained_muscle_max = IntField(default=0)
+    gained_mysticality_min = IntField(default=0)
+    gained_mysticality_max = IntField(default=0)
+    gained_moxie_min = IntField(default=0)
+    gained_moxie_max = IntField(default=0)
 
     # Usability
     usable = BooleanField(default=False)
@@ -46,22 +45,22 @@ class Item(BaseModel):
     pants = BooleanField(default=False)
     shirt = BooleanField(default=False)
     weapon = BooleanField(default=False)
-    weapon_hands = IntegerField(null=True)
-    weapon_type = CharField(null=True)
+    weapon_hands = IntField(null=True)
+    weapon_type = CharField(max_length=255, null=True)
     offhand = BooleanField(default=False)
-    offhand_type = CharField(null=True)
+    offhand_type = CharField(max_length=255, null=True)
     accessory = BooleanField(default=False)
     container = BooleanField(default=False)
     sixgun = BooleanField(default=False)
     familiar_equipment = BooleanField(default=False)
-    power = IntegerField(null=True)
-    required_muscle = IntegerField(default=0)
-    required_mysticality = IntegerField(default=0)
-    required_moxie = IntegerField(default=0)
+    power = IntField(null=True)
+    required_muscle = IntField(default=0)
+    required_mysticality = IntField(default=0)
+    required_moxie = IntField(default=0)
 
     # Collections
-    fold_group = ForeignKeyField(FoldGroup, backref="items", null=True)
-    zap_group = ForeignKeyField(ZapGroup, backref="items", null=True)
+    foldgroup = ForeignKeyField("models.FoldGroup", related_name="items", null=True)
+    zapgroup = ForeignKeyField("models.ZapGroup", related_name="items", null=True)
 
     # Flags
     hatchling = BooleanField(default=False)
@@ -75,7 +74,7 @@ class Item(BaseModel):
     drink_helper = BooleanField(default=False)
     guardian = BooleanField(default=False)
     bounty = BooleanField(default=False)  # Can appear as a bounty item
-    candy = IntegerField()  # 0: n/a, 1: simple, 2: complex
+    candy = IntField()  # 0: n/a, 1: simple, 2: complex
     sphere = BooleanField(default=False)  # What is this for?
     quest = BooleanField(default=False)  # is a quest item
     gift = BooleanField(default=False)  # is a gift item
@@ -85,7 +84,25 @@ class Item(BaseModel):
     def pluralize(self):
         return "{}s".format(self.name) if self.plural is None else self.plural
 
+    @classmethod
+    async def get_or_discover(cls, *args, **kwargs) -> "Item":
+        result = await cls.filter(*args, **kwargs).first()
 
-class ItemQuantity(NamedTuple):
-    item: Item
-    quantity: int
+        if result is None:
+            id: int = kwargs.get("id", None)
+            desc_id: int = kwargs.get("desc_id", None)
+
+            return await cls.discover(id=id, desc_id=desc_id)
+
+        return result
+
+    @classmethod
+    async def discover(cls, id: int = None, desc_id: int = None):
+        if id is not None:
+            desc_id = (await item_information(cls.kol, id).parse()).descid
+
+        if desc_id is None:
+            raise ItemNotFoundError("Cannot discover an item without either an id or a desc_id")
+
+        info = await item_description(cls.kol, desc_id).parse()
+        return Item(**{k: v for k, v in info.items() if v is not None})
