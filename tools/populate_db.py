@@ -1,8 +1,12 @@
+import asyncio
+from tortoise import Tortoise
+from tortoise.transactions import atomic
+from tortoise.exceptions import DoesNotExist
 from html import unescape
 from urllib import request
 import re
 
-from pykollib import db, ZapGroup, Item, FoldGroup
+from pykollib import ZapGroup, Item, FoldGroup
 
 mafia_data = "https://svn.code.sf.net/p/kolmafia/code/src/data/"
 EQUIPMENT_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/equipment.txt"
@@ -83,30 +87,30 @@ def get_id_from_duplicate(name: str):
 
     return int(m.group(1))
 
+@atomic()
+async def load_mafia_zapgroups():
+    tasks = []
 
-@db.connection_context()
-def load_mafia_zapgroups():
-    items = []
-
-    for line in request.urlopen(ZAP_GROUPS_FILE):
+    for i, line in enumerate(request.urlopen(ZAP_GROUPS_FILE)):
         line = unescape(line.decode("utf-8"))
         if len(line) < 2 or line[0] == "#":
             continue
 
-        group = ZapGroup().save()
+        group = ZapGroup(index=i)
 
-        for item in Item.select().where(
-            Item.name.in_([i.strip() for i in line.split(",")])
-        ):
-            item.zap_group = group
-            items += [item]
+        await group.save()
 
-    return items
+        items = await Item.filter(name__in=[i.strip() for i in line.split(",")])
 
+        for item in items:
+            item.zapgroup_id = group.id
+            tasks += [item.save()]
 
-@db.connection_context()
-def load_mafia_foldgroups():
-    items = []
+    return await asyncio.gather(*tasks)
+
+@atomic()
+async def load_mafia_foldgroups():
+    tasks = []
 
     for line in request.urlopen(FOLD_GROUPS_FILE):
         line = unescape(line.decode("utf-8"))
@@ -119,19 +123,21 @@ def load_mafia_foldgroups():
         if len(parts) < 2:
             continue
 
-        group = FoldGroup(damage_percentage=int(parts[0])).save()
+        group = FoldGroup(damage_percentage=int(parts[0]))
 
-        for item in Item.select().where(
-            Item.name.in_([i.strip() for i in parts[1].split(",")])
-        ):
-            item.fold_group = group
-            items += [item]
+        await group.save()
 
-    return items
+        items = await Item.filter(name__in=[i.strip() for i in parts[1].split(",")])
 
+        for item in items:
+            item.foldgroup_id = group.id
+            tasks += [item.save()]
 
-def load_mafia_items():
-    items = []
+    return await asyncio.gather(*tasks)
+
+@atomic()
+async def load_mafia_items():
+    tasks = []
 
     for line in request.urlopen(ITEMS_FILE):
         line = unescape(line.decode("utf-8"))
@@ -154,61 +160,60 @@ def load_mafia_items():
             else parts[7]
         )
 
-        items += [
-            Item(
-                id=int(parts[0]),
-                name=parts[1],
-                desc_id=int(parts[2]),
-                image=parts[3],
-                usable=any(
-                    u in use for u in ["usable", "multiple", "reusable", "message"]
-                ),
-                multiusable="multiple" in use,
-                reusable="reusable" in use,
-                combat_usable=any(u in use for u in ["combat", "combat reusable"]),
-                combat_reusable="combat reusable" in use,
-                curse="curse" in use,
-                bounty="bounty" in use,
-                candy=2 if "candy2" in use else 1 if "candy1" in use else 0,
-                hatchling="grow" in use,
-                pokepill="pokepill" in use,
-                food="food" in use,
-                drink="drink" in use,
-                spleen="spleen" in use,
-                hat="hat" in use,
-                weapon="weapon" in use,
-                sixgun="sixgun" in use,
-                offhand="offhand" in use,
-                container="container" in use,
-                shirt="shirt" in use,
-                pants="pants" in use,
-                accessory="accessory" in use,
-                familiar_equipment="familiar" in use,
-                sphere="sphere" in use,
-                sticker="sticker" in use,
-                card="card" in use,
-                folder="folder" in use,
-                bootspur="bootspur" in use,
-                bootskin="bootskin" in use,
-                food_helper="food helper" in use,
-                drink_helper="drink helper" in use,
-                guardian="guardian" in use,
-                quest="q" in access,
-                gift="g" in access,
-                tradeable="t" in access,
-                discardable="d" in access,
-                autosell=int(parts[6]),
-                plural=plural,
-            )
-        ]
+        item = Item(
+            id=int(parts[0]),
+            name=parts[1],
+            desc_id=int(parts[2]),
+            image=parts[3],
+            usable=any(
+                u in use for u in ["usable", "multiple", "reusable", "message"]
+            ),
+            multiusable="multiple" in use,
+            reusable="reusable" in use,
+            combat_usable=any(u in use for u in ["combat", "combat reusable"]),
+            combat_reusable="combat reusable" in use,
+            curse="curse" in use,
+            bounty="bounty" in use,
+            candy=2 if "candy2" in use else 1 if "candy1" in use else 0,
+            hatchling="grow" in use,
+            pokepill="pokepill" in use,
+            food="food" in use,
+            drink="drink" in use,
+            spleen="spleen" in use,
+            hat="hat" in use,
+            weapon="weapon" in use,
+            sixgun="sixgun" in use,
+            offhand="offhand" in use,
+            container="container" in use,
+            shirt="shirt" in use,
+            pants="pants" in use,
+            accessory="accessory" in use,
+            familiar_equipment="familiar" in use,
+            sphere="sphere" in use,
+            sticker="sticker" in use,
+            card="card" in use,
+            folder="folder" in use,
+            bootspur="bootspur" in use,
+            bootskin="bootskin" in use,
+            food_helper="food helper" in use,
+            drink_helper="drink helper" in use,
+            guardian="guardian" in use,
+            quest="q" in access,
+            gift="g" in access,
+            tradeable="t" in access,
+            discardable="d" in access,
+            autosell=int(parts[6]),
+            plural=plural,
+        )
 
-    return items
+        tasks += [item._insert_instance()]
 
+    return await asyncio.gather(*tasks)
 
-@db.connection_context()
-def load_mafia_equipment():
+@atomic()
+async def load_mafia_equipment():
     type = None
-    items = []
+    tasks = []
 
     for line in request.urlopen(EQUIPMENT_FILE):
         line = unescape(line.decode("utf-8"))
@@ -216,19 +221,19 @@ def load_mafia_equipment():
             continue
 
         if line[0] == "#":
-            if line[0].startswith("# Hats"):
+            if line.startswith("# Hats"):
                 type = "hat"
-            elif line[0].startswith("# Pants"):
+            elif line.startswith("# Pants"):
                 type = "pants"
-            elif line[0].startswith("# Shirts"):
+            elif line.startswith("# Shirts"):
                 type = "shirt"
-            elif line[0].startswith("# Weapons"):
+            elif line.startswith("# Weapons"):
                 type = "weapon"
-            elif line[0].startswith("# Off-hand"):
+            elif line.startswith("# Off-hand"):
                 type = "offhand"
-            elif line[0].startswith("# Accessories"):
+            elif line.startswith("# Accessories"):
                 type = "accessory"
-            elif line[0].startswith("# Containers"):
+            elif line.startswith("# Containers"):
                 type = "container"
             continue
 
@@ -238,69 +243,53 @@ def load_mafia_equipment():
             continue
 
         if parts[0][0] == "[" and id_duplicate_pattern.match(parts[0]):
-            item = Item.get_or_none(id=get_id_from_duplicate(parts[0]))
+            items = [await Item.get(id=get_id_from_duplicate(parts[0]))]
         else:
-            item = Item.get_or_none(name=parts[0])
+            items = await Item.filter(name=parts[0])
 
-        if item is None:
+        if len(items) == 0 or (None in items):
             print("Unrecognized equipment name: {}".format(parts[0]))
             continue
 
-        item.power = int(parts[1])
-        item.hat = type == "hat"
-        item.pants = type == "pants"
-        item.shirt = type == "shirt"
-        item.weapon = type == "weapon"
-        item.offhand = type == "offhand"
-        item.accessory = type == "accessory"
-        item.container = type == "container"
+        for item in items:
+            item.power = int(parts[1])
+            item.hat = type == "hat"
+            item.pants = type == "pants"
+            item.shirt = type == "shirt"
+            item.weapon = type == "weapon"
+            item.offhand = type == "offhand"
+            item.accessory = type == "accessory"
+            item.container = type == "container"
 
-        if len(parts) > 3:
-            if item.weapon:
-                item.weapon_type == parts[3]
-            elif item.offhand:
-                item.offhand_type == parts[3]
+            if len(parts) > 3:
+                if item.weapon:
+                    item.weapon_type == parts[3]
+                elif item.offhand:
+                    item.offhand_type == parts[3]
 
-        # Set the requirements
-        reqs = parts[2].strip()
-        if len(reqs) > 0 and reqs != "none":
-            stat = reqs[0:3]
-            required = int(reqs[5:])
-            if stat == "Mus":
-                item.required_muscle = required
-            elif stat == "Mys":
-                item.required_mysticality = required
-            elif stat == "Mox":
-                item.required_moxie = required
-            else:
-                print(
-                    'Unrecognized requirement "{}" for {}'.format(parts[2], item.name)
-                )
+            # Set the requirements
+            reqs = parts[2].strip()
+            if len(reqs) > 0 and reqs != "none":
+                stat = reqs[0:3]
+                required = int(reqs[5:])
+                if stat == "Mus":
+                    item.required_muscle = required
+                elif stat == "Mys":
+                    item.required_mysticality = required
+                elif stat == "Mox":
+                    item.required_moxie = required
+                else:
+                    print(
+                        'Unrecognized requirement "{}" for {}'.format(parts[2], item.name)
+                    )
 
-        items += [item]
+            tasks += [item.save()]
 
-    fields = [
-        Item.power,
-        Item.hat,
-        Item.pants,
-        Item.shirt,
-        Item.weapon,
-        Item.offhand,
-        Item.accessory,
-        Item.container,
-        Item.weapon_type,
-        Item.offhand_type,
-        Item.required_muscle,
-        Item.required_mysticality,
-        Item.required_moxie,
-    ]
+    return await asyncio.gather(*tasks)
 
-    return items, fields
-
-
-@db.connection_context()
-def load_mafia_consumables(consumable_type):
-    items = []
+@atomic()
+async def load_mafia_consumables(consumable_type):
+    tasks = []
 
     for line in request.urlopen("{}{}.txt".format(mafia_data, consumable_type)):
         line = unescape(line.decode("utf-8"))
@@ -313,11 +302,11 @@ def load_mafia_consumables(consumable_type):
         if len(parts) < 8:
             continue
 
-        item = Item.get_or_none(name=parts[0])
+        try:
+            item = await Item.get(name=parts[0])
+        except DoesNotExist:
+            print("No matching item for consumable {}".format(parts[0]))
 
-        if item is None:
-            print("Unrecognized {} name: {}".format(consumable_type, parts[0]))
-            continue
 
         space = int(parts[1])
         if consumable_type == "fullness":
@@ -353,57 +342,37 @@ def load_mafia_consumables(consumable_type):
             item.gained_moxie_min = min
             item.gained_moxie_max = max
 
-        items += [item]
+        tasks += [item.save()]
 
-    fields = [
-        Item.fullness,
-        Item.inebriety,
-        Item.spleenhit,
-        Item.level_required,
-        Item.quality,
-        Item.gained_adventures_min,
-        Item.gained_adventures_max,
-        Item.gained_muscle_min,
-        Item.gained_muscle_max,
-        Item.gained_mysticality_min,
-        Item.gained_mysticality_max,
-        Item.gained_moxie_min,
-        Item.gained_moxie_max,
-    ]
-
-    return items, fields
+    return await asyncio.gather(*tasks)
 
 
-def populate():
-    db.init("./pykollib/pykollib.db")
-    db.create_tables([ZapGroup, FoldGroup, Item])
+async def populate():
+    await Tortoise.init(
+        db_url="sqlite://pykollib/pykollib.db",
+        modules={'models': ['pykollib.ZapGroup', "pykollib.FoldGroup", "pykollib.Item"]}
+    )
 
-    items = load_mafia_items()
+    await Tortoise.generate_schemas(safe=True)
 
-    with db.atomic():
-        Item.bulk_create(items, batch_size=100)
+    print("Inserting items")
+    await load_mafia_items()
+    print("Updating equipable items")
+    await load_mafia_equipment()
 
-    equipment, fields = load_mafia_equipment()
-
-    with db.atomic():
-        Item.bulk_update(equipment, fields, batch_size=100)
-
+    print("Updating consumable items")
     for c in ["fullness", "inebriety", "spleenhit"]:
-        consumables, fields = load_mafia_consumables(c)
+        await load_mafia_consumables(c)
 
-        with db.atomic():
-            Item.bulk_update(consumables, fields, batch_size=100)
+    print("Updating zappable items")
+    await load_mafia_zapgroups()
+    print("Updating foldable items")
+    await load_mafia_foldgroups()
 
-    zapgroups = load_mafia_zapgroups()
-
-    with db.atomic():
-        Item.bulk_update(zapgroups, [Item.zap_group], batch_size=100)
-
-    foldgroups = load_mafia_foldgroups()
-
-    with db.atomic():
-        Item.bulk_update(foldgroups, [Item.fold_group], batch_size=100)
+    await Tortoise.close_connections()
 
 
 if __name__ == "__main__":
-    populate()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(populate())
+    loop.close()
