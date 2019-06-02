@@ -225,7 +225,7 @@ end: <code class="xref py py-class docutils literal notranslate"><span class="pr
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>items=[]</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.autosell_items.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> {items: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> {items: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}],
 meat_gained: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}</p>
 </dd>
@@ -242,7 +242,7 @@ meat_gained: <code class="xref py py-class docutils literal notranslate"><span c
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cafe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Cafe</span></code>) – Cafe to use</p></li>
-<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>) – Item to consume</p></li>
+<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}) – Item to consume</p></li>
 </ul>
 </dd>
 </dl>
@@ -282,7 +282,7 @@ mp: <code class="xref py py-class docutils literal notranslate"><span class="pre
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.cafe_menu.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -620,7 +620,7 @@ level: <code class="xref py py-class docutils literal notranslate"><span class="
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_rumpus_item.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
 </dd>
 </dl>
@@ -745,7 +745,7 @@ hp: <code class="xref py py-class docutils literal notranslate"><span class="pre
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_crimbotree.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
 </dd>
 </dl>
@@ -762,7 +762,7 @@ quantity: <code class="xref py py-class docutils literal notranslate"><span clas
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_klaw.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
 </dd>
 </dl>
@@ -779,7 +779,7 @@ quantity: <code class="xref py py-class docutils literal notranslate"><span clas
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.clan_vip_lookingglass.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
 </dd>
 </dl>
@@ -869,7 +869,7 @@ skill the user wishes to use.</p>
 <li><p><strong>action</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code>) – The Action to carry out in this combat round</p></li>
 <li><p><strong>skill</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Skill</span></code> {id: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
 buff: <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>}]) – If the action is Action.Skill, specifies the skill to use</p></li>
-<li><p><strong>item</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – If the action is Action.Item, either specifies an item to use, or an array of
+<li><p><strong>item</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – If the action is Action.Item, either specifies an item to use, or an array of
 items to funksling</p></li>
 </ul>
 </dd>
@@ -884,7 +884,7 @@ items to funksling</p></li>
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.craft.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> {created: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> {created: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}],
 explosion: <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>}</p>
 </dd>
@@ -916,7 +916,7 @@ explosion: <code class="xref py py-class docutils literal notranslate"><span cla
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p></li>
-<li><p><strong>items</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<li><p><strong>items</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]) – List of items and their quantities to add to the case</p></li>
 </ul>
 </dd>
@@ -957,7 +957,7 @@ mp: <code class="xref py py-class docutils literal notranslate"><span class="pre
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p></li>
-<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>) – Consumable to eat</p></li>
+<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}) – Consumable to eat</p></li>
 </ul>
 </dd>
 </dl>
@@ -1008,16 +1008,16 @@ For accessories, two possibilities are present.  If equipping each slot seperate
 <em class="property">classmethod </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.equipment.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Outfit</span></code> {hat: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>],
-back: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>],
-shirt: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>],
-weapon: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>],
-offhand: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>],
-pants: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>],
-acc1: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>],
-acc2: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>],
-acc3: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>],
-familiar: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>]}</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Outfit</span></code> {hat: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}],
+back: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}],
+shirt: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}],
+weapon: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}],
+offhand: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}],
+pants: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}],
+acc1: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}],
+acc2: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}],
+acc3: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}],
+familiar: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}]}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1027,7 +1027,7 @@ familiar: <code class="xref py py-data docutils literal notranslate"><span class
 <em class="property">static </em><code class="descname">slot_to_item</code><span class="sig-paren">(</span><em>soup</em>, <em>link</em>, <em>index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.equipment.slot_to_item" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1057,7 +1057,7 @@ familiar: <code class="xref py py-data docutils literal notranslate"><span class
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.hermit_menu.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
 </dd>
 </dl>
@@ -1073,7 +1073,7 @@ quantity: <code class="xref py py-class docutils literal notranslate"><span clas
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.hermit_trade.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
 </dd>
 </dl>
@@ -1108,7 +1108,7 @@ challenge: <code class="xref py py-data docutils literal notranslate"><span clas
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>json</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.inventory.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
 </dd>
 </dl>
@@ -1119,6 +1119,17 @@ quantity: <code class="xref py py-class docutils literal notranslate"><span clas
 <code class="descname">returns_json</code><em class="property"> = True</em><a class="headerlink" href="#pykollib.request.inventory.returns_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of items in the user’s inventory.</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pykollib.request.item_description">
+<em class="property">class </em><code class="descclassname">pykollib.request.</code><code class="descname">item_description</code><span class="sig-paren">(</span><em>session</em>, <em>descid</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the description of an item and then parses various information from the response.</p>
+<dl class="staticmethod">
+<dt id="pykollib.request.item_description.parser">
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.item_description.parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -1208,7 +1219,7 @@ user_id: <code class="xref py py-class docutils literal notranslate"><span class
 username: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>,
 date: <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>,
 text: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>,
-items: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+items: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}],
 meat: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
 type: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>}]</p>
@@ -1279,7 +1290,7 @@ prices with their limit amount per day.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p></li>
-<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>) – Item for which to get prices</p></li>
+<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}) – Item for which to get prices</p></li>
 </ul>
 </dd>
 </dl>
@@ -1339,15 +1350,15 @@ of results is to be returned first.</p></li>
 </dl>
 <dl class="staticmethod">
 <dt id="pykollib.request.mall_search.parser">
-<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.mall_search.parser" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>url</em>, <em>just_items=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.mall_search.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Listing</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Listing</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session},
 price: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
 store_id: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
 store_name: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>,
 stock: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
-limit: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
+limit: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1374,7 +1385,7 @@ limit: <code class="xref py py-class docutils literal notranslate"><span class="
 username: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>,
 user_id: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
-item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session},
 meat: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
 </dd>
 </dl>
@@ -1391,7 +1402,7 @@ meat: <code class="xref py py-class docutils literal notranslate"><span class="p
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p></li>
 <li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Store</span></code>) – NPC store to buy from</p></li>
-<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>) – Item to buy</p></li>
+<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}) – Item to buy</p></li>
 <li><p><strong>quantity</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Quantity of said item to buy</p></li>
 </ul>
 </dd>
@@ -1401,7 +1412,7 @@ meat: <code class="xref py py-class docutils literal notranslate"><span class="p
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.npc_buy.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> {items: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> {items: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}],
 meat_gained: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}</p>
 </dd>
@@ -1454,7 +1465,7 @@ fame: <code class="xref py py-data docutils literal notranslate"><span class="pr
 <em class="property">static </em><code class="descname">parser</code><span class="sig-paren">(</span><em>html</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.pulverize.parser" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
 </dd>
 </dl>
@@ -1528,7 +1539,7 @@ quantity: <code class="xref py py-class docutils literal notranslate"><span clas
 <dd><p>Searches backoffice.php for item name, quantity, price, limit, and ID.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Listing</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Listing</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session},
 order: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
 price: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
@@ -1573,7 +1584,7 @@ and figuring out how many of the item there are.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Active session</p></li>
-<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>) – Item to remove</p></li>
+<li><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code> {kol: pykollib.Session}) – Item to remove</p></li>
 <li><p><strong>quantity</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Amount of that item to remove</p></li>
 </ul>
 </dd>
@@ -1642,7 +1653,7 @@ and figuring out how many of the item there are.</p>
 <em class="property">static </em><code class="descname">parse_trade_items</code><span class="sig-paren">(</span><em>html</em><span class="sig-paren">)</span><a class="headerlink" href="#pykollib.request.trade_pending.parse_trade_items" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}]</p>
 </dd>
 </dl>
@@ -1658,9 +1669,9 @@ quantity: <code class="xref py py-class docutils literal notranslate"><span clas
 status: <code class="xref py py-class docutils literal notranslate"><span class="pre">Status</span></code>,
 user_id: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
 username: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>,
-incoming_items: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+incoming_items: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}],
-outgoing_items: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: <code class="xref py py-class docutils literal notranslate"><span class="pre">Item</span></code>,
+outgoing_items: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ItemQuantity</span></code> {item: Item,
 quantity: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>}],
 incoming_meat: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
 outgoing_meat: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>,
