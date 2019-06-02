@@ -1,7 +1,6 @@
-from peewee import IntegerField
+from .Model import Model
+from tortoise.fields import IntField
 
-from .database import BaseModel
 
-
-class FoldGroup(BaseModel):
-    damage_percentage = IntegerField()
+class FoldGroup(Model):
+    damage_percentage = IntField()

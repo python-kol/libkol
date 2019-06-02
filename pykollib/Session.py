@@ -2,11 +2,12 @@ from os import path
 from time import time
 from typing import Any, Callable, Dict, Optional, Union
 from urllib.parse import urlparse
+from tortoise import Tortoise
 
 from aiohttp import ClientResponse, ClientSession
 
 from . import Clan, Kmail
-from .database import db, db_kol
+from .Model import Model
 from .Location import Location
 from .request import charpane, homepage, login, logout, main, player_profile, status
 from .util.decorators import logged_in
@@ -25,22 +26,21 @@ class Session:
         self.pwd = None
         self.clan = None
         self.kmail = Kmail.Kmail(self)
-        self._db_init(db_file)
+        self.db_file = db_file or path.join(path.dirname(__file__), "pykollib.db")
 
     async def __aenter__(self) -> "Session":
+        await Tortoise.init(
+            db_url="sqlite://{}".format(self.db_file),
+            modules={'models': ['FoldGroup', 'Item', 'ZapGroup']}
+        )
+        Model.kol = self
         return self
 
     async def __aexit__(self, exc_type, exc, tb) -> None:
         if self.is_connected:
             await self.logout()
         await self.client.close()
-
-    def _db_init(self, db_file=None):
-        if db_file is None:
-            db_file = path.join(path.dirname(__file__), "pykollib.db")
-
-        db.init(db_file)
-        db_kol.init(self)
+        await Tortoise.close_connections()
 
     async def request(
         self,

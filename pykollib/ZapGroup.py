@@ -1,5 +1,6 @@
-from .database import BaseModel
+from .Model import Model
+from tortoise.fields import IntField
 
 
-class ZapGroup(BaseModel):
-    pass
+class ZapGroup(Model):
+    index = IntField()
