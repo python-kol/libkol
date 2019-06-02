@@ -22,7 +22,7 @@ class drink(Request):
         )
 
     @staticmethod
-    def parser(html: str, **kwargs) -> parsing.ResourceGain:
+    async def parser(html: str, **kwargs) -> parsing.ResourceGain:
         if "You're way too drunk already." in html:
             raise UserIsDrunkError("You are too drunk to drink more booze.")
 

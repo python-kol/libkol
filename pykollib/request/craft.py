@@ -11,7 +11,8 @@ from ..Error import (
     RecipeNotFoundError,
     SkillNotFoundError,
 )
-from ..Item import Item, ItemQuantity
+from ..types import ItemQuantity
+from ..Item import Item
 from ..util import parsing
 from .request import Request
 
@@ -48,7 +49,7 @@ class craft(Request):
         self.request = session.request("craft.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, url: URL, **kwargs) -> Response:
+    async def parser(html: str, url: URL, **kwargs) -> Response:
         mode = Mode(url.query["mode"])
 
         if "<td>Those two items don't combine to make" in html:
@@ -74,4 +75,4 @@ class craft(Request):
 
         explosion = "Smoke begins to pour from the head of your" in html
 
-        return Response(parsing.item(html), explosion)
+        return Response(await parsing.item(html), explosion)

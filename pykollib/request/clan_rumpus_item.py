@@ -3,11 +3,12 @@ from typing import List
 
 import pykollib
 
-from ..Item import ItemQuantity
+from pykollib import types
 from ..util import parsing
 from .clan_rumpus import Furniture
 from .request import Request
 
+ItemQuantity = types.ItemQuantity
 
 class ItemFurniture(Enum):
     SodaMachine = Furniture.SodaMachine
@@ -27,5 +28,5 @@ class clan_rumpus_item(Request):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[ItemQuantity]:
-        return parsing.item(html)
+    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
+        return await parsing.item(html)

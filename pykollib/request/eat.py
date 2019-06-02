@@ -22,7 +22,7 @@ class eat(Request):
         )
 
     @staticmethod
-    def parser(html: str, **kwargs) -> parsing.ResourceGain:
+    async def parser(html: str, **kwargs) -> parsing.ResourceGain:
         if "You're way too drunk already." in html:
             raise UserIsDrunkError("You're too full to eat that.")
 

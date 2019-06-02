@@ -4,8 +4,10 @@ from typing import List, NamedTuple
 
 import pykollib
 
-from ..Item import Item, ItemQuantity
+from pykollib import types
 from .request import Request
+
+ItemQuantity = types.ItemQuantity
 
 response_pattern = re.compile(r"You sell your (.*?) to (?:.*?) for ([0-9,]+) Meat.")
 
@@ -28,7 +30,7 @@ class autosell_items(Request):
     def __init__(
         self,
         session: "pykollib.Session",
-        items: List[Item],
+        items: List["pykollib.Item"],
         quantity: int = 1,
         all: bool = False,
         keep_one: bool = False,
@@ -49,7 +51,7 @@ class autosell_items(Request):
         self.request = session.request("sellstuff_ugly.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, items: List[Item] = [], **kwargs) -> Response:
+    async def parser(html: str, items: List["pykollib.Item"] = [], **kwargs) -> Response:
         response_match = response_pattern.search(html)
 
         if response_match is None:

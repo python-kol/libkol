@@ -17,7 +17,7 @@ class item_multi_use(Request):
         self.request = session.request("multiuse.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> parsing.ResourceGain:
+    async def parser(html: str, **kwargs) -> parsing.ResourceGain:
         if (
             "<table><tr><td>You don't have that many of that item.</td></tr></table>"
             in html

@@ -10,6 +10,6 @@ class canadia_mindcontrol(Request):
         self.request = session.request("canadia.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> None:
+    async def parser(html: str, **kwargs) -> None:
         if len(html) == 0:
             raise InvalidLocationError("You cannot use the Mind Control Device yet.")

@@ -34,29 +34,29 @@ class equipment(Request):
         self.request = session.request("inventory.php", params=params)
 
     @staticmethod
-    def slot_to_item(soup: Tag, link: str, index: int = 0) -> Optional[Item]:
+    async def slot_to_item(soup: Tag, link: str, index: int = 0) -> Optional[Item]:
         slot_title = soup.find_all("a", href="#{}".format(link))
 
         if len(slot_title) == 0:
             return None
 
         descid = slot_title[index].parent.next_sibling.img["rel"]
-        return Item.get_or_none(desc_id=descid)
+        return await Item.get_or_discover(desc_id=descid)
 
     @classmethod
-    def parser(cls, html: str, **kwargs) -> Outfit:
+    async def parser(cls, html: str, **kwargs) -> Outfit:
         soup = BeautifulSoup(html, "html.parser")
         current = soup.find(id="curequip")
 
         return Outfit(
-            hat=cls.slot_to_item(current, "Hats"),
-            back=cls.slot_to_item(current, "Back"),
-            shirt=cls.slot_to_item(current, "Shirts"),
-            weapon=cls.slot_to_item(current, "Weapons"),
-            offhand=cls.slot_to_item(current, "Off-Hand"),
-            pants=cls.slot_to_item(current, "Pants"),
-            acc1=cls.slot_to_item(current, "Accessories", 0),
-            acc2=cls.slot_to_item(current, "Accessories", 1),
-            acc3=cls.slot_to_item(current, "Accessories", 2),
-            familiar=cls.slot_to_item(current, "Familiar"),
+            hat=(await cls.slot_to_item(current, "Hats")),
+            back=(await cls.slot_to_item(current, "Back")),
+            shirt=(await cls.slot_to_item(current, "Shirts")),
+            weapon=(await cls.slot_to_item(current, "Weapons")),
+            offhand=(await cls.slot_to_item(current, "Off-Hand")),
+            pants=(await cls.slot_to_item(current, "Pants")),
+            acc1=(await cls.slot_to_item(current, "Accessories", 0)),
+            acc2=(await cls.slot_to_item(current, "Accessories", 1)),
+            acc3=(await cls.slot_to_item(current, "Accessories", 2)),
+            familiar=(await cls.slot_to_item(current, "Familiar")),
         )

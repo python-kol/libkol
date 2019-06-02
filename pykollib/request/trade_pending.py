@@ -5,7 +5,8 @@ from typing import List, NamedTuple
 import pykollib
 
 from ..Error import UnknownError
-from ..Item import Item, ItemQuantity
+from ..types import ItemQuantity
+from ..Item import Item
 from .request import Request
 
 item_pattern = re.compile(
@@ -67,7 +68,7 @@ class trade_pending(Request):
         self.request = session.request("makeoffer.php")
 
     @staticmethod
-    def parse_trade_items(html: str) -> List[ItemQuantity]:
+    async def parse_trade_items(html: str) -> List[ItemQuantity]:
         if html is None:
             return []
 
@@ -75,7 +76,7 @@ class trade_pending(Request):
             ItemQuantity(item, quantity)
             for item, quantity in (
                 (
-                    Item.get_or_none(desc_id=int(i.group("itemdescid"))),
+                    (await Item.get_or_discover(desc_id=int(i.group("itemdescid")))),
                     int(i.group("quantity")),
                 )
                 for i in item_pattern.finditer(html)
@@ -84,7 +85,7 @@ class trade_pending(Request):
         ]
 
     @classmethod
-    def parser(cls, html: str, **kwargs) -> List[Trade]:
+    async def parser(cls, html: str, **kwargs) -> List[Trade]:
         """
         Parse each different kind of trade.
         """
@@ -116,8 +117,8 @@ class trade_pending(Request):
                         status=status,
                         user_id=int(results["playerid"]),
                         username=results["playername"],
-                        incoming_items=cls.parse_trade_items(results["incomingitems"]),
-                        outgoing_items=cls.parse_trade_items(results["outgoingitems"]),
+                        incoming_items=(await cls.parse_trade_items(results["incomingitems"])),
+                        outgoing_items=(await cls.parse_trade_items(results["outgoingitems"])),
                         incoming_meat=(
                             int(results["incomingmeat"])
                             if results["incomingmeat"]

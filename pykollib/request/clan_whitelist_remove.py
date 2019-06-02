@@ -11,5 +11,5 @@ class clan_whitelist_remove(Request):
         self.request = session.request("clan_whitelist.php", data=payload, pwd=True)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         return "<td>Whitelist updated.</td>" in html

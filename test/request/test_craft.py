@@ -10,25 +10,28 @@ class CraftTestCase(TestCase):
     request = "craft"
 
     def test_craft_combine_meatpaste_error(self):
-        url = URL.build(query={"mode": "combine"})
-
-        with self.open_test_data("combine_meatpaste_error") as file:
+        async def run_test(file):
+            url = URL.build(query={"mode": "combine"})
             try:
-                craft.parser(file.read(), url=url)
+                await craft.parser(file.read(), url=url)
             except ItemNotFoundError:
                 assert True
                 return
 
             assert False
 
-    def test_craft_cook_recipe_error(self):
-        url = URL.build(query={"mode": "cook"})
+        self.run_async("combine_meatpaste_error", run_test)
 
-        with self.open_test_data("cook_recipe_error") as file:
+
+    def test_craft_cook_recipe_error(self):
+        async def run_test(file):
+            url = URL.build(query={"mode": "cook"})
             try:
-                craft.parser(file.read(), url=url)
+                await craft.parser(file.read(), url=url)
             except RecipeNotFoundError:
                 assert True
                 return
 
             assert False
+
+        self.run_async("cook_recipe_error", run_test)

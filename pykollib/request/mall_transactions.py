@@ -37,7 +37,7 @@ class mall_transactions(Request):
         self.request = session.request("backoffice.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[Transaction]:
+    async def parser(html: str, **kwargs) -> List[Transaction]:
         soup = BeautifulSoup(html, "html.parser")
 
         container = soup.find("span", class_="small")
@@ -52,7 +52,7 @@ class mall_transactions(Request):
             if match is None:
                 raise UnknownError("Parsing transaction failed")
 
-            item = Item.get_or_none(name=match.group(2))
+            item = await Item.get_or_discover(name=match.group(2))
 
             if item is None:
                 print("Item not recognised: {}".format(match.group(2)))

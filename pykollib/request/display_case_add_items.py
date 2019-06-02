@@ -2,7 +2,7 @@ from typing import List
 
 import pykollib
 
-from ..Item import ItemQuantity
+from ..types import ItemQuantity
 from .request import Request
 
 

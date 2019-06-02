@@ -52,7 +52,7 @@ class player_search(Request):
         self.request = session.request("searchplayer.php", data=data)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[Result]:
+    async def parser(html: str, **kwargs) -> List[Result]:
         soup = BeautifulSoup(html, "html.parser")
 
         table = soup.find("table")

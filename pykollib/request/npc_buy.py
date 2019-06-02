@@ -9,7 +9,8 @@ from ..Error import (
     UnknownError,
     WrongKindOfItemError,
 )
-from ..Item import Item, ItemQuantity
+from ..types import ItemQuantity
+from ..Item import Item
 from ..util import parsing
 from .request import Request
 
@@ -62,7 +63,7 @@ class npc_buy(Request):
         self.request = session.request("store.php", data=data)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> Response:
+    async def parser(html: str, **kwargs) -> Response:
         if len(html) == 0:
             raise InvalidLocationError("You cannot visit that store yet.")
 
@@ -80,7 +81,7 @@ class npc_buy(Request):
                 "You do not have enough meat to purchase the item(s)."
             )
 
-        items = parsing.item(html)
+        items = await parsing.item(html)
 
         if len(items) == 0:
             raise UnknownError("Unknown error. No items received.")

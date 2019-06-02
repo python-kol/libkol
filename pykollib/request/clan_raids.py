@@ -24,7 +24,7 @@ class clan_raids(Request):
         return (comment[0].string[:-1].lower(), int(comment[1].string.split(":")[-1]))
 
     @classmethod
-    def parser(cls, html: str, url: URL, **kwargs) -> List[Dict[str, Any]]:
+    async def parser(cls, html: str, url: URL, **kwargs) -> List[Dict[str, Any]]:
         if (
             "Your clan has a basement, but you are not allowed to enter clan dungeons, "
             "so this is as far as you're going, Gilbert."
