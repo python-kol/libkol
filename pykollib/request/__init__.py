@@ -9,7 +9,8 @@ from .canadia_gym import canadia_gym
 from .canadia_mindcontrol import canadia_mindcontrol
 from .charpane import charpane
 from .chat_channel import chat_channel
-from .chat_messages_get import chat_messages_get
+from .chat_receive import chat_receive
+from .chat_send import chat_send
 from .choice import choice
 from .clan_accepting_applications import clan_accepting_applications
 from .clan_apply import clan_apply
@@ -42,12 +43,14 @@ from .closet_meat_add import closet_meat_add
 from .closet_meat_remove import closet_meat_remove
 from .combat import combat
 from .craft import craft
+from .craft_paste import craft_paste
 from .curse import curse
 from .display_case_add_items import display_case_add_items
 from .drink import drink
 from .eat import eat
 from .equip import equip
 from .equipment import equipment
+from .guild_malus import guild_malus
 from .guild_train import guild_train
 from .hermit_menu import hermit_menu
 from .hermit_trade import hermit_trade
@@ -64,6 +67,7 @@ from .kmail_send import kmail_send
 from .login import login
 from .logout import logout
 from .main import main
+from .mall_purchase import mall_purchase
 from .mall_search import mall_search
 from .mall_search_price import mall_search_price
 from .mall_transactions import mall_transactions
@@ -100,7 +104,8 @@ __all__ = [
     "canadia_mindcontrol",
     "charpane",
     "chat_channel",
-    "chat_messages_get",
+    "chat_receive",
+    "chat_send",
     "choice",
     "clan_accepting_applications",
     "clan_apply",
@@ -133,12 +138,14 @@ __all__ = [
     "closet_meat_remove",
     "combat",
     "craft",
+    "craft_paste",
     "curse",
     "display_case_add_items",
     "drink",
     "eat",
     "equip",
     "equipment",
+    "guild_malus",
     "guild_train",
     "hermit_menu",
     "hermit_trade",
@@ -155,6 +162,7 @@ __all__ = [
     "login",
     "logout",
     "main",
+    "mall_purchase",
     "mall_search_price",
     "mall_search",
     "mall_transactions",

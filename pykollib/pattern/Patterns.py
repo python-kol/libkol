@@ -73,8 +73,6 @@ patterns = {
     "gainDrunk": r"You gain ([0-9]+) Drunkenness",
     "gainAdventures": r"You gain ([0-9,]+) Adventures",
     "gainEffect": r"<td valign=center class=effect>You acquire an effect: <b>(.*?)</b><br>\(duration: ([0-9,]+) Adventures\)</td>",
-    # Meatpasting patterns.
-    "noMeatForMeatpasting": r"<td>You don't have enough Meat to make that many\.</td>",
     # Store patterns.
     "storeInventory": r'<tr class="deets" rel="([0-9]+)" after="([0-9]+)">(.*?)<b>(.*?)</b></td><td valign="center" align="center">([0-9]+)</td(.*?)name="price\[([0-9]+)\]" value="([0-9,]+)"(.*?)name="limit\[[0-9]+\]" value="([0-9]+)"(.*?)cheapest: ([0-9]+)</span>',
     # Adventure patterns.
@@ -93,11 +91,6 @@ patterns = {
     "mallItemSearchDetails": r'<a[^<>]*href="mallstore\.php\?whichstore=(?P<storeId>[0-9]+)&searchitem=(?P<itemId>[0-9]+)&searchprice=(?P<price>[0-9]+)"><b>(?P<storeName>.*?)<\/b><\/a>[^<>]*<\/td><td[^<>]*>(?P<quantity>[0-9,]+)<\/td><td[^<>]*>(?:&nbsp;)*(?P<limit>[0-9,]*)[^<>]*<\/td>',
     "nextLink": r"\[<a [^>]*start=([0-9]+)[^>]*>next</a>\]",
     "mallItemHeader": r"<tr class=.blackabove. id=.item_([0-9]+)[^0-9]>",
-    # Mall purchase patterns.
-    "cantAffordItem": r"<td>You can't afford that item\.<\/td>",
-    "mallNoItemAtThatPrice": r"<td>This store doesn't have that item at that price\.",
-    "cantBuyItemIgnoreList": r"<td>That player will not sell to you, because you are on his or her ignore list\.<\/td>",
-    "mallHitLimit": r"You may only buy ([0-9,]+) of this item per day from this store\. You have already purchased ([0-9,]+) in the last 24 hours\.",
     # Canadia patterns.
     "noAdvInstitue": r">You don't have that many Adventures\.  Take off, eh\?<",
     "invalidAdvInstitute": r">That doesn't make any sense, you hoser\.<",
@@ -111,11 +104,6 @@ patterns = {
     "clanWhitelistMember": r"""<tr><td><input type=hidden name=(?:player[0-9]+|who) value=[0-9]+><a href='showplayer\.php\?who=(?P<userId>[0-9]+)' class=nounder><b>(?P<userName>[^<>]+)</b> \(#[0-9]+\)<\/a><\/td><td>(?:<select.*?<option value=(?P<clanRankId>[0-9]+) selected>.*?<\/select>|(?P<clanRankName>[^<>]+))<\/td><td>(?:<input type=text class=text size=[0-9]+ name=title[0-9]+ value=")?(?P<clanTitle>[^<>]*)(?:">)?<\/td>""",
     # Search player Patterns
     "searchPlayers": r'showplayer\.php\?who=([0-9]+)">([^<]*)<\/a>',
-    # Nash Crosby's Still Patterns
-    "wrongStillProfession": r"<td>No still for you\.<\/td>",
-    "invalidStillItem": r"<td>Nash Crosby doesn\'t want anything to do with that item\.<\/td>",
-    "stillItemNotFound": r"<td>You don\'t have that many of that item, Chief.<\/td>",
-    "stillMaxLimit": r"<td>The still can\'t handle that much action today\.<\/td>",
     # Bounty Hunter Hunter patterns.
     "easyBountyAvailable": r'<input type=hidden name=action value=takelow><input class=button type=submit value="I\'ll Get These">',
     "hardBountyAvailable": r'<input type=hidden name=action value=takehigh><input class=button type=submit value="I\'ll Get These">',

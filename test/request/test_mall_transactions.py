@@ -8,7 +8,7 @@ class MallTransactionsTestCase(TestCase):
 
     def test_mall_transactions_short(self):
         async def run_test(file):
-            logs = await mall_transactions.parser(file)
+            logs = await mall_transactions.parser(file.read())
             self.assertEqual(len(logs), 24)
 
             # Ensure we got the one with the internal brackets
