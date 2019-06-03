@@ -13,6 +13,7 @@ from .chat_messages_get import chat_messages_get
 from .choice import choice
 from .clan_accepting_applications import clan_accepting_applications
 from .clan_apply import clan_apply
+from .clan_log import clan_log
 from .clan_member_boot import clan_member_boot
 from .clan_raid_log import clan_raid_log
 from .clan_raids import clan_raids
@@ -103,6 +104,7 @@ __all__ = [
     "choice",
     "clan_accepting_applications",
     "clan_apply",
+    "clan_log",
     "clan_member_boot",
     "clan_raid_log",
     "clan_raids_previous",
