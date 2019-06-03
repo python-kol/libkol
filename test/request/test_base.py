@@ -52,7 +52,7 @@ class TestCase(unittest.TestCase):
         async def run_test():
             await Tortoise.init(
                 db_url="sqlite://{}".format(self.db_file),
-                modules={'models': ['pykollib.FoldGroup', 'pykollib.Item', 'pykollib.ZapGroup']}
+                modules={'models': ['pykollib.FoldGroup', 'pykollib.Item', 'pykollib.ZapGroup', 'pykollib.Store']}
             )
 
             Model.kol = session

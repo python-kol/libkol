@@ -6,5 +6,6 @@ from . import types
 from .Kmail import Kmail
 from .Session import Session
 from .ZapGroup import ZapGroup
+from .Store import Store
 
-__all__ = ["Clan", "Error", "Session", "Kmail", "Item", "types", "FoldGroup", "ZapGroup"]
+__all__ = ["Clan", "Error", "Session", "Kmail", "Item", "types", "FoldGroup", "ZapGroup", "Store"]

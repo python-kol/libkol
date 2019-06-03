@@ -62,6 +62,11 @@ class Item(Model):
     foldgroup = ForeignKeyField("models.FoldGroup", related_name="items", null=True)
     zapgroup = ForeignKeyField("models.ZapGroup", related_name="items", null=True)
 
+    # NPC Store Info
+    store_row = IntField(null=True)
+    store_price = IntField(null=True)
+    store = ForeignKeyField("models.Store", related_name="items", null=True)
+
     # Flags
     hatchling = BooleanField(default=False)
     pokepill = BooleanField(default=False)

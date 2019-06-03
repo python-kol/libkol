@@ -31,7 +31,7 @@ class Session:
     async def __aenter__(self) -> "Session":
         await Tortoise.init(
             db_url="sqlite://{}".format(self.db_file),
-            modules={'models': ['FoldGroup', 'Item', 'ZapGroup']}
+            modules={'models': ["FoldGroup", "Item", "ZapGroup", "Store"]}
         )
         Model.kol = self
         return self

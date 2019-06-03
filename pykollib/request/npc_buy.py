@@ -13,27 +13,7 @@ from ..types import ItemQuantity
 from ..Item import Item
 from ..util import parsing
 from .request import Request
-
-
-class Store(Enum):
-    Smacketeria = "3"
-    GoudasGrimoireAndGrocery = "2"
-    ShadowyStore = "1"
-    Laboratory = "g"
-    BlackMarket = "l"
-    WhiteCitadel = "w"
-    Bakery = "4"
-    GeneralStore = "5"
-    LittleCanadiaJewelers = "j"
-    GnoMart = "n"
-    Nervewreckers = "y"
-    ArmoryAndLeggery = "z"
-    BugbearBakery = "b"
-    Market = "m"
-    Meatsmith = "s"
-    BartelbysBargainBookstore = "r"
-    HippyProduceStand = "h"
-    UnclePsAntiques = "p"
+from ..Store import Store
 
 
 class Response(NamedTuple):
@@ -53,14 +33,27 @@ class npc_buy(Request):
     def __init__(
         self, session: "pykollib.Session", store: Store, item: Item, quantity: int = 1
     ) -> None:
-        data = {
-            "phash": session.pwd,
-            "whichstore": store.value,
-            "buying": "Yep.",
-            "howmany": quantity,
-            "whichitem": item,
+        if item.store_id != store.id:
+            raise WrongKindOfItemError("This item cannot be purchased in that store")
+
+        # Gift shop is handled differently
+        if store.slug == "town_giftshop.php":
+            params = {"action": "buy", "howmany": quantity, "whichitem": item.id}
+            self.request = session.request("town_giftshop.php", pwd=True, params=params)
+            return
+
+        params = {
+            "whichshop": store.slug,
+            "action": "buyitem",
+            "quantity": quantity,
         }
-        self.request = session.request("store.php", data=data)
+
+        if item.store_row:
+            params["whichrow"] = item.store_row
+        else:
+            params["whichitem"] = item.id
+
+        self.request = session.request("shop.php", pwd=True, params=params)
 
     @staticmethod
     async def parser(html: str, **kwargs) -> Response:
@@ -73,6 +66,7 @@ class npc_buy(Request):
         if (
             "This store doesn't sell that item" in html
             or "Invalid item selected" in html
+            or "<td>That isn't a thing that's sold here.</td>" in html
         ):
             raise WrongKindOfItemError("This store doesn't carry that item.")
 
