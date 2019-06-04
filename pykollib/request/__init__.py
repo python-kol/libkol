@@ -89,6 +89,7 @@ from .trade_propose import trade_propose
 from .trade_respond import trade_respond
 from .trade_response_accept import trade_response_accept
 from .trade_response_decline import trade_response_decline
+from .trophy import trophy
 from .uneffect import uneffect
 from .unequip import unequip
 
@@ -184,6 +185,7 @@ __all__ = [
     "trade_respond",
     "trade_response_accept",
     "trade_response_decline",
+    "trophy",
     "uneffect",
     "unequip",
 ]

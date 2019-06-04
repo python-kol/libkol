@@ -7,5 +7,6 @@ from .Kmail import Kmail
 from .Session import Session
 from .ZapGroup import ZapGroup
 from .Store import Store
+from .Trophy import Trophy
 
-__all__ = ["Clan", "Error", "Session", "Kmail", "Item", "types", "FoldGroup", "ZapGroup", "Store"]
+__all__ = ["Clan", "Error", "Session", "Kmail", "Item", "types", "FoldGroup", "ZapGroup", "Store", "Trophy"]

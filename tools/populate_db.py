@@ -5,9 +5,10 @@ from tortoise.exceptions import DoesNotExist
 from html import unescape
 from aiohttp import ClientSession, ClientResponse
 import re
+import json
 from typing import Any, Coroutine, List
 
-from pykollib import ZapGroup, Item, FoldGroup, Store
+from pykollib import ZapGroup, Item, FoldGroup, Store, Trophy
 
 async def load_mafia_data(session: ClientSession, key: str) -> ClientResponse:
     response = await session.get("https://svn.code.sf.net/p/kolmafia/code/src/data/{}.txt".format(key))
@@ -326,11 +327,16 @@ async def load_npcstores(session: ClientSession):
 
     return await asyncio.gather(*tasks)
 
+@atomic()
+async def load_trophies(session: ClientSession):
+    trophies = [Trophy(**trophy) for trophy in json.load(open("./trophies.json"))]
+    tasks = [trophy._insert_instance() for trophy in trophies]
+    return await asyncio.gather(*tasks)
 
 async def populate():
     await Tortoise.init(
-        db_url="sqlite://pykollib/pykollib.db",
-        modules={'models': ['pykollib.ZapGroup', "pykollib.FoldGroup", "pykollib.Item", "pykollib.Store"]}
+        db_url="sqlite://../pykollib/pykollib.db",
+        modules={'models': ['pykollib.ZapGroup', "pykollib.FoldGroup", "pykollib.Item", "pykollib.Store", "pykollib.Trophy"]}
     )
 
     await Tortoise.generate_schemas(safe=True)
@@ -352,6 +358,9 @@ async def populate():
 
         print("Discovering store items")
         await load_npcstores(session)
+
+        print("Inserting trophies")
+        await load_trophies(session)
 
     await Tortoise.close_connections()
 

@@ -1,0 +1,1101 @@
+[
+  {
+    "id": 1,
+    "name": "Little Boat",
+    "image": "gonna need a smaller boat",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 2,
+    "name": "Big Boat",
+    "image": "party on the big boat",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 3,
+    "name": "I Heart Canadia",
+    "image": "get oot eh",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 4,
+    "name": "100 Pound Load",
+    "image": "heavy lourde",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 5,
+    "name": "300 Pound Load",
+    "image": "crushed under pets",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 6,
+    "name": "Silver Yeti",
+    "image": "awwwwww",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 7,
+    "name": "Golden Yeti",
+    "image": "yeti pants now",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 8,
+    "name": "Palindrophy",
+    "image": "a dog a plan",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 9,
+    "name": "Platinum Skull",
+    "image": "big head todd",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 10,
+    "name": "Disgusting Cocktail",
+    "image": "the nastiest cocktail",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 11,
+    "name": "The Ghuol Cup",
+    "image": "ghuolishly good",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 12,
+    "name": "Der Toastdieb",
+    "image": "you done took my toast",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 14,
+    "name": "Easy Come Easy Go",
+    "image": "van went",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 15,
+    "name": "Bouquet of Hippies",
+    "image": "dirt and dirty",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 16,
+    "name": "Weeping Pizza",
+    "image": "angst with extra cheese",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 17,
+    "name": "Black Hole Terrarium",
+    "image": "he aint heavy hes my familiar",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 18,
+    "name": "Failure To Communicate",
+    "image": "shakin the bush here boss",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 19,
+    "name": "Tiny Plastic Trophy",
+    "image": "nice trophy pablo honey",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 20,
+    "name": "99 Red Balloons",
+    "image": "ina little toy shop",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 21,
+    "name": "Gadget Inspector",
+    "image": "go go gadget trophy",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 22,
+    "name": "Boss Boss",
+    "image": "dancing in the dark",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 23,
+    "name": "Jack of Several Trades",
+    "image": "master of nuns",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 24,
+    "name": "Gourdcore",
+    "image": "gored to the core",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 25,
+    "name": "Let My Bugbears Go!",
+    "image": "you damned dirty human",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 26,
+    "name": "Trivially Skilled",
+    "image": "look what i can do",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 27,
+    "name": "This Lousy Trophy AKA This Stupid Trophy",
+    "image": "not worth the wait",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 28,
+    "name": "Three-Tiered Trophy",
+    "image": "no less than three",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 29,
+    "name": "Friend of Elves",
+    "image": "thats too friendly pippin",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 30,
+    "name": "Reindeer Hunter",
+    "image": "run over by grandma",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 31,
+    "name": "Brass Bowling Trophy Trophy",
+    "image": "the dude abides",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 32,
+    "name": "Look, Ma! No Pants!",
+    "image": "not wearing any pants",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 33,
+    "name": "Slice and Dice",
+    "image": "with friends like these",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 34,
+    "name": "Gender Bender",
+    "image": "ladies and gentlemen",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 35,
+    "name": "Golden Meat Stack",
+    "image": "hood ornament",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 36,
+    "name": "Your Log Saw Something That Night",
+    "image": "better than bad its good",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 37,
+    "name": "Little Chickadee",
+    "image": "no well ten beers",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 38,
+    "name": "The Three Amigos",
+    "image": "you shot the invisible swordsman",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 39,
+    "name": "Festive Dismemberment",
+    "image": "in deep end ents",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 40,
+    "name": "Best Meal of My Life",
+    "image": "also ate zarathustra",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 41,
+    "name": "Scourge of Seals",
+    "image": "undercover clubber",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 42,
+    "name": "Tzar of Turtles",
+    "image": "tortoise reform",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 43,
+    "name": "Potentate of Pasta",
+    "image": "stop noodling around",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 44,
+    "name": "Sauciest Saucier",
+    "image": "lost in the sauce once again",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 45,
+    "name": "Duke of Disco",
+    "image": "saturday night inferno",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 46,
+    "name": "Maestro of Mariachi",
+    "image": "dance round the room to accordion keys",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 47,
+    "name": "The Butler Did It",
+    "image": "your mom knows the butler",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 48,
+    "name": "Slapstick",
+    "image": "whoops whoops whoops",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 49,
+    "name": "Moderation In All Things",
+    "image": "eliza knew best",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 50,
+    "name": "TheRight Tool For The Job",
+    "image": "and a filthy job it is",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 51,
+    "name": "Hothouse Hero",
+    "image": "gonna go fondle my sweaters",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 52,
+    "name": "Cool Customer",
+    "image": "like a cucumber on pluto",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 53,
+    "name": "Dreadful, Just Dreadful",
+    "image": "horror has a new name",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 54,
+    "name": "Malodorous",
+    "image": "melodious and mellifluous",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 55,
+    "name": "Wink Wink, Nudge Nudge",
+    "image": "this parrot is nude",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 56,
+    "name": "Crossroads",
+    "image": "my shrimps was dead and gone",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 57,
+    "name": "Friend of the Devils",
+    "image": "jeremiah was a bullfrog",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 58,
+    "name": "Bringer of Storms",
+    "image": "jeff was right",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 59,
+    "name": "Eerily Skilled",
+    "image": "howd you do that man thats creepy",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 60,
+    "name": "I Love A Parade",
+    "image": "but it doesnt love me back",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 61,
+    "name": "Awwww, Yeah",
+    "image": "dont worry your pretty little head",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 62,
+    "name": "Phileas Foggy",
+    "image": "just like tara reid",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 63,
+    "name": "Extinctionist",
+    "image": "you were devoutly aligned",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 64,
+    "name": "Dirty Laundry",
+    "image": "kick em when theyre up",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 65,
+    "name": "Amateur Tour Guide",
+    "image": "this boat sucks",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 66,
+    "name": "Professional Tour Guide",
+    "image": "now ive seen it all",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 67,
+    "name": "Brave Sir Robin",
+    "image": "in soviet russia minstrels eat you",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 68,
+    "name": "Desert Wind",
+    "image": "what the hell are colitas anyway",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 69,
+    "name": "Two-Tiered Tiny Plastic Trophy",
+    "image": "just like grandmas dentures",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 70,
+    "name": "Master Paster",
+    "image": "who runs bartertown",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 71,
+    "name": "Golden Spatula",
+    "image": "and thats all",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 72,
+    "name": "Melon Baller, Shot Caller",
+    "image": "i hardly knowher",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 73,
+    "name": "BAM!",
+    "image": "what do you want on your tombstone",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 74,
+    "name": "Speakeasy Savant",
+    "image": "ill make a note of it",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 75,
+    "name": "Honky Tonk Hero",
+    "image": "hippy hippy shake",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 76,
+    "name": "Cantina Commander",
+    "image": "on channel z",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 77,
+    "name": "Apprentice Meatsmacker",
+    "image": "tong tong tong tong ta tong tong",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 78,
+    "name": "Journeyman Meatsmacker",
+    "image": "now all you need is a sickle",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 79,
+    "name": "Master Meatsmacker",
+    "image": "two tickets to anville",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 80,
+    "name": "Preciousss",
+    "image": "hey vern its jewels",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 81,
+    "name": "The One That Didn't Get Away",
+    "image": "visitors stink earlier",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 82,
+    "name": "Losing Your Marbles",
+    "image": "garble varble zous",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 83,
+    "name": "Hunter In Darkness",
+    "image": "dodecahardon",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 84,
+    "name": "Evil's Okay in My Book",
+    "image": "im a little bit country",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 85,
+    "name": "A Little Help From My Friends",
+    "image": "oh i get by",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 86,
+    "name": "Dancing With the Stars",
+    "image": "every whichway but footloose",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 87,
+    "name": "Every Part of the Seal",
+    "image": "especially those face scars",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 88,
+    "name": "Spaghettihose",
+    "image": "screw you atkins",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 89,
+    "name": "Color Wheel of Yuck",
+    "image": "please dont taste the rainbow",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 90,
+    "name": "Septuple Platinum",
+    "image": "steal this music",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 91,
+    "name": "Professional Photographer",
+    "image": "raggedy annie leibovitz",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 92,
+    "name": "General Assembler",
+    "image": "thats numberwang",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 93,
+    "name": "Penultimate Fantasy VII",
+    "image": "aeris kills dumbledore",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 94,
+    "name": "The Wrong Place at the Right Time",
+    "image": "ocd genocide",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 95,
+    "name": "Who Hustles The Hustlers?",
+    "image": "giant blue pool cue",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 96,
+    "name": "A Screw Ain't One",
+    "image": "in a fruitfight",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 97,
+    "name": "Had to Have Caught Them All",
+    "image": "ocd i choose you",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 98,
+    "name": "Buzzkill",
+    "image": "ow my everything",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 99,
+    "name": "Elf Barker",
+    "image": "spay or neuter your pets",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 100,
+    "name": "Mixed Martial Arts",
+    "image": "sweat grope punch repeat",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 101,
+    "name": "Hadouken!",
+    "image": "tatsumaki senpuu kyaku",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 102,
+    "name": "Good Will Punching",
+    "image": "fisting for dollars",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 103,
+    "name": "Moving Target",
+    "image": "wal mart is stationary",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 104,
+    "name": "Grand Slammer",
+    "image": "gonna need a biggerplaque",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 105,
+    "name": "And My Axe",
+    "image": "look out death adder",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 106,
+    "name": "Spirited Drinker",
+    "image": "never sicker",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 107,
+    "name": "Papier Than Thou",
+    "image": "papier i hardly know her",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 108,
+    "name": "Fantastic Voyager",
+    "image": "for your weiner am i right ha ha ha",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 109,
+    "name": "Haggis Haggis Haggis Haggis Haggis",
+    "image": "haggis is as haggis does",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 110,
+    "name": "Now You've Tasted Everything",
+    "image": "i can taste the cosmos",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 111,
+    "name": "The Old College Try",
+    "image": "natures harmonic",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 112,
+    "name": "Great Responsibility",
+    "image": "time to get a dog i guess",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 113,
+    "name": "Three-Tiered Tiny Plastic Trophy",
+    "image": "little asian different",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 114,
+    "name": "Cosmic Thing",
+    "image": "fruity egocentric magician",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 115,
+    "name": "Right Outfit, Wrong Place",
+    "image": "more or less right time",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 116,
+    "name": "Dreadful Rainbow",
+    "image": "taste the pain",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 117,
+    "name": "Horror Enthusiast",
+    "image": "ermagerd berks",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 118,
+    "name": "Full Heart",
+    "image": "clear eyes dumb shirt",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 119,
+    "name": "Extended Capacity",
+    "image": "warranty sold separately",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 120,
+    "name": "Kissing Maniac",
+    "image": "bastard son thereof",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 121,
+    "name": "Cruising For Six Bruisings",
+    "image": "dont bleed it all in one place",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 122,
+    "name": "Eleven Down, None to Go",
+    "image": "this is getting ridiculous",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 123,
+    "name": "Purity of Essence",
+    "image": "could you describe the ruckus",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 124,
+    "name": "Ansel Adams Jr.",
+    "image": "who here knows quark express",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 125,
+    "name": "No Particular Reason",
+    "image": "take a chanceacus",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 126,
+    "name": "Bronzed Tin Can",
+    "image": "put gilded lilies in it",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 127,
+    "name": "True Believer",
+    "image": "wheel of space",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 128,
+    "name": "EEZY PEEZY",
+    "image": "pez porridge hot",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 129,
+    "name": "Very Like aWhale",
+    "image": "oh no not again",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 130,
+    "name": "Gyro Hero",
+    "image": "hero dreams of gyros",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 131,
+    "name": "Alia Iacta Est",
+    "image": "d c cab squared",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 132,
+    "name": "Always Cloaca Cola",
+    "image": "the choice of an old generation",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 133,
+    "name": "Thar She Blows!",
+    "image": "barfily ever after",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 134,
+    "name": "Partners in Crime",
+    "image": "criminal conspiracy",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 135,
+    "name": "Party Killer",
+    "image": "you ruin everything",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 136,
+    "name": "Master Craftsman",
+    "image": "the harder side of sears",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 137,
+    "name": "Cool Guy",
+    "image": "cool gold jeff game cool",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 138,
+    "name": "Option Paralysis",
+    "image": "shirto redbetter",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 139,
+    "name": "Omni-Cosplay",
+    "image": "may the force boldy go a wizard",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 140,
+    "name": "11 Martini Breakfast",
+    "image": "she told me to pick up olives",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 141,
+    "name": "Golden Pickaxe",
+    "image": "baloneysaurux text",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 142,
+    "name": "Golden Idol",
+    "image": "bananarama crux",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 143,
+    "name": "Golden Moustache",
+    "image": "badonkadonkus_flex",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 144,
+    "name": "Golden Burglar",
+    "image": "banangrama xer",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 146,
+    "name": "Some Assembly Required",
+    "image": "college kids and divorced men",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 147,
+    "name": "Bucket List",
+    "image": "anger management about schmidt",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 148,
+    "name": "Gotpork Connoisseur",
+    "image": "this town needs an enema",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 149,
+    "name": "A Gallon of Milk Keeps the Doctor Away",
+    "image": "this this lemonade",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 150,
+    "name": "Prime Directive Director",
+    "image": "ilovewesley",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 151,
+    "name": "Tentacle Tickler",
+    "image": "oh the horror",
+    "before_ascending": true,
+    "stateful": false
+  },
+  {
+    "id": 152,
+    "name": "LOVE, LOVE, LOVE",
+    "image": "all you need is it",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 153,
+    "name": "Gelatinous Hubris",
+    "image": "i had to drink from the liquid cup",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 154,
+    "name": "Salads of Many Worlds",
+    "image": "in space noone can hear you laugh",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 155,
+    "name": "Ultimate Cosmic Power",
+    "image": "eleven inch flautist",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 156,
+    "name": "Commemorative Replica Blob",
+    "image": "cross about naught",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 157,
+    "name": "You Do It To Yourself",
+    "image": "working class republican",
+    "before_ascending": false,
+    "stateful": false
+  },
+  {
+    "id": 158,
+    "name": "Traditional Crimbo",
+    "image": "yule be happy",
+    "before_ascending": false,
+    "stateful": true
+  },
+  {
+    "id": 159,
+    "name": "Steak and a Beer, Eh?",
+    "image": "we found a dead mouse",
+    "before_ascending": false,
+    "stateful": true
+  }
+]
