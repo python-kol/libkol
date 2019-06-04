@@ -1,49 +1,47 @@
-from typing import Any, Coroutine, Dict, Optional, Tuple
+from typing import Any, Coroutine, Dict, Generic, Optional, TypeVar
+from yarl import URL
 
 from aiohttp import ClientResponse
-from yarl import URL
 
 import pykollib
 
+ParserReturn = TypeVar("ParserReturn")
 
-class Request:
+class Request(Generic[ParserReturn]):
     session: "pykollib.Session"
     request: Coroutine[Any, Any, ClientResponse]
+    response: Optional[ClientResponse] = None
     returns_json: bool = False
 
     def __init__(self, session: "pykollib.Session"):
         self.session = session
 
-    async def text(self, encoding: Optional[str] = None) -> str:
-        response = await self.request
+    async def run(self) -> ClientResponse:
+        self.response = await self.request
+        return self.response
 
-        if response.content is None:
-            await response.read()
+    async def text(self, encoding: Optional[str] = None) -> str:
+        response = self.response or await self.run()
 
         if encoding is None:
             encoding = response.get_encoding()
 
-        content = await response.text(encoding)
+        return await response.text(encoding)
 
+    async def json(self) -> Dict[str, Any]:
+        response = self.response or await self.run()
+
+        return await response.json()
+
+    @staticmethod
+    async def parser(content, **kwargs) -> ParserReturn:
         return content
 
-    async def json(self) -> Tuple[Dict[str, Any], URL]:
-        response = await self.request
+    async def parse(self, **kwargs) -> ParserReturn:
+        content = await self.json() if self.returns_json else await self.text()
 
-        if response.content is None:
-            await response.read()
+        assert self.response is not None
 
-        content = await response.json()
+        url = self.response.url # type: URL
 
-        return content, response.url
-
-    async def parse(self, **kwargs):
-        if self.returns_json:
-            content = await self.json()
-        else:
-            content = await self.text()
-
-        if callable(self.parser) is False:
-            return content
-
-        return await self.parser(content, url=self.request.url, session=self.session, **kwargs)
+        return await self.parser(content, url=url, session=self.session, **kwargs)

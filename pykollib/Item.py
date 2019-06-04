@@ -1,14 +1,12 @@
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from typing import Optional
 
+from pykollib import request
 from .Model import Model
 from .Error import ItemNotFoundError
-from .request import item_information, item_description as item_description_module
-
-item_description = item_description_module.item_description # type: ignore
 
 class Item(Model):
-    id = IntField(pk=True)
+    id = IntField()
     name = CharField(max_length=255)
     desc_id = IntField()
     plural = CharField(max_length=255, null=True)
@@ -108,10 +106,10 @@ class Item(Model):
     @classmethod
     async def discover(cls, id: int = None, desc_id: int = None):
         if id is not None:
-            desc_id = (await item_information(cls.kol, id).parse()).descid
+            desc_id = (await request.item_information(cls.kol, id).parse()).descid
 
         if desc_id is None:
             raise ItemNotFoundError("Cannot discover an item without either an id or a desc_id")
 
-        info = await item_description(cls.kol, desc_id).parse()
+        info = await request.item_description(cls.kol, desc_id).parse()
         return Item(**{k: v for k, v in info.items() if v is not None})

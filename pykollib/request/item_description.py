@@ -18,8 +18,8 @@ class item_description(Request):
         self.request = session.request("desc_item.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs):
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(content: str, **kwargs):
+        soup = BeautifulSoup(content, "html.parser")
 
         container = soup.find(id="description")
         main = container.blockquote

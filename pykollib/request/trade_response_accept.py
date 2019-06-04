@@ -10,5 +10,5 @@ class trade_response_accept(Request):
         self.request = session.request("makeoffer.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> bool:
-        return "Offer Accepted." in html
+    async def parser(content: str, **kwargs) -> bool:
+        return "Offer Accepted." in content

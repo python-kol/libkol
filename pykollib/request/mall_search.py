@@ -77,7 +77,7 @@ class Listing(NamedTuple):
     limit: int
 
 
-class mall_search(Request):
+class mall_search(Request[Union[List[Listing], List[Item]]]):
     """
     Searches for an item at the mall
 
@@ -160,8 +160,8 @@ class mall_search(Request):
         self.request = session.request("mall.php", params=params)
 
     @staticmethod
-    async def parser(html: str, url: URL, just_items: bool = False, **kwargs) -> Union[List[Listing], List[Item]]:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(content: str, **kwargs) -> Union[List[Listing], List[Item]]:
+        soup = BeautifulSoup(content, "html.parser")
         rows = soup.find_all("tr", id=lambda i: i and i.startswith("stock_"))
 
         if len(rows) == 0:

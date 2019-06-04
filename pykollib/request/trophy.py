@@ -13,8 +13,8 @@ class trophy(Request):
         self.request = session.request("trophy.php")
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(content: str, **kwargs) -> List:
+        soup = BeautifulSoup(content, "html.parser")
 
         ids = [trophy["value"] for trophy in soup.find_all("input", attrs={"name": "whichtrophy"})]
 

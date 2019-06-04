@@ -42,21 +42,21 @@ class store_item_add(Request):
         )
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> bool:
+    async def parser(content: str, **kwargs) -> bool:
         # First parse for errors
         notEnoughPattern = PatternManager.getOrCompilePattern("dontHaveEnoughOfItem")
-        if notEnoughPattern.search(html):
+        if notEnoughPattern.search(content):
             raise ItemNotFoundError("You don't have that many of that item.")
 
         dontHaveItemPattern = PatternManager.getOrCompilePattern("dontHaveThatItem")
-        if dontHaveItemPattern.search(html):
+        if dontHaveItemPattern.search(content):
             raise ItemNotFoundError("You don't have that item.")
 
         # Check if responseText matches the success pattern. If not, raise error.
         itemAddedSuccessfully = PatternManager.getOrCompilePattern(
             "itemAddedSuccessfully"
         )
-        if itemAddedSuccessfully.search(html) is None:
+        if itemAddedSuccessfully.search(content) is None:
             raise UnknownError("Something went wrong with the adding.")
 
         return True

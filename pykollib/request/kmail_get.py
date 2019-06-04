@@ -66,14 +66,14 @@ class kmail_get(Request):
         self.request = session.request("messages.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[Message]:
+    async def parser(content: str, **kwargs) -> List[Message]:
         """
         Parses through the response and constructs an array of messages.
         """
 
         messages = []  # type: List[Message]
 
-        for message in full_message_pattern.finditer(html):
+        for message in full_message_pattern.finditer(content):
             messageId = int(message.group(1))
             userId = int(message.group(2))
             userName = message.group(3).strip()
@@ -110,11 +110,11 @@ class kmail_get(Request):
             text = unescape(text)
 
             # Handle special messages.
-            if "brokewin.gif" in html or "bigbrick.gif" in html:
+            if "brokewin.gif" in content or "bigbrick.gif" in content:
                 type = "brick"
-            elif "/heart/cuptop.gif" in html:
+            elif "/heart/cuptop.gif" in content:
                 type = "coffeeCup"
-            elif "/heart/hearttop.gif" in html:
+            elif "/heart/hearttop.gif" in content:
                 type = "candyHeart"
             else:
                 type = "normal"

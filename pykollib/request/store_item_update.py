@@ -21,5 +21,5 @@ class store_item_update(Request):
         self.request = session.request("backoffice", pwd=True, params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> bool:
-        return price_not_updated_pattern.search(html) is not None
+    async def parser(content: str, **kwargs) -> bool:
+        return price_not_updated_pattern.search(content) is not None

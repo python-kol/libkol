@@ -23,11 +23,11 @@ class pulverize(Request):
         self.request = session.request("craft.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
-        if "<td>That's not something you can pulverize.</td>" in html:
+    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
+        if "<td>That's not something you can pulverize.</td>" in content:
             raise WrongKindOfItemError("That item cannot be pulverized")
 
-        if "<td>You haven't got that many" in html:
+        if "<td>You haven't got that many" in content:
             raise ItemNotFoundError("Not enough of that item")
 
-        return await parsing.item(html)
+        return await parsing.item(content)

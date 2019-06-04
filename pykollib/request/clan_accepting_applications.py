@@ -5,7 +5,7 @@ from ..util import parsing
 from .request import Request
 
 
-class clan_accepting_applications(Request):
+class clan_accepting_applications(Request[bool]):
     """
     Toggle whether or not the clan accepts new applications.
     """
@@ -16,8 +16,8 @@ class clan_accepting_applications(Request):
         self.request = session.request("clan_admin.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> bool:
-        results = parsing.panel(html)
+    async def parser(content: str, **kwargs) -> bool:
+        results = parsing.panel(content)
 
         if results.string == "Applications turned on.":
             return True

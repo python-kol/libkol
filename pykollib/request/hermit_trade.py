@@ -17,29 +17,29 @@ class hermit_trade(Request):
         self.request = session.request("hermit.php", data=data)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
+    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
         if (
             "you are able to infer that he doesn't have enough clovers to make that trade"
-            in html
+            in content
         ):
             raise ItemNotFoundError(
                 "The Hermit doesn't have enough clovers for that.", item=24
             )
 
-        if "You don't have enough stuff" in html:
+        if "You don't have enough stuff" in content:
             raise ItemNotFoundError(
                 "You don't have enough worthless items for that.", item=43
             )
 
-        if "You don't have enough Hermit Permits to trade for that many" in html:
+        if "You don't have enough Hermit Permits to trade for that many" in content:
             raise ItemNotFoundError(
                 "You don't have enough hermit permits for that.", item=42
             )
 
-        if "The Hermit doesn't have that item" in html:
+        if "The Hermit doesn't have that item" in content:
             raise WrongKindOfItemError("The Hermit doesn't have any of those.")
 
-        if "You make a trade with the Hermit." not in html:
+        if "You make a trade with the Hermit." not in content:
             raise UnknownError("Unknown error")
 
-        return await parsing.item(html)
+        return await parsing.item(content)

@@ -45,7 +45,7 @@ class ClanLog:
 user_p = r"(?P<username>.*?)(?: \(#(?P<user_id>[0-9]+)\))?"
 other_user_p = r"(?P<other_username>.*?) \(#(?P<other_user_id>[0-9]+)\)"
 
-class clan_log(Request):
+class clan_log(Request[List[ClanLog]]):
     """
     Retrieves the clan activity log.
     """
@@ -97,8 +97,8 @@ class clan_log(Request):
 
 
     @classmethod
-    async def parser(cls, html: str, **kwargs) -> List[ClanLog]:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(cls, content: str, **kwargs) -> List[ClanLog]:
+        soup = BeautifulSoup(content, "html.parser")
 
         raw_logs = [
             log.get_text()

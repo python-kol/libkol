@@ -47,7 +47,7 @@ familiar_pattern = re.compile(
 )
 
 
-class ascension_history(Request):
+class ascension_history(Request[List[Ascension]]):
     """
     Fetches ascension history for a player
 
@@ -61,11 +61,11 @@ class ascension_history(Request):
         self.request = session.request("ascensionhistory.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[Ascension]:
+    async def parser(content: str, **kwargs) -> List[Ascension]:
         """
         Parses through the response and constructs an array of ascensions.
         """
-        soup = BeautifulSoup(html, "html.parser")
+        soup = BeautifulSoup(content, "html.parser")
         end_dates = soup.find_all("td", height="30")
 
         ascensions = []  # type: List[Ascension]

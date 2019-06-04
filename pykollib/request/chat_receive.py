@@ -16,7 +16,7 @@ class Response:
     delay: int
 
 
-class chat_receive(Request):
+class chat_receive(Request[Response]):
     returns_json = True
 
     def __init__(self, session: "pykollib.Session", since: int = 0) -> None:
@@ -29,8 +29,8 @@ class chat_receive(Request):
         self.request = session.request("newchatmessages.php", params=params)
 
     @staticmethod
-    async def parser(json: Dict[str, Any], **kwargs) -> Response:
+    async def parser(content: Dict[str, Any], **kwargs) -> Response:
         try:
-            return Response(**json)
+            return Response(**content)
         except TypeError:
             raise UnknownError("Unknown response from receiving chat messages")

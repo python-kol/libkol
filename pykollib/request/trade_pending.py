@@ -68,8 +68,8 @@ class trade_pending(Request):
         self.request = session.request("makeoffer.php")
 
     @staticmethod
-    async def parse_trade_items(html: str) -> List[ItemQuantity]:
-        if html is None:
+    async def parse_trade_items(content: str) -> List[ItemQuantity]:
+        if content is None:
             return []
 
         return [
@@ -79,21 +79,21 @@ class trade_pending(Request):
                     (await Item.get_or_discover(desc_id=int(i.group("itemdescid")))),
                     int(i.group("quantity")),
                 )
-                for i in item_pattern.finditer(html)
+                for i in item_pattern.finditer(content)
             )
             if item is not None
         ]
 
     @classmethod
-    async def parser(cls, html: str, **kwargs) -> List[Trade]:
+    async def parser(cls, content: str, **kwargs) -> List[Trade]:
         """
         Parse each different kind of trade.
         """
         statuses = [
-            (Status.Incoming, incoming_pattern.finditer(html)),
-            (Status.Outgoing, outgoing_pattern.finditer(html)),
-            (Status.IncomingResponse, incoming_response_pattern.finditer(html)),
-            (Status.OutgoingResponse, outgoing_response_pattern.finditer(html)),
+            (Status.Incoming, incoming_pattern.finditer(content)),
+            (Status.Outgoing, outgoing_pattern.finditer(content)),
+            (Status.IncomingResponse, incoming_response_pattern.finditer(content)),
+            (Status.OutgoingResponse, outgoing_response_pattern.finditer(content)),
         ]
 
         trades = []  # type: List[Trade]

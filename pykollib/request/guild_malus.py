@@ -15,8 +15,8 @@ class guild_malus(Request):
         self.request = session.request("guild.php", pwd=True, data=data)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
-        items = await parsing.item(html)
+    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
+        items = await parsing.item(content)
 
         if len(items) == 0:
             raise UnknownError("Unknonw error using Malus")

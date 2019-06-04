@@ -31,13 +31,13 @@ class trade_respond(Request):
         self.request = session.request("makeoffer.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> bool:
+    async def parser(content: str, **kwargs) -> bool:
         noMeatPattern = PatternManager.getOrCompilePattern("traderHasNotEnoughMeat")
-        if noMeatPattern.search(html):
+        if noMeatPattern.search(content):
             raise NotEnoughMeatError("You don't have as much meat as you're promising.")
 
         noItemsPattern = PatternManager.getOrCompilePattern("traderHasNotEnoughItems")
-        if noItemsPattern.search(html):
+        if noItemsPattern.search(content):
             raise NotEnoughItemsError(
                 "You don't have as many items as you're promising."
             )
@@ -47,7 +47,7 @@ class trade_respond(Request):
         successPattern = PatternManager.getOrCompilePattern(
             "tradeResponseSentSuccessfully"
         )
-        if successPattern.search(html) is None:
+        if successPattern.search(content) is None:
             raise UnknownError("Unknown error sending response to trade")
 
         return True

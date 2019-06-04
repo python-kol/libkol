@@ -10,7 +10,7 @@ from .clan_raid_log import clan_raid_log
 from .request import Request
 
 
-class clan_raids(Request):
+class clan_raids(Request[List[Dict[str, Any]]]):
     """
     Retrieves information on all active raids
     """
@@ -24,14 +24,14 @@ class clan_raids(Request):
         return (comment[0].string[:-1].lower(), int(comment[1].string.split(":")[-1]))
 
     @classmethod
-    async def parser(cls, html: str, url: URL, **kwargs) -> List[Dict[str, Any]]:
+    async def parser(cls, content: str, **kwargs) -> List[Dict[str, Any]]:
         if (
             "Your clan has a basement, but you are not allowed to enter clan dungeons, "
             "so this is as far as you're going, Gilbert."
-        ) in html or html == "":
+        ) in content or content == "":
             raise ClanPermissionsError("You do not have dungeon access for this clan")
 
-        soup = BeautifulSoup(html, "html.parser")
+        soup = BeautifulSoup(content, "html.parser")
 
         current = soup.find("b", text="Current Clan Dungeons:")
 

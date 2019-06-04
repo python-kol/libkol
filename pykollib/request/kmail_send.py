@@ -35,13 +35,13 @@ class kmail_send(Request):
         )
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> bool:
-        if "<td>Invalid PlayerID.</td>" in html:
+    async def parser(content: str, **kwargs) -> bool:
+        if "<td>Invalid PlayerID.</td>" in content:
             raise UserNotFoundError("Invalid player ID.")
 
         if (
             "<center><table><tr><td>That player cannot receive Meat or items from other players right now."
-            in html
+            in content
         ):
             raise UserInHardcoreRoninError(
                 "Unable to send items or meat. User is in hardcore or ronin."
@@ -49,13 +49,13 @@ class kmail_send(Request):
 
         if (
             "<center><table><tr><td>This message could not be sent, because you are on that player's ignore list.</td></tr></table></center>"
-            in html
+            in content
         ):
             raise UserIsIgnoringError("Unable to send message. User is ignoring us.")
 
         if (
             "<center><table><tr><td>You don't have enough of one of the items you're trying to send.</td></tr></table></center>"
-            in html
+            in content
         ):
             raise ItemNotFoundError(
                 "You don't have enough of one of the items you're trying to send."
@@ -63,7 +63,7 @@ class kmail_send(Request):
 
         if (
             "<center><table><tr><td>That player would never use something as old and outmoded as"
-            in html
+            in content
         ):
             raise UserInHardcoreRoninError(
                 "Unable to send items or meat. User is too trendy."
@@ -71,13 +71,13 @@ class kmail_send(Request):
 
         if (
             "<td>This message could not be sent, because that player is on your ignore list\.<\/td>"
-            in html
+            in content
         ):
             raise UserIsIgnoringError(
                 "Unable to send message. We are ignoring the other player."
             )
 
-        if "<td><center>Message sent.</center></td>" not in html:
+        if "<td><center>Message sent.</center></td>" not in content:
             raise UnknownError("UnknownError")
 
         return True

@@ -127,5 +127,4 @@ patterns = {
     "traderBannedFromChat": r"<td>You can't send offers while you're banned from the chat\.",
     "tradeSentSuccessfully": r"<td>Your trade offer has been sent\.",
     "tradeResponseSentSuccessfully": r"Pending Responses \(Outgoing\)",
-    "tradeCancelledSuccessfully": r"Offer cancelled\.",
 }
