@@ -15,7 +15,7 @@ from ..pattern import PatternManager
 from .request import Request
 
 
-class trade_propose(Request):
+class trade_propose(Request[bool]):
     def __init__(
         self,
         session: "pykollib.Session",

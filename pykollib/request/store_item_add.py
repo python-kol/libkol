@@ -1,12 +1,14 @@
+import re
 import pykollib
 
 from ..Error import ItemNotFoundError, UnknownError
 from ..Item import Item
-from ..pattern import PatternManager
 from .request import Request
 
 
-class store_item_add(Request):
+success_pattern = re.compile(r"<td>\(([0-9]+)\) (.*) for ([0-9,]+) meat each")
+
+class store_item_add(Request[bool]):
     """
     Add a single item to your store. The interface to the mall was updated on Sept 13, 2013.
     It looks like items are now added only one at a time.
@@ -44,19 +46,14 @@ class store_item_add(Request):
     @staticmethod
     async def parser(content: str, **kwargs) -> bool:
         # First parse for errors
-        notEnoughPattern = PatternManager.getOrCompilePattern("dontHaveEnoughOfItem")
-        if notEnoughPattern.search(content):
+        if "<td>You don't have enough of those" in content:
             raise ItemNotFoundError("You don't have that many of that item.")
 
-        dontHaveItemPattern = PatternManager.getOrCompilePattern("dontHaveThatItem")
-        if dontHaveItemPattern.search(content):
+        if "<td>You don't have that item." in content:
             raise ItemNotFoundError("You don't have that item.")
 
         # Check if responseText matches the success pattern. If not, raise error.
-        itemAddedSuccessfully = PatternManager.getOrCompilePattern(
-            "itemAddedSuccessfully"
-        )
-        if itemAddedSuccessfully.search(content) is None:
+        if success_pattern.search(content) is None:
             raise UnknownError("Something went wrong with the adding.")
 
         return True

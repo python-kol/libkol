@@ -5,7 +5,7 @@ from ..Trophy import Trophy
 from .request import Request
 
 
-class trophy_buy(Request):
+class trophy_buy(Request[bool]):
     def __init__(self, session: "pykollib.Session", trophy: Trophy) -> None:
         super().__init__(session)
         data = {"action": "buytrophy", "whichtrophy": trophy.id}

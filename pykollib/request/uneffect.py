@@ -4,7 +4,7 @@ from ..Error import EffectNotFoundError, ItemNotFoundError, UnknownError
 from .request import Request
 
 
-class uneffect(Request):
+class uneffect(Request[bool]):
     def __init__(self, session: "pykollib.Session", effect_id: int) -> None:
         super().__init__(session)
         params = {"using": "Yep.", "whicheffect": effect_id}

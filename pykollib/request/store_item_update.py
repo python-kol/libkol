@@ -10,7 +10,7 @@ from .store_inventory import Listing
 price_not_updated_pattern = PatternManager.getOrCompilePattern("mallPriceNotUpdated")
 
 
-class store_item_update(Request):
+class store_item_update(Request[bool]):
     def __init__(self, session: "pykollib.Session", listings: List[Listing]) -> None:
         params = {"action": "updateinv", "ajax": 1, "_": int(time.time() * 1000)}
 

@@ -4,7 +4,7 @@ from ..Error import UnknownError
 from .request import Request
 
 
-class trade_response_decline(Request):
+class trade_response_decline(Request[bool]):
     def __init__(self, session: "pykollib.Session", trade_id: int) -> None:
         super().__init__(session)
         params = {"action": "decline2", "whichoffer": trade_id}

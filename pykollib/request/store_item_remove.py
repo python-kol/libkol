@@ -6,7 +6,7 @@ from ..pattern import PatternManager
 from .request import Request
 
 
-class store_item_remove(Request):
+class store_item_remove(Request[bool]):
     """
     Take a single item from your store using the new Mall interface from Sep 2013
 

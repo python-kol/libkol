@@ -63,7 +63,7 @@ class Trade(NamedTuple):
     message: str  # The message or note attached to the trade.
 
 
-class trade_pending(Request):
+class trade_pending(Request[List[Trade]]):
     def __init__(self, session: "pykollib.Session") -> None:
         self.request = session.request("makeoffer.php")
 
