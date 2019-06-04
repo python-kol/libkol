@@ -62,7 +62,7 @@ class autosell_items(Request):
         for item in items:
             pattern = re.compile(
                 r"(?:(?:([0-9,]+) {})|{})(?:,|$)".format(
-                    re.escape(item.pluralize()), re.escape(item.name)
+                    re.escape(item.pluralize()), re.escape(str(item.name))
                 )
             )
             match = pattern.search(response_match.group(1))

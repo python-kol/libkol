@@ -1,4 +1,5 @@
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
+from typing import Optional
 
 from .Model import Model
 from .Error import ItemNotFoundError
@@ -7,7 +8,7 @@ from .request import item_information, item_description as item_description_modu
 item_description = item_description_module.item_description # type: ignore
 
 class Item(Model):
-    id = IntField(primary_key=True)
+    id = IntField(pk=True)
     name = CharField(max_length=255)
     desc_id = IntField()
     plural = CharField(max_length=255, null=True)
@@ -60,12 +61,15 @@ class Item(Model):
 
     # Collections
     foldgroup = ForeignKeyField("models.FoldGroup", related_name="items", null=True)
+    foldgroup_id: Optional[int]
     zapgroup = ForeignKeyField("models.ZapGroup", related_name="items", null=True)
+    zapgroup_id: Optional[int]
 
     # NPC Store Info
     store_row = IntField(null=True)
     store_price = IntField(null=True)
     store = ForeignKeyField("models.Store", related_name="items", null=True)
+    store_id: Optional[int]
 
     # Flags
     hatchling = BooleanField(default=False)
