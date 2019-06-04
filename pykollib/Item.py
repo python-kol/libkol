@@ -113,3 +113,11 @@ class Item(Model):
 
         info = await request.item_description(cls.kol, desc_id).parse()
         return Item(**{k: v for k, v in info.items() if v is not None})
+
+    async def mall_price(self, limited: bool = False) -> int:
+        prices = await request.mall_price(self.kol, self).parse()
+
+        if limited:
+            return prices.limited[0].price
+
+        return prices.unlimited[0].price
