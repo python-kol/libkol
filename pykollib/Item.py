@@ -141,3 +141,9 @@ class Item(Model):
             return prices.limited[0].price
 
         return prices.unlimited[0].price
+
+    async def get_mall_listings(self, **kwargs) -> List["types.Listing"]:
+        return await request.mall_search(self.kol, query=self, **kwargs).parse()
+
+    async def buy_from_mall(self, **kwargs):
+        return await request.mall_purchase(self.kol, item=self, **kwargs).parse()
