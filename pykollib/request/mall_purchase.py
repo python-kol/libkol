@@ -1,30 +1,41 @@
 from dataclasses import dataclass
-from typing import List
 
 import pykollib
 from .request import Request
 from ..util import parsing
 from ..Item import Item
-from ..types import ItemQuantity
-from ..Error import NotEnoughMeatError, ItemNotFoundError, UserIsIgnoringError, LimitReachedError
+from ..types import Listing
+from ..Error import NotEnoughMeatError, ItemNotFoundError, UserIsIgnoringError, LimitReachedError, UnknownError
 
 @dataclass
 class Response:
-    items: List[ItemQuantity]
+    item: Item
+    quantity: int
     meat_gained: int
 
-class mall_purchase(Request):
+class mall_purchase(Request[Response]):
     """
     Purchases an item from the specified store. This will fail if the price per item is not given
     correctly or if the quantity is higher than the remaining quantity per day. It will purchase
     as many as possible if the quantity is higher than the number in the store.
     """
 
-    def __init__(self, session: "pykollib.Session", store_id: int, item: Item, price: int, quantity: int = 1):
+    def __init__(self, session: "pykollib.Session", listing: Listing = None, store_id: int = None, item: Item = None, price: int = None, quantity: int = None):
         super().__init__(session)
-        data = {"buying": 1, "whichitem": "{}{:09d}".format(item.id, price), "whichstore": store_id, "quantity": quantity}
+        if listing is not None:
+            store_id = listing.store_id
+            item = listing.item
+            price = listing.price
+            quantity = listing.stock if listing.limit == 0 else min(listing.stock, listing.limit)
+        else:
+            quantity = quantity or 1
 
-        self.request = session.request("mallstore.php", pwd=True, ajax=True, data=data)
+        if store_id is None or item is None or price is None:
+            raise TypeError("You must either specify a Listing or a store_id, item and price")
+
+        params = {"buying": 1, "whichitem": "{}{:09d}".format(item.id, price), "whichstore": store_id, "quantity": quantity}
+
+        self.request = session.request("mallstore.php", pwd=True, ajax=True, params=params)
 
     @staticmethod
     async def parser(content: str, **kwargs):
@@ -40,7 +51,17 @@ class mall_purchase(Request):
         if "<td>You may only buy " in content:
             raise LimitReachedError("You have hit the daily limit for this item at this store")
 
+        if "<td>That doesn't make any sense.</td>" in content:
+            raise TypeError("Request malformed")
+
         items = await parsing.item(content)
+
+        if len(items) == 0:
+            raise UnknownError("Purchase failed for unknown reason")
+
+        if len(items) > 1:
+            raise UnknownError("Managed to purchase two types of item from one mall request")
+
         meat_gained = parsing.meat(content)
 
-        return Response(items=items, meat_gained=meat_gained)
+        return Response(item=items[0].item, quantity=items[0].quantity, meat_gained=meat_gained)

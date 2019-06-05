@@ -12,6 +12,8 @@ from .Location import Location
 from .request import charpane, homepage, login, logout, main, player_profile, status
 from .util.decorators import logged_in
 
+models = ["pykollib.FoldGroup", "pykollib.Item", "pykollib.ZapGroup", "pykollib.Store", "pykollib.Trophy"]
+
 
 class Session:
     "This class represents a user's session with The Kingdom of Loathing."
@@ -25,13 +27,13 @@ class Session:
         self.server_url = None
         self.pwd = None
         self.clan = None
-        self.kmail = Kmail.Kmail(self)
+        self.kmail = Kmail(self)
         self.db_file = db_file or path.join(path.dirname(__file__), "pykollib.db")
 
     async def __aenter__(self) -> "Session":
         await Tortoise.init(
             db_url="sqlite://{}".format(self.db_file),
-            modules={'models': ["FoldGroup", "Item", "ZapGroup", "Store", "Trophy"]}
+            modules={'models': models}
         )
         Model.kol = self
         return self
@@ -180,4 +182,4 @@ class Session:
         """"
         Performs a logut request, closing the session.
         """
-        await self.parse(logout)
+        await logout(self).parse()

@@ -12,7 +12,7 @@ rateLimitIP = re.compile(r"Too many login failures from this IP")
 badPassword = re.compile(r"<b>Login failed\.\s+?Bad password\.<\/b>")
 
 
-class login(Request):
+class login(Request[bool]):
     def __init__(
         self,
         session: "pykollib.Session",
@@ -21,6 +21,7 @@ class login(Request):
         challenge: str = None,
         stealth: bool = False,
     ) -> None:
+        super().__init__(session)
         payload = {
             "loggingin": "Yup.",
             "loginname": username + ("/q" if stealth else ""),

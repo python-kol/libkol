@@ -60,6 +60,7 @@ from .item_description import item_description
 from .item_discard import item_discard
 from .item_information import item_information
 from .item_multi_use import item_multi_use
+from .item_search import item_search
 from .item_use import item_use
 from .kmail_delete import kmail_delete
 from .kmail_get import kmail_get
@@ -155,6 +156,7 @@ __all__ = [
     "item_description",
     "item_discard",
     "item_information",
+    "item_search",
     "item_multi_use",
     "item_use",
     "kmail_delete",

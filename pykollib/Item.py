@@ -1,9 +1,10 @@
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
-from typing import Optional
+from typing import List, Optional
 
 from pykollib import request
 from .Model import Model
 from .Error import ItemNotFoundError
+from . import types
 
 class Item(Model):
     id = IntField()
@@ -105,6 +106,20 @@ class Item(Model):
 
     @classmethod
     async def discover(cls, id: int = None, desc_id: int = None):
+        """
+        Discover this item using its id or description id. The description id is preferred as
+        it provides more information, so if only an id is provided, pykollib will first determine
+        the desc_id.
+
+        Note that this Returns an Item object but it is not automatically committed to the database.
+        It is not sufficient to run `await item.save()` to do this however as tortoise-orm will attempt to
+        `UPDATE` the row because it already has an `id` set. Instead you need to run
+        `awaititem._insert_instance()` explicitly.
+
+
+        :param id: Id of the item to discover
+        :param desc_id: Description id of the item to discover
+        """
         if id is not None:
             desc_id = (await request.item_information(cls.kol, id).parse()).descid
 
@@ -114,7 +129,12 @@ class Item(Model):
         info = await request.item_description(cls.kol, desc_id).parse()
         return Item(**{k: v for k, v in info.items() if v is not None})
 
-    async def mall_price(self, limited: bool = False) -> int:
+    async def get_mall_price(self, limited: bool = False) -> int:
+        """
+        Get the lowest price for this item in the mall
+
+        :param limited: Include limited sales in this search
+        """
         prices = await request.mall_price(self.kol, self).parse()
 
         if limited:

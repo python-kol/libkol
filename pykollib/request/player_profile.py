@@ -3,7 +3,6 @@ from typing import Any, Dict
 
 import pykollib
 
-from .. import Clan
 from ..Error import UnknownError
 from .request import Request
 
@@ -26,6 +25,7 @@ class player_profile(Request[Dict[str, Any]]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> Dict[str, Any]:
+        from .. import Clan
         session = kwargs["session"] # type: "pykollib.Session"
 
         username_match = username.search(content)
