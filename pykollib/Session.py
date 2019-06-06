@@ -1,8 +1,9 @@
 from os import path
 from time import time
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any, Callable, DefaultDict, Dict, Optional, Union
 from urllib.parse import urlparse
 from tortoise import Tortoise
+from collections import defaultdict
 
 from aiohttp import ClientResponse, ClientSession
 
@@ -108,6 +109,7 @@ class Session:
 
         await self.get_status()
         await self.get_profile()
+        await self.get_inventory()
 
         return True
 
@@ -155,6 +157,13 @@ class Session:
             return {}
 
         return await request.player_profile(self, user_id).parse()
+
+    @logged_in
+    async def get_inventory(self) -> DefaultDict[Item, int]:
+        sparse_inventory = await request.inventory(self).parse()
+        inventory = defaultdict(int, sparse_inventory)
+        self.state["inventory"] = inventory
+        return inventory
 
     @logged_in
     async def adventure(
