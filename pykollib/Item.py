@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 
 from pykollib import request
 from .Model import Model
-from .Error import ItemNotFoundError
+from .Error import ItemNotFoundError, WrongKindOfItemError
 from . import types
 
 class ItemMeta(ModelMeta):
@@ -174,5 +174,30 @@ class Item(Model, metaclass=ItemMeta):
     async def get_mall_listings(self, **kwargs) -> List["types.Listing"]:
         return await request.mall_search(self.kol, query=self, **kwargs).parse()
 
-    async def buy_from_mall(self, **kwargs):
-        return await request.mall_purchase(self.kol, item=self, **kwargs).parse()
+    async def buy_from_mall(
+        self,
+        listing: "types.Listing" = None,
+        store_id: int = None,
+        price: int = 0,
+        quantity: int = 1
+    ):
+        if listing is None and store_id is None:
+            listings = await self.get_mall_listings(num_results=quantity, max_price=price)
+            tasks = [request.mall_purchase(self.kol, item=self, listing=l).parse() for l in listings]
+            return await asyncio.gather(*tasks)
+
+        return await request.mall_purchase(self.kol, item=self, listing=listing, store_id=store_id, price=price, quantity=quantity).parse()
+
+    def amount(self):
+        return self.kol.state["inventory"][self]
+
+    async def use(self, quantity: int = 1, multi_use: bool = True):
+        if self.usable is False:
+            raise WrongKindOfItemError("This item cannot be used")
+
+        if self.multiusable and multi_use:
+            await request.item_multi_use(self.kol, self, quantity).parse()
+            return
+
+        tasks = [request.item_use(self.kol, self).parse() for _ in range(quantity)]
+        return await asyncio.gather(*tasks)
