@@ -1,12 +1,41 @@
+import asyncio
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
-from typing import List, Optional
+from tortoise.models import ModelMeta
+from typing import List, Optional, Union
 
 from pykollib import request
 from .Model import Model
 from .Error import ItemNotFoundError
 from . import types
 
-class Item(Model):
+class ItemMeta(ModelMeta):
+    def __getitem__(self, key: Union[int, str]):
+        """
+        Syntactic sugar for synchronously grabbing an item by id, description id or name.
+
+        :param key: id, desc_id or name of item you want to grab
+        """
+        loop = asyncio.get_event_loop()
+        future = loop.create_future()
+
+        async def getitem():
+            if isinstance(key, int):
+                # Most desc_ids are 9 digits but there are 14 that aren't.
+                # At time of writing this is good for 115,100 new items before any collisions.
+                if key == 31337 or key == 46522 or key >= 125353:
+                    result = await self.get_or_discover(desc_id=key)
+                else:
+                    result = await self.get_or_discover(id=key)
+            else:
+                result = await self.get(name=key)
+
+            future.set_result(result)
+
+        asyncio.ensure_future(getitem())
+        return future
+
+
+class Item(Model, metaclass=ItemMeta):
     id = IntField()
     name = CharField(max_length=255)
     desc_id = IntField()
