@@ -72,6 +72,7 @@ from .mall_purchase import mall_purchase
 from .mall_search import mall_search
 from .mall_price import mall_price
 from .mall_transactions import mall_transactions
+from .mining import mining
 from .npc_buy import npc_buy
 from .player_profile import player_profile
 from .player_search import player_search
@@ -169,6 +170,7 @@ __all__ = [
     "mall_price",
     "mall_search",
     "mall_transactions",
+    "mining",
     "npc_buy",
     "player_profile",
     "player_search",
