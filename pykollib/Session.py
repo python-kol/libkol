@@ -6,13 +6,12 @@ from tortoise import Tortoise
 
 from aiohttp import ClientResponse, ClientSession
 
-from . import Clan, Kmail
+from . import Clan, Kmail, request, Item
 from .Model import Model
 from .Location import Location
-from .request import charpane, homepage, login, logout, main, player_profile, status
 from .util.decorators import logged_in
 
-models = ["pykollib.FoldGroup", "pykollib.Item", "pykollib.ZapGroup", "pykollib.Store", "pykollib.Trophy"]
+models = ["pykollib.FoldGroup", "pykollib.Item", "pykollib.ZapGroup", "pykollib.Store", "pykollib.Trophy", "pykollib.Modifier", "pykollib.Effect"]
 
 
 class Session:
@@ -95,17 +94,17 @@ class Session:
 
         # Grab the KoL homepage.
         self.server_url = (
-            await homepage(self, server_number=server_number).parse()
+            await request.homepage(self, server_number=server_number).parse()
         ).server_url
 
         # Perform the login.
-        logged_in = await login(self, username, password, stealth=stealth).parse()
+        logged_in = await request.login(self, username, password, stealth=stealth).parse()
         self.is_connected = logged_in
         self.state["username"] = username
 
         # Loading these both makes various things work
-        await main(self).parse()
-        await charpane(self).parse()
+        await request.main(self).parse()
+        await request.charpane(self).parse()
 
         await self.get_status()
         await self.get_profile()
@@ -139,7 +138,7 @@ class Session:
         """
         Load the current username, user_id, pwd and rollover time into the state
         """
-        data = await status(self).parse()
+        data = await request.status(self).parse()
         self.pwd = data["pwd"]
         self.state["username"] = data["name"]
         self.state["user_id"] = int(data["playerid"])
@@ -155,7 +154,7 @@ class Session:
         if user_id is None:
             return {}
 
-        return await player_profile(self, user_id).parse()
+        return await request.player_profile(self, user_id).parse()
 
     @logged_in
     async def adventure(
@@ -182,4 +181,4 @@ class Session:
         """"
         Performs a logut request, closing the session.
         """
-        await logout(self).parse()
+        await request.logout(self).parse()

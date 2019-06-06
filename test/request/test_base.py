@@ -2,6 +2,7 @@ from tortoise import Tortoise
 from tortoise.models import Model
 from unittest.mock import MagicMock
 from collections import namedtuple
+from pykollib import models
 import unittest
 import asyncio
 from os import path
@@ -52,7 +53,7 @@ class TestCase(unittest.TestCase):
         async def run_test():
             await Tortoise.init(
                 db_url="sqlite://{}".format(self.db_file),
-                modules={'models': ['pykollib.FoldGroup', 'pykollib.Item', 'pykollib.ZapGroup', 'pykollib.Store', "pykollib.Trophy"]}
+                modules={'models': models}
             )
 
             Model.kol = session

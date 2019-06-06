@@ -8,7 +8,7 @@ import re
 import json
 from typing import Any, Coroutine, List
 
-from pykollib import ZapGroup, Item, FoldGroup, Store, Trophy
+from pykollib import ZapGroup, Item, FoldGroup, Store, Trophy, Effect, Modifier, models
 
 async def load_mafia_data(session: ClientSession, key: str) -> ClientResponse:
     response = await session.get("https://svn.code.sf.net/p/kolmafia/code/src/data/{}.txt".format(key))
@@ -30,13 +30,16 @@ def split_range(range: str):
 id_duplicate_pattern = re.compile(r"\[([0-9]+)\].+")
 
 
-def get_id_from_duplicate(name: str):
+def mafia_dedupe(name: str):
+    if name[0] != "[":
+        return {"name": name}
+
     m = id_duplicate_pattern.match(name)
 
     if m is None:
-        raise ValueError("Cannot extract id from duplicate item name: {}".format(name))
+        return {"name": name}
 
-    return int(m.group(1))
+    return {"id": int(m.group(1))}
 
 @atomic()
 async def load_zapgroups(session: ClientSession):
@@ -195,10 +198,7 @@ async def load_equipment(session: ClientSession):
         if len(parts) < 3:
             continue
 
-        if parts[0][0] == "[" and id_duplicate_pattern.match(parts[0]):
-            items = [await Item.get(id=get_id_from_duplicate(parts[0]))]
-        else:
-            items = await Item.filter(name=parts[0])
+        items = await Item.filter(*mafia_dedupe(parts[0]))
 
         if len(items) == 0 or (None in items):
             print("Unrecognized equipment name: {}".format(parts[0]))
@@ -328,6 +328,82 @@ async def load_npcstores(session: ClientSession):
     return await asyncio.gather(*tasks)
 
 @atomic()
+async def load_effects(session: ClientSession):
+    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+
+    async for bytes in (await load_mafia_data(session, "statuseffects")).content:
+        line = unescape(bytes.decode("utf-8")).strip()
+
+        if "\t" not in line or line[0] == "#":
+            continue
+
+        parts = line.split("\t")
+
+        if len(parts) < 4:
+            continue
+
+        effect = Effect(id=int(parts[0]), name=parts[1], image=parts[2], desc_id=parts[3])
+        tasks += [effect._insert_instance()]
+
+    return await asyncio.gather(*tasks)
+
+@atomic()
+async def load_modifiers(session: ClientSession):
+    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+
+    async for bytes in (await load_mafia_data(session, "modifiers")).content:
+        line = unescape(bytes.decode("utf-8")).strip()
+
+        if "\t" not in line or line[0] == "#":
+            continue
+
+        parts = line.split("\t")
+
+        modifier_base = {}
+
+        if parts[0] == "Item":
+            try:
+                item = await Item.get(**mafia_dedupe(parts[1]))
+            except:
+                print("Couldn't find item `{}` for modifier".format(parts[1]))
+                continue
+
+            modifier_base["item_id"] = item.id
+        elif parts[0] == "Effect":
+            try:
+                effect = await Effect.get(**mafia_dedupe(parts[1]))
+            except:
+                print("Couldn't find effect `{}` for modifier".format(parts[1]))
+                continue
+            modifier_base["effect_id"] = effect.id
+        else:
+            continue
+
+        modifiers_pattern = re.compile("([A-Za-z][A-Z'a-z ]+?)( Percent)?(?:: (\".*?\"|\[.*?\]|[+-][0-9\.]+))?(?:, |$)")
+
+        for m in modifiers_pattern.finditer(parts[2]):
+            modifier = Modifier(
+                **modifier_base,
+                key=m.group(1),
+                percentage=(m.group(2) is not None),
+            )
+
+            value = m.group(3)
+
+            if value is None:
+                pass
+            elif value[0] == "[":
+                modifier.expression_value = value[1:-1]
+            elif value[0] == "\"":
+                modifier.string_value = value[1:-1]
+            else:
+                modifier.numeric_value = float(value)
+
+            tasks += [modifier.save()]
+
+    return await asyncio.gather(*tasks)
+
+@atomic()
 async def load_trophies(session: ClientSession):
     trophies = [Trophy(**trophy) for trophy in json.load(open("./trophies.json"))]
     tasks = [trophy._insert_instance() for trophy in trophies]
@@ -336,7 +412,7 @@ async def load_trophies(session: ClientSession):
 async def populate():
     await Tortoise.init(
         db_url="sqlite://../pykollib/pykollib.db",
-        modules={'models': ['pykollib.ZapGroup', "pykollib.FoldGroup", "pykollib.Item", "pykollib.Store", "pykollib.Trophy"]}
+        modules={'models': models}
     )
 
     await Tortoise.generate_schemas(safe=True)
@@ -361,6 +437,12 @@ async def populate():
 
         print("Inserting trophies")
         await load_trophies(session)
+
+        print("Inserting effects")
+        await load_effects(session)
+
+        print("Inserting modifiers")
+        await load_modifiers(session)
 
     await Tortoise.close_connections()
 
