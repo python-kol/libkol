@@ -9,7 +9,7 @@ from ..Error import (
     UserIsIgnoringError,
     UserNotFoundError,
 )
-from ..Item import ItemQuantity
+from ..types import ItemQuantity
 from .request import Request
 
 
@@ -35,7 +35,7 @@ class kmail_send(Request):
         )
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         if "<td>Invalid PlayerID.</td>" in html:
             raise UserNotFoundError("Invalid player ID.")
 

@@ -14,7 +14,7 @@ class NashCrosbysStillRequest(GenericRequest):
         self.requestData["whichitem"] = itemId
         self.requestData["quantity"] = qty
 
-    def parseResponse(self):
+    async def parseresponse(self):
         wrongProfessionPattern = PatternManager.getOrCompilePattern(
             "wrongStillProfession"
         )

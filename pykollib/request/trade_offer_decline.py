@@ -15,7 +15,7 @@ class trade_offer_decline(Request):
         self.request = session.request("makeoffer.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, url: URL, **kwargs) -> bool:
+    async def parser(html: str, url: URL, **kwargs) -> bool:
         if success_pattern.search(html) is None:
             raise UnknownError(
                 "Unknown error declining trade offer for trade {}".format(

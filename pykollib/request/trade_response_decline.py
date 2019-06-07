@@ -14,7 +14,7 @@ class trade_response_decline(Request):
         self.request = session.request("makeoffer.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         if success_pattern.search(html) is False:
             raise UnknownError("Unknown error declining trade response for trade")
 

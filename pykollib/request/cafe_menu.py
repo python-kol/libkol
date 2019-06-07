@@ -31,7 +31,7 @@ class cafe_menu(Request):
         self.request = session.request("cafe.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[Item]:
+    async def parser(html: str, **kwargs) -> List[Item]:
         if cannot_go_pattern.search(html):
             raise InvalidLocationError("You cannot reach that cafe.")
 
@@ -41,7 +41,7 @@ class cafe_menu(Request):
             if desc_id.isdigit() is False:
                 continue
 
-            item = Item.get_or_none(desc_id=int(desc_id))
+            item = await Item.get_or_discover(desc_id=int(desc_id))
 
             if item is None:
                 print("Unrecognised item with descid {}".format(desc_id))

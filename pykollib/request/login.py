@@ -37,7 +37,7 @@ class login(Request):
         self.request = session.request("login.php", data=payload)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         if mainFrameset.search(html):
             return True
 

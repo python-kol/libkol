@@ -61,7 +61,7 @@ class ascension_history(Request):
         self.request = session.request("ascensionhistory.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[Ascension]:
+    async def parser(html: str, **kwargs) -> List[Ascension]:
         """
         Parses through the response and constructs an array of ascensions.
         """

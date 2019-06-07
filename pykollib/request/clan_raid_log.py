@@ -72,7 +72,7 @@ class clan_raid_log(Request):
         }
 
     @classmethod
-    def parser(cls, html: str, url: URL, **kwargs) -> Dict[str, Any]:
+    async def parser(cls, html: str, url: URL, **kwargs) -> Dict[str, Any]:
         soup = BeautifulSoup(html, "html.parser")
 
         title = soup.find("b", text=previous_run_pattern)

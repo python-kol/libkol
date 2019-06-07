@@ -28,7 +28,7 @@ class store_item_remove(Request):
         self.request = session.request("backoffice.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         # First parse for errors
         notEnoughPattern = PatternManager.getOrCompilePattern("dontHaveThatManyInStore")
         if notEnoughPattern.search(html):

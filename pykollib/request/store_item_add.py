@@ -42,7 +42,7 @@ class store_item_add(Request):
         )
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         # First parse for errors
         notEnoughPattern = PatternManager.getOrCompilePattern("dontHaveEnoughOfItem")
         if notEnoughPattern.search(html):

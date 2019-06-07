@@ -1,5 +1,4 @@
-import asyncio
-from typing import Any, Coroutine, Dict, Optional, Tuple, Union
+from typing import Any, Coroutine, Dict, Optional, Tuple
 
 from aiohttp import ClientResponse
 from yarl import URL
@@ -15,7 +14,7 @@ class Request:
     def __init__(self, session: "pykollib.Session"):
         self.session = session
 
-    async def text(self, encoding: Optional[str] = None) -> Tuple[str, URL]:
+    async def text(self, encoding: Optional[str] = None) -> str:
         response = await self.request
 
         if response.content is None:
@@ -26,7 +25,7 @@ class Request:
 
         content = await response.text(encoding)
 
-        return content, response.url
+        return content
 
     async def json(self) -> Tuple[Dict[str, Any], URL]:
         response = await self.request
@@ -47,7 +46,4 @@ class Request:
         if callable(self.parser) is False:
             return content
 
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            self.parser(content, self.request.url, self.session, **kwargs)
-        )
+        return await self.parser(content, url=self.request.url, session=self.session, **kwargs)

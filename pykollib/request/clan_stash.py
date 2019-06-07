@@ -21,10 +21,10 @@ class clan_stash(Request):
         self.request = session.request("clan_stash.php", pwd=True)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[Dict[str, Any]]:
+    async def parser(html: str, **kwargs) -> List[Dict[str, Any]]:
         return [
             {
-                "item": Item[int(i["id"])],
+                "item": await Item.get_or_discover(id=int(i["id"])),
                 "quantity": int(i["quantity"] or 1),
                 "cost": int(i["cost"] or 0),
             }

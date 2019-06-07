@@ -17,7 +17,7 @@ class clan_show(Request):
         self.request = session.request("showclan.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> Dict[str, Any]:
+    async def parser(html: str, **kwargs) -> Dict[str, Any]:
         soup = BeautifulSoup(html, "html.parser")
         leader_link = soup.find("a")
         return {

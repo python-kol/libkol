@@ -16,7 +16,7 @@ class clan_accepting_applications(Request):
         self.request = session.request("clan_admin.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         results = parsing.panel(html)
 
         if results.string == "Applications turned on.":

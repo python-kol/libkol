@@ -10,7 +10,7 @@ from ..Error import (
     UserInHardcoreRoninError,
     UserIsIgnoringError,
 )
-from ..Item import ItemQuantity
+from ..types import ItemQuantity
 from ..pattern import PatternManager
 from .request import Request
 
@@ -38,7 +38,7 @@ class trade_propose(Request):
         self.request = session.request("makeoffer.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> bool:
+    async def parser(html: str, **kwargs) -> bool:
         ignorePattern = PatternManager.getOrCompilePattern("traderIgnoringUs")
         if ignorePattern.search(html):
             raise UserIsIgnoringError("That player has you on his/her ignore list.")

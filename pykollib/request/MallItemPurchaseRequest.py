@@ -22,7 +22,7 @@ class MallItemPurchaseRequest(GenericRequest):
         self.requestData["whichstore"] = storeId
         self.requestData["quantity"] = quantity
 
-    def parseResponse(self):
+    async def parseresponse(self):
         cantAffordItemPattern = PatternManager.getOrCompilePattern("cantAffordItem")
         if cantAffordItemPattern.search(self.responseText):
             raise Error.Error(
