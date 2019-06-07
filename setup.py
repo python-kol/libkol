@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pykollib",
-    version="0.9.4.5",
+    version="0.9.4.6",
     author="",
     author_email="dan@heathmailbox.com",
     description="Python library for interacting with the Kingdom of Loathing ",
@@ -18,7 +18,6 @@ setuptools.setup(
       "beautifulsoup4",
       "dataclasses",
       "multidict",
-      "typing",
       "yarl",
       "aiosqlite",
       "tortoise-orm"
