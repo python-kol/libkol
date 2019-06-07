@@ -42,7 +42,7 @@ class clan_rumpus_gym(Request):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    def parser(html: str, url: URL, **kwargs) -> Response:
+    async def parser(html: str, url: URL, **kwargs) -> Response:
         stat = gym_stat_mapping[int(url.query["whichgym"])]
         assert isinstance(stat, Stat)
 

@@ -13,7 +13,7 @@ class MalusRequest(GenericRequest):
         self.requestData["whichitem"] = itemId
         self.requestData["quantity"] = numTimes
 
-    def parseResponse(self):
+    async def parseresponse(self):
         items = []
 
         singleItemPattern = PatternManager.getOrCompilePattern("acquireSingleItem")

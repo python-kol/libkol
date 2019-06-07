@@ -48,7 +48,7 @@ class clan_rumpus(Request):
         self.request = session.request("clan_rumpus.php")
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[Furniture]:
+    async def parser(html: str, **kwargs) -> List[Furniture]:
         return [
             Furniture(coords)
             for coords in (

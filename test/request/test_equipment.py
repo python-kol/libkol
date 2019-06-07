@@ -1,7 +1,6 @@
 from collections import Counter
 
 from pykollib.request import equipment
-from pykollib.request.equip import Slot
 
 from .test_base import TestCase
 
@@ -10,8 +9,8 @@ class EquipmentTestCase(TestCase):
     request = "equipment"
 
     def test_equipment_accessories_merged(self):
-        with self.open_test_data("accessories_merged") as file:
-            outfit = equipment.parser(file.read())
+        async def run_test(file):
+            outfit = await equipment.parser(file.read())
 
             self.assertEqual(outfit.hat.id, 2078)
             self.assertEqual(outfit.back.id, 5738)
@@ -25,9 +24,11 @@ class EquipmentTestCase(TestCase):
             )
             self.assertEqual(outfit.familiar.id, 4135)
 
+        self.run_async("accessories_merged", run_test)
+
     def test_equipment_accessories_separate(self):
-        with self.open_test_data("accessories_separate") as file:
-            outfit = equipment.parser(file.read())
+        async def run_test(file):
+            outfit = await equipment.parser(file.read())
             self.assertEqual(outfit.hat.id, 2078)
             self.assertEqual(outfit.back.id, 5738)
             self.assertEqual(outfit.shirt.id, 3837)
@@ -38,3 +39,5 @@ class EquipmentTestCase(TestCase):
             self.assertEqual(outfit.acc2.id, 3322)
             self.assertEqual(outfit.acc3.id, 6956)
             self.assertEqual(outfit.familiar.id, 4135)
+
+        self.run_async("accessories_separate", run_test)

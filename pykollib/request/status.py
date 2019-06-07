@@ -13,5 +13,5 @@ class status(Request):
         self.request = session.request("api.php", json=True, data=payload)
 
     @staticmethod
-    def parser(json: Dict[str, Any], **kwargs) -> Dict[str, Any]:
+    async def parser(json: Dict[str, Any], **kwargs) -> Dict[str, Any]:
         return json

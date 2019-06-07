@@ -6,7 +6,7 @@ from typing import List, NamedTuple
 import pykollib
 
 from ..Error import UnknownError
-from ..Item import ItemQuantity
+from ..types import ItemQuantity
 from ..pattern import PatternManager
 from ..util import parsing
 from .request import Request
@@ -66,7 +66,7 @@ class kmail_get(Request):
         self.request = session.request("messages.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> List[Message]:
+    async def parser(html: str, **kwargs) -> List[Message]:
         """
         Parses through the response and constructs an array of messages.
         """
@@ -126,7 +126,7 @@ class kmail_get(Request):
                     username=userName,
                     date=date,
                     text=text,
-                    items=parsing.item(rawText),
+                    items=await parsing.item(rawText),
                     meat=parsing.meat(rawText),
                     type=type,
                 )

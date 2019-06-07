@@ -22,7 +22,7 @@ class chat_messages_get(Request):
         self.request = session.request("newchatmessages.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> Response:
+    async def parser(html: str, **kwargs) -> Response:
         # Get the timestamp we should send to the server next time we make a request.
         last_seen_matcher = last_seen_pattern.search(html)
 

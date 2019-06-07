@@ -23,7 +23,7 @@ class cafe_consume(Request):
         self.request = session.request("cafe.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> parsing.ResourceGain:
+    async def parser(html: str, **kwargs) -> parsing.ResourceGain:
         if cannot_go_pattern.search(html):
             raise InvalidLocationError("You cannot reach that cafe.")
         if (

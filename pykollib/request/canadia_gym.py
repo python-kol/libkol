@@ -25,7 +25,7 @@ class canadia_gym(Request):
         self.request = session.request("canadia.php", params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> Response:
+    async def parser(html: str, **kwargs) -> Response:
         if len(html) == 0:
             raise InvalidLocationError(
                 "You cannot attend The Institute for Canadian Studies"

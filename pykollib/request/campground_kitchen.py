@@ -26,7 +26,7 @@ class campground_kitchen(Request):
         self.request = session.request("campground.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> Response:
+    async def parser(html: str, **kwargs) -> Response:
         response = {
             "oven": "You've got an E-Z Cook&trade; oven installed in your kitchen."
             in html,

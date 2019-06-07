@@ -8,28 +8,34 @@ class HermitTradeTestCase(TestCase):
     request = "hermit_trade"
 
     def test_hermit_trade_clover(self):
-        with self.open_test_data("clover") as file:
-            items = hermit_trade.parser(file.read())
+        async def run_test(file):
+            items = await hermit_trade.parser(file.read())
             self.assertEqual(len(items), 1)
             self.assertEqual(items[0].item.id, 24)
             self.assertEqual(items[0].quantity, 1)
 
+        self.run_async("clover", run_test)
+
     def test_hermit_trade_doesnt_sell(self):
-        with self.open_test_data("doesnt_sell") as file:
+        async def run_test(file):
             try:
-                hermit_trade.parser(file.read())
+                await hermit_trade.parser(file.read())
             except WrongKindOfItemError:
                 assert True
                 return
 
             assert False
 
+        self.run_async("doesnt_sell", run_test)
+
     def test_hermit_trade_insufficient(self):
-        with self.open_test_data("insufficient") as file:
+        async def run_test(file):
             try:
-                hermit_trade.parser(file.read())
+                await hermit_trade.parser(file.read())
             except ItemNotFoundError as e:
                 self.assertEqual(e.item, 43)
                 return
 
             assert False
+
+        self.run_async("insufficient", run_test)

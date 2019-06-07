@@ -37,7 +37,7 @@ class item_information(Request):
         self.request = session.request("api.php", json=True, data=data)
 
     @staticmethod
-    def parser(json: Dict[str, Any], **kwargs) -> Response:
+    async def parser(json: Dict[str, Any], **kwargs) -> Response:
         return Response(
             descid=int(json["descid"]),
             name=json["name"],

@@ -1,0 +1,24 @@
+<body>
+
+<div id="description" class=small><center><img  src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/briefcase.gif" height=30 width=30 alt="test case"><br><b>test case</b></center><p><blockquote>This is Jick's test case. It contains stuff used for testing things, and things used for testing stuff.<!-- itemid: 1517 --><br><br>Type: <b>accessory</b><br>Selling Price: <b>42 Meat.</b><p><center><b><font color=blue>All Attributes +100%<br>+10000% Item Drops from Monsters<br>Maximum HP/MP +10000<br>+10 to Monster Level<br>Grants 10 Adventures of Aykrophobia at Rollover<br>Running away always works.<br></font></b></center></blockquote><script type="text/javascript">
+<!--
+var resizetries = 0;
+var fsckinresize;
+setTimeout(fsckinresize = function ()  {
+	var desch = document.getElementById('description').offsetHeight;
+	if (desch < 100 && resizetries < 5) {
+		setTimeout(fsckinresize, 100);
+		resizetries++;
+	}
+	if (desch < 100) desch = 200;
+	//alert('resizing on try #' + resizetries);
+	if (self.resizeTo && window.outerHeight) {
+		self.resizeTo(400, desch + (window.outerHeight - window.innerHeight) + 50);
+	}
+	else if (self.resizeTo ) { self.resizeTo(400, desch+130); }
+	else { window.innerHeight = newh; }
+}, 100);
+//-->
+</script>
+</div>
+</body>

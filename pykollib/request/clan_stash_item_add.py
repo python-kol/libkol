@@ -1,8 +1,8 @@
 from typing import List
 
 import pykollib
+from pykollib import types
 
-from ..Item import ItemQuantity
 from .request import Request
 
 
@@ -10,7 +10,7 @@ class clan_stash_item_add(Request):
     """
     Adds items to the clan's stash.
     """
-    def __init__(self, session: "pykollib.Session", items: List[ItemQuantity]) -> None:
+    def __init__(self, session: "pykollib.Session", items: List[types.ItemQuantity]) -> None:
         params = {"action": "addgoodies"}
 
         for i, iq in enumerate(items):

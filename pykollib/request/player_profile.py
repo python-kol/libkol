@@ -25,7 +25,7 @@ class player_profile(Request):
         self.request = session.request("showplayer.php", data=payload)
 
     @staticmethod
-    def parser(html: str, url, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
+    async def parser(html: str, url, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
         username_match = username.search(html)
         ascensions_match = numAscensions.search(html)
         trophies_match = numTrophies.search(html)

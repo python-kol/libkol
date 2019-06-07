@@ -9,5 +9,5 @@ class logout(Request):
         self.request = session.request("logout.php")
 
     @staticmethod
-    def parser(html: str, url, session: "pykollib.Session", **kwargs) -> None:
+    async def parser(html: str, url, session: "pykollib.Session", **kwargs) -> None:
         session.is_connected = False

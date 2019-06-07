@@ -29,7 +29,7 @@ class skill_use(Request):
         self.request = session.request("skills.php", pwd=True, params=params)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> str:
+    async def parser(html: str, **kwargs) -> str:
         match = results_pattern.search(html)
 
         if match is None:

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Union
 
 from bs4 import BeautifulSoup
 from yarl import URL
@@ -160,13 +160,13 @@ class mall_search(Request):
         self.request = session.request("mall.php", params=params)
 
     @staticmethod
-    def parser(html: str, url: URL, **kwargs) -> List[Listing]:
+    async def parser(html: str, url: URL, just_items: bool = False, **kwargs) -> Union[List[Listing], List[Item]]:
         soup = BeautifulSoup(html, "html.parser")
         rows = soup.find_all("tr", id=lambda i: i and i.startswith("stock_"))
 
         if len(rows) == 0:
             return [
-                Item[int(str(item["id"])[5:])]
+                await Item.get_or_discover(id=int(str(item["id"])[5:]))
                 for item in soup.find_all(
                     "tr", id=lambda i: i and i.startswith("item_")
                 )
@@ -174,7 +174,7 @@ class mall_search(Request):
 
         return [
             Listing(
-                Item[int(url.query["searchitem"])],
+                await Item.get_or_discover(id=int(url.query["searchitem"])),
                 int(url.query["searchprice"]),
                 int(url.query["whichstore"]),
                 store_name,

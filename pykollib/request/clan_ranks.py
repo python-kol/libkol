@@ -33,7 +33,7 @@ class clan_ranks(Request):
         }
 
     @classmethod
-    def parser(cls, html: str, **kwargs) -> List[Dict[str, Any]]:
+    async def parser(cls, html: str, **kwargs) -> List[Dict[str, Any]]:
         soup = BeautifulSoup(html, "html.parser")
 
         ranks = [

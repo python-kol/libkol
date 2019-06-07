@@ -32,7 +32,7 @@ class clan_apply(Request):
         self.request = session.request("showclan.php", data=payload)
 
     @staticmethod
-    def parser(html: str, **kwargs) -> Response:
+    async def parser(html: str, **kwargs) -> Response:
         """
         Formats the clan application response
         """

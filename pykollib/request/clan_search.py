@@ -34,7 +34,7 @@ class clan_search(Request):
         self.request = session.request("clan_signup.php", data=data)
 
     @staticmethod
-    def parser(
+    async def parser(
         html: str, url: URL, session: "pykollib.Session", **kwargs
     ) -> List["Clan"]:
         return [
