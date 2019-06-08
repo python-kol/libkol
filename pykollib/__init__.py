@@ -14,9 +14,25 @@ from .Trophy import Trophy
 from .Effect import Effect
 from .Modifier import Modifier
 
+
 def run(func: Callable):
     loop = asyncio.get_event_loop()
     loop.run_until_complete(func())
     loop.close()
 
-__all__ = ["Clan", "Error", "Session", "Kmail", "Item", "types", "FoldGroup", "ZapGroup", "Store", "Trophy", "Effect", "Modifier", "models"]
+
+__all__ = [
+    "Clan",
+    "Error",
+    "Session",
+    "Kmail",
+    "Item",
+    "types",
+    "FoldGroup",
+    "ZapGroup",
+    "Store",
+    "Trophy",
+    "Effect",
+    "Modifier",
+    "models",
+]

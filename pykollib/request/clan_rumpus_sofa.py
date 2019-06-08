@@ -15,6 +15,7 @@ class clan_rumpus_sofa(Request[Response]):
     """
     Uses the comfy sofa in the clan rumpus room.
     """
+
     def __init__(self, session: "pykollib.Session", turns: int = 0) -> None:
         super().__init__(session)
 

@@ -24,6 +24,7 @@ class equip(Request):
     """
     Equips items from the inventory passed by itemId.  If a slot is specified, it will attempt to equip accessories into that slot.
     """
+
     def __init__(self, session: "pykollib.Session", item: Item, slot: Slot) -> None:
         super().__init__(session)
 

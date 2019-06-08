@@ -8,11 +8,13 @@ import pykollib
 from ..Item import Item
 from .request import Request
 
+
 @dataclass
 class Listing:
     price: int
     quantity: int
     limit: int
+
 
 @dataclass
 class Response:
@@ -31,6 +33,7 @@ class mall_price(Request[Response]):
     :param session: Active session
     :param item: Item for which to get prices
     """
+
     def __init__(self, session: "pykollib.Session", item: Item) -> None:
         super().__init__(session)
 

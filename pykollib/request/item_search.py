@@ -90,6 +90,7 @@ class item_search(Request[List[Item]]):
     :param start: Not usually needed by the user. Tells which item in the list
                   of results is to be returned first.
     """
+
     def __init__(
         self,
         session: "pykollib.Session",
@@ -105,7 +106,7 @@ class item_search(Request[List[Item]]):
     ) -> None:
         super().__init__(session)
 
-        pudnuggler = "\"{}\"".format(query.name) if isinstance(query, Item) else query
+        pudnuggler = '"{}"'.format(query.name) if isinstance(query, Item) else query
 
         params = {
             "didadv": 1,
@@ -139,7 +140,5 @@ class item_search(Request[List[Item]]):
 
         return [
             await Item.get_or_discover(id=int(str(item["id"])[5:]))
-            for item in soup.find_all(
-                "tr", id=lambda i: i and i.startswith("item_")
-            )
+            for item in soup.find_all("tr", id=lambda i: i and i.startswith("item_"))
         ]

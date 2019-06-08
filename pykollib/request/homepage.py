@@ -19,6 +19,7 @@ class homepage(Request[Response]):
     particular server number to the user. In addition, it gives us the user's login challenge
     so that we might login to the server in a more secure fashion.
     """
+
     def __init__(self, session: "pykollib.Session", server_number: int = 0) -> None:
         super().__init__(session)
 
@@ -31,7 +32,7 @@ class homepage(Request[Response]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> Response:
-        url = kwargs["url"] # type: URL
+        url = kwargs["url"]  # type: URL
 
         soup = BeautifulSoup(content, "html.parser")
 

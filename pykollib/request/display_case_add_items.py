@@ -13,6 +13,7 @@ class display_case_add_items(Request):
     :param session: Active session
     :param items: List of items and their quantities to add to the case
     """
+
     def __init__(self, session: "pykollib.Session", items: List[ItemQuantity]) -> None:
         super().__init__(session)
 

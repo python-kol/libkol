@@ -17,6 +17,7 @@ class clan_apply(Request[Response]):
 
     :param clan_id: id of clan
     """
+
     def __init__(self, session: "pykollib.Session", clan_id: int) -> None:
         super().__init__(session)
 

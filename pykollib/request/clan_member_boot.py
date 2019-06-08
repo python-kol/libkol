@@ -11,6 +11,7 @@ class clan_member_boot(Request):
     """
     Boot member from clan (also removes their whitelist)
     """
+
     def __init__(
         self, session: "pykollib.Session", user_id: Union[int, List[int]]
     ) -> None:

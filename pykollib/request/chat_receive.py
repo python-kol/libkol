@@ -9,6 +9,7 @@ from .request import Request
 
 last_seen_pattern = re.compile(r"lastseen:([0-9]+)")
 
+
 @dataclass
 class Response:
     msgs: List[str]
@@ -24,7 +25,7 @@ class chat_receive(Request[Response]):
         params = {
             # "aa" is a float and I don't know what it means but it works without it
             "j": 1,
-            "lasttime": since
+            "lasttime": since,
         }
         self.request = session.request("newchatmessages.php", params=params)
 

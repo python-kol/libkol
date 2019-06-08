@@ -13,7 +13,6 @@ class ClanAcceptingApplicationsTestCase(TestCase):
 
         self.run_async("on", run_test)
 
-
     def test_clan_accepting_applications_off(self):
         async def run_test(file):
             parsed = await clan_accepting_applications.parser(file.read())

@@ -11,6 +11,7 @@ class clan_vip_crimbotree(Request[List[ItemQuantity]]):
     """
     Uses the Crimbo Tree in the clan VIP room.
     """
+
     def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
 

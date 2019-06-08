@@ -10,9 +10,13 @@ from typing import Any, Coroutine, List
 
 from pykollib import ZapGroup, Item, FoldGroup, Store, Trophy, Effect, Modifier, models
 
+
 async def load_mafia_data(session: ClientSession, key: str) -> ClientResponse:
-    response = await session.get("https://svn.code.sf.net/p/kolmafia/code/src/data/{}.txt".format(key))
+    response = await session.get(
+        "https://svn.code.sf.net/p/kolmafia/code/src/data/{}.txt".format(key)
+    )
     return response
+
 
 range_pattern = re.compile(r"(-?[0-9]+)(?:-(-?[0-9]+))?")
 
@@ -41,9 +45,10 @@ def mafia_dedupe(name: str):
 
     return {"id": int(m.group(1))}
 
+
 @atomic()
 async def load_zapgroups(session: ClientSession):
-    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+    tasks = []  # type: List[Coroutine[Any, Any, Item]]
 
     index = 1
 
@@ -66,9 +71,10 @@ async def load_zapgroups(session: ClientSession):
 
     return await asyncio.gather(*tasks)
 
+
 @atomic()
 async def load_foldgroups(session: ClientSession):
-    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+    tasks = []  # type: List[Coroutine[Any, Any, Item]]
 
     async for bytes in (await load_mafia_data(session, "foldgroups")).content:
         line = unescape(bytes.decode("utf-8")).strip()
@@ -93,9 +99,10 @@ async def load_foldgroups(session: ClientSession):
 
     return await asyncio.gather(*tasks)
 
+
 @atomic()
 async def load_items(session: ClientSession):
-    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+    tasks = []  # type: List[Coroutine[Any, Any, Item]]
 
     async for bytes in (await load_mafia_data(session, "items")).content:
         line = unescape(bytes.decode("utf-8")).strip()
@@ -123,9 +130,7 @@ async def load_items(session: ClientSession):
             name=parts[1],
             desc_id=int(parts[2]),
             image=parts[3],
-            usable=any(
-                u in use for u in ["usable", "multiple", "reusable", "message"]
-            ),
+            usable=any(u in use for u in ["usable", "multiple", "reusable", "message"]),
             multiusable="multiple" in use,
             reusable="reusable" in use,
             combat_usable=any(u in use for u in ["combat", "combat reusable"]),
@@ -168,10 +173,11 @@ async def load_items(session: ClientSession):
 
     return await asyncio.gather(*tasks)
 
+
 @atomic()
 async def load_equipment(session: ClientSession):
     type = None
-    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+    tasks = []  # type: List[Coroutine[Any, Any, Item]]
 
     async for bytes in (await load_mafia_data(session, "equipment")).content:
         line = unescape(bytes.decode("utf-8")).strip()
@@ -233,16 +239,19 @@ async def load_equipment(session: ClientSession):
                     item.required_moxie = required
                 else:
                     print(
-                        'Unrecognized requirement "{}" for {}'.format(parts[2], item.name)
+                        'Unrecognized requirement "{}" for {}'.format(
+                            parts[2], item.name
+                        )
                     )
 
             tasks += [item.save()]
 
     return await asyncio.gather(*tasks)
 
+
 @atomic()
 async def load_consumables(session: ClientSession, consumable_type):
-    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+    tasks = []  # type: List[Coroutine[Any, Any, Item]]
 
     async for bytes in (await load_mafia_data(session, consumable_type)).content:
         line = unescape(bytes.decode("utf-8")).strip()
@@ -259,7 +268,6 @@ async def load_consumables(session: ClientSession, consumable_type):
             item = await Item.get(name=parts[0])
         except DoesNotExist:
             print("No matching item for consumable {}".format(parts[0]))
-
 
         space = int(parts[1])
         if consumable_type == "fullness":
@@ -299,9 +307,10 @@ async def load_consumables(session: ClientSession, consumable_type):
 
     return await asyncio.gather(*tasks)
 
+
 @atomic()
 async def load_npcstores(session: ClientSession):
-    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+    tasks = []  # type: List[Coroutine[Any, Any, Item]]
 
     store = None
 
@@ -327,9 +336,10 @@ async def load_npcstores(session: ClientSession):
 
     return await asyncio.gather(*tasks)
 
+
 @atomic()
 async def load_effects(session: ClientSession):
-    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+    tasks = []  # type: List[Coroutine[Any, Any, Item]]
 
     async for bytes in (await load_mafia_data(session, "statuseffects")).content:
         line = unescape(bytes.decode("utf-8")).strip()
@@ -342,14 +352,17 @@ async def load_effects(session: ClientSession):
         if len(parts) < 4:
             continue
 
-        effect = Effect(id=int(parts[0]), name=parts[1], image=parts[2], desc_id=parts[3])
+        effect = Effect(
+            id=int(parts[0]), name=parts[1], image=parts[2], desc_id=parts[3]
+        )
         tasks += [effect._insert_instance()]
 
     return await asyncio.gather(*tasks)
 
+
 @atomic()
 async def load_modifiers(session: ClientSession):
-    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+    tasks = []  # type: List[Coroutine[Any, Any, Item]]
 
     async for bytes in (await load_mafia_data(session, "modifiers")).content:
         line = unescape(bytes.decode("utf-8")).strip()
@@ -379,13 +392,13 @@ async def load_modifiers(session: ClientSession):
         else:
             continue
 
-        modifiers_pattern = re.compile("([A-Za-z][A-Z'a-z ]+?)( Percent)?(?:: (\".*?\"|\[.*?\]|[+-][0-9\.]+))?(?:, |$)")
+        modifiers_pattern = re.compile(
+            '([A-Za-z][A-Z\'a-z ]+?)( Percent)?(?:: (".*?"|\[.*?\]|[+-][0-9\.]+))?(?:, |$)'
+        )
 
         for m in modifiers_pattern.finditer(parts[2]):
             modifier = Modifier(
-                **modifier_base,
-                key=m.group(1),
-                percentage=(m.group(2) is not None),
+                **modifier_base, key=m.group(1), percentage=(m.group(2) is not None)
             )
 
             value = m.group(3)
@@ -394,7 +407,7 @@ async def load_modifiers(session: ClientSession):
                 pass
             elif value[0] == "[":
                 modifier.expression_value = value[1:-1]
-            elif value[0] == "\"":
+            elif value[0] == '"':
                 modifier.string_value = value[1:-1]
             else:
                 modifier.numeric_value = float(value)
@@ -403,16 +416,17 @@ async def load_modifiers(session: ClientSession):
 
     return await asyncio.gather(*tasks)
 
+
 @atomic()
 async def load_trophies(session: ClientSession):
     trophies = [Trophy(**trophy) for trophy in json.load(open("./trophies.json"))]
     tasks = [trophy._insert_instance() for trophy in trophies]
     return await asyncio.gather(*tasks)
 
+
 async def populate():
     await Tortoise.init(
-        db_url="sqlite://../pykollib/pykollib.db",
-        modules={'models': models}
+        db_url="sqlite://../pykollib/pykollib.db", modules={"models": models}
     )
 
     await Tortoise.generate_schemas(safe=True)

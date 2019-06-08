@@ -19,6 +19,7 @@ class store_item_remove(Request[bool]):
     :param item: Item to remove
     :param quantity: Amount of that item to remove
     """
+
     def __init__(
         self, session: "pykollib.Session", item: Item, quantity: int = 1
     ) -> None:

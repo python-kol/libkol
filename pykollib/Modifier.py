@@ -2,6 +2,7 @@ from .Model import Model
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from typing import Optional
 
+
 class Modifier(Model):
     item = ForeignKeyField("models.Item", related_name="modifiers", null=True)
     item_id: Optional[int]

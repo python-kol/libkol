@@ -14,6 +14,7 @@ class clan_whitelist(Request[List[Dict[str, Any]]]):
     """
     Retrieves information from the clan whitelist page.
     """
+
     def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
 

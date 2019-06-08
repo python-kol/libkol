@@ -12,6 +12,7 @@ class inventory(Request[Dict[Item, int]]):
     """
     Get a list of items in the user's inventory.
     """
+
     def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
         data = {"for": session.state.get("user_agent", "pykollib"), "what": "inventory"}
@@ -20,7 +21,4 @@ class inventory(Request[Dict[Item, int]]):
 
     @staticmethod
     async def parser(content: Dict[str, Any], **kwargs) -> Dict[Item, int]:
-        return {
-            await Item[int(id)]: int(quantity)
-            for id, quantity in content.items()
-        }
+        return {await Item[int(id)]: int(quantity) for id, quantity in content.items()}

@@ -7,6 +7,7 @@ class clan_stash_item_remove(Request):
     """
     Take items from the player's clan stash.
     """
+
     def __init__(
         self, session: "pykollib.Session", item_id: int = 0, quantity: int = 0
     ) -> None:

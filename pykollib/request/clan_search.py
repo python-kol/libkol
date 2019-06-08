@@ -33,7 +33,7 @@ class clan_search(Request[List["Clan"]]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> List["Clan"]:
-        session = kwargs["session"] # type: "pykollib.Session"
+        session = kwargs["session"]  # type: "pykollib.Session"
         return [
             Clan(session, id=int(m.group(1)), name=m.group(2))
             for m in clan_search_result_pattern.finditer(content)

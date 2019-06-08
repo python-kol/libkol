@@ -16,6 +16,9 @@ class trophy(Request[List[Trophy]]):
     async def parser(content: str, **kwargs) -> List[Trophy]:
         soup = BeautifulSoup(content, "html.parser")
 
-        ids = [trophy["value"] for trophy in soup.find_all("input", attrs={"name": "whichtrophy"})]
+        ids = [
+            trophy["value"]
+            for trophy in soup.find_all("input", attrs={"name": "whichtrophy"})
+        ]
 
         return await Trophy.filter(id__in=ids)

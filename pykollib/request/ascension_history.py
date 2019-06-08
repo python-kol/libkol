@@ -9,11 +9,13 @@ import pykollib
 
 from .request import Request
 
+
 @dataclass
 class Ascension:
     """
     Ascension
     """
+
     id: int  # The ascension id
     dropped_path: bool  # Whether the path was dropped in-run
     level: int  # The level at which the user broke the prism
@@ -54,6 +56,7 @@ class ascension_history(Request[List[Ascension]]):
     :params player_id: Player for whom to fetch ascension history
     :params pre_ns13: Whether to include pre NS13 ascension history
     """
+
     def __init__(
         self, session: "pykollib.Session", player_id: int, pre_ns13: bool = False
     ) -> None:

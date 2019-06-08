@@ -8,6 +8,7 @@ from .Model import Model
 from .Error import ItemNotFoundError, WrongKindOfItemError
 from . import types
 
+
 class ItemMeta(ModelMeta):
     def __getitem__(self, key: Union[int, str]):
         """
@@ -153,7 +154,9 @@ class Item(Model, metaclass=ItemMeta):
             desc_id = (await request.item_information(cls.kol, id).parse()).descid
 
         if desc_id is None:
-            raise ItemNotFoundError("Cannot discover an item without either an id or a desc_id")
+            raise ItemNotFoundError(
+                "Cannot discover an item without either an id or a desc_id"
+            )
 
         info = await request.item_description(cls.kol, desc_id).parse()
         return Item(**{k: v for k, v in info.items() if v is not None})
@@ -179,14 +182,26 @@ class Item(Model, metaclass=ItemMeta):
         listing: "types.Listing" = None,
         store_id: int = None,
         price: int = 0,
-        quantity: int = 1
+        quantity: int = 1,
     ):
         if listing is None and store_id is None:
-            listings = await self.get_mall_listings(num_results=quantity, max_price=price)
-            tasks = [request.mall_purchase(self.kol, item=self, listing=l).parse() for l in listings]
+            listings = await self.get_mall_listings(
+                num_results=quantity, max_price=price
+            )
+            tasks = [
+                request.mall_purchase(self.kol, item=self, listing=l).parse()
+                for l in listings
+            ]
             return await asyncio.gather(*tasks)
 
-        return await request.mall_purchase(self.kol, item=self, listing=listing, store_id=store_id, price=price, quantity=quantity).parse()
+        return await request.mall_purchase(
+            self.kol,
+            item=self,
+            listing=listing,
+            store_id=store_id,
+            price=price,
+            quantity=quantity,
+        ).parse()
 
     def amount(self):
         return self.kol.state["inventory"][self]
