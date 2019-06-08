@@ -26,7 +26,8 @@ class player_profile(Request[Dict[str, Any]]):
     @staticmethod
     async def parser(content: str, **kwargs) -> Dict[str, Any]:
         from .. import Clan
-        session = kwargs["session"] # type: "pykollib.Session"
+
+        session = kwargs["session"]  # type: "pykollib.Session"
 
         username_match = username.search(content)
         ascensions_match = numAscensions.search(content)

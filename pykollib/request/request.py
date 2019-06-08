@@ -7,6 +7,7 @@ import pykollib
 
 ParserReturn = TypeVar("ParserReturn")
 
+
 class Request(Generic[ParserReturn]):
     session: "pykollib.Session"
     request: Coroutine[Any, Any, ClientResponse]
@@ -42,6 +43,6 @@ class Request(Generic[ParserReturn]):
 
         assert self.response is not None
 
-        url = self.response.url # type: URL
+        url = self.response.url  # type: URL
 
         return await self.parser(content, url=url, session=self.session, **kwargs)

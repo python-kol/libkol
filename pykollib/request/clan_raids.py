@@ -14,6 +14,7 @@ class clan_raids(Request[List[Dict[str, Any]]]):
     """
     Retrieves information on all active raids
     """
+
     def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
 

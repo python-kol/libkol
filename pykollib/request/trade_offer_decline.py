@@ -13,7 +13,7 @@ class trade_offer_decline(Request[bool]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> bool:
-        url = kwargs["url"] # type: URL
+        url = kwargs["url"]  # type: URL
 
         if "Offer cancelled." not in content:
             raise UnknownError(

@@ -5,6 +5,7 @@ from typing import Optional, List
 from ..util import parsing
 from .request import Request
 
+
 class item_description(Request):
     """
     Gets the description of an item and then parses various information from the response.
@@ -28,10 +29,24 @@ class item_description(Request):
         id = int(main.find(string=lambda text: isinstance(text, Comment))[9:])
         name = container.center.img["alt"]
         image = URL(container.center.img["src"]).parts[-1]
-        autosell = next((int(line[1].string.split(" ")[0].replace(",", "")) for line in lines if line[0] == "Selling Price: "), None)
-        level_required = next((int(line[1].string) for line in lines if line[0] == "Level required: "), None)
-        type: Optional[List[str]] = next((line[1].string.split(" ") for line in lines if line[0] == "Type: "), None)
-        power = next((int(line[1].string) for line in lines if line[0] == "Power: "), None)
+        autosell = next(
+            (
+                int(line[1].string.split(" ")[0].replace(",", ""))
+                for line in lines
+                if line[0] == "Selling Price: "
+            ),
+            None,
+        )
+        level_required = next(
+            (int(line[1].string) for line in lines if line[0] == "Level required: "),
+            None,
+        )
+        type: Optional[List[str]] = next(
+            (line[1].string.split(" ") for line in lines if line[0] == "Type: "), None
+        )
+        power = next(
+            (int(line[1].string) for line in lines if line[0] == "Power: "), None
+        )
 
         food = type and type[0] == "food"
         booze = type and type[0] == "booze"
@@ -48,5 +63,5 @@ class item_description(Request):
             "spleen": spleen,
             "quality": type[1][1:-1] if type and (food or booze or spleen) else None,
             "hat": type and type[0] == "hat",
-            "power": power
+            "power": power,
         }

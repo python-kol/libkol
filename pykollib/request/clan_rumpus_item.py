@@ -10,6 +10,7 @@ from .request import Request
 
 ItemQuantity = types.ItemQuantity
 
+
 class ItemFurniture(Enum):
     SodaMachine = Furniture.SodaMachine
     SnackMachine = Furniture.SnackMachine
@@ -20,6 +21,7 @@ class clan_rumpus_item(Request[List[ItemQuantity]]):
     """
     Uses an item dispenser in the clan rumpus room.
     """
+
     def __init__(self, session: "pykollib.Session", furniture: ItemFurniture) -> None:
         super().__init__(session)
         spot, furni = furniture.value

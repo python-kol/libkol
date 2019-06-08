@@ -9,6 +9,7 @@ from .. import types
 from ..pattern import PatternManager
 from ..Stat import Stat
 
+
 def panel(html: str, title: str = "Results:") -> Tag:
     soup = BeautifulSoup(html, "html.parser")
     headers = soup.find_all("b", text=title)
@@ -33,7 +34,9 @@ def split_by_br(element: Tag, wrapper: Tag = None):
         if g[0].name != "br"
     ]
 
-    return elements if wrapper is None else [wrap_elements(wrapper, e) for e in elements]
+    return (
+        elements if wrapper is None else [wrap_elements(wrapper, e) for e in elements]
+    )
 
 
 single_item_pattern = re.compile(

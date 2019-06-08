@@ -8,6 +8,7 @@ from .request import Request
 
 success_pattern = re.compile(r"<td>\(([0-9]+)\) (.*) for ([0-9,]+) meat each")
 
+
 class store_item_add(Request[bool]):
     """
     Add a single item to your store. The interface to the mall was updated on Sept 13, 2013.
@@ -20,6 +21,7 @@ class store_item_add(Request[bool]):
     Testing will need to be done to see how important this is. Presumably you could just append
     000 after the current seconds since epoch.
     """
+
     def __init__(
         self,
         session: "pykollib.Session",

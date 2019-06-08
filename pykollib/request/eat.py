@@ -13,6 +13,7 @@ class eat(Request[parsing.ResourceGain]):
     :param session: Active session
     :param item: Consumable to eat
     """
+
     def __init__(self, session: "pykollib.Session", item: Item) -> None:
         super().__init__(session)
 

@@ -16,6 +16,7 @@ class clan_rumpus_effect(Request[List[Dict[str, Any]]]):
     """
     Uses an effect giver in the clan rumpus room.
     """
+
     def __init__(self, session: "pykollib.Session", type: Type) -> None:
         super().__init__(session)
 

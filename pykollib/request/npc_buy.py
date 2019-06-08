@@ -29,6 +29,7 @@ class npc_buy(Request):
     :param item: Item to buy
     :param quantity: Quantity of said item to buy
     """
+
     def __init__(
         self, session: "pykollib.Session", store: Store, item: Item, quantity: int = 1
     ) -> None:
@@ -41,11 +42,7 @@ class npc_buy(Request):
             self.request = session.request("town_giftshop.php", pwd=True, params=params)
             return
 
-        params = {
-            "whichshop": store.slug,
-            "action": "buyitem",
-            "quantity": quantity,
-        }
+        params = {"whichshop": store.slug, "action": "buyitem", "quantity": quantity}
 
         if item.store_row:
             params["whichrow"] = item.store_row

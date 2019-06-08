@@ -15,6 +15,7 @@ class clan_stash(Request[List[Dict[str, Any]]]):
     """
     This class is used to get a list of items in the user's clan stash.
     """
+
     def __init__(self, session: "pykollib.Session"):
         super().__init__(session)
 

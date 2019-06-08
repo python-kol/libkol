@@ -169,6 +169,7 @@ class charpane(Request[Dict[str, Any]]):
     """
     Requests the user's character pane.
     """
+
     def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
 
@@ -176,7 +177,7 @@ class charpane(Request[Dict[str, Any]]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> Dict[str, Any]:
-        session = kwargs["session"] # type: "pykollib.Session"
+        session = kwargs["session"]  # type: "pykollib.Session"
         pwd_matcher = pwd_pattern.search(content)
         username_matcher = username_pattern.search(content)
         user_id_matcher = user_id_pattern.search(content)
@@ -230,7 +231,9 @@ class charpane(Request[Dict[str, Any]]):
         data["effects"] = [
             {"name": str(match.group(1)), "turns": int(match.group(2))}
             for match in (
-                match for match in characterEffect.finditer(content) if match is not None
+                match
+                for match in characterEffect.finditer(content)
+                if match is not None
             )
         ]
 
