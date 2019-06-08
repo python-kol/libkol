@@ -33,4 +33,4 @@ class HermitMenuTestCase(TestCase):
 
         request_mocks = {"desc_item.php": "unrecognised_desc"}
 
-        self.run_async("unrecognised", run_test, request_mocks)
+        self.run_async("unrecognised", run_test, request_mocks=request_mocks)

@@ -13,7 +13,7 @@ class Response(NamedTuple):
     challenge: Optional[str]
 
 
-class homepage(Request):
+class homepage(Request[Response]):
     """
     This request is most often used before logging in. It allows the KoL servers to assign a
     particular server number to the user. In addition, it gives us the user's login challenge
@@ -30,8 +30,10 @@ class homepage(Request):
         self.request = session.request(url)
 
     @staticmethod
-    async def parser(html: str, url: URL, **kwargs) -> Response:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(content: str, **kwargs) -> Response:
+        url = kwargs["url"] # type: URL
+
+        soup = BeautifulSoup(content, "html.parser")
 
         challenge_input = soup.find("input", attrs={"name": "challenge"})
         challenge = str(challenge_input["value"]) if challenge_input else None

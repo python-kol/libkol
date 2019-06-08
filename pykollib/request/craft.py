@@ -28,7 +28,7 @@ class Response(NamedTuple):
     explosion: bool
 
 
-class craft(Request):
+class craft(Request[Response]):
     def __init__(
         self,
         session: "pykollib.Session",
@@ -49,30 +49,31 @@ class craft(Request):
         self.request = session.request("craft.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(html: str, url: URL, **kwargs) -> Response:
+    async def parser(content: str, **kwargs) -> Response:
+        url = kwargs["url"] # type: URL
         mode = Mode(url.query["mode"])
 
-        if "<td>Those two items don't combine to make" in html:
+        if "<td>Those two items don't combine to make" in content:
             raise RecipeNotFoundError("Unable to craft. Does not match any recipe.")
 
         if (
             mode in [Mode.Cocktail, Mode.Cook]
-            and "<td>You don't have the skill necessary to " in html
+            and "<td>You don't have the skill necessary to " in content
         ):
             raise SkillNotFoundError("Unable to craft. We are not skilled enough.")
 
-        if "<td>You don't have enough of one the " in html:
+        if "<td>You don't have enough of one the " in content:
             raise ItemNotFoundError("Unable to craft. You don't have all of the items.")
 
-        if "<td>You don't have that many adventures left." in html:
+        if "<td>You don't have that many adventures left." in content:
             raise NotEnoughAdventuresError("Unable to craft. Not enough adventures.")
 
         if (
             mode is Mode.Combine
-            and '<div style="text-align:left">You don\'t have any meat paste.' in html
+            and '<div style="text-align:left">You don\'t have any meat paste.' in content
         ):
             raise ItemNotFoundError("Unable to craft. You need sufficient meatpaste")
 
-        explosion = "Smoke begins to pour from the head of your" in html
+        explosion = "Smoke begins to pour from the head of your" in content
 
-        return Response(await parsing.item(html), explosion)
+        return Response(await parsing.item(content), explosion)

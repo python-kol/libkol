@@ -1,11 +1,12 @@
 from enum import Enum
-from typing import List, NamedTuple, Union
+from typing import List, Union
 
 from bs4 import BeautifulSoup
 from yarl import URL
 
 import pykollib
 
+from ..types import Listing
 from ..Item import Item
 from .request import Request
 
@@ -68,21 +69,13 @@ sortable_categories = [
 ]
 
 
-class Listing(NamedTuple):
-    item: Item
-    price: int
-    store_id: int
-    store_name: str
-    stock: int
-    limit: int
-
-
-class mall_search(Request):
+class mall_search(Request[List[Listing]]):
     """
     Searches for an item at the mall
 
     :param session: The Pykol session
-    :param query: The string to search for.  You can use % for a wildca:param d
+    :param query: The Item or string to search for. You can use % for a wildcard string. If you
+                  supply an Item instance, it will search for exactly and only that item.
     :param category: The category to search in, such as 'food'.  The default is
                      to search in all categories.  Note the convenience constants
                      above.
@@ -95,7 +88,6 @@ class mall_search(Request):
     :param sort_items_by: How to sort the items listed in the output. Depending on the other
                           search parameters, not all of the possible values will be maningful.
     :param sort_shops_by: How to sort the shops within each individual item.
-    :param just_items: Whether to suppress the shops and just show a list of items.
     :param tiers: For food and booze, an array listing which quality levels to
                   include in the search results.
     :param consumable_by_me: For consumable items, whether to list only items that
@@ -112,14 +104,13 @@ class mall_search(Request):
     def __init__(
         self,
         session: "pykollib.Session",
-        query: str,
+        query: Union[str, Item],
         category: Category = Category.All,
         no_limits: bool = False,
         max_price: int = 0,
         num_results: int = 0,
         sort_items_by: SortBy = SortBy.Name,
         sort_shops_by: SortBy = SortBy.Price,
-        just_items: bool = False,
         tiers: List[Tier] = [t for t in Tier],
         consumable_by_me: bool = False,
         weapon_attribute: int = 3,
@@ -129,16 +120,18 @@ class mall_search(Request):
     ) -> None:
         super().__init__(session)
 
+        pudnuggler = "\"{}\"".format(query.name) if isinstance(query, Item) else query
+
         params = {
             "didadv": 1,
-            "pudnuggler": query,
+            "pudnuggler": pudnuggler,
             "category": category.value,
             "consumable_byme": "1" if consumable_by_me else "0",
             "weaponattribute": weapon_attribute,
             "weaponhands": weapon_hands,
             "wearable_byme": "1" if wearable_by_me else "0",
             "nolimits": "1" if no_limits else "0",
-            "justitems": "1" if just_items else "0",
+            "justitems": 0,
             "sortresultsby": sort_shops_by.value,
             "max_price": max_price,
             "x_cheapest": num_results,
@@ -160,17 +153,11 @@ class mall_search(Request):
         self.request = session.request("mall.php", params=params)
 
     @staticmethod
-    async def parser(html: str, url: URL, just_items: bool = False, **kwargs) -> Union[List[Listing], List[Item]]:
-        soup = BeautifulSoup(html, "html.parser")
-        rows = soup.find_all("tr", id=lambda i: i and i.startswith("stock_"))
+    async def parser(content: str, **kwargs) -> List[Listing]:
+        include_limit_reached = kwargs.get("include_limit_reached", False)
 
-        if len(rows) == 0:
-            return [
-                await Item.get_or_discover(id=int(str(item["id"])[5:]))
-                for item in soup.find_all(
-                    "tr", id=lambda i: i and i.startswith("item_")
-                )
-            ]
+        soup = BeautifulSoup(content, "html.parser")
+        rows = soup.find_all("tr", id=lambda i: i and i.startswith("stock_"))
 
         return [
             Listing(
@@ -184,16 +171,19 @@ class mall_search(Request):
                     if limit == "\xa0"
                     else int(limit.replace("\xa0", "").replace("/day", ""))
                 ),
+                limit_reached,
             )
-            for url, store_name, stock, limit in (
+            for url, store_name, stock, limit, limit_reached in (
                 (
                     URL(row.contents[1].a["href"]),
                     row.contents[1].a.string,
                     row.contents[2].string,
                     row.contents[3].string,
+                    "limited" in row["class"]
                 )
                 for row in rows
             )
+            if include_limit_reached or limit_reached is False
         ]
 
 

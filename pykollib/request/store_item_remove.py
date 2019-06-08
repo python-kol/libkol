@@ -6,7 +6,7 @@ from ..pattern import PatternManager
 from .request import Request
 
 
-class store_item_remove(Request):
+class store_item_remove(Request[bool]):
     """
     Take a single item from your store using the new Mall interface from Sep 2013
 
@@ -28,17 +28,17 @@ class store_item_remove(Request):
         self.request = session.request("backoffice.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> bool:
+    async def parser(content: str, **kwargs) -> bool:
         # First parse for errors
         notEnoughPattern = PatternManager.getOrCompilePattern("dontHaveThatManyInStore")
-        if notEnoughPattern.search(html):
+        if notEnoughPattern.search(content):
             raise ItemNotFoundError("You either don't have that item, or not enough")
 
         # Check if responseText matches the success pattern. If not, raise error.
         itemTakenSuccessfully = PatternManager.getOrCompilePattern(
             "itemTakenSuccessfully"
         )
-        if itemTakenSuccessfully.search(html) is None:
+        if itemTakenSuccessfully.search(content) is None:
             raise UnknownError("Something went wrong with the taking of the item.")
 
         return True

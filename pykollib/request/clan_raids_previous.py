@@ -1,6 +1,6 @@
 import re
 from datetime import date, datetime
-from typing import Any, Dict, List, NamedTuple
+from typing import List, NamedTuple
 
 from bs4 import BeautifulSoup
 from yarl import URL
@@ -24,7 +24,7 @@ class Response(NamedTuple):
     total: int
     raids: List[Raid]
 
-class clan_raids_previous(Request):
+class clan_raids_previous(Request[Response]):
     """
     Retrieves a list of old raid logs, in pages of length 10
     """
@@ -36,11 +36,11 @@ class clan_raids_previous(Request):
         self.request = session.request("clan_oldraidlogs.php", params=params)
 
     @staticmethod
-    async def parser(html: str, url: URL, **kwargs) -> Response:
-        if "(No previous Clan Dungeon records found)" in html:
+    async def parser(content: str, **kwargs) -> Response:
+        if "(No previous Clan Dungeon records found)" in content:
             raise ClanRaidsNotFoundError("Page of old clan raids not found")
 
-        soup = BeautifulSoup(html, "html.parser")
+        soup = BeautifulSoup(content, "html.parser")
         summary = soup.find(text=summary_pattern)
         m = summary_pattern.search(summary.string)
 

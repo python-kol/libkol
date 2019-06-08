@@ -10,7 +10,7 @@ from .request import Request
 rank_pattern = re.compile(r"(.*?) \(°([0-9]+)\)")
 
 
-class clan_whitelist(Request):
+class clan_whitelist(Request[List[Dict[str, Any]]]):
     """
     Retrieves information from the clan whitelist page.
     """
@@ -21,9 +21,9 @@ class clan_whitelist(Request):
 
     @staticmethod
     async def parser(
-        html: str, include_rank: bool = False, only_rank: bool = False, **kwargs
+        content: str, include_rank: bool = False, only_rank: bool = False, **kwargs
     ) -> List[Dict[str, Any]]:
-        soup = BeautifulSoup(html, "html.parser")
+        soup = BeautifulSoup(content, "html.parser")
 
         # Get rid of stupid forms everywhere
         for f in soup.find_all("form"):

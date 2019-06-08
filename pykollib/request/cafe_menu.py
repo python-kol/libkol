@@ -18,7 +18,7 @@ class Cafe(Enum):
     HellsKitchen = 3
 
 
-class cafe_menu(Request):
+class cafe_menu(Request[List[Item]]):
     """
     Check the current menu at a given cafe.
 
@@ -31,12 +31,12 @@ class cafe_menu(Request):
         self.request = session.request("cafe.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[Item]:
-        if cannot_go_pattern.search(html):
+    async def parser(content: str, **kwargs) -> List[Item]:
+        if cannot_go_pattern.search(content):
             raise InvalidLocationError("You cannot reach that cafe.")
 
         items = []  # type: List[Item]
-        for match in menu_item_pattern.finditer(html):
+        for match in menu_item_pattern.finditer(content):
             desc_id = match.group(2)
             if desc_id.isdigit() is False:
                 continue

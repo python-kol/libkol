@@ -3,65 +3,16 @@ from tortoise import Tortoise
 from tortoise.transactions import atomic
 from tortoise.exceptions import DoesNotExist
 from html import unescape
-from urllib import request
+from aiohttp import ClientSession, ClientResponse
 import re
+import json
+from typing import Any, Coroutine, List
 
-from pykollib import ZapGroup, Item, FoldGroup
+from pykollib import ZapGroup, Item, FoldGroup, Store, Trophy, Effect, Modifier, models
 
-mafia_data = "https://svn.code.sf.net/p/kolmafia/code/src/data/"
-EQUIPMENT_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/equipment.txt"
-FOLD_GROUPS_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/foldgroups.txt"
-ITEMS_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/items.txt"
-ZAP_GROUPS_FILE = "https://svn.code.sf.net/p/kolmafia/code/src/data/zapgroups.txt"
-
-ENCHANTMENT_MAPPINGS = {
-    "Adventures": "adventuresAtRollover",
-    "Cold Damage": "coldDamage",
-    "Cold Resistance": "coldResistance",
-    "Cold Spell Damage": "coldSpellDamage",
-    "Critical": "critical",
-    "Damage Absorption": "damageAbsorption",
-    "Fumble": "fumble",
-    "Hobo Power": "hoboPower",
-    "Hot Damage": "hotDamage",
-    "Hot Resistance": "hotResistance",
-    "Hot Spell Damage": "hotSpellDamage",
-    "Initiative": "initiative",
-    "Item Drop": "itemDrop",
-    "Maximum HP": "maximumHP",
-    "Maximum MP": "maximumMP",
-    "Meat Drop": "meatDrop",
-    "Melee Damage": "weaponDamage",
-    "Moxie Percent": "moxiePercent",
-    "Muscle Percent": "musclePercent",
-    "Mysticality Percent": "mysticalityPercent",
-    "Moxie": "moxie",
-    "Muscle": "muscle",
-    "Mysticality": "mysticality",
-    "Ranged Damage": "rangedDamage",
-    "Sleaze Damage": "sleazeDamage",
-    "Sleaze Resistance": "sleazeResistance",
-    "Sleaze Spell Damage": "sleazeSpellDamage",
-    "Spell Damage": "spellDamage",
-    "Spell Damage Percent": "spellDamagePercent",
-    "Spooky Damage": "spookyDamage",
-    "Spooky Resistance": "spookyResistance",
-    "Spooky Spell Damage": "spookySpellDamage",
-    "Stench Damage": "stenchDamage",
-    "Stench Resistance": "stenchResistance",
-    "Stench Spell Damage": "stenchSpellDamage",
-    "Weapon Damage": "weaponDamage",
-}
-
-GIFT_PACKAGES = [
-    "raffle prize box",
-    "Warehouse 23 crate",
-    "anniversary gift box",
-    "bindle of joy",
-    "moist sack",
-    "foreign box",
-    "Uncle Crimbo's Sack",
-]
+async def load_mafia_data(session: ClientSession, key: str) -> ClientResponse:
+    response = await session.get("https://svn.code.sf.net/p/kolmafia/code/src/data/{}.txt".format(key))
+    return response
 
 range_pattern = re.compile(r"(-?[0-9]+)(?:-(-?[0-9]+))?")
 
@@ -79,24 +30,31 @@ def split_range(range: str):
 id_duplicate_pattern = re.compile(r"\[([0-9]+)\].+")
 
 
-def get_id_from_duplicate(name: str):
+def mafia_dedupe(name: str):
+    if name[0] != "[":
+        return {"name": name}
+
     m = id_duplicate_pattern.match(name)
 
     if m is None:
-        raise ValueError("Cannot extract id from duplicate item name: {}".format(name))
+        return {"name": name}
 
-    return int(m.group(1))
+    return {"id": int(m.group(1))}
 
 @atomic()
-async def load_mafia_zapgroups():
-    tasks = []
+async def load_zapgroups(session: ClientSession):
+    tasks = [] # type: List[Coroutine[Any, Any, Item]]
 
-    for i, line in enumerate(request.urlopen(ZAP_GROUPS_FILE)):
-        line = unescape(line.decode("utf-8"))
+    index = 1
+
+    async for bytes in (await load_mafia_data(session, "zapgroups")).content:
+        line = unescape(bytes.decode("utf-8")).strip()
+
         if len(line) < 2 or line[0] == "#":
             continue
 
-        group = ZapGroup(index=i)
+        group = ZapGroup(index=index)
+        index += 1
 
         await group.save()
 
@@ -109,11 +67,11 @@ async def load_mafia_zapgroups():
     return await asyncio.gather(*tasks)
 
 @atomic()
-async def load_mafia_foldgroups():
-    tasks = []
+async def load_foldgroups(session: ClientSession):
+    tasks = [] # type: List[Coroutine[Any, Any, Item]]
 
-    for line in request.urlopen(FOLD_GROUPS_FILE):
-        line = unescape(line.decode("utf-8"))
+    async for bytes in (await load_mafia_data(session, "foldgroups")).content:
+        line = unescape(bytes.decode("utf-8")).strip()
 
         if len(line) < 2 or line[0] == "#":
             continue
@@ -136,11 +94,11 @@ async def load_mafia_foldgroups():
     return await asyncio.gather(*tasks)
 
 @atomic()
-async def load_mafia_items():
-    tasks = []
+async def load_items(session: ClientSession):
+    tasks = [] # type: List[Coroutine[Any, Any, Item]]
 
-    for line in request.urlopen(ITEMS_FILE):
-        line = unescape(line.decode("utf-8"))
+    async for bytes in (await load_mafia_data(session, "items")).content:
+        line = unescape(bytes.decode("utf-8")).strip()
 
         if len(line) == 0 or line[0] == "#":
             continue
@@ -211,30 +169,28 @@ async def load_mafia_items():
     return await asyncio.gather(*tasks)
 
 @atomic()
-async def load_mafia_equipment():
+async def load_equipment(session: ClientSession):
     type = None
-    tasks = []
+    tasks = [] # type: List[Coroutine[Any, Any, Item]]
 
-    for line in request.urlopen(EQUIPMENT_FILE):
-        line = unescape(line.decode("utf-8"))
-        if len(line) == 0:
+    async for bytes in (await load_mafia_data(session, "equipment")).content:
+        line = unescape(bytes.decode("utf-8")).strip()
+
+        if len(line) < 2:
             continue
 
         if line[0] == "#":
-            if line.startswith("# Hats"):
-                type = "hat"
-            elif line.startswith("# Pants"):
-                type = "pants"
-            elif line.startswith("# Shirts"):
-                type = "shirt"
-            elif line.startswith("# Weapons"):
-                type = "weapon"
-            elif line.startswith("# Off-hand"):
-                type = "offhand"
-            elif line.startswith("# Accessories"):
-                type = "accessory"
-            elif line.startswith("# Containers"):
-                type = "container"
+            type = {
+                "Hats": "hat",
+                "Pants": "pants",
+                "Shirts": "shirt",
+                "Weapons": "weapon",
+                "Off-hand": "offhand",
+                "Accessories": "accessory",
+                "Containers": "container",
+            }.get(line[2:])
+
+        if type is None:
             continue
 
         parts = line.split("\t")
@@ -242,10 +198,7 @@ async def load_mafia_equipment():
         if len(parts) < 3:
             continue
 
-        if parts[0][0] == "[" and id_duplicate_pattern.match(parts[0]):
-            items = [await Item.get(id=get_id_from_duplicate(parts[0]))]
-        else:
-            items = await Item.filter(name=parts[0])
+        items = await Item.filter(*mafia_dedupe(parts[0]))
 
         if len(items) == 0 or (None in items):
             print("Unrecognized equipment name: {}".format(parts[0]))
@@ -288,11 +241,11 @@ async def load_mafia_equipment():
     return await asyncio.gather(*tasks)
 
 @atomic()
-async def load_mafia_consumables(consumable_type):
-    tasks = []
+async def load_consumables(session: ClientSession, consumable_type):
+    tasks = [] # type: List[Coroutine[Any, Any, Item]]
 
-    for line in request.urlopen("{}{}.txt".format(mafia_data, consumable_type)):
-        line = unescape(line.decode("utf-8"))
+    async for bytes in (await load_mafia_data(session, consumable_type)).content:
+        line = unescape(bytes.decode("utf-8")).strip()
 
         if len(line) == 0 or line[0] == "#":
             continue
@@ -346,28 +299,150 @@ async def load_mafia_consumables(consumable_type):
 
     return await asyncio.gather(*tasks)
 
+@atomic()
+async def load_npcstores(session: ClientSession):
+    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+
+    store = None
+
+    async for bytes in (await load_mafia_data(session, "npcstores")).content:
+        line = unescape(bytes.decode("utf-8")).strip()
+
+        if len(line) < 2 or line[0] == "#":
+            continue
+
+        parts = line.split("\t")
+
+        if store is None or store.slug != parts[1]:
+            store = Store(name=parts[0], slug=parts[1])
+            await store.save()
+
+        item = await Item.get(name=parts[2])
+
+        item.store_id = store.id
+        item.store_price = int(parts[3])
+        item.store_row = int(parts[4][3:]) if len(parts) > 4 else None
+
+        tasks += [item.save()]
+
+    return await asyncio.gather(*tasks)
+
+@atomic()
+async def load_effects(session: ClientSession):
+    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+
+    async for bytes in (await load_mafia_data(session, "statuseffects")).content:
+        line = unescape(bytes.decode("utf-8")).strip()
+
+        if "\t" not in line or line[0] == "#":
+            continue
+
+        parts = line.split("\t")
+
+        if len(parts) < 4:
+            continue
+
+        effect = Effect(id=int(parts[0]), name=parts[1], image=parts[2], desc_id=parts[3])
+        tasks += [effect._insert_instance()]
+
+    return await asyncio.gather(*tasks)
+
+@atomic()
+async def load_modifiers(session: ClientSession):
+    tasks = [] # type: List[Coroutine[Any, Any, Item]]
+
+    async for bytes in (await load_mafia_data(session, "modifiers")).content:
+        line = unescape(bytes.decode("utf-8")).strip()
+
+        if "\t" not in line or line[0] == "#":
+            continue
+
+        parts = line.split("\t")
+
+        modifier_base = {}
+
+        if parts[0] == "Item":
+            try:
+                item = await Item.get(**mafia_dedupe(parts[1]))
+            except:
+                print("Couldn't find item `{}` for modifier".format(parts[1]))
+                continue
+
+            modifier_base["item_id"] = item.id
+        elif parts[0] == "Effect":
+            try:
+                effect = await Effect.get(**mafia_dedupe(parts[1]))
+            except:
+                print("Couldn't find effect `{}` for modifier".format(parts[1]))
+                continue
+            modifier_base["effect_id"] = effect.id
+        else:
+            continue
+
+        modifiers_pattern = re.compile("([A-Za-z][A-Z'a-z ]+?)( Percent)?(?:: (\".*?\"|\[.*?\]|[+-][0-9\.]+))?(?:, |$)")
+
+        for m in modifiers_pattern.finditer(parts[2]):
+            modifier = Modifier(
+                **modifier_base,
+                key=m.group(1),
+                percentage=(m.group(2) is not None),
+            )
+
+            value = m.group(3)
+
+            if value is None:
+                pass
+            elif value[0] == "[":
+                modifier.expression_value = value[1:-1]
+            elif value[0] == "\"":
+                modifier.string_value = value[1:-1]
+            else:
+                modifier.numeric_value = float(value)
+
+            tasks += [modifier.save()]
+
+    return await asyncio.gather(*tasks)
+
+@atomic()
+async def load_trophies(session: ClientSession):
+    trophies = [Trophy(**trophy) for trophy in json.load(open("./trophies.json"))]
+    tasks = [trophy._insert_instance() for trophy in trophies]
+    return await asyncio.gather(*tasks)
 
 async def populate():
     await Tortoise.init(
-        db_url="sqlite://pykollib/pykollib.db",
-        modules={'models': ['pykollib.ZapGroup', "pykollib.FoldGroup", "pykollib.Item"]}
+        db_url="sqlite://../pykollib/pykollib.db",
+        modules={'models': models}
     )
 
     await Tortoise.generate_schemas(safe=True)
 
-    print("Inserting items")
-    await load_mafia_items()
-    print("Updating equipable items")
-    await load_mafia_equipment()
+    async with ClientSession() as session:
+        print("Inserting items")
+        await load_items(session)
+        print("Discovering equipable items")
+        await load_equipment(session)
 
-    print("Updating consumable items")
-    for c in ["fullness", "inebriety", "spleenhit"]:
-        await load_mafia_consumables(c)
+        print("Discovering consumable items")
+        for c in ["fullness", "inebriety", "spleenhit"]:
+            await load_consumables(session, c)
 
-    print("Updating zappable items")
-    await load_mafia_zapgroups()
-    print("Updating foldable items")
-    await load_mafia_foldgroups()
+        print("Discovering zappable items")
+        await load_zapgroups(session)
+        print("Discovering foldable items")
+        await load_foldgroups(session)
+
+        print("Discovering store items")
+        await load_npcstores(session)
+
+        print("Inserting trophies")
+        await load_trophies(session)
+
+        print("Inserting effects")
+        await load_effects(session)
+
+        print("Inserting modifiers")
+        await load_modifiers(session)
 
     await Tortoise.close_connections()
 

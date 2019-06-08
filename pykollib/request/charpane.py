@@ -165,7 +165,7 @@ def titleToClass(title: str) -> str:
     raise UnknownError("Did not recognise player class {}".format(title))
 
 
-class charpane(Request):
+class charpane(Request[Dict[str, Any]]):
     """
     Requests the user's character pane.
     """
@@ -175,10 +175,11 @@ class charpane(Request):
         self.request = session.request("charpane.php")
 
     @staticmethod
-    async def parser(html: str, url, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
-        pwd_matcher = pwd_pattern.search(html)
-        username_matcher = username_pattern.search(html)
-        user_id_matcher = user_id_pattern.search(html)
+    async def parser(content: str, **kwargs) -> Dict[str, Any]:
+        session = kwargs["session"] # type: "pykollib.Session"
+        pwd_matcher = pwd_pattern.search(content)
+        username_matcher = username_pattern.search(content)
+        user_id_matcher = user_id_pattern.search(content)
 
         if pwd_matcher is None or username_matcher is None or user_id_matcher is None:
             raise UnknownError("Failed to parse basic information from charpane")
@@ -189,36 +190,36 @@ class charpane(Request):
             "userId": int(user_id_matcher.group(1)),
         }
 
-        match = characterLevel.search(html)
+        match = characterLevel.search(content)
         if match:
             title = str(match.group(2))
             data["level"] = int(match.group(1))
             data["levelTitle"] = title
             data["class"] = titleToClass(title)
 
-        match = characterHP.search(html)
+        match = characterHP.search(content)
         if match:
             data["currentHP"] = int(match.group(1))
             data["maxHP"] = int(match.group(2))
 
-        match = characterMP.search(html)
+        match = characterMP.search(content)
         if match:
             data["currentMP"] = int(match.group(1))
             data["maxMP"] = int(match.group(2))
 
-        match = characterMeat.search(html)
+        match = characterMeat.search(content)
         if match:
             data["meat"] = int(match.group(1).replace(",", ""))
 
-        match = characterAdventures.search(html)
+        match = characterAdventures.search(content)
         if match:
             data["adventures"] = int(match.group(1))
 
-        match = characterDrunk.search(html)
+        match = characterDrunk.search(content)
         if match:
             data["drunkenness"] = int(match.group(1))
 
-        match = currentFamiliar.search(html)
+        match = currentFamiliar.search(content)
         if match:
             data["familiar"] = {
                 "name": str(match.group(1)),
@@ -229,33 +230,33 @@ class charpane(Request):
         data["effects"] = [
             {"name": str(match.group(1)), "turns": int(match.group(2))}
             for match in (
-                match for match in characterEffect.finditer(html) if match is not None
+                match for match in characterEffect.finditer(content) if match is not None
             )
         ]
 
-        match = characterMuscle.search(html)
+        match = characterMuscle.search(content)
         if match:
             if match.group(1) and len(str(match.group(1))) > 0:
                 data["buffedMuscle"] = int(match.group(1))
             data["baseMuscle"] = int(match.group(2))
 
-        match = characterMoxie.search(html)
+        match = characterMoxie.search(content)
         if match:
             if match.group(1) and len(str(match.group(1))) > 0:
                 data["buffedMoxie"] = int(match.group(1))
             data["baseMoxie"] = int(match.group(2))
 
-        match = characterMysticality.search(html)
+        match = characterMysticality.search(content)
         if match:
             if match.group(1) and len(str(match.group(1))) > 0:
                 data["buffedMysticality"] = int(match.group(1))
             data["baseMysticality"] = int(match.group(2))
 
-        match = characterRonin.search(html)
+        match = characterRonin.search(content)
         if match:
             data["roninLeft"] = int(match.group(1))
 
-        match = characterMindControl.search(html)
+        match = characterMindControl.search(content)
         if match:
             data["mindControl"] = int(match.group(1))
 

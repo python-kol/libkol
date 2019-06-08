@@ -13,7 +13,7 @@ class MeatFurniture(Enum):
     Bush = Furniture.MeatBush
 
 
-class clan_rumpus_meat(Request):
+class clan_rumpus_meat(Request[int]):
     """
     Uses a meat dispenser in the clan rumpus room.
     """
@@ -25,5 +25,5 @@ class clan_rumpus_meat(Request):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> int:
-        return parsing.meat(html)
+    async def parser(content: str, **kwargs) -> int:
+        return parsing.meat(content)

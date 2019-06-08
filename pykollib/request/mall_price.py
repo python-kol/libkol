@@ -1,25 +1,26 @@
-from typing import List, NamedTuple
+from typing import List
 
 from bs4 import BeautifulSoup
+from dataclasses import dataclass
 
 import pykollib
 
 from ..Item import Item
 from .request import Request
 
-
-class Listing(NamedTuple):
+@dataclass
+class Listing:
     price: int
     quantity: int
     limit: int
 
-
-class Response(NamedTuple):
+@dataclass
+class Response:
     unlimited: List[Listing]
     limited: List[Listing]
 
 
-class mall_search_price(Request):
+class mall_price(Request[Response]):
     """
     Search the mall for the lowest prices of an item. This will return the
     4 lowest unlimited prices, and if applicable, the 3 lowest limited
@@ -37,8 +38,8 @@ class mall_search_price(Request):
         self.request = session.request("backoffice.php", data=data, pwd=True)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> Response:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(content: str, **kwargs) -> Response:
+        soup = BeautifulSoup(content, "html.parser")
 
         unlimited = soup.find("td", text="unlimited:")
         limited = soup.find("td", text="limited:")

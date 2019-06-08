@@ -29,8 +29,8 @@ class skill_use(Request):
         self.request = session.request("skills.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> str:
-        match = results_pattern.search(html)
+    async def parser(content: str, **kwargs) -> str:
+        match = results_pattern.search(content)
 
         if match is None:
             raise UnknownError("Couldn't parse response from use skill")

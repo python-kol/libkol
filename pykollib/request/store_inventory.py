@@ -29,7 +29,7 @@ class store_inventory(Request):
         self.request = session.request("backoffice.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[Listing]:
+    async def parser(content: str, **kwargs) -> List[Listing]:
         """
         Searches backoffice.php for item name, quantity, price, limit, and ID.
         """
@@ -42,5 +42,5 @@ class store_inventory(Request):
                 limit=int(match.group(10)),
                 cheapest=int(match.group(12)),
             )
-            for match in store_inventory_pattern.finditer(html)
+            for match in store_inventory_pattern.finditer(content)
         ]

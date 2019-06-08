@@ -6,7 +6,7 @@ from ..util import parsing
 from .request import Request
 
 
-class drink(Request):
+class drink(Request[parsing.ResourceGain]):
     """
     This request is for drinking booze from the inventory.
     It accepts the current session and the ID number of the booze to be drank.
@@ -22,15 +22,15 @@ class drink(Request):
         )
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> parsing.ResourceGain:
-        if "You're way too drunk already." in html:
+    async def parser(content: str, **kwargs) -> parsing.ResourceGain:
+        if "You're way too drunk already." in content:
             raise UserIsDrunkError("You are too drunk to drink more booze.")
 
-        if "That's not booze." in html:
+        if "That's not booze." in content:
             raise WrongKindOfItemError("That item is not booze.")
 
-        if ">You don't have the item you're trying to use.<" in html:
+        if ">You don't have the item you're trying to use.<" in content:
             raise ItemNotFoundError("Item not in inventory.")
 
         # Check the results
-        return parsing.resource_gain(html)
+        return parsing.resource_gain(content)

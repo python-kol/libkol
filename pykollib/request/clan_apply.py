@@ -11,7 +11,7 @@ class Response(NamedTuple):
     already_member: bool
 
 
-class clan_apply(Request):
+class clan_apply(Request[Response]):
     """
     Apply to a clan
 
@@ -32,20 +32,20 @@ class clan_apply(Request):
         self.request = session.request("showclan.php", data=payload)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> Response:
+    async def parser(content: str, **kwargs) -> Response:
         """
         Formats the clan application response
         """
 
         if (
             "You can't apply to a new clan when you're the leader of an existing clan."
-            in html
+            in content
         ):
             raise CannotChangeClanError(
                 "Cannot apply to another clan because you are the leader of another clan"
             )
 
-        accepted = "clanhalltop.gif" in html
-        already_member = "You can't apply to a clan you're already in." in html
+        accepted = "clanhalltop.gif" in content
+        already_member = "You can't apply to a clan you're already in." in content
 
         return Response(accepted or already_member, already_member)

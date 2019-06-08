@@ -24,7 +24,7 @@ class Response(NamedTuple):
     level: int
 
 
-class clan_rumpus_gym(Request):
+class clan_rumpus_gym(Request[Response]):
     """
     Visits the a gym in the clan rumpus room for a specified number of turns
 
@@ -42,12 +42,14 @@ class clan_rumpus_gym(Request):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    async def parser(html: str, url: URL, **kwargs) -> Response:
+    async def parser(content: str, **kwargs) -> Response:
+        url = kwargs["url"] # type: URL
+
         stat = gym_stat_mapping[int(url.query["whichgym"])]
         assert isinstance(stat, Stat)
 
         return Response(
-            substats=parsing.substat(html, stat=stat),
-            stats=parsing.stat(html, stat=stat),
-            level=parsing.level(html),
+            substats=parsing.substat(content, stat=stat),
+            stats=parsing.stat(content, stat=stat),
+            level=parsing.level(content),
         )

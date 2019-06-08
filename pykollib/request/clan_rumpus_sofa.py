@@ -11,7 +11,7 @@ class Response(NamedTuple):
     hp: int
 
 
-class clan_rumpus_sofa(Request):
+class clan_rumpus_sofa(Request[Response]):
     """
     Uses the comfy sofa in the clan rumpus room.
     """
@@ -22,5 +22,5 @@ class clan_rumpus_sofa(Request):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> Response:
-        return Response(parsing.mp(html), parsing.hp(html))
+    async def parser(content: str, **kwargs) -> Response:
+        return Response(parsing.mp(content), parsing.hp(content))

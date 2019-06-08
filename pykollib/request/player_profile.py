@@ -3,7 +3,6 @@ from typing import Any, Dict
 
 import pykollib
 
-from .. import Clan
 from ..Error import UnknownError
 from .request import Request
 
@@ -18,18 +17,21 @@ numTrophies = re.compile(r"Trophies Collected:<\/b><\/td><td>([0-9,]+)<\/td>")
 numTattoos = re.compile(r"Tattoos Collected:<\/b><\/td><td>([0-9,]+)<\/td>")
 
 
-class player_profile(Request):
+class player_profile(Request[Dict[str, Any]]):
     def __init__(self, session: "pykollib.Session", player_id: int) -> None:
         super().__init__(session)
         payload = {"who": player_id}
         self.request = session.request("showplayer.php", data=payload)
 
     @staticmethod
-    async def parser(html: str, url, session: "pykollib.Session", **kwargs) -> Dict[str, Any]:
-        username_match = username.search(html)
-        ascensions_match = numAscensions.search(html)
-        trophies_match = numTrophies.search(html)
-        tattoos_match = numTattoos.search(html)
+    async def parser(content: str, **kwargs) -> Dict[str, Any]:
+        from .. import Clan
+        session = kwargs["session"] # type: "pykollib.Session"
+
+        username_match = username.search(content)
+        ascensions_match = numAscensions.search(content)
+        trophies_match = numTrophies.search(content)
+        tattoos_match = numTattoos.search(content)
 
         if username_match is None:
             raise UnknownError("Cannot match username")
@@ -43,7 +45,7 @@ class player_profile(Request):
 
         session.state.update(data)
 
-        clanMatch = clan.search(html)
+        clanMatch = clan.search(content)
         if clanMatch:
             clan_id = int(clanMatch.group(1))
             clan_name = clanMatch.group(2)

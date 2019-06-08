@@ -48,6 +48,10 @@ class InvalidItemError(Error):
     pass
 
 
+class InvalidOutfitError(Error):
+    pass
+
+
 class InvalidLocationError(Error):
     pass
 

@@ -19,22 +19,22 @@ class guild_train(Request):
         self.request = session.request("guild.php", pwd=True, data=data)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> bool:
-        if ">You're not powerful enough to train that skill.<" in html:
+    async def parser(content: str, **kwargs) -> bool:
+        if ">You're not powerful enough to train that skill.<" in content:
             raise UserIsLowLevelError(
                 "You aren't a high enough level to learn that skill."
             )
 
-        if ">Invalid skill selected.<" in html:
+        if ">Invalid skill selected.<" in content:
             raise SkillNotFoundError("You cannot train that skill at the Guild Hall.")
 
-        if ">You can't afford to train that skill.<" in html:
+        if ">You can't afford to train that skill.<" in content:
             raise NotEnoughMeatError("You cannot afford to train that skill")
 
-        if ">You've already got that skill.<" in html:
+        if ">You've already got that skill.<" in content:
             raise AlreadyCompletedError("You already know that skill.")
 
-        if ">You learn a new skill: <b>" not in html:
+        if ">You learn a new skill: <b>" not in content:
             raise UnknownError("Unknown error")
 
         return True
