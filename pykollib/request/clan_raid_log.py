@@ -13,7 +13,7 @@ from .request import Request
 previous_run_pattern = re.compile(r"^(.+?) run, ([A-Za-z]+) ([0-9]{2}), ([0-9]{4})$")
 
 
-class clan_raid_log(Request):
+class clan_raid_log(Request[Dict[str, Any]]):
     """
     Retrieves on a previous raid.
     """
@@ -72,8 +72,10 @@ class clan_raid_log(Request):
         }
 
     @classmethod
-    async def parser(cls, html: str, url: URL, **kwargs) -> Dict[str, Any]:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(cls, content: str, **kwargs) -> Dict[str, Any]:
+        url = kwargs["url"] # type: URL
+
+        soup = BeautifulSoup(content, "html.parser")
 
         title = soup.find("b", text=previous_run_pattern)
 

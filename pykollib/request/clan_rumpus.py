@@ -42,17 +42,17 @@ class Furniture(Enum):
 furniture_pattern = re.compile(r"rump([0-9])_([0-9])\.gif")
 
 
-class clan_rumpus(Request):
+class clan_rumpus(Request[List[Furniture]]):
     def __init__(self, session: "pykollib.Session"):
         super().__init__(session)
         self.request = session.request("clan_rumpus.php")
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[Furniture]:
+    async def parser(content: str, **kwargs) -> List[Furniture]:
         return [
             Furniture(coords)
             for coords in (
-                (f.group(1), f.group(2)) for f in furniture_pattern.finditer(html)
+                (f.group(1), f.group(2)) for f in furniture_pattern.finditer(content)
             )
             if Furniture.has_value(coords)
         ]

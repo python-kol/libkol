@@ -10,7 +10,7 @@ class Response(NamedTuple):
     already: bool
 
 
-class clan_whitelist_add(Request):
+class clan_whitelist_add(Request[Response]):
     def __init__(
         self,
         session: "pykollib.Session",
@@ -22,8 +22,8 @@ class clan_whitelist_add(Request):
         self.request = session.request("clan_whitelist.php", data=payload, pwd=True)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> Response:
-        success = " added to whitelist.</td>" in html
-        already = "<td>That player is already on the whitelist.</td>" in html
+    async def parser(content: str, **kwargs) -> Response:
+        success = " added to whitelist.</td>" in content
+        already = "<td>That player is already on the whitelist.</td>" in content
 
         return Response(success or already, already)

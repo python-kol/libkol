@@ -44,8 +44,8 @@ class equipment(Request):
         return await Item.get_or_discover(desc_id=descid)
 
     @classmethod
-    async def parser(cls, html: str, **kwargs) -> Outfit:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(cls, content: str, **kwargs) -> Outfit:
+        soup = BeautifulSoup(content, "html.parser")
         current = soup.find(id="curequip")
 
         return Outfit(

@@ -12,7 +12,7 @@ class Type(Enum):
     Radio = (4, 1)
 
 
-class clan_rumpus_effect(Request):
+class clan_rumpus_effect(Request[List[Dict[str, Any]]]):
     """
     Uses an effect giver in the clan rumpus room.
     """
@@ -23,5 +23,5 @@ class clan_rumpus_effect(Request):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[Dict[str, Any]]:
-        return parsing.effects(html)
+    async def parser(content: str, **kwargs) -> List[Dict[str, Any]]:
+        return parsing.effects(content)

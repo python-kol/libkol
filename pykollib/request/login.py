@@ -12,7 +12,7 @@ rateLimitIP = re.compile(r"Too many login failures from this IP")
 badPassword = re.compile(r"<b>Login failed\.\s+?Bad password\.<\/b>")
 
 
-class login(Request):
+class login(Request[bool]):
     def __init__(
         self,
         session: "pykollib.Session",
@@ -21,6 +21,7 @@ class login(Request):
         challenge: str = None,
         stealth: bool = False,
     ) -> None:
+        super().__init__(session)
         payload = {
             "loggingin": "Yup.",
             "loginname": username + ("/q" if stealth else ""),
@@ -37,14 +38,14 @@ class login(Request):
         self.request = session.request("login.php", data=payload)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> bool:
-        if mainFrameset.search(html):
+    async def parser(content: str, **kwargs) -> bool:
+        if mainFrameset.search(content):
             return True
 
-        if badPassword.search(html):
+        if badPassword.search(content):
             raise LoginFailedBadPasswordError("Login failed. Bad password.")
 
-        match = rateLimit.search(html)
+        match = rateLimit.search(content)
         if match:
             waits = {"a": 1, "a couple of": 2, "five": 5, "fifteen": 15}
             wait = waits.get(match.group(1), 1)
@@ -55,7 +56,7 @@ class login(Request):
                 wait=wait * 60,
             )
 
-        if rateLimitIP.search(html):
+        if rateLimitIP.search(content):
             raise LoginFailedGenericError(
                 "Too many login attempts from this IP. Please wait 15 minutes and try again.",
                 wait=15 * 60,

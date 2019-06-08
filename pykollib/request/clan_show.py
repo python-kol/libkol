@@ -8,7 +8,7 @@ import pykollib
 from .request import Request
 
 
-class clan_show(Request):
+class clan_show(Request[Dict[str, Any]]):
     """
     Get information about a clan
     """
@@ -17,8 +17,8 @@ class clan_show(Request):
         self.request = session.request("showclan.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> Dict[str, Any]:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(content: str, **kwargs) -> Dict[str, Any]:
+        soup = BeautifulSoup(content, "html.parser")
         leader_link = soup.find("a")
         return {
             "name": soup.find("td", bgcolor="blue").string,

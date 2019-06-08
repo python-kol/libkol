@@ -7,7 +7,7 @@ import pykollib
 from .request import Request
 
 
-class clan_ranks(Request):
+class clan_ranks(Request[List[Dict[str, Any]]]):
     def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
         self.request = session.request("clan_editranks.php")
@@ -33,8 +33,8 @@ class clan_ranks(Request):
         }
 
     @classmethod
-    async def parser(cls, html: str, **kwargs) -> List[Dict[str, Any]]:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(cls, content: str, **kwargs) -> List[Dict[str, Any]]:
+        soup = BeautifulSoup(content, "html.parser")
 
         ranks = [
             {

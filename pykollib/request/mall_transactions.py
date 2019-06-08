@@ -37,8 +37,8 @@ class mall_transactions(Request):
         self.request = session.request("backoffice.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[Transaction]:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(content: str, **kwargs) -> List[Transaction]:
+        soup = BeautifulSoup(content, "html.parser")
 
         container = soup.find("span", class_="small")
 

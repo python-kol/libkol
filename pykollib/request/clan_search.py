@@ -1,8 +1,6 @@
 import re
 from typing import List
 
-from yarl import URL
-
 import pykollib
 
 from .. import Clan
@@ -13,7 +11,7 @@ clan_search_result_pattern = re.compile(
 )
 
 
-class clan_search(Request):
+class clan_search(Request[List["Clan"]]):
     def __init__(
         self, session: "pykollib.Session", query: str, nameonly: bool = True
     ) -> None:
@@ -34,10 +32,9 @@ class clan_search(Request):
         self.request = session.request("clan_signup.php", data=data)
 
     @staticmethod
-    async def parser(
-        html: str, url: URL, session: "pykollib.Session", **kwargs
-    ) -> List["Clan"]:
+    async def parser(content: str, **kwargs) -> List["Clan"]:
+        session = kwargs["session"] # type: "pykollib.Session"
         return [
             Clan(session, id=int(m.group(1)), name=m.group(2))
-            for m in clan_search_result_pattern.finditer(html)
+            for m in clan_search_result_pattern.finditer(content)
         ]

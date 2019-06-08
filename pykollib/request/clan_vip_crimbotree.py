@@ -7,7 +7,7 @@ from ..util import parsing
 from .request import Request
 
 
-class clan_vip_crimbotree(Request):
+class clan_vip_crimbotree(Request[List[ItemQuantity]]):
     """
     Uses the Crimbo Tree in the clan VIP room.
     """
@@ -18,5 +18,5 @@ class clan_vip_crimbotree(Request):
         self.request = session.request("clan_viplounge.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
-        return await parsing.item(html)
+    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
+        return await parsing.item(content)

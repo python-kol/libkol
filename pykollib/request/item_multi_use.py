@@ -17,18 +17,18 @@ class item_multi_use(Request):
         self.request = session.request("multiuse.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> parsing.ResourceGain:
+    async def parser(content: str, **kwargs) -> parsing.ResourceGain:
         if (
             "<table><tr><td>You don't have that many of that item.</td></tr></table>"
-            in html
+            in content
         ):
             raise NotEnoughItemsError("You don't have that many of that item.")
 
         if (
             "<table><tr><td>That item isn't usable in quantity.</td></tr></table>"
-            in html
+            in content
         ):
             raise WrongKindOfItemError("You cannot multi-use that item.")
 
         # Find out what happened
-        return parsing.resource_gain(html)
+        return parsing.resource_gain(content)

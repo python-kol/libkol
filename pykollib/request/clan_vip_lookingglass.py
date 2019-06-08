@@ -7,7 +7,7 @@ from ..util import parsing
 from .request import Request
 
 
-class clan_vip_lookingglass(Request):
+class clan_vip_lookingglass(Request[List[ItemQuantity]]):
     """
     Uses the Looking Glass in the clan VIP room.
     """
@@ -18,5 +18,5 @@ class clan_vip_lookingglass(Request):
         self.request = session.request("clan_viplounge.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
-        return await parsing.item(html)
+    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
+        return await parsing.item(content)

@@ -1,13 +1,42 @@
+import asyncio
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
+from tortoise.models import ModelMeta
+from typing import List, Optional, Union
 
+from pykollib import request
 from .Model import Model
-from .Error import ItemNotFoundError
-from .request import item_information, item_description as item_description_module
+from .Error import ItemNotFoundError, WrongKindOfItemError
+from . import types
 
-item_description = item_description_module.item_description # type: ignore
+class ItemMeta(ModelMeta):
+    def __getitem__(self, key: Union[int, str]):
+        """
+        Syntactic sugar for synchronously grabbing an item by id, description id or name.
 
-class Item(Model):
-    id = IntField(primary_key=True)
+        :param key: id, desc_id or name of item you want to grab
+        """
+        loop = asyncio.get_event_loop()
+        future = loop.create_future()
+
+        async def getitem():
+            if isinstance(key, int):
+                # Most desc_ids are 9 digits but there are 14 that aren't.
+                # At time of writing this is good for 115,100 new items before any collisions.
+                if key == 31337 or key == 46522 or key >= 125353:
+                    result = await self.get_or_discover(desc_id=key)
+                else:
+                    result = await self.get_or_discover(id=key)
+            else:
+                result = await self.get(name=key)
+
+            future.set_result(result)
+
+        asyncio.ensure_future(getitem())
+        return future
+
+
+class Item(Model, metaclass=ItemMeta):
+    id = IntField()
     name = CharField(max_length=255)
     desc_id = IntField()
     plural = CharField(max_length=255, null=True)
@@ -60,7 +89,15 @@ class Item(Model):
 
     # Collections
     foldgroup = ForeignKeyField("models.FoldGroup", related_name="items", null=True)
+    foldgroup_id: Optional[int]
     zapgroup = ForeignKeyField("models.ZapGroup", related_name="items", null=True)
+    zapgroup_id: Optional[int]
+
+    # NPC Store Info
+    store_row = IntField(null=True)
+    store_price = IntField(null=True)
+    store = ForeignKeyField("models.Store", related_name="items", null=True)
+    store_id: Optional[int]
 
     # Flags
     hatchling = BooleanField(default=False)
@@ -98,11 +135,69 @@ class Item(Model):
 
     @classmethod
     async def discover(cls, id: int = None, desc_id: int = None):
+        """
+        Discover this item using its id or description id. The description id is preferred as
+        it provides more information, so if only an id is provided, pykollib will first determine
+        the desc_id.
+
+        Note that this Returns an Item object but it is not automatically committed to the database.
+        It is not sufficient to run `await item.save()` to do this however as tortoise-orm will attempt to
+        `UPDATE` the row because it already has an `id` set. Instead you need to run
+        `awaititem._insert_instance()` explicitly.
+
+
+        :param id: Id of the item to discover
+        :param desc_id: Description id of the item to discover
+        """
         if id is not None:
-            desc_id = (await item_information(cls.kol, id).parse()).descid
+            desc_id = (await request.item_information(cls.kol, id).parse()).descid
 
         if desc_id is None:
             raise ItemNotFoundError("Cannot discover an item without either an id or a desc_id")
 
-        info = await item_description(cls.kol, desc_id).parse()
+        info = await request.item_description(cls.kol, desc_id).parse()
         return Item(**{k: v for k, v in info.items() if v is not None})
+
+    async def get_mall_price(self, limited: bool = False) -> int:
+        """
+        Get the lowest price for this item in the mall
+
+        :param limited: Include limited sales in this search
+        """
+        prices = await request.mall_price(self.kol, self).parse()
+
+        if limited:
+            return prices.limited[0].price
+
+        return prices.unlimited[0].price
+
+    async def get_mall_listings(self, **kwargs) -> List["types.Listing"]:
+        return await request.mall_search(self.kol, query=self, **kwargs).parse()
+
+    async def buy_from_mall(
+        self,
+        listing: "types.Listing" = None,
+        store_id: int = None,
+        price: int = 0,
+        quantity: int = 1
+    ):
+        if listing is None and store_id is None:
+            listings = await self.get_mall_listings(num_results=quantity, max_price=price)
+            tasks = [request.mall_purchase(self.kol, item=self, listing=l).parse() for l in listings]
+            return await asyncio.gather(*tasks)
+
+        return await request.mall_purchase(self.kol, item=self, listing=listing, store_id=store_id, price=price, quantity=quantity).parse()
+
+    def amount(self):
+        return self.kol.state["inventory"][self]
+
+    async def use(self, quantity: int = 1, multi_use: bool = True):
+        if self.usable is False:
+            raise WrongKindOfItemError("This item cannot be used")
+
+        if self.multiusable and multi_use:
+            await request.item_multi_use(self.kol, self, quantity).parse()
+            return
+
+        tasks = [request.item_use(self.kol, self).parse() for _ in range(quantity)]
+        return await asyncio.gather(*tasks)

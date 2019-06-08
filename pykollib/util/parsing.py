@@ -25,13 +25,15 @@ def wrap_elements(wrapper: Tag, elements: List[Tag]):
 
 
 def split_by_br(element: Tag, wrapper: Tag = None):
-    return [
-        wrap_elements(wrapper, g) if wrapper is not None else g
+    elements = [
+        g
         for g in (
             list(g) for k, g in groupby(element.children, key=lambda e: e.name != "br")
         )
         if g[0].name != "br"
     ]
+
+    return elements if wrapper is None else [wrap_elements(wrapper, e) for e in elements]
 
 
 single_item_pattern = re.compile(

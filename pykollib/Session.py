@@ -1,16 +1,18 @@
 from os import path
 from time import time
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any, Callable, DefaultDict, Dict, Optional, Union
 from urllib.parse import urlparse
 from tortoise import Tortoise
+from collections import defaultdict
 
 from aiohttp import ClientResponse, ClientSession
 
-from . import Clan, Kmail
+from . import Clan, Kmail, request, Item
 from .Model import Model
 from .Location import Location
-from .request import charpane, homepage, login, logout, main, player_profile, status
 from .util.decorators import logged_in
+
+models = ["pykollib.FoldGroup", "pykollib.Item", "pykollib.ZapGroup", "pykollib.Store", "pykollib.Trophy", "pykollib.Modifier", "pykollib.Effect"]
 
 
 class Session:
@@ -25,13 +27,13 @@ class Session:
         self.server_url = None
         self.pwd = None
         self.clan = None
-        self.kmail = Kmail.Kmail(self)
+        self.kmail = Kmail(self)
         self.db_file = db_file or path.join(path.dirname(__file__), "pykollib.db")
 
     async def __aenter__(self) -> "Session":
         await Tortoise.init(
             db_url="sqlite://{}".format(self.db_file),
-            modules={'models': ['FoldGroup', 'Item', 'ZapGroup']}
+            modules={'models': models}
         )
         Model.kol = self
         return self
@@ -93,20 +95,21 @@ class Session:
 
         # Grab the KoL homepage.
         self.server_url = (
-            await homepage(self, server_number=server_number).parse()
+            await request.homepage(self, server_number=server_number).parse()
         ).server_url
 
         # Perform the login.
-        logged_in = await login(self, username, password, stealth=stealth).parse()
+        logged_in = await request.login(self, username, password, stealth=stealth).parse()
         self.is_connected = logged_in
         self.state["username"] = username
 
         # Loading these both makes various things work
-        await main(self).parse()
-        await charpane(self).parse()
+        await request.main(self).parse()
+        await request.charpane(self).parse()
 
         await self.get_status()
         await self.get_profile()
+        await self.get_inventory()
 
         return True
 
@@ -137,7 +140,7 @@ class Session:
         """
         Load the current username, user_id, pwd and rollover time into the state
         """
-        data = await status(self).parse()
+        data = await request.status(self).parse()
         self.pwd = data["pwd"]
         self.state["username"] = data["name"]
         self.state["user_id"] = int(data["playerid"])
@@ -153,7 +156,14 @@ class Session:
         if user_id is None:
             return {}
 
-        return await player_profile(self, user_id).parse()
+        return await request.player_profile(self, user_id).parse()
+
+    @logged_in
+    async def get_inventory(self) -> DefaultDict[Item, int]:
+        sparse_inventory = await request.inventory(self).parse()
+        inventory = defaultdict(int, sparse_inventory)
+        self.state["inventory"] = inventory
+        return inventory
 
     @logged_in
     async def adventure(
@@ -180,4 +190,4 @@ class Session:
         """"
         Performs a logut request, closing the session.
         """
-        await self.parse(logout)
+        await request.logout(self).parse()

@@ -23,7 +23,7 @@ class AutosellMode(Enum):
     Quantity = 3
 
 
-class autosell_items(Request):
+class autosell_items(Request[Response]):
     """
     Sells items via the autosell system
     """
@@ -51,8 +51,8 @@ class autosell_items(Request):
         self.request = session.request("sellstuff_ugly.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(html: str, items: List["pykollib.Item"] = [], **kwargs) -> Response:
-        response_match = response_pattern.search(html)
+    async def parser(content: str, items: List["pykollib.Item"] = [], **kwargs) -> Response:
+        response_match = response_pattern.search(content)
 
         if response_match is None:
             return Response([], 0)
@@ -62,7 +62,7 @@ class autosell_items(Request):
         for item in items:
             pattern = re.compile(
                 r"(?:(?:([0-9,]+) {})|{})(?:,|$)".format(
-                    re.escape(item.pluralize()), re.escape(item.name)
+                    re.escape(item.pluralize()), re.escape(str(item.name))
                 )
             )
             match = pattern.search(response_match.group(1))

@@ -14,8 +14,8 @@ class hermit_menu(Request):
         self.request = session.request("hermit.php")
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
-        soup = BeautifulSoup(html, "html.parser")
+    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
+        soup = BeautifulSoup(content, "html.parser")
 
         menu = []  # type: List[ItemQuantity]
         for item_image in soup.find_all("img", class_="hand"):

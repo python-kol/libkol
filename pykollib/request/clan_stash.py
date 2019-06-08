@@ -11,7 +11,7 @@ stashItemsPattern = re.compile(
 )
 
 
-class clan_stash(Request):
+class clan_stash(Request[List[Dict[str, Any]]]):
     """
     This class is used to get a list of items in the user's clan stash.
     """
@@ -21,12 +21,12 @@ class clan_stash(Request):
         self.request = session.request("clan_stash.php", pwd=True)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[Dict[str, Any]]:
+    async def parser(content: str, **kwargs) -> List[Dict[str, Any]]:
         return [
             {
                 "item": await Item.get_or_discover(id=int(i["id"])),
                 "quantity": int(i["quantity"] or 1),
                 "cost": int(i["cost"] or 0),
             }
-            for i in (m.groupdict() for m in stashItemsPattern.finditer(html))
+            for i in (m.groupdict() for m in stashItemsPattern.finditer(content))
         ]

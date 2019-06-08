@@ -16,7 +16,7 @@ class ItemFurniture(Enum):
     MrKlaw = Furniture.MrKlaw
 
 
-class clan_rumpus_item(Request):
+class clan_rumpus_item(Request[List[ItemQuantity]]):
     """
     Uses an item dispenser in the clan rumpus room.
     """
@@ -28,5 +28,5 @@ class clan_rumpus_item(Request):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> List[ItemQuantity]:
-        return await parsing.item(html)
+    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
+        return await parsing.item(content)

@@ -34,8 +34,8 @@ class questlog(Request):
         self.request = session.request("questlog.php", params=params)
 
     @staticmethod
-    async def parser(html: str, **kwargs) -> Dict[str, str]:
+    async def parser(content: str, **kwargs) -> Dict[str, str]:
         return {
             match.group(1): match.group(2)
-            for match in quests_completed_pattern.finditer(html)
+            for match in quests_completed_pattern.finditer(content)
         }
