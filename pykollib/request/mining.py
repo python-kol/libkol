@@ -3,6 +3,7 @@ import pykollib
 from .request import Request
 from ..Error import InvalidLocationError, InvalidOutfitError
 
+
 class mining(Request[str]):
     """
     A request used to visit a mine.

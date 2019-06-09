@@ -27,6 +27,7 @@ class questlog(Request):
 
     :param page: Page of the quest log to request
     """
+
     def __init__(
         self, session: "pykollib.Session", page: QuestPage = QuestPage.Current
     ) -> None:

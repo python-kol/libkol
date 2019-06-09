@@ -11,6 +11,7 @@ class clan_vip_klaw(Request[List[ItemQuantity]]):
     """
     Uses the Deluxe Mr. Klaw in the clan VIP room.
     """
+
     def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
 

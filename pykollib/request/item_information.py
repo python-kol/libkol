@@ -30,6 +30,7 @@ class item_information(Request):
     """
     Get information about a particular item.
     """
+
     def __init__(self, session: "pykollib.Session", item_id) -> None:
         super().__init__(session)
 

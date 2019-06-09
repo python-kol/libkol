@@ -12,7 +12,15 @@ from .Model import Model
 from .Location import Location
 from .util.decorators import logged_in
 
-models = ["pykollib.FoldGroup", "pykollib.Item", "pykollib.ZapGroup", "pykollib.Store", "pykollib.Trophy", "pykollib.Modifier", "pykollib.Effect"]
+models = [
+    "pykollib.FoldGroup",
+    "pykollib.Item",
+    "pykollib.ZapGroup",
+    "pykollib.Store",
+    "pykollib.Trophy",
+    "pykollib.Modifier",
+    "pykollib.Effect",
+]
 
 
 class Session:
@@ -32,8 +40,7 @@ class Session:
 
     async def __aenter__(self) -> "Session":
         await Tortoise.init(
-            db_url="sqlite://{}".format(self.db_file),
-            modules={'models': models}
+            db_url="sqlite://{}".format(self.db_file), modules={"models": models}
         )
         Model.kol = self
         return self
@@ -99,7 +106,9 @@ class Session:
         ).server_url
 
         # Perform the login.
-        logged_in = await request.login(self, username, password, stealth=stealth).parse()
+        logged_in = await request.login(
+            self, username, password, stealth=stealth
+        ).parse()
         self.is_connected = logged_in
         self.state["username"] = username
 

@@ -101,6 +101,7 @@ class mall_search(Request[List[Listing]]):
     :param start: Not usually needed by the user. Tells which item in the list
                   of results is to be returned first.
     """
+
     def __init__(
         self,
         session: "pykollib.Session",
@@ -120,7 +121,7 @@ class mall_search(Request[List[Listing]]):
     ) -> None:
         super().__init__(session)
 
-        pudnuggler = "\"{}\"".format(query.name) if isinstance(query, Item) else query
+        pudnuggler = '"{}"'.format(query.name) if isinstance(query, Item) else query
 
         params = {
             "didadv": 1,
@@ -179,7 +180,7 @@ class mall_search(Request[List[Listing]]):
                     row.contents[1].a.string,
                     row.contents[2].string,
                     row.contents[3].string,
-                    "limited" in row["class"]
+                    "limited" in row["class"],
                 )
                 for row in rows
             )

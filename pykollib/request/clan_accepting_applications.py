@@ -9,6 +9,7 @@ class clan_accepting_applications(Request[bool]):
     """
     Toggle whether or not the clan accepts new applications.
     """
+
     def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
 

@@ -31,6 +31,7 @@ class clan_rumpus_gym(Request[Response]):
     :param stat: The stat to train
     :param turns: The number of turns to train for
     """
+
     def __init__(self, session: "pykollib.Session", stat: Stat, turns: int) -> None:
         super().__init__(session)
 
@@ -43,7 +44,7 @@ class clan_rumpus_gym(Request[Response]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> Response:
-        url = kwargs["url"] # type: URL
+        url = kwargs["url"]  # type: URL
 
         stat = gym_stat_mapping[int(url.query["whichgym"])]
         assert isinstance(stat, Stat)

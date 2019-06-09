@@ -27,7 +27,7 @@ class curse(Request[bool]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> bool:
-        url = kwargs["url"] # type: URL
+        url = kwargs["url"]  # type: URL
 
         if len(content) < 10:
             raise WrongKindOfItemError("You can't curse with that item.")

@@ -141,6 +141,7 @@ class clan_raid_log(Request[Raid]):
     """
     Retrieves on a previous raid.
     """
+
     def __init__(self, session: "pykollib.Session", raid_id: int) -> None:
         super().__init__(session)
 
@@ -349,7 +350,6 @@ class clan_raid_log(Request[Raid]):
     @classmethod
     async def parser(cls, content: str, **kwargs) -> Raid:
         url = kwargs["url"] # type: URL
-
         soup = BeautifulSoup(content, "html.parser")
 
         title = soup.find("b", text=previous_run_pattern)

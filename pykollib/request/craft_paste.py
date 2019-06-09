@@ -7,6 +7,7 @@ from ..util import parsing
 from ..Item import Item
 from ..types import ItemQuantity
 
+
 class craft_paste(Request[List[ItemQuantity]]):
     """
     Creates meat paste, meat stacks, or dense meat stacks.
@@ -16,7 +17,9 @@ class craft_paste(Request[List[ItemQuantity]]):
         super().__init__(session)
 
         if item.id not in [25, 88, 258]:
-            raise WrongKindOfItemError("You can only create meat paste and stacks this way")
+            raise WrongKindOfItemError(
+                "You can only create meat paste and stacks this way"
+            )
 
         data = {"action": "makepaste", "whichitem": item.id, "qty": quantity}
         self.request = session.request("craft.php", pwd=True, data=data)
@@ -24,7 +27,9 @@ class craft_paste(Request[List[ItemQuantity]]):
     @staticmethod
     async def parser(content: str, **kwargs) -> List[ItemQuantity]:
         if "<td>You don't have enough Meat to make that many.</td>" in content:
-            raise NotEnoughMeatError("Unable to make the requested item. You don't have enough meat.")
+            raise NotEnoughMeatError(
+                "Unable to make the requested item. You don't have enough meat."
+            )
 
         # Get the item(s) we received.
         items = await parsing.item(content)

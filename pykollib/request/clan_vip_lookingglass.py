@@ -11,6 +11,7 @@ class clan_vip_lookingglass(Request[List[ItemQuantity]]):
     """
     Uses the Looking Glass in the clan VIP room.
     """
+
     def __init__(self, session: "pykollib.Session") -> None:
         super().__init__(session)
 

@@ -13,6 +13,7 @@ class drink(Request[parsing.ResourceGain]):
     It returns the results, including and stat gain, adventure gain,
     effect gain, or drunkenness gain.
     """
+
     def __init__(self, session: "pykollib.Session", item: Item) -> None:
         super().__init__(session)
 

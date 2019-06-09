@@ -9,6 +9,7 @@ class campground_rest(Request):
 
     :param session: Active session
     """
+
     def __init__(self, session: "pykollib.Session"):
         params = {"action": "rest"}
         self.request = session.request("campground.php", params=params)

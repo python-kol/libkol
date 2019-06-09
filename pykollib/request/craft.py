@@ -50,7 +50,7 @@ class craft(Request[Response]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> Response:
-        url = kwargs["url"] # type: URL
+        url = kwargs["url"]  # type: URL
         mode = Mode(url.query["mode"])
 
         if "<td>Those two items don't combine to make" in content:
@@ -70,7 +70,8 @@ class craft(Request[Response]):
 
         if (
             mode is Mode.Combine
-            and '<div style="text-align:left">You don\'t have any meat paste.' in content
+            and '<div style="text-align:left">You don\'t have any meat paste.'
+            in content
         ):
             raise ItemNotFoundError("Unable to craft. You need sufficient meatpaste")
 

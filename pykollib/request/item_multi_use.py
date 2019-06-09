@@ -10,6 +10,7 @@ class item_multi_use(Request):
     """
     Uses multiple items at once
     """
+
     def __init__(self, session: "pykollib.Session", item: Item, quantity: int) -> None:
         super().__init__(session)
 

@@ -7,6 +7,7 @@ class clan_stash_meat_add(Request):
     """
     Adds meat to the player's clan stash.
     """
+
     def __init__(self, session: "pykollib.Session", quantity: int) -> None:
         super().__init__(session)
 
