@@ -14,6 +14,7 @@ from .clan_raid_log import Raid
 
 summary_pattern = re.compile(r"Showing [0-9]+-[0-9]+ of ([0-9]+)")
 
+
 @dataclass
 class Response:
     total: int
@@ -59,6 +60,8 @@ class clan_raids_previous(Request[Response]):
             name = cells[2].text.replace(u"\xa0", "").lower()
             page_url = URL(str(cells[4].find("a")["href"]))
             id = int(page_url.query["viewlog"])
-            raids.append(Raid(id=id, name=name, start=start, end=end, summary=[], events=None))
+            raids.append(
+                Raid(id=id, name=name, start=start, end=end, summary=[], events=None)
+            )
 
         return Response(total=total, raids=raids)
