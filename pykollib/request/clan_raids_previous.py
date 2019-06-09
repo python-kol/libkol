@@ -1,6 +1,7 @@
 import re
-from datetime import date, datetime
-from typing import List, NamedTuple
+from datetime import datetime
+from typing import List
+from dataclasses import dataclass
 
 from bs4 import BeautifulSoup
 from yarl import URL
@@ -9,18 +10,13 @@ import pykollib
 
 from ..Error import ClanRaidsNotFoundError, UnknownError
 from .request import Request
+from .clan_raid_log import Raid
 
 summary_pattern = re.compile(r"Showing [0-9]+-[0-9]+ of ([0-9]+)")
 
 
-class Raid(NamedTuple):
-    id: int
-    name: str
-    start: date
-    end: date
-
-
-class Response(NamedTuple):
+@dataclass
+class Response:
     total: int
     raids: List[Raid]
 
@@ -64,6 +60,8 @@ class clan_raids_previous(Request[Response]):
             name = cells[2].text.replace(u"\xa0", "").lower()
             page_url = URL(str(cells[4].find("a")["href"]))
             id = int(page_url.query["viewlog"])
-            raids.append(Raid(id=id, name=name, start=start, end=end))
+            raids.append(
+                Raid(id=id, name=name, start=start, end=end, summary=[], events=None)
+            )
 
         return Response(total=total, raids=raids)
