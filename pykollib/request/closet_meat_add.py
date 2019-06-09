@@ -7,6 +7,7 @@ class closet_meat_add(Request):
     """
     Adds meat to the player's closet.
     """
+
     def __init__(self, session: "pykollib.Session", quantity: int) -> None:
         super().__init__(session)
 

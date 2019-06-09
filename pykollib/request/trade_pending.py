@@ -117,8 +117,12 @@ class trade_pending(Request[List[Trade]]):
                         status=status,
                         user_id=int(results["playerid"]),
                         username=results["playername"],
-                        incoming_items=(await cls.parse_trade_items(results["incomingitems"])),
-                        outgoing_items=(await cls.parse_trade_items(results["outgoingitems"])),
+                        incoming_items=(
+                            await cls.parse_trade_items(results["incomingitems"])
+                        ),
+                        outgoing_items=(
+                            await cls.parse_trade_items(results["outgoingitems"])
+                        ),
                         incoming_meat=(
                             int(results["incomingmeat"])
                             if results["incomingmeat"]

@@ -18,6 +18,7 @@ class MallPriceTestCase(TestCase):
         """
         Only the cost gets commas, never the limit or stock
         """
+
         async def run_test(file):
             r = await mall_price.parser(file.read())
             self.assertEqual(len(r.unlimited), 4)

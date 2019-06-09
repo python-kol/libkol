@@ -19,10 +19,12 @@ class Response:
     total: int
     raids: List[Raid]
 
+
 class clan_raids_previous(Request[Response]):
     """
     Retrieves a list of old raid logs, in pages of length 10
     """
+
     def __init__(self, session: "pykollib.Session", page: int = 0) -> None:
 
         super().__init__(session)

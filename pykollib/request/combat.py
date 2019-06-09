@@ -35,6 +35,7 @@ class combat(Request):
     :param item: If the action is Action.Item, either specifies an item to use, or an array of
                  items to funksling
     """
+
     def __init__(
         self,
         session: "pykollib.Session",

@@ -12,6 +12,7 @@ class clan_show(Request[Dict[str, Any]]):
     """
     Get information about a clan
     """
+
     def __init__(self, session: "pykollib.Session", id: int):
         params = {"recruiter": 1, "whichclan": id}
         self.request = session.request("showclan.php", params=params)

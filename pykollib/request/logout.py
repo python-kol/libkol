@@ -10,6 +10,6 @@ class logout(Request):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> None:
-        session = kwargs["session"] # type: "pykollib.Session"
+        session = kwargs["session"]  # type: "pykollib.Session"
 
         session.is_connected = False

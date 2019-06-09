@@ -21,6 +21,7 @@ class campground_kitchen(Request[Response]):
 
     :param session: Active session
     """
+
     def __init__(self, session: "pykollib.Session"):
         params = {"action": "inspectkitchen"}
         self.request = session.request("campground.php", pwd=True, params=params)

@@ -27,6 +27,7 @@ class autosell_items(Request[Response]):
     """
     Sells items via the autosell system
     """
+
     def __init__(
         self,
         session: "pykollib.Session",
@@ -51,7 +52,9 @@ class autosell_items(Request[Response]):
         self.request = session.request("sellstuff_ugly.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(content: str, items: List["pykollib.Item"] = [], **kwargs) -> Response:
+    async def parser(
+        content: str, items: List["pykollib.Item"] = [], **kwargs
+    ) -> Response:
         response_match = response_pattern.search(content)
 
         if response_match is None:

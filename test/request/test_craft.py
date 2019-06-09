@@ -22,7 +22,6 @@ class CraftTestCase(TestCase):
 
         self.run_async("combine_meatpaste_error", run_test)
 
-
     def test_craft_cook_recipe_error(self):
         async def run_test(file):
             url = URL.build(query={"mode": "cook"})

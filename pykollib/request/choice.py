@@ -11,6 +11,7 @@ class choice(Request):
     :param choice: The id of the choice
     :param option: The number option to submit
     """
+
     def __init__(self, session: "pykollib.Session", choice: int, option: int) -> None:
         super().__init__(session)
         params = {"whichchoce": choice, "option": option}
