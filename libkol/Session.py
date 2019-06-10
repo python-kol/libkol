@@ -8,6 +8,7 @@ from collections import defaultdict
 from aiohttp import ClientResponse, ClientSession
 
 from . import Clan, Kmail, request, Item
+from .maximize import maximize
 from .Model import Model
 from .Location import Location
 from .util.decorators import logged_in
@@ -193,6 +194,9 @@ class Session:
         """
         location = Location(self, id=location_id)
         return await (await location.visit()).text()
+
+    async def maximize(self, *args, **kwargs):
+        return await maximize(self, *args, **kwargs)
 
     @logged_in
     async def logout(self):
