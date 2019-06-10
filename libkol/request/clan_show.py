@@ -3,7 +3,7 @@ from typing import Any, Dict
 from bs4 import BeautifulSoup
 from yarl import URL
 
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -13,7 +13,7 @@ class clan_show(Request[Dict[str, Any]]):
     Get information about a clan
     """
 
-    def __init__(self, session: "pykollib.Session", id: int):
+    def __init__(self, session: "libkol.Session", id: int):
         params = {"recruiter": 1, "whichclan": id}
         self.request = session.request("showclan.php", params=params)
 

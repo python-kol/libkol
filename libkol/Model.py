@@ -1,6 +1,6 @@
 from tortoise.models import Model as TortoiseModel
-import pykollib
+import libkol
 
 
 class Model(TortoiseModel):
-    kol: "pykollib.Session"
+    kol: "libkol.Session"

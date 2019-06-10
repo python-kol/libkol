@@ -16,12 +16,12 @@ import sphinx_autodoc_typehints
 import inspect
 from typing import NamedTuple
 
-sys.path.insert(0, os.path.abspath("../pykollib"))
+sys.path.insert(0, os.path.abspath("../libkol"))
 
 
 # -- Project information -----------------------------------------------------
 
-project = "pykollib"
+project = "libkol"
 copyright = "2019, madowl and gausie"
 author = "madowl and gausie"
 

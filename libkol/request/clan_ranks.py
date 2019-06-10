@@ -2,13 +2,13 @@ from typing import Any, Dict, List
 
 from bs4 import BeautifulSoup, Tag
 
-import pykollib
+import libkol
 
 from .request import Request
 
 
 class clan_ranks(Request[List[Dict[str, Any]]]):
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
         self.request = session.request("clan_editranks.php")
 

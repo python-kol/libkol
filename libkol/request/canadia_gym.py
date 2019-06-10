@@ -1,6 +1,6 @@
 from typing import Dict, NamedTuple
 
-import pykollib
+import libkol
 
 from ..Error import InvalidLocationError, NotEnoughAdventuresError, RequestGenericError
 from ..pattern import PatternManager
@@ -20,7 +20,7 @@ invalid_turns_pattern = PatternManager.getOrCompilePattern("invalidAdvInstitute"
 
 
 class canadia_gym(Request[Response]):
-    def __init__(self, session: "pykollib.Session", turns: int):
+    def __init__(self, session: "libkol.Session", turns: int):
         params = {"action": "institute", "numturns": turns}
         self.request = session.request("canadia.php", params=params)
 

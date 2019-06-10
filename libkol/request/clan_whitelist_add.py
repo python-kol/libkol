@@ -1,6 +1,6 @@
 from typing import NamedTuple, Union
 
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -13,7 +13,7 @@ class Response(NamedTuple):
 class clan_whitelist_add(Request[Response]):
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         user: Union[int, str],
         rank: int = 0,
         title: str = "",

@@ -1,6 +1,6 @@
 import json
 
-from pykollib.request import chat_send
+from libkol.request import chat_send
 
 from .test_base import TestCase
 

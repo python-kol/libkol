@@ -3,18 +3,18 @@ from yarl import URL
 
 from aiohttp import ClientResponse
 
-import pykollib
+import libkol
 
 ParserReturn = TypeVar("ParserReturn")
 
 
 class Request(Generic[ParserReturn]):
-    session: "pykollib.Session"
+    session: "libkol.Session"
     request: Coroutine[Any, Any, ClientResponse]
     response: Optional[ClientResponse] = None
     returns_json: bool = False
 
-    def __init__(self, session: "pykollib.Session"):
+    def __init__(self, session: "libkol.Session"):
         self.session = session
 
     async def run(self) -> ClientResponse:

@@ -2,7 +2,7 @@ from tortoise import Tortoise
 from tortoise.models import Model
 from unittest.mock import MagicMock
 from collections import namedtuple
-from pykollib import models
+from libkol import models
 import unittest
 import asyncio
 from os import path
@@ -51,7 +51,7 @@ class MockSession:
 
 class TestCase(unittest.TestCase):
     request: str
-    db_file = path.join(path.dirname(__file__), "../../pykollib/pykollib.db")
+    db_file = path.join(path.dirname(__file__), "../../libkol/libkol.db")
 
     def run_async(self, data, async_test, ext: str = "html", request_mocks={}):
         event_loop = asyncio.new_event_loop()

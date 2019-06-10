@@ -1,6 +1,6 @@
 from typing import List, NamedTuple
 
-import pykollib
+import libkol
 
 from ..Item import Item
 from ..pattern import PatternManager
@@ -23,7 +23,7 @@ class store_inventory(Request):
     Get a list of items currently in a user's store
     """
 
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
 
         params = {"which": 1}

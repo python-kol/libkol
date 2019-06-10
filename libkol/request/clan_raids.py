@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 from bs4 import BeautifulSoup, Tag
 
-import pykollib
+import libkol
 
 from ..Error import ClanPermissionsError
 from .clan_raid_log import clan_raid_log, Raid
@@ -14,7 +14,7 @@ class clan_raids(Request[List[Raid]]):
     Retrieves information on all active raids
     """
 
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
 
         self.request = session.request("clan_raidlogs.php")

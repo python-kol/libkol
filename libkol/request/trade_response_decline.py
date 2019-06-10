@@ -1,11 +1,11 @@
-import pykollib
+import libkol
 
 from ..Error import UnknownError
 from .request import Request
 
 
 class trade_response_decline(Request[bool]):
-    def __init__(self, session: "pykollib.Session", trade_id: int) -> None:
+    def __init__(self, session: "libkol.Session", trade_id: int) -> None:
         super().__init__(session)
         params = {"action": "decline2", "whichoffer": trade_id}
         self.request = session.request("makeoffer.php", pwd=True, params=params)

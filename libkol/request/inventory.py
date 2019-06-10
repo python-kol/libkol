@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-import pykollib
+import libkol
 
 from ..Item import Item
 from .request import Request
@@ -13,9 +13,9 @@ class inventory(Request[Dict[Item, int]]):
     Get a list of items in the user's inventory.
     """
 
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
-        data = {"for": session.state.get("user_agent", "pykollib"), "what": "inventory"}
+        data = {"for": session.state.get("user_agent", "libkol"), "what": "inventory"}
 
         self.request = session.request("api.php", json=True, data=data)
 

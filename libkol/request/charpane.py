@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict
 
-import pykollib
+import libkol
 
 from ..Error import UnknownError
 from .request import Request
@@ -170,14 +170,14 @@ class charpane(Request[Dict[str, Any]]):
     Requests the user's character pane.
     """
 
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
 
         self.request = session.request("charpane.php")
 
     @staticmethod
     async def parser(content: str, **kwargs) -> Dict[str, Any]:
-        session = kwargs["session"]  # type: "pykollib.Session"
+        session = kwargs["session"]  # type: "libkol.Session"
         pwd_matcher = pwd_pattern.search(content)
         username_matcher = username_pattern.search(content)
         user_id_matcher = user_id_pattern.search(content)

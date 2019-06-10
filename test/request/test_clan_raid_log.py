@@ -1,4 +1,4 @@
-from pykollib.request import clan_raid_log
+from libkol.request import clan_raid_log
 
 from .test_base import TestCase
 

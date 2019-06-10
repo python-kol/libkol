@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from ..Item import Item
 from ..Error import NotEnoughItemsError, WrongKindOfItemError
@@ -11,7 +11,7 @@ class item_use(Request[str]):
     Uses the requested item.
     """
 
-    def __init__(self, session: "pykollib.Session", item: Item) -> None:
+    def __init__(self, session: "libkol.Session", item: Item) -> None:
         super().__init__(session)
 
         params = {"which": 3, "whichitem": item.id}

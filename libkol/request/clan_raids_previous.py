@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from bs4 import BeautifulSoup
 from yarl import URL
 
-import pykollib
+import libkol
 
 from ..Error import ClanRaidsNotFoundError, UnknownError
 from .request import Request
@@ -26,7 +26,7 @@ class clan_raids_previous(Request[Response]):
     Retrieves a list of old raid logs, in pages of length 10
     """
 
-    def __init__(self, session: "pykollib.Session", page: int = 0) -> None:
+    def __init__(self, session: "libkol.Session", page: int = 0) -> None:
 
         super().__init__(session)
         params = {"startrow": page * 10}

@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 from bs4 import BeautifulSoup
 from typing import List
 
@@ -7,7 +7,7 @@ from .request import Request
 
 
 class trophy(Request[List[Trophy]]):
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
 
         self.request = session.request("trophy.php")

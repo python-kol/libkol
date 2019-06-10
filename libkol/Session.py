@@ -13,13 +13,13 @@ from .Location import Location
 from .util.decorators import logged_in
 
 models = [
-    "pykollib.FoldGroup",
-    "pykollib.Item",
-    "pykollib.ZapGroup",
-    "pykollib.Store",
-    "pykollib.Trophy",
-    "pykollib.Modifier",
-    "pykollib.Effect",
+    "libkol.FoldGroup",
+    "libkol.Item",
+    "libkol.ZapGroup",
+    "libkol.Store",
+    "libkol.Trophy",
+    "libkol.Modifier",
+    "libkol.Effect",
 ]
 
 
@@ -36,7 +36,7 @@ class Session:
         self.pwd = None
         self.clan = None
         self.kmail = Kmail(self)
-        self.db_file = db_file or path.join(path.dirname(__file__), "pykollib.db")
+        self.db_file = db_file or path.join(path.dirname(__file__), "libkol.db")
 
     async def __aenter__(self) -> "Session":
         await Tortoise.init(

@@ -1,6 +1,6 @@
 from typing import List
 
-import pykollib
+import libkol
 
 from ..Error import NotEnoughItemsError, NotEnoughMeatError, UnknownError
 from ..types import ItemQuantity
@@ -11,7 +11,7 @@ from .request import Request
 class trade_respond(Request[bool]):
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         trade_id: int,
         item_quantities: List[ItemQuantity] = [],
         meat: int = 0,

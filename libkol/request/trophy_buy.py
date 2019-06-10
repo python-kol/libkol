@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from ..Error import InvalidActionError, UnknownError
 from ..Trophy import Trophy
@@ -6,7 +6,7 @@ from .request import Request
 
 
 class trophy_buy(Request[bool]):
-    def __init__(self, session: "pykollib.Session", trophy: Trophy) -> None:
+    def __init__(self, session: "libkol.Session", trophy: Trophy) -> None:
         super().__init__(session)
         data = {"action": "buytrophy", "whichtrophy": trophy.id}
         self.request = session.request("trophy.php", data=data)

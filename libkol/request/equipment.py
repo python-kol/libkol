@@ -2,7 +2,7 @@ from typing import NamedTuple, Optional
 
 from bs4 import BeautifulSoup, Tag
 
-import pykollib
+import libkol
 
 from ..Item import Item
 from .request import Request
@@ -28,7 +28,7 @@ class equipment(Request):
     For accessories, two possibilities are present.  If equipping each slot seperately is enabled, each item's dictionary will contain an attribute "slot" with the number of the slot it occupies.  Otherwise, the "slot" attribute will have the value 0 for all equipped accessories.
     """
 
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
 
         params = {"which": 2}

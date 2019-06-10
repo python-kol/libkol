@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
-import pykollib
+import libkol
 
 from ..Error import UnknownError
 from .request import Request
@@ -20,7 +20,7 @@ class Response:
 class chat_receive(Request[Response]):
     returns_json = True
 
-    def __init__(self, session: "pykollib.Session", since: int = 0) -> None:
+    def __init__(self, session: "libkol.Session", since: int = 0) -> None:
         super().__init__(session)
         params = {
             # "aa" is a float and I don't know what it means but it works without it

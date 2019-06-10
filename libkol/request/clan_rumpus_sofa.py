@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-import pykollib
+import libkol
 
 from ..util import parsing
 from .request import Request
@@ -16,7 +16,7 @@ class clan_rumpus_sofa(Request[Response]):
     Uses the comfy sofa in the clan rumpus room.
     """
 
-    def __init__(self, session: "pykollib.Session", turns: int = 0) -> None:
+    def __init__(self, session: "libkol.Session", turns: int = 0) -> None:
         super().__init__(session)
 
         params = {"preaction": "nap", "numturns": turns}

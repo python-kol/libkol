@@ -1,12 +1,12 @@
 from typing import Union
 
-import pykollib
+import libkol
 
 from .request import Request
 
 
 class clan_whitelist_remove(Request[bool]):
-    def __init__(self, session: "pykollib.Session", user: Union[int, str]) -> None:
+    def __init__(self, session: "libkol.Session", user: Union[int, str]) -> None:
         payload = {"action": "updatewl", "who": user, "remove": "Remove"}
         self.request = session.request("clan_whitelist.php", data=payload, pwd=True)
 

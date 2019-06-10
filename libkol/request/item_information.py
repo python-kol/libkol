@@ -1,6 +1,6 @@
 from typing import Any, Dict, NamedTuple, Optional
 
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -31,7 +31,7 @@ class item_information(Request):
     Get information about a particular item.
     """
 
-    def __init__(self, session: "pykollib.Session", item_id) -> None:
+    def __init__(self, session: "libkol.Session", item_id) -> None:
         super().__init__(session)
 
         data = {"what": "item", "id": item_id}

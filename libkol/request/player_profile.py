@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict
 
-import pykollib
+import libkol
 
 from ..Error import UnknownError
 from .request import Request
@@ -18,7 +18,7 @@ numTattoos = re.compile(r"Tattoos Collected:<\/b><\/td><td>([0-9,]+)<\/td>")
 
 
 class player_profile(Request[Dict[str, Any]]):
-    def __init__(self, session: "pykollib.Session", player_id: int) -> None:
+    def __init__(self, session: "libkol.Session", player_id: int) -> None:
         super().__init__(session)
         payload = {"who": player_id}
         self.request = session.request("showplayer.php", data=payload)
@@ -27,7 +27,7 @@ class player_profile(Request[Dict[str, Any]]):
     async def parser(content: str, **kwargs) -> Dict[str, Any]:
         from .. import Clan
 
-        session = kwargs["session"]  # type: "pykollib.Session"
+        session = kwargs["session"]  # type: "libkol.Session"
 
         username_match = username.search(content)
         ascensions_match = numAscensions.search(content)

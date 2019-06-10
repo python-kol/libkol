@@ -1,7 +1,7 @@
 import re
 from typing import List
 
-import pykollib
+import libkol
 
 from .. import Clan
 from .request import Request
@@ -13,7 +13,7 @@ clan_search_result_pattern = re.compile(
 
 class clan_search(Request[List["Clan"]]):
     def __init__(
-        self, session: "pykollib.Session", query: str, nameonly: bool = True
+        self, session: "libkol.Session", query: str, nameonly: bool = True
     ) -> None:
         data = {
             "action": "search",
@@ -33,7 +33,7 @@ class clan_search(Request[List["Clan"]]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> List["Clan"]:
-        session = kwargs["session"]  # type: "pykollib.Session"
+        session = kwargs["session"]  # type: "libkol.Session"
         return [
             Clan(session, id=int(m.group(1)), name=m.group(2))
             for m in clan_search_result_pattern.finditer(content)

@@ -2,7 +2,7 @@ import re
 from enum import Enum
 from typing import List
 
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -43,7 +43,7 @@ furniture_pattern = re.compile(r"rump([0-9])_([0-9])\.gif")
 
 
 class clan_rumpus(Request[List[Furniture]]):
-    def __init__(self, session: "pykollib.Session"):
+    def __init__(self, session: "libkol.Session"):
         super().__init__(session)
         self.request = session.request("clan_rumpus.php")
 

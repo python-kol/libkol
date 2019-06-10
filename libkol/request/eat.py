@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from ..Error import ItemNotFoundError, UserIsDrunkError, WrongKindOfItemError
 from ..Item import Item
@@ -14,7 +14,7 @@ class eat(Request[parsing.ResourceGain]):
     :param item: Consumable to eat
     """
 
-    def __init__(self, session: "pykollib.Session", item: Item) -> None:
+    def __init__(self, session: "libkol.Session", item: Item) -> None:
         super().__init__(session)
 
         params = {"which": 1, "whichitem": item.id}

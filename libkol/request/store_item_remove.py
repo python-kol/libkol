@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from ..Error import ItemNotFoundError, UnknownError
 from ..Item import Item
@@ -21,7 +21,7 @@ class store_item_remove(Request[bool]):
     """
 
     def __init__(
-        self, session: "pykollib.Session", item: Item, quantity: int = 1
+        self, session: "libkol.Session", item: Item, quantity: int = 1
     ) -> None:
         super().__init__(session)
 

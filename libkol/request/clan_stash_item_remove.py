@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -9,7 +9,7 @@ class clan_stash_item_remove(Request):
     """
 
     def __init__(
-        self, session: "pykollib.Session", item_id: int = 0, quantity: int = 0
+        self, session: "libkol.Session", item_id: int = 0, quantity: int = 0
     ) -> None:
         super().__init__(session)
 

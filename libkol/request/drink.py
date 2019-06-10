@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from ..Error import ItemNotFoundError, UserIsDrunkError, WrongKindOfItemError
 from ..Item import Item
@@ -14,7 +14,7 @@ class drink(Request[parsing.ResourceGain]):
     effect gain, or drunkenness gain.
     """
 
-    def __init__(self, session: "pykollib.Session", item: Item) -> None:
+    def __init__(self, session: "libkol.Session", item: Item) -> None:
         super().__init__(session)
 
         params = {"which": 1, "whichitem": item.id}

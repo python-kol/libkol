@@ -2,7 +2,7 @@ import re
 from enum import Enum
 from typing import Dict
 
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -29,7 +29,7 @@ class questlog(Request):
     """
 
     def __init__(
-        self, session: "pykollib.Session", page: QuestPage = QuestPage.Current
+        self, session: "libkol.Session", page: QuestPage = QuestPage.Current
     ) -> None:
         params = {"which": page.value}
         self.request = session.request("questlog.php", params=params)

@@ -1,11 +1,11 @@
-import pykollib
+import libkol
 
 from ..Error import InvalidLocationError
 from .request import Request
 
 
 class canadia_mindcontrol(Request[bool]):
-    def __init__(self, session: "pykollib.Session", level: int) -> None:
+    def __init__(self, session: "libkol.Session", level: int) -> None:
         params = {"action": "changedial", "whichlevel": level}
         self.request = session.request("canadia.php", params=params)
 

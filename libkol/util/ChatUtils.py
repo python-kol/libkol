@@ -1,7 +1,7 @@
 from html import unescape
 
-from pykollib.pattern import PatternManager
-from pykollib.util import Report
+from libkol.pattern import PatternManager
+from libkol.util import Report
 
 CHAT_CHANNELS = [
     "clan",

@@ -1,6 +1,6 @@
 from typing import Union
 
-import pykollib
+import libkol
 
 from ..Error import UnknownError
 from ..pattern import PatternManager
@@ -13,7 +13,7 @@ results_pattern = PatternManager.getOrCompilePattern("results")
 class skill_use(Request):
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         skill: Skill,
         times: int = 1,
         target: Union[int, str] = None,

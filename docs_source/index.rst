@@ -1,4 +1,4 @@
-pykollib documentation
+libkol documentation
 ====================================
 
 .. toctree::

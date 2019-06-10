@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Optional, Union
 
-import pykollib
+import libkol
 
 from ..Error import InvalidActionError
 from ..Item import Item
@@ -38,7 +38,7 @@ class combat(Request):
 
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         action: Action,
         skill: Optional[Skill] = None,
         item: Union[Item, List[Item]] = None,

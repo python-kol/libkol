@@ -1,13 +1,13 @@
 from typing import List
 
-import pykollib
+import libkol
 
 from .request import Request
 
 
 class kmail_delete(Request):
     def __init__(
-        self, session: "pykollib.Session", message_ids: List[int], box: str = "Inbox"
+        self, session: "libkol.Session", message_ids: List[int], box: str = "Inbox"
     ) -> None:
         params = {"the_action": "delete", "box": box}
 

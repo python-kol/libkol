@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict, List
 
-import pykollib
+import libkol
 
 from ..Item import Item
 from .request import Request
@@ -16,7 +16,7 @@ class clan_stash(Request[List[Dict[str, Any]]]):
     This class is used to get a list of items in the user's clan stash.
     """
 
-    def __init__(self, session: "pykollib.Session"):
+    def __init__(self, session: "libkol.Session"):
         super().__init__(session)
 
         self.request = session.request("clan_stash.php", pwd=True)

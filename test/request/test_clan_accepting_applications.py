@@ -1,4 +1,4 @@
-from pykollib.request import clan_accepting_applications
+from libkol.request import clan_accepting_applications
 
 from .test_base import TestCase
 
