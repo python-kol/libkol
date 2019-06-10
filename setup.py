@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="libkol",
-    version="0.9.3",
+    version="0.9.0",
     author="",
     author_email="dan@heathmailbox.com",
     description="Python library for interacting with the Kingdom of Loathing ",
