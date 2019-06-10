@@ -1,7 +1,27 @@
 from libkol import Modifier
 from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus
+from sympy.parsing.sympy_parser import parse_expr
 
-async def maximize(session, *args, modifier="Maximum HP", **kwargs):
+def determine_value(modifier, base):
+    if modifier.string_value:
+        return 1
+
+    if modifier.numeric_value:
+        if modifier.percentage:
+            return modifier.numeric_value * base
+
+        return modifier.numeric_value
+
+    if modifier.expression_value:
+        try:
+            expr = parse_expr(modifier.expression_value)
+            print(expr)
+        except:
+            pass
+        return 0
+
+
+async def maximize(session, *args, modifier="Maximum HP", base=10, **kwargs):
     modifiers = await Modifier.Modifier.filter(key=modifier, item_id__not_isnull=True).all()
 
     map = {}
@@ -17,7 +37,7 @@ async def maximize(session, *args, modifier="Maximum HP", **kwargs):
     outfit = LpVariable.dicts("outfit", keys, 0, 1, cat="Integer")
 
     # Objective
-    prob += lpSum([(map[i]["modifier"].numeric_value or 0) * outfit[i] for i in outfit])
+    prob += lpSum([determine_value(map[i]["modifier"], base) * outfit[i] for i in outfit])
 
     prob += lpSum([outfit[i] for i in outfit if map[i]["item"].hat]) <= 1
     prob += lpSum([outfit[i] for i in outfit if map[i]["item"].shirt]) <= 1
