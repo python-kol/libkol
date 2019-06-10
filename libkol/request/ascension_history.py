@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from bs4 import BeautifulSoup
 
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -58,7 +58,7 @@ class ascension_history(Request[List[Ascension]]):
     """
 
     def __init__(
-        self, session: "pykollib.Session", player_id: int, pre_ns13: bool = False
+        self, session: "libkol.Session", player_id: int, pre_ns13: bool = False
     ) -> None:
         params = {"back": "other", "who": player_id, "prens13": 1 if pre_ns13 else 0}
         self.request = session.request("ascensionhistory.php", params=params)

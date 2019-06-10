@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from .request import Request
 from ..Error import InvalidLocationError, InvalidOutfitError
@@ -12,7 +12,7 @@ class mining(Request[str]):
     :param location_id: Id of the mine to visit
     """
 
-    def __init__(self, session: "pykollib.Session", mine: int):
+    def __init__(self, session: "libkol.Session", mine: int):
         super().__init__(session)
         params = {"mine": mine}
 

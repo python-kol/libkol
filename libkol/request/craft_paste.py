@@ -1,6 +1,6 @@
 from typing import List
 
-import pykollib
+import libkol
 from ..Error import WrongKindOfItemError, NotEnoughMeatError, UnknownError
 from .request import Request
 from ..util import parsing
@@ -13,7 +13,7 @@ class craft_paste(Request[List[ItemQuantity]]):
     Creates meat paste, meat stacks, or dense meat stacks.
     """
 
-    def __init__(self, session: "pykollib.Session", item: Item, quantity: int = 1):
+    def __init__(self, session: "libkol.Session", item: Item, quantity: int = 1):
         super().__init__(session)
 
         if item.id not in [25, 88, 258]:

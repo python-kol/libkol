@@ -6,7 +6,7 @@ API Reference
 
    session
 
-`pykollib` can be used through the API layer, the Request API or circumvented entirely
+`libkol` can be used through the API layer, the Request API or circumvented entirely
 to directly visit URLs. That list is also in order of decreasing preference - we aim to
 support every action through the API and at the very least through a Request.
 

@@ -4,7 +4,7 @@ from typing import List, Union
 from bs4 import BeautifulSoup
 from yarl import URL
 
-import pykollib
+import libkol
 
 from ..types import Listing
 from ..Item import Item
@@ -104,7 +104,7 @@ class mall_search(Request[List[Listing]]):
 
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         query: Union[str, Item],
         category: Category = Category.All,
         no_limits: bool = False,

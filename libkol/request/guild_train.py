@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from ..Error import (
     AlreadyCompletedError,
@@ -12,7 +12,7 @@ from .request import Request
 
 
 class guild_train(Request):
-    def __init__(self, session: "pykollib.Session", skill: Skill) -> None:
+    def __init__(self, session: "libkol.Session", skill: Skill) -> None:
         super().__init__(session)
         data = {"action": "train", "whichskill": skill.id}
 

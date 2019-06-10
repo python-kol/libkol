@@ -1,6 +1,6 @@
 from typing import List
 
-import pykollib
+import libkol
 
 from ..Error import ItemNotFoundError, UnknownError, WrongKindOfItemError
 from ..types import ItemQuantity
@@ -11,7 +11,7 @@ from .request import Request
 
 class hermit_trade(Request):
     def __init__(
-        self, session: "pykollib.Session", item: Item, quantity: int = 1
+        self, session: "libkol.Session", item: Item, quantity: int = 1
     ) -> None:
         data = {"action": "trade", "quantity": quantity, "whichitem": item.id}
         self.request = session.request("hermit.php", data=data)

@@ -1,7 +1,7 @@
 from typing import List
 
-import pykollib
-from pykollib import types
+import libkol
+from libkol import types
 
 from .request import Request
 
@@ -12,7 +12,7 @@ class clan_stash_item_add(Request):
     """
 
     def __init__(
-        self, session: "pykollib.Session", items: List[types.ItemQuantity]
+        self, session: "libkol.Session", items: List[types.ItemQuantity]
     ) -> None:
         params = {"action": "addgoodies"}
 

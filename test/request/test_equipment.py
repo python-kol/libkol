@@ -1,6 +1,6 @@
 from collections import Counter
 
-from pykollib.request import equipment
+from libkol.request import equipment
 
 from .test_base import TestCase
 

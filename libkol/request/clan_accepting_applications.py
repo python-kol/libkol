@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from ..Error import UnknownError
 from ..util import parsing
@@ -10,7 +10,7 @@ class clan_accepting_applications(Request[bool]):
     Toggle whether or not the clan accepts new applications.
     """
 
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
 
         params = {"action": "noapp"}

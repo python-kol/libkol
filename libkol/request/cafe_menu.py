@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List
 
-import pykollib
+import libkol
 
 from ..Error import InvalidLocationError, RequestGenericError
 from ..Item import Item
@@ -26,7 +26,7 @@ class cafe_menu(Request[List[Item]]):
     :params cafe: The Cafe from which to get the menu
     """
 
-    def __init__(self, session: "pykollib.Session", cafe: Cafe):
+    def __init__(self, session: "libkol.Session", cafe: Cafe):
         params = {"cafeid": cafe}
         self.request = session.request("cafe.php", pwd=True, params=params)
 

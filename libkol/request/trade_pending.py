@@ -2,7 +2,7 @@ import re
 from enum import Enum
 from typing import List, NamedTuple
 
-import pykollib
+import libkol
 
 from ..Error import UnknownError
 from ..types import ItemQuantity
@@ -64,7 +64,7 @@ class Trade(NamedTuple):
 
 
 class trade_pending(Request[List[Trade]]):
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         self.request = session.request("makeoffer.php")
 
     @staticmethod

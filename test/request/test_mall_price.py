@@ -1,4 +1,4 @@
-from pykollib.request import mall_price
+from libkol.request import mall_price
 
 from .test_base import TestCase
 

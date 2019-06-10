@@ -3,7 +3,7 @@ from typing import List
 from bs4 import BeautifulSoup
 from dataclasses import dataclass
 
-import pykollib
+import libkol
 
 from ..Item import Item
 from .request import Request
@@ -34,7 +34,7 @@ class mall_price(Request[Response]):
     :param item: Item for which to get prices
     """
 
-    def __init__(self, session: "pykollib.Session", item: Item) -> None:
+    def __init__(self, session: "libkol.Session", item: Item) -> None:
         super().__init__(session)
 
         data = {"action": "prices", "iid": item.id}

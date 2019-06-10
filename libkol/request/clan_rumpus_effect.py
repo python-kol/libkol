@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any, Dict, List
 
-import pykollib
+import libkol
 
 from ..util import parsing
 from .request import Request
@@ -17,7 +17,7 @@ class clan_rumpus_effect(Request[List[Dict[str, Any]]]):
     Uses an effect giver in the clan rumpus room.
     """
 
-    def __init__(self, session: "pykollib.Session", type: Type) -> None:
+    def __init__(self, session: "libkol.Session", type: Type) -> None:
         super().__init__(session)
 
         params = {"action": "click", "spot": type.value[0], "furni": type.value[1]}

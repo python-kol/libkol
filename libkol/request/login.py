@@ -1,7 +1,7 @@
 import hashlib
 import re
 
-import pykollib
+import libkol
 
 from ..Error import LoginFailedBadPasswordError, LoginFailedGenericError, UnknownError
 from .request import Request
@@ -15,7 +15,7 @@ badPassword = re.compile(r"<b>Login failed\.\s+?Bad password\.<\/b>")
 class login(Request[bool]):
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         username: str,
         password: str,
         challenge: str = None,

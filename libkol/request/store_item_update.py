@@ -1,8 +1,8 @@
 import time
 from typing import List
 
-import pykollib
-from pykollib.pattern import PatternManager
+import libkol
+from libkol.pattern import PatternManager
 
 from .request import Request
 from .store_inventory import Listing
@@ -11,7 +11,7 @@ price_not_updated_pattern = PatternManager.getOrCompilePattern("mallPriceNotUpda
 
 
 class store_item_update(Request[bool]):
-    def __init__(self, session: "pykollib.Session", listings: List[Listing]) -> None:
+    def __init__(self, session: "libkol.Session", listings: List[Listing]) -> None:
         params = {"action": "updateinv", "ajax": 1, "_": int(time.time() * 1000)}
 
         for listing in listings:

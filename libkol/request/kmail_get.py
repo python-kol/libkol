@@ -3,7 +3,7 @@ from datetime import datetime
 from html import unescape
 from typing import List, NamedTuple
 
-import pykollib
+import libkol
 
 from ..Error import UnknownError
 from ..types import ItemQuantity
@@ -33,7 +33,7 @@ class Message(NamedTuple):
 class kmail_get(Request):
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         box: str = "Inbox",
         page: int = 0,
         messages_per_page: int = 100,

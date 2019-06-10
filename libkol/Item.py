@@ -3,7 +3,7 @@ from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from tortoise.models import ModelMeta
 from typing import List, Optional, Union
 
-from pykollib import request
+from libkol import request
 from .Model import Model
 from .Error import ItemNotFoundError, WrongKindOfItemError
 from . import types
@@ -138,7 +138,7 @@ class Item(Model, metaclass=ItemMeta):
     async def discover(cls, id: int = None, desc_id: int = None):
         """
         Discover this item using its id or description id. The description id is preferred as
-        it provides more information, so if only an id is provided, pykollib will first determine
+        it provides more information, so if only an id is provided, libkol will first determine
         the desc_id.
 
         Note that this Returns an Item object but it is not automatically committed to the database.

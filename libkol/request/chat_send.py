@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 from typing import Any, Dict, List
 from dataclasses import dataclass
 from unicodedata import normalize
@@ -16,7 +16,7 @@ class Response:
 class chat_send(Request[Response]):
     returns_json = True
 
-    def __init__(self, session: "pykollib.Session", text: str = ""):
+    def __init__(self, session: "libkol.Session", text: str = ""):
         super().__init__(session)
 
         params = {

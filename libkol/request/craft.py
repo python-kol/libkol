@@ -3,7 +3,7 @@ from typing import List, NamedTuple, Tuple
 
 from yarl import URL
 
-import pykollib
+import libkol
 
 from ..Error import (
     ItemNotFoundError,
@@ -31,7 +31,7 @@ class Response(NamedTuple):
 class craft(Request[Response]):
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         mode: Mode,
         ingredients: Tuple[Item, Item],
         quantity: int = 1,

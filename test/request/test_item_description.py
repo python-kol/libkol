@@ -1,4 +1,4 @@
-from pykollib.request import item_description
+from libkol.request import item_description
 from .test_base import TestCase
 
 

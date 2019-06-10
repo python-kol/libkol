@@ -1,4 +1,4 @@
-from pykollib.request import hermit_menu
+from libkol.request import hermit_menu
 from .test_base import TestCase
 
 

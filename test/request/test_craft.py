@@ -1,7 +1,7 @@
 from yarl import URL
 
-from pykollib.Error import ItemNotFoundError, RecipeNotFoundError
-from pykollib.request import craft
+from libkol.Error import ItemNotFoundError, RecipeNotFoundError
+from libkol.request import craft
 
 from .test_base import TestCase
 

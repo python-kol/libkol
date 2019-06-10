@@ -4,7 +4,7 @@ from typing import List, NamedTuple, Optional
 from bs4 import BeautifulSoup
 from yarl import URL
 
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -28,7 +28,7 @@ class Result(NamedTuple):
 class player_search(Request):
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         query: str,
         query_type: QueryType = QueryType.StartsWith,
         pvp_only: bool = False,

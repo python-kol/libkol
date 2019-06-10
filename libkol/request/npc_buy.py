@@ -1,6 +1,6 @@
 from typing import List, NamedTuple
 
-import pykollib
+import libkol
 
 from ..Error import (
     InvalidLocationError,
@@ -31,7 +31,7 @@ class npc_buy(Request):
     """
 
     def __init__(
-        self, session: "pykollib.Session", store: Store, item: Item, quantity: int = 1
+        self, session: "libkol.Session", store: Store, item: Item, quantity: int = 1
     ) -> None:
         if item.store_id != store.id:
             raise WrongKindOfItemError("This item cannot be purchased in that store")

@@ -8,7 +8,7 @@ import re
 import json
 from typing import Any, Coroutine, List
 
-from pykollib import ZapGroup, Item, FoldGroup, Store, Trophy, Effect, Modifier, models
+from libkol import ZapGroup, Item, FoldGroup, Store, Trophy, Effect, Modifier, models
 
 
 async def load_mafia_data(session: ClientSession, key: str) -> ClientResponse:
@@ -426,7 +426,7 @@ async def load_trophies(session: ClientSession):
 
 async def populate():
     await Tortoise.init(
-        db_url="sqlite://../pykollib/pykollib.db", modules={"models": models}
+        db_url="sqlite://../libkol/libkol.db", modules={"models": models}
     )
 
     await Tortoise.generate_schemas(safe=True)

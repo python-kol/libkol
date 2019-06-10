@@ -1,5 +1,5 @@
 Session
 =======
 
-.. autoclass:: pykollib.Session
+.. autoclass:: libkol.Session
  :members:

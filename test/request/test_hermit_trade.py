@@ -1,5 +1,5 @@
-from pykollib.Error import ItemNotFoundError, WrongKindOfItemError
-from pykollib.request import hermit_trade
+from libkol.Error import ItemNotFoundError, WrongKindOfItemError
+from libkol.request import hermit_trade
 
 from .test_base import TestCase
 

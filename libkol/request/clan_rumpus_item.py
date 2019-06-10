@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import List
 
-import pykollib
+import libkol
 
-from pykollib import types
+from libkol import types
 from ..util import parsing
 from .clan_rumpus import Furniture
 from .request import Request
@@ -22,7 +22,7 @@ class clan_rumpus_item(Request[List[ItemQuantity]]):
     Uses an item dispenser in the clan rumpus room.
     """
 
-    def __init__(self, session: "pykollib.Session", furniture: ItemFurniture) -> None:
+    def __init__(self, session: "libkol.Session", furniture: ItemFurniture) -> None:
         super().__init__(session)
         spot, furni = furniture.value
 

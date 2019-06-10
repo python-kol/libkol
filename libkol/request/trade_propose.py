@@ -1,6 +1,6 @@
 from typing import List
 
-import pykollib
+import libkol
 
 from ..Error import (
     BannedFromChatError,
@@ -18,7 +18,7 @@ from .request import Request
 class trade_propose(Request[bool]):
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         user_id: int,
         item_quantities: List[ItemQuantity] = [],
         meat: int = 0,

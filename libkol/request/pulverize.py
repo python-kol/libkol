@@ -1,6 +1,6 @@
 from typing import List
 
-import pykollib
+import libkol
 
 from ..Error import ItemNotFoundError, WrongKindOfItemError
 from ..Item import Item
@@ -11,7 +11,7 @@ from .request import Request
 
 class pulverize(Request):
     def __init__(
-        self, session: "pykollib.Session", item: Item, quantity: int = 1
+        self, session: "libkol.Session", item: Item, quantity: int = 1
     ) -> None:
         params = {
             "action": "pulverize",

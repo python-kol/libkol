@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -12,7 +12,7 @@ class choice(Request):
     :param option: The number option to submit
     """
 
-    def __init__(self, session: "pykollib.Session", choice: int, option: int) -> None:
+    def __init__(self, session: "libkol.Session", choice: int, option: int) -> None:
         super().__init__(session)
         params = {"whichchoce": choice, "option": option}
         self.request = session.request("choice.php", params=params, pwd=True)

@@ -2,7 +2,7 @@ from typing import List
 
 from bs4 import BeautifulSoup
 
-import pykollib
+import libkol
 
 from ..types import ItemQuantity
 from ..Item import Item
@@ -10,7 +10,7 @@ from .request import Request
 
 
 class hermit_menu(Request):
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         self.request = session.request("hermit.php")
 
     @staticmethod

@@ -2,9 +2,9 @@ import re
 from enum import Enum
 from typing import List, NamedTuple
 
-import pykollib
+import libkol
 
-from pykollib import types
+from libkol import types
 from .request import Request
 
 ItemQuantity = types.ItemQuantity
@@ -30,8 +30,8 @@ class autosell_items(Request[Response]):
 
     def __init__(
         self,
-        session: "pykollib.Session",
-        items: List["pykollib.Item"],
+        session: "libkol.Session",
+        items: List["libkol.Item"],
         quantity: int = 1,
         all: bool = False,
         keep_one: bool = False,
@@ -53,7 +53,7 @@ class autosell_items(Request[Response]):
 
     @staticmethod
     async def parser(
-        content: str, items: List["pykollib.Item"] = [], **kwargs
+        content: str, items: List["libkol.Item"] = [], **kwargs
     ) -> Response:
         response_match = response_pattern.search(content)
 

@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from ..Error import InvalidLocationError, NotEnoughMeatError, WrongKindOfItemError
 from ..Item import Item
@@ -18,7 +18,7 @@ class cafe_consume(Request[parsing.ResourceGain]):
     :param item: Item to consume
     """
 
-    def __init__(self, session: "pykollib.Session", cafe: Cafe, item: Item) -> None:
+    def __init__(self, session: "libkol.Session", cafe: Cafe, item: Item) -> None:
         params = {"action": "CONSUME!", "cafeid": cafe, "whichitem": item.id}
         self.request = session.request("cafe.php", pwd=True, params=params)
 

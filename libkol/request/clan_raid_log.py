@@ -5,7 +5,7 @@ from datetime import date
 from bs4 import BeautifulSoup, Tag
 from yarl import URL
 from dataclasses import dataclass
-import pykollib
+import libkol
 
 from ..Error import UnknownError
 from ..util import parsing
@@ -145,7 +145,7 @@ class clan_raid_log(Request[Raid]):
     Retrieves on a previous raid.
     """
 
-    def __init__(self, session: "pykollib.Session", raid_id: int) -> None:
+    def __init__(self, session: "libkol.Session", raid_id: int) -> None:
         super().__init__(session)
 
         params = {"viewlog": raid_id}

@@ -1,5 +1,5 @@
 """
-This module holds all of the regular expression patterns that pykol uses. It makes sense
+This module holds all of the regular expression patterns that kollib uses. It makes sense
 to store them all in the same place since many patterns are used by multiple requests.
 The 'patterns' data object is a dictionary mapping patternId to pattern. If pattern is a tuple,
 then the first element of the tuple should be the pattern while the second element is a flag

@@ -1,6 +1,6 @@
 from typing import List
 
-import pykollib
+import libkol
 
 from ..types import ItemQuantity
 from ..util import parsing
@@ -12,7 +12,7 @@ class clan_vip_klaw(Request[List[ItemQuantity]]):
     Uses the Deluxe Mr. Klaw in the clan VIP room.
     """
 
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
 
         params = {"action": "klaw"}

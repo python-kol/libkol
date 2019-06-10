@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from .equip import Slot
 from .request import Request
@@ -11,7 +11,7 @@ class unequip(Request):
     :param slot: Will unequip item from the specified Slot, or completely undress if `slot` is None
     """
 
-    def __init__(self, session: "pykollib.Session", slot: "Slot" = None) -> None:
+    def __init__(self, session: "libkol.Session", slot: "Slot" = None) -> None:
         super().__init__(session)
 
         params = {}

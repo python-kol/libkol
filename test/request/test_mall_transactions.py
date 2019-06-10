@@ -1,4 +1,4 @@
-from pykollib.request import mall_transactions
+from libkol.request import mall_transactions
 
 from .test_base import TestCase
 

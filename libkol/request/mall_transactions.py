@@ -5,7 +5,7 @@ from typing import List, NamedTuple
 from bs4 import BeautifulSoup
 from yarl import URL
 
-import pykollib
+import libkol
 
 from ..Error import UnknownError
 from ..Item import Item
@@ -31,7 +31,7 @@ class mall_transactions(Request):
     :param session: Active session
 	"""
 
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
 
         params = {"which": 3}

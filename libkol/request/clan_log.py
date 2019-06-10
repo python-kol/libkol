@@ -5,8 +5,8 @@ from typing import Dict, List, Optional
 from bs4 import BeautifulSoup
 import re
 
-import pykollib
-from pykollib.util import parsing
+import libkol
+from libkol.util import parsing
 
 from ..Error import UnknownError
 from .request import Request
@@ -54,7 +54,7 @@ class clan_log(Request[List[ClanLog]]):
     Retrieves the clan activity log.
     """
 
-    def __init__(self, session: "pykollib.Session"):
+    def __init__(self, session: "libkol.Session"):
         self.request = session.request("clan_log.php")
 
     log_patterns = {

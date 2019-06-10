@@ -2,7 +2,7 @@ from typing import Union
 
 from yarl import URL
 
-import pykollib
+import libkol
 
 from ..Error import (
     AlreadyCompletedError,
@@ -19,7 +19,7 @@ from .request import Request
 
 class curse(Request[bool]):
     def __init__(
-        self, session: "pykollib.Session", player: Union[str, int], item: Item
+        self, session: "libkol.Session", player: Union[str, int], item: Item
     ) -> None:
         params = {"action": "use", "whichitem": item.id, "targetplayer": player}
 

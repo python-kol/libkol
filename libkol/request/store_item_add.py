@@ -1,5 +1,5 @@
 import re
-import pykollib
+import libkol
 
 from ..Error import ItemNotFoundError, UnknownError
 from ..Item import Item
@@ -24,7 +24,7 @@ class store_item_add(Request[bool]):
 
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         item: Item,
         quantity: int = 1,
         limit: int = 0,

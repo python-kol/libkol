@@ -1,4 +1,4 @@
-import pykollib
+import libkol
 
 from .request import Request
 from .trade_pending import Status
@@ -12,7 +12,7 @@ class trade_cancel(Request):
     :param status: Status of the trade to be cancelled
     """
 
-    def __init__(self, session: "pykollib.Session", id: int, status: Status) -> None:
+    def __init__(self, session: "libkol.Session", id: int, status: Status) -> None:
         super().__init__(session)
 
         params = {

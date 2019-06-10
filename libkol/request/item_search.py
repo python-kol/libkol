@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Union
 from bs4 import BeautifulSoup
-import pykollib
+import libkol
 
 from ..Item import Item
 from .request import Request
@@ -93,7 +93,7 @@ class item_search(Request[List[Item]]):
 
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         query: Union[str, Item],
         category: Category = Category.All,
         sort_items_by: SortBy = SortBy.Name,

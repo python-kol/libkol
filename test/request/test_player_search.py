@@ -1,4 +1,4 @@
-from pykollib.request import player_search
+from libkol.request import player_search
 
 from .test_base import TestCase
 

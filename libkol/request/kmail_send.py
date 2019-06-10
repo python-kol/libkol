@@ -1,6 +1,6 @@
 from typing import List, Union
 
-import pykollib
+import libkol
 
 from ..Error import (
     ItemNotFoundError,
@@ -16,7 +16,7 @@ from .request import Request
 class kmail_send(Request):
     def __init__(
         self,
-        session: "pykollib.Session",
+        session: "libkol.Session",
         recipient: Union[int, str],
         message: str = "",
         items: List[ItemQuantity] = [],

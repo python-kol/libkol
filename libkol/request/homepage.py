@@ -3,7 +3,7 @@ from typing import NamedTuple, Optional
 from bs4 import BeautifulSoup
 from yarl import URL
 
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -20,7 +20,7 @@ class homepage(Request[Response]):
     so that we might login to the server in a more secure fashion.
     """
 
-    def __init__(self, session: "pykollib.Session", server_number: int = 0) -> None:
+    def __init__(self, session: "libkol.Session", server_number: int = 0) -> None:
         super().__init__(session)
 
         if server_number > 0:

@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 from bs4 import BeautifulSoup
 
-import pykollib
+import libkol
 
 from .request import Request
 
@@ -15,7 +15,7 @@ class clan_whitelist(Request[List[Dict[str, Any]]]):
     Retrieves information from the clan whitelist page.
     """
 
-    def __init__(self, session: "pykollib.Session") -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
 
         self.request = session.request("clan_whitelist.php")

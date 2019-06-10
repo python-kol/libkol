@@ -8,7 +8,7 @@ copies in each class.
 import re
 from typing import Dict, Pattern
 
-from pykollib.pattern import Patterns
+from libkol.pattern import Patterns
 
 __compiledPatterns = {}  # type: Dict[str, Pattern]
 

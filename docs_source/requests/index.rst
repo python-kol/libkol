@@ -1,7 +1,7 @@
 Request Reference
 =================
 
-It is the aim of `pykollib` that every action that can be performed through the
+It is the aim of `libkol` that every action that can be performed through the
 Kingdom of Loathing web interface is represented as a `request` in this module.
 `requests` handle the two aspects of interacting programmatically with KoL -
 generating the requisite URL and parsing the HTML response.
@@ -20,6 +20,6 @@ it is possible to carry out these two operations separately.
 As the parsed return type is a result of a different function, the documentation is
 currently not displaying it, but we’re working on it!
 
-.. automodule:: pykollib.request
+.. automodule:: libkol.request
  :members:
  :undoc-members:

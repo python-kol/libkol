@@ -2,7 +2,7 @@ from typing import Dict, NamedTuple
 
 from yarl import URL
 
-import pykollib
+import libkol
 
 from ..Stat import Stat
 from ..util import parsing
@@ -32,7 +32,7 @@ class clan_rumpus_gym(Request[Response]):
     :param turns: The number of turns to train for
     """
 
-    def __init__(self, session: "pykollib.Session", stat: Stat, turns: int) -> None:
+    def __init__(self, session: "libkol.Session", stat: Stat, turns: int) -> None:
         super().__init__(session)
 
         params = {

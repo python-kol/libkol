@@ -1,4 +1,4 @@
-from pykollib.request import trophy
+from libkol.request import trophy
 
 from .test_base import TestCase
 
