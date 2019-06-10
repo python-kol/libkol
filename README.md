@@ -3,7 +3,7 @@ libkol [![PyPi version](https://img.shields.io/pypi/v/libkol.svg)](https://pypi.
 
 What is it?
 -----------
-The purpose of libkol is to create a [Python](http://www.python.org/) package that makes it extremely easy to develop code that works with [The Kingdom of Loathing](http://www.kingdomofloathing.com). pykollib can be used for anything from writing short scripts to complex bots.
+The purpose of libkol is to create a [Python](http://www.python.org/) package that makes it extremely easy to develop code that works with [The Kingdom of Loathing](http://www.kingdomofloathing.com). It can be used for anything from writing short scripts to complex bots.
 
 It is based on pykol, on which both [kBay](http://forums.kingdomofloathing.com:8080/vb/showthread.php?t=141613) and [wadbot](http://forums.kingdomofloathing.com:8080/vb/showthread.php?t=152258) were built.
 
@@ -38,7 +38,7 @@ $ make test username=[username] password=[password]
 
 How can I contribute?
 ---------------------
-1. [Fork](http://help.github.com/forking/) pykollib
+1. [Fork](http://help.github.com/forking/) libkol
 2. Clone your fork - `git clone git@github.com:your_username/libkol.git`
 3. Add a remote to this repository - `git remote add upstream git://github.com/python-kol/libkol.git`
 4. Fetch the current libkol sources - `git fetch upstream`
