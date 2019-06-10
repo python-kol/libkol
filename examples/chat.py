@@ -4,8 +4,8 @@ and start listening to chat.
 """
 
 import asyncio
-from pykollib import Session
-from pykollib.request import getChatMessagesRequest, openChatRequest
+from libkol import Session
+from libkol.request import getChatMessagesRequest, openChatRequest
 
 
 async def main():
