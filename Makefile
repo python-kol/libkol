@@ -1,5 +1,5 @@
 test:
-	python -m unittest pykollib/test/**/test_*.py
+	python -m unittest libkol/test/**/test_*.py
 
 install:
 	pre-commit install
