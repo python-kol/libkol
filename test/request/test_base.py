@@ -15,7 +15,9 @@ def open_test_data(request, variant: str, ext: str = "html"):
 
 
 class MockSession:
-    def __init__(self, test, request_mocks):
+    state = {}
+
+    def __init__(self, test, request_mocks, state):
         Response = namedtuple(
             "ClientResponse", ["url", "content", "get_encoding", "text"]
         )
@@ -51,20 +53,21 @@ class MockSession:
 
 class TestCase(unittest.TestCase):
     request: str
+    session = None
     db_file = path.join(path.dirname(__file__), "../../libkol/libkol.db")
 
-    def run_async(self, data, async_test, ext: str = "html", request_mocks={}):
+    def run_async(self, data, async_test, ext: str = "html", request_mocks={}, state={}):
         event_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(event_loop)
 
-        session = MockSession(self, request_mocks)
+        self.session = MockSession(self, request_mocks, state)
 
         async def run_test():
             await Tortoise.init(
                 db_url="sqlite://{}".format(self.db_file), modules={"models": models}
             )
 
-            Model.kol = session
+            Model.kol = self.session
 
             try:
                 with open_test_data(self.request, data, ext) as file:
@@ -77,4 +80,4 @@ class TestCase(unittest.TestCase):
         event_loop.run_until_complete(coro())
         event_loop.close()
 
-        return session
+        return self.session
