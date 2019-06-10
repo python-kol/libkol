@@ -1,10 +1,10 @@
 """
-This file shows how you can use adventure using pykollib
+This file shows how you can use adventure using libkol
 """
 
 import asyncio
 
-from pykollib import Session
+from libkol import Session
 
 
 async def main():

@@ -10,7 +10,7 @@ from tabulate import tabulate
 from itertools import groupby
 from tqdm import tqdm
 
-from pykollib import Session
+from libkol import Session
 
 kill_pattern = re.compile(r"^([^\(]+) \(#([0-9]+)\) defeated (.*) \(([0-9]+) turns?\)")
 skill_pattern = re.compile(r"^([^\(]+) \(#([0-9]+)\)  used The Machine")
