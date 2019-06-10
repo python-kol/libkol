@@ -19,4 +19,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    extras_require={"docs": ["sphinx_autodoc_typehints==1.6.0"]},
 )
