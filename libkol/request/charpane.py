@@ -9,7 +9,8 @@ from .request import Request
 pwd_pattern = re.compile(r"var pwdhash = \"([0-9a-f]+)\";")
 user_id_pattern = re.compile(r"var playerid = ([0-9]+);")
 username_pattern = re.compile(r"<a [^<>]*href=\"charsheet\.php\">(?:<b>)?([^<>]+)<")
-characterLevel = re.compile(r"<br>Level ([0-9]+)<br>(.*?)<table")
+characterLevel = re.compile(r"<br>Level ([0-9]+)<br>(.*?)<")
+characterLevelCustomTitle = re.compile(r"<br>(.*?)<br>\(Level ([0-9]+)\)<")
 characterMuscle = re.compile(
     r"Muscle:</td><td align=left><b>(?:<font color=blue>([0-9]+)</font>)?(?:&nbsp;)?\(?([0-9]+)\)?</b>"
 )
@@ -196,7 +197,13 @@ class charpane(Request[Dict[str, Any]]):
             title = str(match.group(2))
             data["level"] = int(match.group(1))
             data["levelTitle"] = title
+            data["title"] = title
             data["class"] = titleToClass(title)
+        else:
+            match = characterLevelCustomTitle.search(content)
+            if match:
+                data["level"] = int(match.group(2))
+                data["title"] = str(match.group(1))
 
         match = characterHP.search(content)
         if match:
