@@ -16,6 +16,7 @@ def open_test_data(request, variant: str, ext: str = "html"):
 
 class MockSession:
     def __init__(self, test, request_mocks):
+        self.state = {}
         Response = namedtuple(
             "ClientResponse", ["url", "content", "get_encoding", "text"]
         )
