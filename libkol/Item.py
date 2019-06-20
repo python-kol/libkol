@@ -229,6 +229,9 @@ class Item(Model, metaclass=ItemMeta):
     def amount(self):
         return self.kol.state["inventory"][self]
 
+    def have(self):
+        return self.amount() > 0
+
     async def use(self, quantity: int = 1, multi_use: bool = True):
         if self.usable is False:
             raise WrongKindOfItemError("This item cannot be used")

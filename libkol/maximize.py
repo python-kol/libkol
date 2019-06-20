@@ -19,7 +19,9 @@ async def maximize(session, *args, modifier: str = None, **kwargs):
     map = {}
     for m in modifiers:
         await m.fetch_related('item')
-        map[m.item.id] = {"item": m.item, "modifier": m}
+
+        if m.item.have():
+            map[m.item.id] = {"item": m.item, "modifier": m}
 
     # Define the problem
     prob = LpProblem(modifier, LpMaximize)
