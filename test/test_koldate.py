@@ -1,6 +1,7 @@
 from unittest import TestCase
 from libkol.koldate import koldate
 
+
 class KoldateTestCase(TestCase):
     def test_ronald_phase(self):
         self.assertEqual(koldate(52, 2, 0).ronald_phase, 0)

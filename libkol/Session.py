@@ -218,6 +218,7 @@ class Session:
     @logged_in
     async def get_reagent_potion_duration(self) -> int:
         from . import Skill
+
         duration = 5
         duration += 5 if self.get_character_class() == CharacterClass.Sauceror else 0
         duration += 5 if (await Skill["Impetuous Sauciness"]).have() else 0

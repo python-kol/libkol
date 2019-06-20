@@ -64,7 +64,9 @@ class charpane(Request[Dict[str, Any]]):
         user_id_matcher = user_id_pattern.search(content)
 
         if pwd_matcher is None or username_matcher is None or user_id_matcher is None:
-            print(pwd_matcher is None, username_matcher is None, user_id_matcher is None)
+            print(
+                pwd_matcher is None, username_matcher is None, user_id_matcher is None
+            )
             raise UnknownError("Failed to parse basic information from charpane")
 
         data = {
@@ -103,7 +105,11 @@ class charpane(Request[Dict[str, Any]]):
         if match:
             data["meat"] = int(match.group(1).replace(",", ""))
 
-        data["adventures"] = int(soup.find("img", alt="Adventures Remaining").find_next_sibling("span").string)
+        data["adventures"] = int(
+            soup.find("img", alt="Adventures Remaining")
+            .find_next_sibling("span")
+            .string
+        )
 
         match = characterDrunk.search(content)
         data["inebriety"] = int(match.group(1)) if match else 0
@@ -127,7 +133,9 @@ class charpane(Request[Dict[str, Any]]):
 
         data["buffed_muscle"], data["base_muscle"] = cls.get_stat(soup, "Muscle:")
         data["buffed_moxie"], data["base_moxie"] = cls.get_stat(soup, "Moxie:")
-        data["buffed_mysticality"], data["base_mysticality"] = cls.get_stat(soup, "Mysticality:")
+        data["buffed_mysticality"], data["base_mysticality"] = cls.get_stat(
+            soup, "Mysticality:"
+        )
 
         match = characterRonin.search(content)
         if match:

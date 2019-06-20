@@ -8,6 +8,7 @@ from libkol import Item
 
 from util import load_mafia_data, mafia_dedupe
 
+
 @atomic()
 async def load(session: ClientSession):
     type = None

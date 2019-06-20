@@ -9,10 +9,7 @@ from .request import Request
 
 
 class skills(Request[List[Skill]]):
-    def __init__(
-        self,
-        session: "libkol.Session",
-    ) -> None:
+    def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
 
         params = {"layout": 1}

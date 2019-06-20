@@ -53,7 +53,14 @@ class item_description(Request):
         spleen = type and type[0] == "spleen"
 
         enchantment_block = soup.find("font", color="blue")
-        enchantments = [e.get_text() for e in parsing.split_by_br(enchantment_block, soup.new_tag("div"))] if enchantment_block else []
+        enchantments = (
+            [
+                e.get_text()
+                for e in parsing.split_by_br(enchantment_block, soup.new_tag("div"))
+            ]
+            if enchantment_block
+            else []
+        )
 
         return {
             "id": id,

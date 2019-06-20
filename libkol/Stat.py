@@ -2,6 +2,7 @@ from enum import Enum
 
 from .CharacterClass import CharacterClass
 
+
 class Stat(Enum):
     Muscle = "muscle"
     Mysticality = "mysticality"

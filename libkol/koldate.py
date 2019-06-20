@@ -11,6 +11,7 @@ phase_names = {
     7: "waning crescent",
 }
 
+
 class KLT(tzinfo):
     """
     Kingdom of Loathing Time
@@ -25,9 +26,10 @@ class KLT(tzinfo):
     def dst(self, dt):
         return timedelta(0)
 
+
 class koldate:
     EPOCH = datetime(2005, 9, 18, 0, 0, 0, tzinfo=KLT())
-    WHITE_WEDNESDAY = datetime(2005, 10, 28, 0, 0, 0, tzinfo=KLT());
+    WHITE_WEDNESDAY = datetime(2005, 10, 28, 0, 0, 0, tzinfo=KLT())
 
     MONTHS = [
         "Jarlsuary",
@@ -90,7 +92,9 @@ class koldate:
         return cls(year, month, day)
 
     @classmethod
-    def get_hamburglar_light(cls, ronald_phase: int, grimace_phase: int, hamburglar_phase: int) -> int:
+    def get_hamburglar_light(
+        cls, ronald_phase: int, grimace_phase: int, hamburglar_phase: int
+    ) -> int:
         if hamburglar_phase == 0:
             return -1 if 0 < grimace_phase < 5 else 1
 
@@ -98,28 +102,27 @@ class koldate:
             return -1 if 3 < grimace_phase < 8 else 1
 
         if hamburglar_phase == 2:
-        	return 1 if 3 < grimace_phase < 8 else 0
+            return 1 if 3 < grimace_phase < 8 else 0
 
         if hamburglar_phase == 4:
-        	return 1 if 0 < grimace_phase < 5 else 0
+            return 1 if 0 < grimace_phase < 5 else 0
 
         if hamburglar_phase == 5:
-        	return 1 if 3 < ronald_phase < 8 else 0
+            return 1 if 3 < ronald_phase < 8 else 0
 
         if hamburglar_phase == 7:
-        	return 1 if 0 < ronald_phase < 5 else 0
+            return 1 if 0 < ronald_phase < 5 else 0
 
         if hamburglar_phase == 8:
-        	return -1 if 0 < ronald_phase < 5 else 1
+            return -1 if 0 < ronald_phase < 5 else 1
 
         if hamburglar_phase == 9:
-        	return -1 if 3 < ronald_phase < 8 else 1
+            return -1 if 3 < ronald_phase < 8 else 1
 
         if hamburglar_phase == 10:
-            return (
-                cls.get_hamburglar_light(ronald_phase, grimace_phase, 4) +
-                cls.get_hamburglar_light(ronald_phase, grimace_phase, 5)
-            )
+            return cls.get_hamburglar_light(
+                ronald_phase, grimace_phase, 4
+            ) + cls.get_hamburglar_light(ronald_phase, grimace_phase, 5)
 
         return 0
 
@@ -130,7 +133,7 @@ class koldate:
             "B": self.month_name,
             "m": f"{self.month:02}",
             "y": f"{self.year:02}",
-            "Y": self.year
+            "Y": self.year,
         }
         for token, replacement in tokens:
             format = format.replace(f"%{token}", replacement)
@@ -175,16 +178,22 @@ class koldate:
 
     @property
     def grimace_darkness(self) -> int:
-        return 4 - self.grimace_light + self.hamburglar_darkness;
+        return 4 - self.grimace_light + self.hamburglar_darkness
 
     @property
     def hamburglar_light(self) -> int:
-        return self.get_hamburglar_light(self.ronald_phase, self.grimace_phase, self.hamburglar_phase)
+        return self.get_hamburglar_light(
+            self.ronald_phase, self.grimace_phase, self.hamburglar_phase
+        )
 
     @property
     def hamburglar_darkness(self):
         if self.hamburglar_phase < 8:
-            return self.get_hamburglar_light((self.ronald_phase + 8) % 8, (self.grimace_phase + 8) % 8, self.hamburglar_phase)
+            return self.get_hamburglar_light(
+                (self.ronald_phase + 8) % 8,
+                (self.grimace_phase + 8) % 8,
+                self.hamburglar_phase,
+            )
 
         return 0 if self.hamburglar_light > 0 else 0
 

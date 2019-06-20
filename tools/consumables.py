@@ -9,9 +9,11 @@ from libkol import Item
 
 from util import load_mafia_data, split_range
 
+
 async def load(session: ClientSession):
     for c in ["fullness", "inebriety", "spleenhit"]:
         await load_consumables(session, c)
+
 
 @atomic()
 async def load_consumables(session: ClientSession, consumable_type):

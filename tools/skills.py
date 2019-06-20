@@ -8,6 +8,7 @@ from libkol import Skill
 
 from util import load_mafia_data
 
+
 @atomic()
 async def load(session: ClientSession):
     tasks = []  # type: List[Coroutine[Any, Any, Skill]]

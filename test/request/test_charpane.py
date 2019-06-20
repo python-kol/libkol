@@ -24,11 +24,9 @@ class CharpaneTestCase(TestCase):
             self.assertEqual(parsed["meat"], 2975747)
 
             # self.assertEqual(parsed["drunkenness"], 0);
-            self.assertEqual(parsed["familiar"], {
-                "name": "Ass",
-                "type": "Mosquito",
-                "weight": 4,
-            })
+            self.assertEqual(
+                parsed["familiar"], {"name": "Ass", "type": "Mosquito", "weight": 4}
+            )
 
             self.assertEqual(parsed["adventures"], 200)
             self.assertEqual(parsed["base_muscle"], 118)
@@ -66,7 +64,9 @@ class CharpaneTestCase(TestCase):
             self.assertEqual(
                 charpane_result.get("title"), None
             )  # custom title gives no level title information
-            self.assertEqual(charpane_result.get("character_class"), None)  # or class information
+            self.assertEqual(
+                charpane_result.get("character_class"), None
+            )  # or class information
             self.assertEqual(charpane_result["current_hp"], 122)
             self.assertEqual(charpane_result["max_hp"], 129)
             self.assertEqual(charpane_result["current_mp"], 0)

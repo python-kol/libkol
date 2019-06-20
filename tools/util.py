@@ -1,6 +1,7 @@
 from aiohttp import ClientSession, ClientResponse
 import re
 
+
 async def load_mafia_data(session: ClientSession, key: str) -> ClientResponse:
     response = await session.get(
         "https://svn.code.sf.net/p/kolmafia/code/src/data/{}.txt".format(key)

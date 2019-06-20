@@ -56,7 +56,9 @@ class TestCase(unittest.TestCase):
     session = None
     db_file = path.join(path.dirname(__file__), "../../libkol/libkol.db")
 
-    def run_async(self, data, async_test, ext: str = "html", request_mocks={}, state={}):
+    def run_async(
+        self, data, async_test, ext: str = "html", request_mocks={}, state={}
+    ):
         event_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(event_loop)
 

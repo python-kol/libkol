@@ -6,12 +6,19 @@ from functools import partial
 from aiohttp import ClientSession
 import re
 from sympy import functions, Symbol
-from sympy.parsing.sympy_parser import parse_expr, _token_splittable, standard_transformations, implicit_multiplication, split_symbols_custom
+from sympy.parsing.sympy_parser import (
+    parse_expr,
+    _token_splittable,
+    standard_transformations,
+    implicit_multiplication,
+    split_symbols_custom,
+)
 
 from typing import Any, Coroutine, List
 from libkol import Modifier, Effect, Item, Skill
 
 from util import load_mafia_data, mafia_dedupe
+
 
 async def cross_referencer(name: str, value: str, modifier_base):
     name = name.lower()
@@ -35,6 +42,7 @@ async def cross_referencer(name: str, value: str, modifier_base):
 
     return True, entity
 
+
 def can_split(symbol):
     if symbol not in Modifier.custom_functions:
         return _token_splittable(symbol)
@@ -47,6 +55,7 @@ def caret_to_pow(tokens, local_dict, global_dict):
             tokens[i] = (53, "**")
 
     return tokens
+
 
 @atomic()
 async def load(session: ClientSession):
@@ -65,7 +74,7 @@ async def load(session: ClientSession):
         referencable, entity = await cross_referencer(parts[0], parts[1], modifier_base)
 
         if referencable is False:
-           continue
+            continue
 
         modifiers_pattern = re.compile(
             '([A-Za-z][A-Z\'a-z ]+?)( Percent)?(?:: (".*?"|\[.*?\]|[+-]?[0-9\.]+))?(?:, |$)'
@@ -91,7 +100,11 @@ async def load(session: ClientSession):
                 for f in Modifier.custom_functions.keys():
                     original = "class" if f == "charclass" else f
                     if original in expr:
-                        expr = re.sub(r"{}\(([^\)]+)\)".format(original), "{}(\"\\1\")".format(f), expr)
+                        expr = re.sub(
+                            r"{}\(([^\)]+)\)".format(original),
+                            '{}("\\1")'.format(f),
+                            expr,
+                        )
 
                 custom_funcs = []
 
@@ -128,13 +141,25 @@ async def load(session: ClientSession):
                     "W": Symbol("W"),
                     "X": Symbol("X"),
                     "Y": Symbol("Y"),
-                    **{f: partial(register_custom_func, f) for f in Modifier.custom_functions.keys()}
+                    **{
+                        f: partial(register_custom_func, f)
+                        for f in Modifier.custom_functions.keys()
+                    },
                 }
 
-                transformations = standard_transformations + (split_symbols_custom(can_split), caret_to_pow, implicit_multiplication)
+                transformations = standard_transformations + (
+                    split_symbols_custom(can_split),
+                    caret_to_pow,
+                    implicit_multiplication,
+                )
 
                 try:
-                    expr = parse_expr(expr, local_dict=funcs, transformations=transformations, evaluate=True)
+                    expr = parse_expr(
+                        expr,
+                        local_dict=funcs,
+                        transformations=transformations,
+                        evaluate=True,
+                    )
                 except:
                     print("Failed to parse {}".format(expr))
                     continue

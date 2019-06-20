@@ -18,7 +18,7 @@ async def populate():
         print("Inserting items")
         await items.load(session)
 
-        print ("Inserting skills")
+        print("Inserting skills")
         await skills.load(session)
 
         print("Discovering equipable items")

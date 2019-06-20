@@ -5,6 +5,7 @@ from aiohttp import ClientSession
 
 from libkol import Trophy
 
+
 @atomic()
 async def load(session: ClientSession):
     trophies = [Trophy(**trophy) for trophy in json.load(open("./trophies.json"))]

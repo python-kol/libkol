@@ -7,6 +7,7 @@ from .Model import Model
 from .Stat import Stat
 from .koldate import koldate
 
+
 class Modifier(Model):
     item = ForeignKeyField("models.Item", related_name="modifiers", null=True)
     item_id: Optional[int]
@@ -28,7 +29,9 @@ class Modifier(Model):
         return pickle.loads(b)
 
     custom_functions = {
-        "charclass": lambda c: 1 if Modifier.kol.get_character_class().value == c else 0,
+        "charclass": lambda c: 1
+        if Modifier.kol.get_character_class().value == c
+        else 0,
         "effect": lambda effect: 0,
         "env": lambda env: 0,
         "event": lambda event: 0,
@@ -36,7 +39,9 @@ class Modifier(Model):
         "mod": lambda mod: 0,
         "path": lambda path: 0,
         "pref": lambda pref: 0,
-        "skill": lambda name: next((1 for s in Modifier.kol.state["skills"] if s.name == name), 0),
+        "skill": lambda name: next(
+            (1 for s in Modifier.kol.state["skills"] if s.name == name), 0
+        ),
         "zone": lambda zone: 0,
     }
 
@@ -96,7 +101,9 @@ class Modifier(Model):
                 if isinstance(expr, int) or expr.is_number:
                     return expr
                 else:
-                    print("Unknown symbols {} in {}".format(expr.free_symbols, expression))
+                    print(
+                        "Unknown symbols {} in {}".format(expr.free_symbols, expression)
+                    )
             except Exception as e:
                 print("Could not parse {}".format(expression))
                 print(e)

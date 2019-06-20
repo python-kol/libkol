@@ -3,6 +3,7 @@ from typing import Optional
 
 from .Error import UnknownError
 
+
 class CharacterClass(Enum):
     SealClubber = "Seal Clubber"
     TurtleTamer = "Turtle Tamer"
@@ -15,6 +16,7 @@ class CharacterClass(Enum):
     @property
     def stat(self) -> Optional["Stat"]:
         from .Stat import Stat
+
         if self in [CharacterClass.SealClubber, CharacterClass.TurtleTamer]:
             return Stat.Muscle
         if self in [CharacterClass.Sauceror, CharacterClass.Pastamancer]:
