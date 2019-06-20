@@ -23,17 +23,17 @@ async def cross_referencer(name: str, value: str, modifier_base):
     elif name == "skill":
         Entity = Skill
     else:
-        return False
+        return False, None
 
     try:
         entity = await Entity.get(**mafia_dedupe(value))
     except:
         print("Couldn't find {} `{}` for modifier".format(name, value))
-        return False
+        return False, None
 
     modifier_base["{}_id".format(name)] = entity.id
 
-    return True
+    return True, entity
 
 def can_split(symbol):
     if symbol not in Modifier.custom_functions:
@@ -62,7 +62,7 @@ async def load(session: ClientSession):
 
         modifier_base = {}
 
-        referencable = await cross_referencer(parts[0], parts[1], modifier_base)
+        referencable, entity = await cross_referencer(parts[0], parts[1], modifier_base)
 
         if referencable is False:
            continue
@@ -75,6 +75,11 @@ async def load(session: ClientSession):
             modifier = Modifier(
                 **modifier_base, key=m.group(1), percentage=(m.group(2) is not None)
             )
+
+            if modifier.key == "Single Equip" and isinstance(entity, Item):
+                entity.single_equip = True
+                tasks += [entity.save()]
+                continue
 
             value = m.group(3)
 

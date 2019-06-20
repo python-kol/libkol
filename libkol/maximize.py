@@ -23,7 +23,7 @@ async def maximize(session, *args, modifier: str = None, **kwargs):
 
     # Define the problem
     prob = LpProblem(modifier, LpMaximize)
-    outfit = LpVariable.dicts("outfit", map.keys(), 0, 1, cat="Integer")
+    outfit = LpVariable.dicts("outfit", map.keys(), 0, 3, cat="Integer")
 
     # Objective
     prob += lpSum([await map[i]["modifier"].get_value(smithsness=calculate_smithsness(outfit, smithsness)) * outfit[i] for i in outfit])
@@ -36,6 +36,10 @@ async def maximize(session, *args, modifier: str = None, **kwargs):
     prob += lpSum([outfit[i] for i in outfit if map[i]["item"].accessory]) <= 3
     prob += lpSum([outfit[i] for i in outfit if map[i]["item"].familiar_equipment]) <= 1
     prob += lpSum([outfit[i] for i in outfit if map[i]["item"].type not in ["hat", "shirt", "weapon", "offhand", "pants", "accessory", "familiar_equipment"]]) == 0
+
+    for i in outfit:
+        if map[i]["item"].single_equip:
+            prob += outfit[i] <= 1
 
     prob.writeLP("maximizer.lp")
     prob.solve()
@@ -50,6 +54,7 @@ async def maximize(session, *args, modifier: str = None, **kwargs):
             continue
 
         id = int(index[7:])
-        result.append(map[id]["item"])
+        for _ in range(int(q)):
+            result.append(map[id]["item"])
 
     return result

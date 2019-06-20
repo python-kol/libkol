@@ -69,6 +69,7 @@ async def load(session: ClientSession):
             food_helper="food helper" in use,
             drink_helper="drink helper" in use,
             guardian="guardian" in use,
+            single_equip=False if "accessory" in use else True,
             quest="q" in access,
             gift="g" in access,
             tradeable="t" in access,

@@ -111,6 +111,7 @@ class Item(Model, metaclass=ItemMeta):
     food_helper = BooleanField(default=False)
     drink_helper = BooleanField(default=False)
     guardian = BooleanField(default=False)
+    single_equip = BooleanField(default=True)
     bounty = BooleanField(default=False)  # Can appear as a bounty item
     candy = IntField()  # 0: n/a, 1: simple, 2: complex
     sphere = BooleanField(default=False)  # What is this for?
