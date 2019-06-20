@@ -52,6 +52,8 @@ class item_description(Request):
         booze = type and type[0] == "booze"
         spleen = type and type[0] == "spleen"
 
+        enchantments = ["".join(e) for e in parsing.split_by_br(soup.find("font", color="blue"))]
+
         return {
             "id": id,
             "name": name,
@@ -64,4 +66,5 @@ class item_description(Request):
             "quality": type[1][1:-1] if type and (food or booze or spleen) else None,
             "hat": type and type[0] == "hat",
             "power": power,
+            "enchantments": enchantments,
         }
