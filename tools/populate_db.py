@@ -4,7 +4,7 @@ from tortoise import Tortoise
 from aiohttp import ClientSession
 from libkol import models
 
-import items, equipment, consumables, zapgroups, foldgroups, npcstores, trophies, effects, modifiers, skills
+import items, equipment, consumables, zapgroups, foldgroups, npcstores, trophies, effects, modifiers, skills, outfits
 
 
 async def populate():
@@ -31,6 +31,8 @@ async def populate():
         await zapgroups.load(session)
         print("Discovering foldable items")
         await foldgroups.load(session)
+        print("Discovering outfits")
+        await outfits.load(session)
 
         print("Discovering store items")
         await npcstores.load(session)

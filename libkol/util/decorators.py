@@ -8,7 +8,7 @@ def logged_in(func):
     def _decorator(self, *args, **kwargs):
         session = self.session if hasattr(self, "session") else self
         if session.is_connected is False:
-            raise NotLoggedInError
+            raise NotLoggedInError("You must be logged in")
         return func(self, *args, **kwargs)
 
     return _decorator

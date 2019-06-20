@@ -15,6 +15,9 @@ class Modifier(Model):
     effect = ForeignKeyField("models.Effect", related_name="modifiers", null=True)
     effect_id: Optional[int]
 
+    outfit = ForeignKeyField("models.Outfit", related_name="modifiers", null=True)
+    outfit_id: Optional[int]
+
     key = CharField(max_length=255)
     numeric_value = IntField(null=True)
     string_value = CharField(max_length=255, null=True)

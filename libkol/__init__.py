@@ -14,6 +14,7 @@ from .Trophy import Trophy
 from .Effect import Effect
 from .Modifier import Modifier
 from .Skill import Skill
+from .Outfit import Outfit
 from .CharacterClass import CharacterClass
 
 
@@ -37,6 +38,7 @@ __all__ = [
     "Trophy",
     "Effect",
     "Modifier",
+    "Outfit",
     "models",
     "Skill",
 ]

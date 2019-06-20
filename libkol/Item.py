@@ -93,6 +93,8 @@ class Item(Model, metaclass=ItemMeta):
     foldgroup_id: Optional[int]
     zapgroup = ForeignKeyField("models.ZapGroup", related_name="items", null=True)
     zapgroup_id: Optional[int]
+    outfit = ForeignKeyField("models.Outfit", related_name="pieces", null=True)
+    outfit_id: Optional[int]
 
     # NPC Store Info
     store_row = IntField(null=True)

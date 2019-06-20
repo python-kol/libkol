@@ -1,3 +1,4 @@
+from tortoise.query_utils import Q
 from libkol import Modifier
 from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus
 
@@ -10,13 +11,17 @@ def calculate_smithsness(outfit, smithsness) -> int:
     )
 
 
+def outfit_bonus(outfit, outfits) -> int:
+    for o in outfits.values():
+        if all(outfit.get(p.id, 0) >= 1 for p in o["outfit"].pieces):
+            return o["modifier"].get_value()
+
+
 async def maximize(session, *args, modifier: str = None, **kwargs):
     if modifier is None:
         return []
 
-    modifiers = await Modifier.Modifier.filter(
-        key=modifier, item_id__not_isnull=True
-    ).all()
+    # Load smithsness modifiers for tracking smithsness
     smiths_modifiers = await Modifier.Modifier.filter(
         key="Smithsness", item_id__not_isnull=True
     ).all()
@@ -26,12 +31,25 @@ async def maximize(session, *args, modifier: str = None, **kwargs):
         await s.fetch_related("item")
         smithsness[s.item.id] = await s.get_value()
 
-    map = {}
-    for m in modifiers:
-        await m.fetch_related("item")
+    # Load relevant modifiers
+    modifiers = await Modifier.Modifier.filter(
+        Q(item_id__not_isnull=True) | Q(outfit_id__not_isnull=True)
+    ).filter(key=modifier).all()
 
-        if m.item.have():
-            map[m.item.id] = {"item": m.item, "modifier": m}
+    outfits = {}
+    map = {}
+
+    for m in modifiers:
+        if m.item_id:
+            await m.fetch_related("item")
+
+            if m.item.have():
+                map[m.item.id] = {"item": m.item, "modifier": m}
+
+        if m.outfit_id:
+            await m.fetch_related("outfit")
+            await m.outfit.fetch_related("pieces")
+            outfits[m.outfit.id] = {"outfit": m.outfit, "modifier": m}
 
     # Define the problem
     prob = LpProblem(modifier, LpMaximize)
@@ -46,7 +64,7 @@ async def maximize(session, *args, modifier: str = None, **kwargs):
             * outfit[i]
             for i in outfit
         ]
-    )
+    ) + outfit_bonus(outfit, outfits)
 
     prob += lpSum([outfit[i] for i in outfit if map[i]["item"].hat]) <= 1
     prob += lpSum([outfit[i] for i in outfit if map[i]["item"].shirt]) <= 1

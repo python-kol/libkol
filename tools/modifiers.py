@@ -15,7 +15,7 @@ from sympy.parsing.sympy_parser import (
 )
 
 from typing import Any, Coroutine, List
-from libkol import Modifier, Effect, Item, Skill
+from libkol import Modifier, Effect, Item, Skill, Outfit
 
 from util import load_mafia_data, mafia_dedupe
 
@@ -29,6 +29,8 @@ async def cross_referencer(name: str, value: str, modifier_base):
         Entity = Effect
     elif name == "skill":
         Entity = Skill
+    elif name == "outfit":
+        Entity = Outfit
     else:
         return False, None
 
