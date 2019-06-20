@@ -89,8 +89,8 @@ class koldate:
 
         return cls(year, month, day)
 
-    @staticmethod
-    def get_hamburglar_light(ronald_phase: int, grimace_phase: int, hamburglar_phase: int) -> int:
+    @classmethod
+    def get_hamburglar_light(cls, ronald_phase: int, grimace_phase: int, hamburglar_phase: int) -> int:
         if hamburglar_phase == 0:
             return -1 if 0 < grimace_phase < 5 else 1
 
@@ -117,8 +117,8 @@ class koldate:
 
         if hamburglar_phase == 10:
             return (
-                self.get_hamburglar_light(ronald_phase, grimace_phase, 4) +
-                self.get_hamburglar_light(ronald_phase, grimace_phase, 5)
+                cls.get_hamburglar_light(ronald_phase, grimace_phase, 4) +
+                cls.get_hamburglar_light(ronald_phase, grimace_phase, 5)
             )
 
         return 0

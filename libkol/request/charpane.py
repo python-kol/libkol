@@ -4,13 +4,15 @@ from bs4 import BeautifulSoup, Tag
 
 import libkol
 
+from ..CharacterClass import CharacterClass
 from ..Error import UnknownError
 from .request import Request
 
 pwd_pattern = re.compile(r"var pwdhash = \"([0-9a-f]+)\";")
 user_id_pattern = re.compile(r"var playerid = ([0-9]+);")
 username_pattern = re.compile(r"<a [^<>]*href=\"charsheet\.php\">(?:<b>)?([^<>]+)<")
-characterLevel = re.compile(r"<br>Level ([0-9]+)<br>(.*?)<table")
+characterLevel = re.compile(r"<br>Level ([0-9]+)<br>(.*?)<")
+characterLevelCustomTitle = re.compile(r"<br>(.*?)<br>\(Level ([0-9]+)\)<")
 characterHP = re.compile(
     r"onclick=\'doc\(\"hp\"\);\'[^<>]*><br><span class=[^>]+>([0-9]+)&nbsp;/&nbsp;([0-9]+)</span>"
 )
@@ -34,127 +36,6 @@ characterMindControl = re.compile(r">Mind Control</a>: <b>([0-9]{1,2})</b>")
 characterDrunk = re.compile(
     r">(?:Inebriety|Temulency|Tipsiness|Drunkenness):</td><td><b>([0-9]{1,2})</b>"
 )
-
-
-def titleToClass(title: str) -> str:
-    if title == "Astral Spirit":
-        return "Astral Spirit"
-
-    if title in [
-        "Lemming Trampler",
-        "Tern Slapper",
-        "Puffin Intimidator",
-        "Ermine Thumper",
-        "Penguin Frightener",
-        "Malamute Basher",
-        "Narwhal Pummeler",
-        "Otter Crusher",
-        "Caribou Smacker",
-        "Moose Harasser",
-        "Reindeer Threatener",
-        "Ox Wrestler",
-        "Walrus Bludgeoner",
-        "Whale Boxer",
-        "Seal Clubber",
-    ]:
-        return "Seal Clubber"
-
-    if title in [
-        "Toad Coach",
-        "Skink Trainer",
-        "Frog Director",
-        "Gecko Supervisor",
-        "Newt Herder",
-        "Frog Boss",
-        "Iguana Driver",
-        "Salamander Subduer",
-        "Bullfrog Overseer",
-        "Rattlesnake Chief",
-        "Crocodile Lord",
-        "Cobra Commander",
-        "Alligator Subjugator",
-        "Asp Master",
-        "Turtle Tamer",
-    ]:
-        return "Turtle Tamer"
-
-    if title in [
-        "Dough Acolyte",
-        "Yeast Scholar",
-        "Noodle Neophyte",
-        "Starch Savant",
-        "Carbohydrate Cognoscenti",
-        "Spaghetti Sage",
-        "Macaroni Magician",
-        "Vermicelli Enchanter",
-        "Linguini Thaumaturge",
-        "Ravioli Sorcerer",
-        "Manicotti Magus",
-        "Spaghetti Spellbinder",
-        "Cannelloni Conjurer",
-        "Angel-Hair Archmage",
-        "Pastamancer",
-    ]:
-        return "Pastamancer"
-
-    if title in [
-        "Allspice Acolyte",
-        "Cilantro Seer",
-        "Parsley Enchanter",
-        "Sage Sage",
-        "Rosemary Diviner",
-        "Thyme Wizard",
-        "Tarragon Thaumaturge",
-        "Oreganoccultist",
-        "Basillusionist",
-        "Coriander Conjurer",
-        "Bay Leaf Brujo",
-        "Sesame Soothsayer",
-        "Marinara Mage",
-        "Alfredo Archmage",
-        "Sauceror",
-    ]:
-        return "Sauceror"
-
-    if title in [
-        "Funk Footpad",
-        "Rhythm Rogue",
-        "Chill Crook",
-        "Jiggy Grifter",
-        "Beat Snatcher",
-        "Sample Swindler",
-        "Move Buster",
-        "Jam Horker",
-        "Groove Filcher",
-        "Vibe Robber",
-        "Boogie Brigand",
-        "Flow Purloiner",
-        "Jive Pillager",
-        "Rhymer And Stealer",
-        "Disco Bandit",
-    ]:
-        return "Disco Bandit"
-
-    if title in [
-        "Polka Criminal",
-        "Mariachi Larcenist",
-        "Zydeco Rogue",
-        "Chord Horker",
-        "Chromatic Crook",
-        "Squeezebox Scoundrel",
-        "Concertina Con Artist",
-        "Button Box Burglar",
-        "Hurdy-Gurdy Hooligan",
-        "Sub-Sub-Apprentice Accordion Thief",
-        "Sub-Apprentice Accordion Thief",
-        "Pseudo-Apprentice Accordion Thief",
-        "Hemi-Apprentice Accordion Thief",
-        "Apprentice Accordion Thief",
-        "Accordion Thief",
-    ]:
-        return "Accordion Thief"
-
-    raise UnknownError("Did not recognise player class {}".format(title))
 
 
 class charpane(Request[Dict[str, Any]]):
@@ -183,6 +64,7 @@ class charpane(Request[Dict[str, Any]]):
         user_id_matcher = user_id_pattern.search(content)
 
         if pwd_matcher is None or username_matcher is None or user_id_matcher is None:
+            print(pwd_matcher is None, username_matcher is None, user_id_matcher is None)
             raise UnknownError("Failed to parse basic information from charpane")
 
         data = {
@@ -191,16 +73,25 @@ class charpane(Request[Dict[str, Any]]):
             "user_id": int(user_id_matcher.group(1)),
         }
 
+        avatar = soup.find("img", crossorigin="Anonymous")
+        if avatar and avatar["src"].endswith("_f.gif"):
+            data["gender"] = "f"
+
         match = characterLevel.search(content)
         if match:
             title = str(match.group(2))
             data["level"] = int(match.group(1))
-            data["level_title"] = title
-            data["class"] = titleToClass(title)
+            data["title"] = title
+            data["character_class"] = CharacterClass.from_title(title)
+        else:
+            match = characterLevelCustomTitle.search(content)
+            if match:
+                data["level"] = int(match.group(2))
+                data["custom_title"] = str(match.group(1))
 
         match = characterHP.search(content)
         if match:
-            data["current_hP"] = int(match.group(1))
+            data["current_hp"] = int(match.group(1))
             data["max_hp"] = int(match.group(2))
 
         match = characterMP.search(content)
@@ -234,9 +125,9 @@ class charpane(Request[Dict[str, Any]]):
             )
         ]
 
-        data["base_muscle"], data["buffed_muscle"] = cls.get_stat(soup, "Muscle:")
-        data["base_moxie"], data["buffed_moxie"] = cls.get_stat(soup, "Moxie:")
-        data["base_mysticality"], data["buffed_mysticality"] = cls.get_stat(soup, "Mysticality:")
+        data["buffed_muscle"], data["base_muscle"] = cls.get_stat(soup, "Muscle:")
+        data["buffed_moxie"], data["base_moxie"] = cls.get_stat(soup, "Moxie:")
+        data["buffed_mysticality"], data["base_mysticality"] = cls.get_stat(soup, "Mysticality:")
 
         match = characterRonin.search(content)
         if match:
