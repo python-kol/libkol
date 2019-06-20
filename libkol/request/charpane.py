@@ -71,6 +71,11 @@ class charpane(Request[Dict[str, Any]]):
             "user_id": int(user_id_matcher.group(1)),
         }
 
+        avatar = soup.find("img", crossorigin="Anonymous")
+        if avatar and avatar["src"].endswith("_f.gif"):
+            data["gender"] = "f"
+
+
         match = characterLevel.search(content)
         if match:
             title = str(match.group(2))

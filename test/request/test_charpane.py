@@ -1,3 +1,4 @@
+from libkol import CharacterClass
 from libkol.request import charpane
 
 from .test_base import TestCase
@@ -15,7 +16,7 @@ class CharpaneTestCase(TestCase):
             self.assertEqual(parsed["user_id"], 3270869);
             self.assertEqual(parsed["level"], 13);
             self.assertEqual(parsed["level_title"], "Accordion Thief");
-            self.assertEqual(parsed["class"], "Accordion Thief");
+            self.assertEqual(parsed["character_class"], CharacterClass.AccordionThief);
             self.assertEqual(parsed["current_hP"], 134);
             self.assertEqual(parsed["max_hp"], 134);
             self.assertEqual(parsed["current_mp"], 122);
