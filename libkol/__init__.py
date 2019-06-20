@@ -16,6 +16,7 @@ from .Modifier import Modifier
 from .Skill import Skill
 from .CharacterClass import CharacterClass
 
+
 def run(func: Callable):
     loop = asyncio.get_event_loop()
     loop.run_until_complete(func())

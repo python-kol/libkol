@@ -6,7 +6,6 @@ import libkol
 
 from ..Error import UnknownError
 from .request import Request
-from ..CharacterClass import CharacterClass
 
 pwd_pattern = re.compile(r"var pwdhash = \"([0-9a-f]+)\";")
 user_id_pattern = re.compile(r"var playerid = ([0-9]+);")
@@ -35,6 +34,127 @@ characterMindControl = re.compile(r">Mind Control</a>: <b>([0-9]{1,2})</b>")
 characterDrunk = re.compile(
     r">(?:Inebriety|Temulency|Tipsiness|Drunkenness):</td><td><b>([0-9]{1,2})</b>"
 )
+
+
+def titleToClass(title: str) -> str:
+    if title == "Astral Spirit":
+        return "Astral Spirit"
+
+    if title in [
+        "Lemming Trampler",
+        "Tern Slapper",
+        "Puffin Intimidator",
+        "Ermine Thumper",
+        "Penguin Frightener",
+        "Malamute Basher",
+        "Narwhal Pummeler",
+        "Otter Crusher",
+        "Caribou Smacker",
+        "Moose Harasser",
+        "Reindeer Threatener",
+        "Ox Wrestler",
+        "Walrus Bludgeoner",
+        "Whale Boxer",
+        "Seal Clubber",
+    ]:
+        return "Seal Clubber"
+
+    if title in [
+        "Toad Coach",
+        "Skink Trainer",
+        "Frog Director",
+        "Gecko Supervisor",
+        "Newt Herder",
+        "Frog Boss",
+        "Iguana Driver",
+        "Salamander Subduer",
+        "Bullfrog Overseer",
+        "Rattlesnake Chief",
+        "Crocodile Lord",
+        "Cobra Commander",
+        "Alligator Subjugator",
+        "Asp Master",
+        "Turtle Tamer",
+    ]:
+        return "Turtle Tamer"
+
+    if title in [
+        "Dough Acolyte",
+        "Yeast Scholar",
+        "Noodle Neophyte",
+        "Starch Savant",
+        "Carbohydrate Cognoscenti",
+        "Spaghetti Sage",
+        "Macaroni Magician",
+        "Vermicelli Enchanter",
+        "Linguini Thaumaturge",
+        "Ravioli Sorcerer",
+        "Manicotti Magus",
+        "Spaghetti Spellbinder",
+        "Cannelloni Conjurer",
+        "Angel-Hair Archmage",
+        "Pastamancer",
+    ]:
+        return "Pastamancer"
+
+    if title in [
+        "Allspice Acolyte",
+        "Cilantro Seer",
+        "Parsley Enchanter",
+        "Sage Sage",
+        "Rosemary Diviner",
+        "Thyme Wizard",
+        "Tarragon Thaumaturge",
+        "Oreganoccultist",
+        "Basillusionist",
+        "Coriander Conjurer",
+        "Bay Leaf Brujo",
+        "Sesame Soothsayer",
+        "Marinara Mage",
+        "Alfredo Archmage",
+        "Sauceror",
+    ]:
+        return "Sauceror"
+
+    if title in [
+        "Funk Footpad",
+        "Rhythm Rogue",
+        "Chill Crook",
+        "Jiggy Grifter",
+        "Beat Snatcher",
+        "Sample Swindler",
+        "Move Buster",
+        "Jam Horker",
+        "Groove Filcher",
+        "Vibe Robber",
+        "Boogie Brigand",
+        "Flow Purloiner",
+        "Jive Pillager",
+        "Rhymer And Stealer",
+        "Disco Bandit",
+    ]:
+        return "Disco Bandit"
+
+    if title in [
+        "Polka Criminal",
+        "Mariachi Larcenist",
+        "Zydeco Rogue",
+        "Chord Horker",
+        "Chromatic Crook",
+        "Squeezebox Scoundrel",
+        "Concertina Con Artist",
+        "Button Box Burglar",
+        "Hurdy-Gurdy Hooligan",
+        "Sub-Sub-Apprentice Accordion Thief",
+        "Sub-Apprentice Accordion Thief",
+        "Pseudo-Apprentice Accordion Thief",
+        "Hemi-Apprentice Accordion Thief",
+        "Apprentice Accordion Thief",
+        "Accordion Thief",
+    ]:
+        return "Accordion Thief"
+
+    raise UnknownError("Did not recognise player class {}".format(title))
 
 
 class charpane(Request[Dict[str, Any]]):
@@ -71,17 +191,12 @@ class charpane(Request[Dict[str, Any]]):
             "user_id": int(user_id_matcher.group(1)),
         }
 
-        avatar = soup.find("img", crossorigin="Anonymous")
-        if avatar and avatar["src"].endswith("_f.gif"):
-            data["gender"] = "f"
-
-
         match = characterLevel.search(content)
         if match:
             title = str(match.group(2))
             data["level"] = int(match.group(1))
             data["level_title"] = title
-            data["character_class"] = CharacterClass.from_title(title)
+            data["class"] = titleToClass(title)
 
         match = characterHP.search(content)
         if match:

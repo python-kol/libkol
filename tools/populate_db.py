@@ -6,6 +6,7 @@ from libkol import models
 
 import items, equipment, consumables, zapgroups, foldgroups, npcstores, trophies, effects, modifiers, skills
 
+
 async def populate():
     await Tortoise.init(
         db_url="sqlite://../libkol/libkol.db", modules={"models": models}
