@@ -13,7 +13,8 @@ from .Store import Store
 from .Trophy import Trophy
 from .Effect import Effect
 from .Modifier import Modifier
-
+from .Skill import Skill
+from .CharacterClass import CharacterClass
 
 def run(func: Callable):
     loop = asyncio.get_event_loop()
@@ -23,6 +24,7 @@ def run(func: Callable):
 
 __all__ = [
     "Clan",
+    "CharacterClass",
     "Error",
     "Session",
     "Kmail",
@@ -35,4 +37,5 @@ __all__ = [
     "Effect",
     "Modifier",
     "models",
+    "Skill",
 ]
