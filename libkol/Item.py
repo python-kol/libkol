@@ -161,6 +161,28 @@ class Item(Model, metaclass=ItemMeta):
         info = await request.item_description(cls.kol, desc_id).parse()
         return Item(**{k: v for k, v in info.items() if v is not None})
 
+    @property
+    def type(self):
+        if self.hat:
+            return "hat"
+        elif self.shirt:
+            return "shirt"
+        elif self.weapon:
+            return "weapon"
+        elif self.offhand:
+            return "offhand"
+        elif self.pants:
+            return "pants"
+        elif self.familiar_equipment:
+            return "familiar_equipment"
+        elif self.accessory:
+            return "accessory"
+
+        return "other"
+
+    async def get_description(self):
+        return await request.item_description(self.kol, self.desc_id).parse()
+
     async def get_mall_price(self, limited: bool = False) -> int:
         """
         Get the lowest price for this item in the mall
