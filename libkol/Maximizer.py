@@ -2,6 +2,7 @@ from libkol import Bonus
 from aioitertools import groupby
 from tortoise.query_utils import Q
 from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus
+from collections import defaultdict
 
 
 class Maximizer:
@@ -11,12 +12,17 @@ class Maximizer:
         self.minimize = []
         self.must_equip = []
         self.must_not_equip = []
+        self.weight = defaultdict(lambda: 1)
 
     def __iadd__(self, constraint):
         from libkol import Modifier, Item
+        from libkol.Modifier import WeightedModifier
 
         if isinstance(constraint, Modifier):
             self.maximize.append(constraint)
+        elif isinstance(constraint, WeightedModifier):
+            self.maximize.append(constraint.modifier)
+            self.weight[constraint.modifier] = constraint.weight
         elif isinstance(constraint, Item):
             self.must_equip.append(constraint)
         else:
@@ -26,9 +32,13 @@ class Maximizer:
 
     def __isub__(self, constraint):
         from libkol import Modifier, Item
+        from libkol.Modifier import WeightedModifier
 
         if isinstance(constraint, Modifier):
             self.minimize.append(constraint)
+        elif isinstance(constraint, WeightedModifier):
+            self.minimize.append(constraint.modifier)
+            self.weight[constraint.modifier] = constraint.weight
         elif isinstance(constraint, Item):
             self.must_not_equip.append(constraint)
         else:
@@ -83,7 +93,7 @@ class Maximizer:
                 .filter(modifier__in=modifiers)
                 .prefetch_related("item", "outfit", "outfit__pieces")
             )
-            # if b.outfit or (b.item and b.item.have())
+            if b.outfit or (b.item and b.item.have())
         ]
 
         grouped_bonuses = groupby(bonuses, lambda m: m.modifier)
@@ -117,6 +127,7 @@ class Maximizer:
                         )
                     ]
                 )
+                * self.weight[m]
                 * (1 if m in self.maximize else -1 if m in self.minimize else 0)
                 async for m, bonuses in grouped_bonuses
             ]
