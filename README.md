@@ -1,4 +1,4 @@
-libkol [![PyPi version](https://img.shields.io/pypi/v/libkol.svg)](https://pypi.python.org/pypi/libkol/) [![Python 3.6+](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+libkol [![PyPi version](https://img.shields.io/pypi/v/libkol.svg)](https://pypi.python.org/pypi/libkol/) [![Python 3.6+](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/) [![CircleCI](https://circleci.com/gh/python-kol/libkol.svg?style=shield)](https://circleci.com/gh/python-kol/libkol) [![Coverage](https://circleci.com/api/v1.1/project/github/python-kol/libkol/latest/artifacts/0/home/circleci/project/htmlcov/coverage.svg)](https://circleci.com/api/v1.1/project/github/python-kol/libkol/latest/artifacts/0/home/circleci/project/htmlcov/index.html)
 =====
 
 What is it?
