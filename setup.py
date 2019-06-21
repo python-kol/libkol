@@ -13,7 +13,16 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/python-kol/libkol",
     packages=setuptools.find_packages(),
-    install_requires=["aiohttp", "beautifulsoup4", "multidict", "peewee", "typing", "yarl", "tortoise-orm"],
+    install_requires=[
+        "aiohttp",
+        "beautifulsoup4",
+        "multidict",
+        "typing",
+        "yarl",
+        "tortoise-orm",
+        "PuLP==1.6.10",
+        "sympy==1.4",
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

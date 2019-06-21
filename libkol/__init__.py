@@ -13,6 +13,9 @@ from .Store import Store
 from .Trophy import Trophy
 from .Effect import Effect
 from .Modifier import Modifier
+from .Skill import Skill
+from .Outfit import Outfit
+from .CharacterClass import CharacterClass
 
 
 def run(func: Callable):
@@ -23,6 +26,7 @@ def run(func: Callable):
 
 __all__ = [
     "Clan",
+    "CharacterClass",
     "Error",
     "Session",
     "Kmail",
@@ -34,5 +38,7 @@ __all__ = [
     "Trophy",
     "Effect",
     "Modifier",
+    "Outfit",
     "models",
+    "Skill",
 ]

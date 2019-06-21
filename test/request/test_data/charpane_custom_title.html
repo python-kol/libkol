@@ -1,0 +1,113 @@
+<script type="text/javascript">
+tp=top
+var todo = [];
+function nextAction() {
+	var next_todo = todo.shift();
+	if (next_todo) {
+		eval(next_todo);
+	}
+}
+function dojax(dourl, afterFunc, hoverCaller, failureFunc, method, params) {
+	$.ajax({
+		type: method || 'GET', url: dourl, cache: false,
+		data: params || null,
+		global: false,
+		success: function (out) {
+			nextAction();
+			if (out.match(/no\|/)) {
+				var parts = out.split(/\|/);
+				if (failureFunc) failureFunc(parts[1]);
+				else if (window.dojaxFailure) window.dojaxFailure(parts[1]);
+				else if (tp.chatpane.handleMessage) tp.chatpane.handleMessage({type: 'event', msg: 'Oops!  Sorry, Dave, you appear to be ' + parts[1]});
+				else  $('#ChatWindow').append('<font color="green">Oops!  Sorry, Dave, you appear to be ' + parts[1] + '.</font><br />' + "\n");
+				return;
+			}
+			if (hoverCaller)  {
+				float_results(hoverCaller, out);
+				if (afterFunc) { afterFunc(out); }
+				return;
+			}			var $eff = $(tp.mainpane.document).find('#effdiv');
+			if ($eff.length == 0) {
+				var d = tp.mainpane.document.createElement('DIV');
+				d.id = 'effdiv';
+				var b = tp.mainpane.document.body;
+				if ($('#content_').length > 0) {
+					b = $('#content_ div:first')[0];
+				}
+				b.insertBefore(d, b.firstChild);
+				$eff = $(d);
+			}
+			$eff.find('a[name="effdivtop"]').remove().end()
+				.prepend('<a name="effdivtop"></a><center>' + out + '</center>').css('display','block');
+			if (!window.dontscroll || (window.dontscroll && dontscroll==0)) {
+				tp.mainpane.document.location = tp.mainpane.document.location + "#effdivtop";
+			}
+			if (afterFunc) { afterFunc(out); }
+		}
+	});
+}
+	var turnsplayed = 13609;
+var turnsthisrun = 240;
+var rollover = 1560396601;
+var rightnow = 1560321600;
+var playerid = 123456;
+var pwdhash = "123";
+var hide_nudges = true;
+$(document).ready(function () {
+	var multi = function  (e) {
+		e.preventDefault();
+		var link = this;
+		pop_query($(this), 'How many times?', 'Do It!', function (res) {
+			dojax(($(link).attr('href')+'&ajax=1').replace('qty=1', 'qty='+res));
+		});
+	};
+	$('.upeffect').click(function (e) {
+		e.preventDefault();
+		if (e.shiftKey) multi.apply(this, [e]);
+		else dojax($(this).attr('href')+'&ajax=1');
+	});
+	$('.upeffect').bind('contextmenu', multi);
+	function add_close(el) {
+		if (!hide_nudges) return;
+		if ($(el).find('.close').length > 0) return;
+		var ht = '<a href="#" class="close"><img alt="Hide" title="Hide"  src="https://s3.amazonaws.com/images.kingdomofloathing.com/closebutton.gif" style="float: right;"/></a>';
+		var c = $(ht);
+		$(el).append(c);
+		c.click(function () {
+			var key = $(this).parents('tr:first').attr('rel');
+			var nxt = $(this).parents('tr');
+			if (nxt.next()) {
+				add_close(nxt.next().find('td div'));
+			}
+			$(this).parents('tr:first').remove();
+			$.get('charpane.php?hide='+escape(key)+'&pwd='+pwdhash);
+			$('.showall').show();
+		});
+	}
+	if (hide_nudges) $('#nudges td div').hover(
+		function () {
+			if (!hide_nudges) return;
+			add_close(this);
+		},
+		function () {
+			if (!hide_nudges) return;
+			$(this).find('.close').remove();
+		}
+	);
+});
+</script>
+	<script language=Javascript src="https://s3.amazonaws.com/images.kingdomofloathing.com/scripts/charpane.20130711.js"></script>
+	<script type="text/javascript" src="https://s3.amazonaws.com/images.kingdomofloathing.com/scripts/cookie.20121112.js"></script>
+<script type="text/javascript">
+jQuery(function ($) {
+	$(window).resize(function () {
+		var winW = 300;
+		if (document.body && document.body.offsetWidth) { winW = document.body.offsetWidth; }
+		if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) { winW = document.documentElement.offsetWidth; }
+		if (window.innerWidth && window.innerHeight) { winW = window.innerWidth; }
+		setCookie('charpwd', winW, 365, true);
+	});
+})
+</script>
+<body bgcolor=white text=black link=black alink=black vlink=black onload='startup();'>
+<center id='rollover' class=tiny style='color: red; cursor: pointer;' onClick='doc("maintenance");'></center><center><table align=center><tr><td><a class='nounder ' target=mainpane href="charsheet.php"><div style="position: relative; height: 100px; width: 60px"><img  crossorigin="Anonymous"  src="https://s3.amazonaws.com/images.kingdomofloathing.com/otherimages/cavs/1844412.gif" width=60 height=100 border=0></div></div></a></td><td valign=center><center><a class=nounder target=mainpane href="charsheet.php"><b>Username</b></a><br>The Electric Kool-Aid Acid Tester<br>(Level 8)<table title='9 / 15' cellpadding=0 cellspacing=0 style='border: 1px solid #5A5A5A'><tr><td height=5 width=60 bgcolor=#5A5A5A></td><td width=40 bgcolor=white></td></tr></table></td></tr></table><table align=center><tr><td align=right>Muscle:</td><td align=left><b><font color=blue>59</font>&nbsp;(44)</b><table title='41 / 89' cellpadding=0 cellspacing=0 style='border: 1px solid #5A5A5A'><tr><td height=3 width=23 bgcolor=#5A5A5A></td><td width=27 bgcolor=white></td></tr></table></td></tr><tr><td align=right>Mysticality:</td><td align=left><b><font color=blue>97</font>&nbsp;(62)</b><table title='86 / 125' cellpadding=0 cellspacing=0 style='border: 1px solid #5A5A5A'><tr><td height=3 width=34 bgcolor=#5A5A5A></td><td width=16 bgcolor=white></td></tr></table></td></tr><tr><td align=right>Moxie:</td><td align=left><b><font color=blue>62</font>&nbsp;(47)</b><table title='74 / 95' cellpadding=0 cellspacing=0 style='border: 1px solid #5A5A5A'><tr><td height=3 width=38 bgcolor=#5A5A5A></td><td width=12 bgcolor=white></td></tr></table></td></tr><span class=><tr><td align=right><span class=>Temulency:</span></td><td><b><span class="">5 / 4</span></b></td></tr></span><tr><td colspan=2><center>You are falling-down drunk.</center></td></tr></table><table cellpadding=3 align=center><tr><td align=center><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/hp.gif" class=hand onclick='doc("hp");' title="Hit Points" alt="Hit Points"><br><span class=black>122&nbsp;/&nbsp;129</span></td><td align=center><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/mp.gif" class=hand onclick='doc("mp");' title="Mana Points" alt="Mana Points"><br><span class=black>0&nbsp;/&nbsp;151</span></td></tr><tr><td align=center><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/meat.gif" class=hand onclick='doc("meat");' title="Meat" alt="Meat"><br><span class=black>11,418</span></td><td align=center><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/hourglass.gif" class=hand onclick='doc("adventures");' title="Adventures Remaining" alt="Adventures Remaining"><br><span class=black>13</span></td></tr></table><font size=2><b>Hardcore</b></font><br><br><font size=2><a target=mainpane href="gnomes.php?place=machine">Annoy-o-Tron 5k</a>: <b>10</b></font><br><br><center id="nudgeblock"><font size=2><a class=nounder href=questlog.php target=mainpane><b>Current Quest:</b></a></font><br><a style="display: none" href="charpane.php?showall=1&pwd=123" class="showall"><font size="1">[show all]</font><br/></a><table id="nudges" width="100%"><tr rel="mclargehuge"><td class="small" colspan="2"><div>Go talk to the Trapper on <a href=place.php?whichplace=mclargehuge class=nounder target=mainpane><b>Mt. McLargeHuge</b></a>.</div></td></tr><tr rel="cyrpt"><td class="small" colspan="2"><div>Get rid of the evil in <b><a class=nounder target=mainpane href="crypt.php">The Cyrpt</a></b>.<p><b><a class=nounder target=mainpane href="inv_use.php?whichitem=4964&pwd=123">Evilometer:</a> 45</b></div></td></tr><tr rel="melvin"><td class="small" colspan="2"><div>Go to the <a class=nounder target=mainpane href=place.php?whichplace=mountains><b>Thinknerd Warehouse</b></a> and find Melvign's &quot;shirt.&quot;</div></td></tr><tr rel="doctorbag"><td class="small" colspan="2"><div>Acquire an anti-anti-antidote.</div></td></tr></table><p></center><center><font size=2><b><a onclick='if (top.mainpane.focus) top.mainpane.focus();' class=nounder href="place.php?whichplace=town_wrong" target=mainpane>Last Adventure:</a></b></font><br><table cellspacing=0 cellpadding=0><tr><td><font size=2><a onclick='if (top.mainpane.focus) top.mainpane.focus();' target=mainpane href="adventure.php?snarfblat=528">The Neverending Party</a><br></font></td></tr></table></center><center><p><b><font size=2>Effects:</font></b><br><table><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/happy.gif" width=30 height=30  onClick='eff("123");'></td><td valign=center><font size=2>Favored by Lyle (10)</font><br></td></tr><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/8ball.gif" width=30 height=30  onClick='eff("123");'></td><td valign=center><font size=2>Hustlin' (10)</font><br></td></tr><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/10101.gif" width=30 height=30  onClick='eff("123");'></td><td valign=center><font size=2>init.enh (17)</font><br></td></tr><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/monkhead.gif" width=30 height=30  onClick='eff("123");'></td><td valign=center><font size=2>Brother Flying Burrito's Blessing (20)</font><br></td></tr><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/book4.gif" width=30 height=30  onClick='eff("123");'></td><td valign=center><font size=2>Tomes of Opportunity (20)</font><br></td></tr><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/2ball.gif" width=30 height=30  onClick='eff("123");'></td><td valign=center><font size=2>Billiards Belligerence (20)</font><br></td></tr><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/10101.gif" width=30 height=30  onClick='eff("16b5be921ee17b766c88e3dfe58c6c6a");'></td><td valign=center><font size=2>meat.enh (50)</font><br></td></tr><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/raindrop.gif" width=30 height=30  onClick='eff("123");'></td><td valign=center><font size=2>Thaumodynamic (50)</font><br></td></tr><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/dasboot.gif" width=30 height=30  onClick='eff("123");'></td><td valign=center><font size=2>Silent Running (50)</font><br></td></tr><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/10101.gif" width=30 height=30  onClick='eff("123");'></td><td valign=center><font size=2>items.enh (50)</font><br></td></tr><tr><td></td><td valign='middle' align=right><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/pressie.gif" width=30 height=30  onClick='eff("123");'></td><td valign=center><font size=2>There's No N in Love (100)</font><br></td></tr></table></center></body>

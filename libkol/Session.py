@@ -1,6 +1,6 @@
 from os import path
 from time import time
-from typing import Any, Callable, DefaultDict, Dict, Optional, Union
+from typing import Any, Callable, DefaultDict, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from tortoise import Tortoise
 from collections import defaultdict
@@ -8,7 +8,10 @@ from collections import defaultdict
 from aiohttp import ClientResponse, ClientSession
 
 from . import Clan, Kmail, request, Item
+from .maximize import maximize
 from .Model import Model
+from .Stat import Stat
+from .CharacterClass import CharacterClass
 from .Location import Location
 from .util.decorators import logged_in
 
@@ -20,6 +23,8 @@ models = [
     "libkol.Trophy",
     "libkol.Modifier",
     "libkol.Effect",
+    "libkol.Skill",
+    "libkol.Outfit",
 ]
 
 
@@ -119,6 +124,7 @@ class Session:
         await self.get_status()
         await self.get_profile()
         await self.get_inventory()
+        await self.get_skills()
 
         return True
 
@@ -168,6 +174,58 @@ class Session:
         return await request.player_profile(self, user_id).parse()
 
     @logged_in
+    async def get_skills(self) -> List["Skill"]:
+        """
+        Return list of player's known skills
+        """
+        return await request.skills(self).parse()
+
+    @logged_in
+    def get_stat(self, stat: Stat, buffed: bool = False) -> int:
+        return self.state["{}_{}".format("buffed" if buffed else "base", stat.value)]
+
+    @logged_in
+    def get_character_class(self) -> CharacterClass:
+        return self.state["character_class"]
+
+    @logged_in
+    def get_inebriety(self) -> int:
+        return self.state["inebriety"]
+
+    @logged_in
+    def get_level(self) -> int:
+        return self.state["level"]
+
+    @logged_in
+    def get_num_ascensions(self) -> int:
+        return self.state["num_ascensions"]
+
+    @logged_in
+    async def get_gender(self) -> str:
+        if "gender" in self.state:
+            pass
+        elif self.get_character_class() == CharacterClass.AstralSpirit:
+            self.state["gender"] = "n"
+        else:
+            d = await (await Item["vinyl boots"]).get_description()
+            self.state["gender"] = "f" if "+15% Moxie" in d["enchantments"] else "m"
+
+        return self.state["gender"]
+
+    @logged_in
+    def get_familiar_weight(self) -> int:
+        return self.state["familiar"]["weight"]
+
+    @logged_in
+    async def get_reagent_potion_duration(self) -> int:
+        from . import Skill
+
+        duration = 5
+        duration += 5 if self.get_character_class() == CharacterClass.Sauceror else 0
+        duration += 5 if (await Skill["Impetuous Sauciness"]).have() else 0
+        return duration
+
+    @logged_in
     async def get_inventory(self) -> DefaultDict[Item, int]:
         sparse_inventory = await request.inventory(self).parse()
         inventory = defaultdict(int, sparse_inventory)
@@ -193,6 +251,9 @@ class Session:
         """
         location = Location(self, id=location_id)
         return await (await location.visit()).text()
+
+    async def maximize(self, *args, **kwargs):
+        return await maximize(self, *args, **kwargs)
 
     @logged_in
     async def logout(self):

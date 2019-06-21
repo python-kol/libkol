@@ -79,6 +79,7 @@ from .player_search import player_search
 from .pulverize import pulverize
 from .questlog import questlog
 from .skill_use import skill_use
+from .skills import skills
 from .status import status
 from .store_inventory import store_inventory
 from .store_item_add import store_item_add
@@ -177,6 +178,7 @@ __all__ = [
     "pulverize",
     "questlog",
     "skill_use",
+    "skills",
     "status",
     "store_inventory",
     "store_item_add",
