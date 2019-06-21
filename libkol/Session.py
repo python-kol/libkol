@@ -21,7 +21,7 @@ models = [
     "libkol.ZapGroup",
     "libkol.Store",
     "libkol.Trophy",
-    "libkol.Modifier",
+    "libkol.Bonus",
     "libkol.Effect",
     "libkol.Skill",
     "libkol.Outfit",
@@ -174,7 +174,7 @@ class Session:
         return await request.player_profile(self, user_id).parse()
 
     @logged_in
-    async def get_skills(self) -> List["Skill"]:
+    async def get_skills(self) -> List["libkol.Skill"]:
         """
         Return list of player's known skills
         """
@@ -251,9 +251,6 @@ class Session:
         """
         location = Location(self, id=location_id)
         return await (await location.visit()).text()
-
-    async def maximize(self, *args, **kwargs):
-        return await maximize(self, *args, **kwargs)
 
     @logged_in
     async def logout(self):
