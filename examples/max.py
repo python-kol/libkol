@@ -1,10 +1,12 @@
-from libkol import Session, run
-from libkol.maximize import maximize
+from libkol import Session, run, Modifier, Maximizer
 
 
 async def main():
     async with Session() as kol:
-        items = await maximize(kol, modifier="Spooky Damage")
+        problem = Maximizer(kol)
+        problem += Modifier.Moxie
+        problem -= Modifier.CombatRate
+        items = await problem.solve()
 
         for i in items:
             print(f"{i.type}: {i.name}")

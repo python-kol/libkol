@@ -4,11 +4,10 @@ from typing import Any, Callable, DefaultDict, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from tortoise import Tortoise
 from collections import defaultdict
-
 from aiohttp import ClientResponse, ClientSession
+import libkol
+from libkol import Clan, Kmail, request, Item
 
-from . import Clan, Kmail, request, Item
-from .maximize import maximize
 from .Model import Model
 from .Stat import Stat
 from .CharacterClass import CharacterClass
