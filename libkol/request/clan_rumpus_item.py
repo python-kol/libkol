@@ -3,12 +3,9 @@ from typing import List
 
 import libkol
 
-from libkol import types
 from ..util import parsing
 from .clan_rumpus import Furniture
 from .request import Request
-
-ItemQuantity = types.ItemQuantity
 
 
 class ItemFurniture(Enum):
@@ -17,7 +14,7 @@ class ItemFurniture(Enum):
     MrKlaw = Furniture.MrKlaw
 
 
-class clan_rumpus_item(Request[List[ItemQuantity]]):
+class clan_rumpus_item(Request[List["libkol.types.ItemQuantity"]]):
     """
     Uses an item dispenser in the clan rumpus room.
     """
@@ -30,5 +27,5 @@ class clan_rumpus_item(Request[List[ItemQuantity]]):
         self.request = session.request("clan_rumpus.php", params=params)
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
+    async def parser(content: str, **kwargs) -> List["libkol.types.ItemQuantity"]:
         return await parsing.item(content)

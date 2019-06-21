@@ -9,7 +9,6 @@ from ..Error import (
     UserIsIgnoringError,
     UserNotFoundError,
 )
-from ..types import ItemQuantity
 from .request import Request
 
 
@@ -19,7 +18,7 @@ class kmail_send(Request):
         session: "libkol.Session",
         recipient: Union[int, str],
         message: str = "",
-        items: List[ItemQuantity] = [],
+        items: List["libkol.types.ItemQuantity"] = [],
         meat: int = 0,
     ) -> None:
         params = {"toid": ""}

@@ -6,7 +6,6 @@ from typing import List, NamedTuple
 import libkol
 
 from ..Error import UnknownError
-from ..types import ItemQuantity
 from ..pattern import PatternManager
 from ..util import parsing
 from .request import Request
@@ -25,7 +24,7 @@ class Message(NamedTuple):
     username: str  # The name of the user who sent or received this message.
     date: datetime  # The date the message was sent.
     text: str  # The contents of the message.
-    items: List[ItemQuantity]  # Items attached to the message.
+    items: List["libkol.types.ItemQuantity"]  # Items attached to the message.
     meat: int  # The amount of meat sent with the message.
     type: str  # Type of message (coffee, candy, normal etc)
 

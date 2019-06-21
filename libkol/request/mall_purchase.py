@@ -3,8 +3,6 @@ from dataclasses import dataclass
 import libkol
 from .request import Request
 from ..util import parsing
-from ..Item import Item
-from ..types import Listing
 from ..Error import (
     NotEnoughMeatError,
     ItemNotFoundError,
@@ -16,7 +14,7 @@ from ..Error import (
 
 @dataclass
 class Response:
-    item: Item
+    item: "libkol.Item"
     quantity: int
     meat_gained: int
 
@@ -31,9 +29,9 @@ class mall_purchase(Request[Response]):
     def __init__(
         self,
         session: "libkol.Session",
-        listing: Listing = None,
+        listing: "libkol.types.Listing" = None,
         store_id: int = None,
-        item: Item = None,
+        item: "libkol.Item" = None,
         price: int = None,
         quantity: int = None,
     ):

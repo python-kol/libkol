@@ -8,7 +8,6 @@ from yarl import URL
 import libkol
 
 from ..Error import UnknownError
-from ..Item import Item
 from ..util import parsing
 from .request import Request
 
@@ -20,7 +19,7 @@ class Transaction(NamedTuple):
     username: str
     user_id: int
     quantity: int
-    item: Item
+    item: "libkol.Item"
     meat: int
 
 
@@ -39,6 +38,8 @@ class mall_transactions(Request):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> List[Transaction]:
+        from libkol import Item
+
         soup = BeautifulSoup(content, "html.parser")
 
         container = soup.find("span", class_="small")

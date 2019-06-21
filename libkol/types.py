@@ -1,20 +1,21 @@
-from . import Item
-
+from typing import Optional
 from dataclasses import dataclass
+
+import libkol
 
 
 @dataclass
 class ItemQuantity:
-    item: "Item"
+    item: "libkol.Item"
     quantity: int
 
 
 @dataclass
 class Listing:
-    item: Item
-    price: int
-    store_id: int
-    store_name: str
-    stock: int
-    limit: int
-    limit_reached: bool
+    item: Optional["libkol.Item"] = None
+    price: int = 0
+    stock: int = 0
+    limit: int = 0
+    limit_reached: bool = False
+    store_id: Optional[int] = None
+    store_name: Optional[str] = None

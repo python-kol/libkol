@@ -3,7 +3,6 @@ from typing import Any, Dict, List
 
 import libkol
 
-from ..Item import Item
 from .request import Request
 
 stashItemsPattern = re.compile(
@@ -23,6 +22,8 @@ class clan_stash(Request[List[Dict[str, Any]]]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> List[Dict[str, Any]]:
+        from libkol import Item
+
         return [
             {
                 "item": await Item.get_or_discover(id=int(i["id"])),
