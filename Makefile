@@ -9,6 +9,7 @@ coverage:
 	coverage run -m unittest test/**/test_*.py
 	coverage report
 	coverage html
+	coverage-badge -o htmlcov/coverage.svg
 
 install:
 	pip install -r requirements.txt --user
