@@ -56,13 +56,22 @@ html_static_path = ["_static"]
 
 
 fa_orig = sphinx_autodoc_typehints.format_annotation
+
+
 def format_annotation(annotation):
     if inspect.isclass(annotation) and hasattr(annotation, "__annotations__"):
-            return ':py:class:`~{}.{}` {{{}}}'.format(
-                annotation.__module__,
-                annotation.__qualname__,
-                (',\n'.join('{}: {}'.format(k, format_annotation(v)) for k, v in  annotation.__annotations__.items()))
-            )
+        return ":py:class:`~{}.{}` {{{}}}".format(
+            annotation.__module__,
+            annotation.__qualname__,
+            (
+                ",\n".join(
+                    "{}: {}".format(k, format_annotation(v))
+                    for k, v in annotation.__annotations__.items()
+                )
+            ),
+        )
 
     return fa_orig(annotation)
+
+
 sphinx_autodoc_typehints.format_annotation = format_annotation

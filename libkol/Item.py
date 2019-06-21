@@ -93,6 +93,8 @@ class Item(Model, metaclass=ItemMeta):
     foldgroup_id: Optional[int]
     zapgroup = ForeignKeyField("models.ZapGroup", related_name="items", null=True)
     zapgroup_id: Optional[int]
+    outfit = ForeignKeyField("models.Outfit", related_name="pieces", null=True)
+    outfit_id: Optional[int]
 
     # NPC Store Info
     store_row = IntField(null=True)
@@ -111,6 +113,7 @@ class Item(Model, metaclass=ItemMeta):
     food_helper = BooleanField(default=False)
     drink_helper = BooleanField(default=False)
     guardian = BooleanField(default=False)
+    single_equip = BooleanField(default=True)
     bounty = BooleanField(default=False)  # Can appear as a bounty item
     candy = IntField()  # 0: n/a, 1: simple, 2: complex
     sphere = BooleanField(default=False)  # What is this for?
@@ -161,6 +164,28 @@ class Item(Model, metaclass=ItemMeta):
         info = await request.item_description(cls.kol, desc_id).parse()
         return Item(**{k: v for k, v in info.items() if v is not None})
 
+    @property
+    def type(self):
+        if self.hat:
+            return "hat"
+        elif self.shirt:
+            return "shirt"
+        elif self.weapon:
+            return "weapon"
+        elif self.offhand:
+            return "offhand"
+        elif self.pants:
+            return "pants"
+        elif self.familiar_equipment:
+            return "familiar_equipment"
+        elif self.accessory:
+            return "accessory"
+
+        return "other"
+
+    async def get_description(self):
+        return await request.item_description(self.kol, self.desc_id).parse()
+
     async def get_mall_price(self, limited: bool = False) -> int:
         """
         Get the lowest price for this item in the mall
@@ -205,6 +230,9 @@ class Item(Model, metaclass=ItemMeta):
 
     def amount(self):
         return self.kol.state["inventory"][self]
+
+    def have(self):
+        return self.amount() > 0
 
     async def use(self, quantity: int = 1, multi_use: bool = True):
         if self.usable is False:
