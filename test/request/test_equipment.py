@@ -10,7 +10,7 @@ class EquipmentTestCase(TestCase):
 
     def test_equipment_accessories_merged(self):
         async def run_test(file):
-            outfit = await equipment.parser(file.read())
+            outfit = await equipment.parser(file.read(), session=self.session)
 
             self.assertEqual(outfit.hat.id, 2078)
             self.assertEqual(outfit.back.id, 5738)
