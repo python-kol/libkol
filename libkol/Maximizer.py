@@ -1,7 +1,7 @@
 from libkol import Bonus
 from aioitertools import groupby
 from tortoise.query_utils import Q
-from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus
+from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus, LpStatusOptimal
 from collections import defaultdict
 
 
@@ -194,16 +194,20 @@ class Maximizer:
         prob.writeLP("maximizer.lp")
         prob.solve()
 
-        print("Status: ", LpStatus[prob.status])
+        if prob.status is not LpStatusOptimal:
+            raise ValueError(LpStatus[prob.status])
+
         result = []
 
         for v in prob.variables():
             index = v.name
             q = v.varValue
+
             if q == 0 or q is None:
                 continue
 
             id = int(index[7:])
+
             for _ in range(int(q)):
                 result.append(
                     next(b.item for b in bonuses if b.item and b.item.id == id)
