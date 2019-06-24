@@ -40,7 +40,7 @@ class combat(Request):
         session: "libkol.Session",
         action: Action,
         skill: Optional[Skill] = None,
-        item: Union["libkol.item", List["libkol.Item"]] = None,
+        item: Union["libkol.Item", List["libkol.Item"]] = None,
     ) -> None:
         from libkol import Item
 
