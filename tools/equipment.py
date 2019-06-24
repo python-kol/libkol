@@ -11,7 +11,7 @@ from util import load_mafia_data, mafia_dedupe
 
 @atomic()
 async def load(session: ClientSession):
-    type = None
+    equipment_type = None
     tasks = []  # type: List[Coroutine[Any, Any, Item]]
 
     async for bytes in (await load_mafia_data(session, "equipment")).content:
@@ -21,7 +21,7 @@ async def load(session: ClientSession):
             continue
 
         if line[0] == "#":
-            type = {
+            equipment_type = {
                 "Hats": "hat",
                 "Pants": "pants",
                 "Shirts": "shirt",
@@ -29,9 +29,9 @@ async def load(session: ClientSession):
                 "Off-hand": "offhand",
                 "Accessories": "accessory",
                 "Containers": "container",
-            }.get(line[2:])
+            }.get(line[2 : line.find(" ", 2)])
 
-        if type is None:
+        if equipment_type is None:
             continue
 
         parts = line.split("\t")
@@ -39,7 +39,7 @@ async def load(session: ClientSession):
         if len(parts) < 3:
             continue
 
-        items = await Item.filter(*mafia_dedupe(parts[0]))
+        items = await Item.filter(**mafia_dedupe(parts[0]))
 
         if len(items) == 0 or (None in items):
             print("Unrecognized equipment name: {}".format(parts[0]))
@@ -47,13 +47,13 @@ async def load(session: ClientSession):
 
         for item in items:
             item.power = int(parts[1])
-            item.hat = type == "hat"
-            item.pants = type == "pants"
-            item.shirt = type == "shirt"
-            item.weapon = type == "weapon"
-            item.offhand = type == "offhand"
-            item.accessory = type == "accessory"
-            item.container = type == "container"
+            item.hat = equipment_type == "hat"
+            item.pants = equipment_type == "pants"
+            item.shirt = equipment_type == "shirt"
+            item.weapon = equipment_type == "weapon"
+            item.offhand = equipment_type == "offhand"
+            item.accessory = equipment_type == "accessory"
+            item.container = equipment_type == "container"
 
             if len(parts) > 3:
                 if item.weapon:
