@@ -73,7 +73,7 @@ class Maximizer:
         )
 
     async def solve(self):
-        from libkol import Modifier
+        from libkol import Modifier, Slot
 
         # Load smithsness bonuses for tracking smithsness
         smithsness_bonuses = {
@@ -207,7 +207,7 @@ class Maximizer:
         if prob.status is not LpStatusOptimal:
             raise ValueError(LpStatus[prob.status])
 
-        result = []
+        result = defaultdict(lambda: None)  # type: DefaultDict[Slot, Optional[Item]]
 
         for v in prob.variables():
             index = v.name
@@ -216,9 +216,30 @@ class Maximizer:
             if q == 0 or q is None:
                 continue
 
-            id = int(index[7:])
+            item = next(i for i in possible_items if i.id == int(index[7:]))
 
-            for _ in range(int(q)):
-                result.append(next(i for i in possible_items if i.id == id))
+            slot = item.slot
+
+            if slot == Slot.Acc1:
+                if result[Slot.Acc1] is None:
+                    slot = Slot.Acc1
+                elif result[Slot.Acc2] is None:
+                    slot = Slot.Acc2
+                elif result[Slot.Acc3] is None:
+                    slot = Slot.Acc3
+                else:
+                    raise Exception("Pulp has done something wrong")
+
+            result[slot] = item
 
         return result
+
+    async def solve_and_equip(self):
+        outfit = await self.solve()
+
+        await self.session.unequip()
+
+        for slot, item in outfit.items():
+            await item.equip(slot)
+
+        return True

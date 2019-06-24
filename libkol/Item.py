@@ -4,6 +4,7 @@ from tortoise.models import ModelMeta
 from typing import List, Optional, Union
 
 from libkol import request
+from .Slot import Slot
 from .Stat import Stat
 from .Model import Model
 from .Error import ItemNotFoundError, WrongKindOfItemError
@@ -178,6 +179,10 @@ class Item(Model, metaclass=ItemMeta):
         ]
         return next((t for t in types if getattr(self, t)), "other")
 
+    @property
+    def slot(self) -> Optional[Slot]:
+        return Slot.from_db(self.type)
+
     async def get_description(self):
         return await request.item_description(self.kol, self.desc_id).parse()
 
@@ -224,10 +229,32 @@ class Item(Model, metaclass=ItemMeta):
         ).parse()
 
     def amount(self):
-        return self.kol.get_inventory()[self] + self.kol.get_equipment().count(self)
+        return self.kol.inventory[self] + list(self.kol.equipment.values()).count(self)
 
     def equipped(self):
-        return self in self.kol.get_equipment()
+        return self in self.kol.equipment.values()
+
+    async def equip(self, slot: Optional[Slot] = None) -> bool:
+        actual_slot = self.slot if slot is None else slot
+
+        if actual_slot is None:
+            raise WrongKindOfItemError("This item cannot be equipped")
+
+        curr = self.kol.equipment
+
+        # If it's already there don't worry
+        if curr[actual_slot] == self:
+            return True
+
+        # If user didn't specify an accessory and we have it in a slot, don't worry
+        if (
+            actual_slot is Slot.Acc1
+            and slot is None
+            and (curr[Slot.Acc2] == self or curr[Slot.Acc3] == self)
+        ):
+            return True
+
+        return await request.equip(self.kol, self, actual_slot).parse()
 
     def have(self):
         return self.amount() > 0

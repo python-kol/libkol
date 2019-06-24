@@ -230,15 +230,21 @@ class Session:
         await request.equipment(self).parse()
         return True
 
-    def get_equipment(self) -> List[Item]:
-        return list(self.state["equipment"])
+    @property
+    def equipment(self) -> Dict["libkol.Slot", Optional[Item]]:
+        return self.state["equipment"]
+
+    @logged_in
+    async def unequip(self, slot: Optional["libkol.Slot"] = None):
+        return await request.unequip(self, slot).parse()
 
     @logged_in
     async def refresh_inventory(self) -> bool:
         await request.inventory(self).parse()
         return True
 
-    def get_inventory(self) -> DefaultDict[Item, int]:
+    @property
+    def inventory(self) -> DefaultDict[Item, int]:
         return defaultdict(int, self.state["inventory"])
 
     @logged_in

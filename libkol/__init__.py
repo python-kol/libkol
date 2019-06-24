@@ -17,6 +17,7 @@ from .Session import Session, models
 from .Skill import Skill
 from .Store import Store
 from .Stat import Stat
+from .Slot import Slot
 from .Trophy import Trophy
 from .ZapGroup import ZapGroup
 
@@ -44,6 +45,7 @@ __all__ = [
     "Skill",
     "Store",
     "Stat",
+    "Slot",
     "Trophy",
     "types",
     "ZapGroup",
