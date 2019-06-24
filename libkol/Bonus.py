@@ -6,6 +6,8 @@ from .Modifier import Modifier
 from .Model import Model
 from .koldate import koldate
 
+from .Error import UnknownError
+
 
 class Bonus(Model):
     item = ForeignKeyField("models.Item", related_name="bonuses", null=True)
@@ -75,11 +77,10 @@ class Bonus(Model):
                 if isinstance(expr, int) or expr.is_number:
                     return expr
                 else:
-                    print(
+                    UnknownError(
                         "Unknown symbols {} in {}".format(expr.free_symbols, expression)
                     )
-            except Exception as e:
-                print("Could not parse {}".format(expression))
-                print(e)
+            except Exception:
+                UnknownError("Could not parse {}".format(expression))
 
         return 0
