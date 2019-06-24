@@ -122,7 +122,8 @@ class Session:
 
         await self.get_status()
         await self.get_profile()
-        await self.get_inventory()
+        await self.refresh_inventory()
+        await self.refresh_equipment()
         await self.get_skills()
 
         return True
@@ -225,11 +226,20 @@ class Session:
         return duration
 
     @logged_in
-    async def get_inventory(self) -> DefaultDict[Item, int]:
-        sparse_inventory = await request.inventory(self).parse()
-        inventory = defaultdict(int, sparse_inventory)
-        self.state["inventory"] = inventory
-        return inventory
+    async def refresh_equipment(self) -> bool:
+        await request.equipment(self).parse()
+        return True
+
+    def get_equipment(self) -> List[Item]:
+        return list(self.state["equipment"])
+
+    @logged_in
+    async def refresh_inventory(self) -> bool:
+        await request.inventory(self).parse()
+        return True
+
+    def get_inventory(self) -> DefaultDict[Item, int]:
+        return defaultdict(int, self.state["inventory"])
 
     @logged_in
     async def adventure(

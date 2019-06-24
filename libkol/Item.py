@@ -4,6 +4,7 @@ from tortoise.models import ModelMeta
 from typing import List, Optional, Union
 
 from libkol import request
+from .Stat import Stat
 from .Model import Model
 from .Error import ItemNotFoundError, WrongKindOfItemError
 from . import types
@@ -166,22 +167,16 @@ class Item(Model, metaclass=ItemMeta):
 
     @property
     def type(self):
-        if self.hat:
-            return "hat"
-        elif self.shirt:
-            return "shirt"
-        elif self.weapon:
-            return "weapon"
-        elif self.offhand:
-            return "offhand"
-        elif self.pants:
-            return "pants"
-        elif self.familiar_equipment:
-            return "familiar_equipment"
-        elif self.accessory:
-            return "accessory"
-
-        return "other"
+        types = [
+            "hat",
+            "shirt",
+            "weapon",
+            "offhand",
+            "pants",
+            "familiar_equipment",
+            "accessory",
+        ]
+        return next((t for t in types if getattr(self, t)), "other")
 
     async def get_description(self):
         return await request.item_description(self.kol, self.desc_id).parse()
@@ -229,10 +224,21 @@ class Item(Model, metaclass=ItemMeta):
         ).parse()
 
     def amount(self):
-        return self.kol.state["inventory"][self]
+        return self.kol.get_inventory()[self] + self.kol.get_equipment().count(self)
+
+    def equipped(self):
+        return self in self.kol.get_equipment()
 
     def have(self):
         return self.amount() > 0
+
+    def meet_requirements(self):
+        return (
+            self.kol.get_level() >= self.level_required
+            and self.kol.get_stat(Stat.Muscle) >= self.required_muscle
+            and self.kol.get_stat(Stat.Mysticality) >= self.required_mysticality
+            and self.kol.get_stat(Stat.Moxie) >= self.required_moxie
+        )
 
     async def use(self, quantity: int = 1, multi_use: bool = True):
         if self.usable is False:
