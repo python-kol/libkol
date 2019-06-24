@@ -22,4 +22,7 @@ class inventory(Request[Dict["libkol.Item", int]]):
     async def parser(content: Dict[str, Any], **kwargs) -> Dict["libkol.Item", int]:
         from libkol import Item
 
-        return {await Item[int(id)]: int(quantity) for id, quantity in content.items()}
+        session = kwargs["session"]  # type: "libkol.Session"
+        inv = {await Item[int(id)]: int(quantity) for id, quantity in content.items()}
+        session.state["inventory"] = inv
+        return inv

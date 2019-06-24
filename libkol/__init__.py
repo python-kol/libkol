@@ -16,6 +16,7 @@ from .Outfit import Outfit
 from .Session import Session, models
 from .Skill import Skill
 from .Store import Store
+from .Stat import Stat
 from .Trophy import Trophy
 from .ZapGroup import ZapGroup
 
@@ -42,6 +43,7 @@ __all__ = [
     "Session",
     "Skill",
     "Store",
+    "Stat",
     "Trophy",
     "types",
     "ZapGroup",

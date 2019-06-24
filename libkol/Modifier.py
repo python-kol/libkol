@@ -6,9 +6,10 @@ from .Stat import Stat
 
 
 class WeightedModifier:
-    def __init__(self, modifier: "Modifier", weight: int = 1):
+    def __init__(self, modifier: "Modifier", weight: int = 1, min: int = 0):
         self.modifier = modifier
         self.weight = weight
+        self.min = min
 
     def __eq__(self, thing):
         return self.modifier is thing
@@ -167,10 +168,10 @@ class Modifier(Enum):
     WikiName = "Wiki Name"
 
     def __mul__(self, weight: int) -> "WeightedModifier":
-        return WeightedModifier(self, weight)
+        return WeightedModifier(self, weight=weight)
 
-    def __init__(self, name: str, weight: int = 1):
-        self.weight = weight
+    def __ge__(self, min: int) -> "WeightedModifier":
+        return WeightedModifier(self, min=min)
 
     def apply_percentage(self, session: "libkol.Session", multiplier: float) -> float:
         if self is Modifier.MaximumHp:

@@ -1,5 +1,5 @@
-from typing import NamedTuple, Optional
-
+from typing import Optional
+from dataclasses import dataclass
 from bs4 import BeautifulSoup, Tag
 
 import libkol
@@ -7,7 +7,8 @@ import libkol
 from .request import Request
 
 
-class Equipment(NamedTuple):
+@dataclass
+class Equipment:
     hat: Optional["libkol.Item"]
     back: Optional["libkol.Item"]
     shirt: Optional["libkol.Item"]
@@ -17,7 +18,25 @@ class Equipment(NamedTuple):
     acc1: Optional["libkol.Item"]
     acc2: Optional["libkol.Item"]
     acc3: Optional["libkol.Item"]
-    familiar: Optional["libkol.Item"]
+    familiar_equipment: Optional["libkol.Item"]
+
+    def __iter__(self):
+        slots = [
+            "hat",
+            "back",
+            "shirt",
+            "weapon",
+            "offhand",
+            "pants",
+            "acc1",
+            "acc2",
+            "acc3",
+            "familiar_equipment",
+        ]
+        for s in slots:
+            i = getattr(self, s, None)
+            if i is not None:
+                yield i
 
 
 class equipment(Request):
@@ -49,10 +68,12 @@ class equipment(Request):
 
     @classmethod
     async def parser(cls, content: str, **kwargs) -> Equipment:
+        session = kwargs["session"]  # type: libkol.Session
+
         soup = BeautifulSoup(content, "html.parser")
         current = soup.find(id="curequip")
 
-        return Equipment(
+        eq = Equipment(
             hat=(await cls.slot_to_item(current, "Hats")),
             back=(await cls.slot_to_item(current, "Back")),
             shirt=(await cls.slot_to_item(current, "Shirts")),
@@ -62,5 +83,8 @@ class equipment(Request):
             acc1=(await cls.slot_to_item(current, "Accessories", 0)),
             acc2=(await cls.slot_to_item(current, "Accessories", 1)),
             acc3=(await cls.slot_to_item(current, "Accessories", 2)),
-            familiar=(await cls.slot_to_item(current, "Familiar")),
+            familiar_equipment=(await cls.slot_to_item(current, "Familiar")),
         )
+
+        session.state["equipment"] = eq
+        return eq
