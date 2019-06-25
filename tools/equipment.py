@@ -29,14 +29,13 @@ async def load(session: ClientSession):
                 "Off-hand": "offhand",
                 "Accessories": "accessory",
                 "Containers": "container",
-            }.get(line[2 : line.find(" ", 2)])
+            }.get(line[2 : line.find(" ", 2)], equipment_type)
 
-        if equipment_type is None:
             continue
 
         parts = line.split("\t")
 
-        if len(parts) < 3:
+        if equipment_type is None or len(parts) < 3:
             continue
 
         items = await Item.filter(**mafia_dedupe(parts[0]))
@@ -57,9 +56,10 @@ async def load(session: ClientSession):
 
             if len(parts) > 3:
                 if item.weapon:
-                    item.weapon_type == parts[3]
+                    item.weapon_hands = int(parts[3][0])
+                    item.weapon_type = parts[3][8:]
                 elif item.offhand:
-                    item.offhand_type == parts[3]
+                    item.offhand_type = parts[3]
 
             # Set the requirements
             reqs = parts[2].strip()
