@@ -3,6 +3,7 @@ from aioitertools import groupby
 from tortoise.query_utils import Q
 from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus, LpStatusOptimal
 from collections import defaultdict
+from typing import DefaultDict, Optional
 
 
 class Maximizer:
@@ -73,7 +74,7 @@ class Maximizer:
         )
 
     async def solve(self):
-        from libkol import Modifier, Slot
+        from libkol import Modifier, Slot, Item
 
         # Load smithsness bonuses for tracking smithsness
         smithsness_bonuses = {
@@ -152,9 +153,9 @@ class Maximizer:
         # Add minima and maxima
         async for m, bonuses in grouped_bonuses:
             prob += (
-                this.minimum(m)
+                self.minimum(m)
                 <= lpSum([await b.get_value(smithsness=smithsness) for b in bonuses])
-                <= this.maximum(m)
+                <= self.maximum(m)
             )
 
         # Maximum slot sizes
@@ -170,13 +171,7 @@ class Maximizer:
 
         for slot, size in slot_sizes:
             prob += (
-                lpSum(
-                    [
-                        solution[b.item.id]
-                        for b in bonuses
-                        if b.item and getattr(b.item, slot)
-                    ]
-                )
+                lpSum([solution[i.id] for i in possible_items if getattr(i, slot)])
                 <= size
             )
 
