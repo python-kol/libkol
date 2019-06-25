@@ -150,6 +150,10 @@ class Session:
         """
         return self.state.get("user_id", None)
 
+    @property
+    def adventures(self):
+        return self.state["adventures"]
+
     @logged_in
     async def get_status(self):
         """

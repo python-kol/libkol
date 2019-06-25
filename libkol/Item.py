@@ -124,6 +124,10 @@ class Item(Model, metaclass=ItemMeta):
     tradeable = BooleanField(default=False)  # is tradeable
     discardable = BooleanField(default=False)  # is discardable
 
+    @property
+    def adventures(self):
+        return (self.gained_adventures_min + self.gained_adventures_max) / 2
+
     def pluralize(self):
         return "{}s".format(self.name) if self.plural is None else self.plural
 

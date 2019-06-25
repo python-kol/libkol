@@ -79,6 +79,10 @@ class mining(Request[Response]):
         if "<td>You can't mine without the proper equipment" in content:
             raise InvalidOutfitError("Incorrect outfit")
 
+        if "<td>You wander around randomly in the mine" not in content:
+            session = kwargs["session"]  # type: libkol.Session
+            session.state["adventures"] -= 1
+
         mine = cls.parse_mine(content)
 
         return Response(mine=mine, resource_gain=await parsing.resource_gain(content))
