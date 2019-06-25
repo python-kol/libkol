@@ -1,5 +1,5 @@
 from libkol import Bonus
-from aioitertools import groupby
+from aioitertools import iter
 from tortoise.query_utils import Q
 from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus, LpStatusOptimal
 from collections import defaultdict
@@ -14,8 +14,8 @@ class Maximizer:
         self.must_equip = []
         self.must_not_equip = []
         self.weight = defaultdict(lambda: 1)
-        self.minimum = defaultdict(int)
-        self.maximum = defaultdict(int)
+        self.minimum = {}
+        self.maximum = {}
 
     def __iadd__(self, constraint):
         from libkol import Modifier, Item
@@ -24,9 +24,11 @@ class Maximizer:
         if isinstance(constraint, Modifier):
             self.maximize.append(constraint)
         elif isinstance(constraint, WeightedModifier):
-            self.maximize.append(constraint.modifier)
-            self.weight[constraint.modifier] = constraint.weight
-            self.minimum[constraint.modifier] = constraint.min
+            if constraint.min is not None:
+                self.minimum[constraint.modifier] = constraint.min
+            else:
+                self.maximize.append(constraint.modifier)
+                self.weight[constraint.modifier] = constraint.weight
         elif isinstance(constraint, Item):
             self.must_equip.append(constraint)
         else:
@@ -41,9 +43,11 @@ class Maximizer:
         if isinstance(constraint, Modifier):
             self.minimize.append(constraint)
         elif isinstance(constraint, WeightedModifier):
-            self.minimize.append(constraint.modifier)
-            self.weight[constraint.modifier] = constraint.weight
-            self.maximum[constraint.modifier] = constraint.min
+            if constraint.min is not None:
+                self.maximum[constraint.modifier] = constraint.min
+            else:
+                self.minimize.append(constraint.modifier)
+                self.weight[constraint.modifier] = constraint.weight
         elif isinstance(constraint, Item):
             self.must_not_equip.append(constraint)
         else:
@@ -87,7 +91,12 @@ class Maximizer:
         }
 
         # Load relevant bonuses
-        modifiers = self.maximize + self.minimize
+        modifiers = set(
+            self.maximize
+            + self.minimize
+            + list(self.maximum.keys())
+            + list(self.minimum.keys())
+        )
 
         bonuses = [
             b
@@ -110,7 +119,9 @@ class Maximizer:
             )
         ]
 
-        grouped_bonuses = groupby(bonuses, lambda m: m.modifier)
+        grouped_bonuses = {}
+        for b in bonuses:
+            grouped_bonuses[b.modifier] = grouped_bonuses.get(b.modifier, []) + [b]
 
         possible_items = [b.item for b in bonuses if b.item] + self.must_equip
 
@@ -146,17 +157,23 @@ class Maximizer:
                 )
                 * self.weight[m]
                 * (1 if m in self.maximize else -1 if m in self.minimize else 0)
-                async for m, bonuses in grouped_bonuses
+                async for m, bonuses in iter(grouped_bonuses.items())
             ]
         )
 
         # Add minima and maxima
-        async for m, bonuses in grouped_bonuses:
-            prob += (
-                self.minimum(m)
-                <= lpSum([await b.get_value(smithsness=smithsness) for b in bonuses])
-                <= self.maximum(m)
+        for m, bonuses in grouped_bonuses.items():
+            total = lpSum(
+                [
+                    await b.get_value(smithsness=smithsness) * solution[b.item.id]
+                    for b in bonuses
+                    if b.item
+                ]
             )
+            if self.minimum.get(m) is not None:
+                prob += total >= self.minimum[m]
+            if self.maximum.get(m) is not None:
+                prob += total <= self.maximum[m]
 
         # Maximum slot sizes
         slot_sizes = [

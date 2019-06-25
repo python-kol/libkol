@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Optional, Union
 from enum import Enum
 import libkol
 
@@ -6,7 +6,9 @@ from .Stat import Stat
 
 
 class WeightedModifier:
-    def __init__(self, modifier: "Modifier", weight: int = 1, min: int = 0):
+    def __init__(
+        self, modifier: "Modifier", weight: int = 1, min: Optional[int] = None
+    ):
         self.modifier = modifier
         self.weight = weight
         self.min = min
