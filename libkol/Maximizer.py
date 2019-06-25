@@ -192,6 +192,18 @@ class Maximizer:
                 <= size
             )
 
+        # You've only got so many hands!
+        prob += (
+            lpSum(
+                [
+                    solution[i.id]
+                    for i in possible_items
+                    if (i.weapon and i.weapon_hands >= 2) or i.offhand
+                ]
+            )
+            <= 1
+        )
+
         # For each item...
         for i in possible_items:
             # Don't plan to equip things we can't wear
