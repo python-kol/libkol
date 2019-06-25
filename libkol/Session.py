@@ -1,6 +1,6 @@
 from os import path
 from time import time
-from typing import Any, Callable, DefaultDict, Dict, List, Optional, Union
+from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
 from tortoise import Tortoise
 from collections import defaultdict
@@ -246,6 +246,15 @@ class Session:
     @property
     def inventory(self) -> DefaultDict[Item, int]:
         return defaultdict(int, self.state["inventory"])
+
+    @logged_in
+    async def mine(
+        self,
+        mine_id: int,
+        reset: bool = False,
+        coords: Optional[Tuple[int, int]] = None,
+    ):
+        return await request.mining(self, mine_id, reset=reset, coords=coords).parse()
 
     @logged_in
     async def adventure(
