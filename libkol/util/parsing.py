@@ -1,7 +1,8 @@
 import re
 from copy import copy
 from itertools import groupby
-from typing import Any, Dict, List, NamedTuple
+from dataclasses import dataclass
+from typing import Any, Dict, List
 
 from bs4 import BeautifulSoup, Tag
 
@@ -216,25 +217,28 @@ def effects(text: str) -> List[Dict[str, Any]]:
     return effects
 
 
-class ResourceGain(NamedTuple):
+@dataclass
+class ResourceGain:
+    items: List["types.ItemQuantity"]
     adventures: int
     inebriety: int
     substats: Dict[str, int]
     stats: Dict[str, int]
-    level: int
+    levels: int
     effects: List[Dict[str, Any]]
     hp: int
     mp: int
 
 
-def resource_gain(html: str) -> ResourceGain:
+async def resource_gain(html: str) -> ResourceGain:
     return ResourceGain(
-        adventures(html),
-        inebriety(html),
-        substat(html),
-        stat(html),
-        level(html),
-        effects(html),
-        hp(html),
-        mp(html),
+        items=(await item(html)),
+        adventures=adventures(html),
+        inebriety=inebriety(html),
+        substats=substat(html),
+        stats=stat(html),
+        levels=level(html),
+        effects=effects(html),
+        hp=hp(html),
+        mp=mp(html),
     )
