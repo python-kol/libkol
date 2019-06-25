@@ -18,15 +18,19 @@ class equip(Request):
         super().__init__(session)
 
         params = {"action": "equip", "which": 2, "whichitem": item.id}
-        data = {"slot": slot}
+
+        if slot.is_accessory():
+            params["slot"] = slot.to_acc_number()
 
         self.request = session.request(
-            "inv_equip.php", pwd=True, params=params, data=data
+            "inv_equip.php", pwd=True, ajax=True, params=params
         )
 
     @staticmethod
     async def parser(content: str, **kwargs) -> bool:
-        "Checks for errors due to equipping items you don't have, or equipping items that aren't equippable."
+        """
+        Checks for errors due to equipping items you don't have, or equipping items that aren't equippable.
+        """
         from libkol import Item, Slot
 
         if "You don't have the item you're trying to equip." in content:
@@ -57,12 +61,14 @@ class equip(Request):
             unequipped = first
             equipped_onclick = items[0]["onclick"]
             equipped = await Item[int(equipped_onclick[9 : equipped_onclick.find(",")])]
-
-        if unequipped:
             session.state["inventory"][unequipped] += 1
 
         query_slot = url.query.get("slot")
-        slot = Slot.acc(int(query_slot)) if query_slot is not None else equipped.slot
+        slot = (
+            Slot.from_acc_number(int(query_slot))
+            if query_slot is not None
+            else equipped.slot
+        )
         session.state["equipment"][slot] = equipped
 
         return True

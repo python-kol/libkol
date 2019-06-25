@@ -15,8 +15,11 @@ class Slot(Enum):
     FamiliarEquipment = "familiarequip"
 
     @classmethod
-    def acc(cls, num: int) -> "Slot":
+    def from_acc_number(cls, num: int) -> "Slot":
         return Slot.Acc1 if num == 1 else Slot.Acc2 if num == 2 else Slot.Acc3
+
+    def to_acc_number(self):
+        return int(self.value[-1])
 
     def is_accessory(self):
         return self in [Slot.Acc1, Slot.Acc2, Slot.Acc3]

@@ -24,7 +24,7 @@ class unequip(Request):
             params["action"] = "unequip"
             params["type"] = slot.value
 
-        self.request = session.request("inv_equip.php", params=params)
+        self.request = session.request("inv_equip.php", pwd=True, params=params)
 
     @staticmethod
     async def parser(content: str, **kwargs) -> List["libkol.Item"]:
@@ -33,7 +33,7 @@ class unequip(Request):
         session = kwargs["session"]  # type: libkol.Session
         url = kwargs["url"]  # type: URL
 
-        if content is "":
+        if content == "":
             return []
 
         if "All items unequipped." in content:
@@ -46,7 +46,7 @@ class unequip(Request):
             slot = Slot(url.query["type"])
             unequipped = {slot: item}
 
-        for slot, item in unequipped:
+        for slot, item in unequipped.items():
             session.state["equipment"][slot] = None
             session.state["inventory"][item] += 1
 
