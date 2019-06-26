@@ -123,14 +123,14 @@ class charpane(Request[Dict[str, Any]]):
                 "weight": int(match.group(2)),
             }
 
-        data["effects"] = [
-            {"name": str(match.group(1)), "turns": int(match.group(2))}
+        data["effects"] = {
+            str(match.group(1)): int(match.group(2))
             for match in (
                 match
                 for match in characterEffect.finditer(content)
                 if match is not None
             )
-        ]
+        }
 
         data["buffed_muscle"], data["base_muscle"] = cls.get_stat(soup, "Muscle:")
         data["buffed_moxie"], data["base_moxie"] = cls.get_stat(soup, "Moxie:")

@@ -42,19 +42,19 @@ class CharpaneTestCase(TestCase):
         async def run_test(file):
             charpane_result = await charpane.parser(file.read(), session=self.session)
 
-            effects = [
-                {"name": "Favored by Lyle", "turns": 10},
-                {"name": "Hustlin'", "turns": 10},
-                {"name": "init.enh", "turns": 17},
-                {"name": "Brother Flying Burrito's Blessing", "turns": 20},
-                {"name": "Tomes of Opportunity", "turns": 20},
-                {"name": "Billiards Belligerence", "turns": 20},
-                {"name": "meat.enh", "turns": 50},
-                {"name": "Thaumodynamic", "turns": 50},
-                {"name": "Silent Running", "turns": 50},
-                {"name": "items.enh", "turns": 50},
-                {"name": "There's No N in Love", "turns": 100},
-            ]
+            effects = {
+                "Favored by Lyle": 10,
+                "Hustlin'": 10,
+                "init.enh": 17,
+                "Brother Flying Burrito's Blessing": 20,
+                "Tomes of Opportunity": 20,
+                "Billiards Belligerence": 20,
+                "meat.enh": 50,
+                "Thaumodynamic": 50,
+                "Silent Running": 50,
+                "items.enh": 50,
+                "There's No N in Love": 100,
+            }
             self.assertEqual(charpane_result["username"], "Username")
             self.assertEqual(charpane_result["user_id"], 123456)
             self.assertEqual(charpane_result["level"], 8)

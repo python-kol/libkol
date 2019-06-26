@@ -211,7 +211,7 @@ class Maximizer:
                 prob += solution[i.id] == 0
 
             # We can only equip as many as we have
-            prob += solution[i.id] <= i.amount()
+            prob += solution[i.id] <= i.amount
 
             # We can only equip one single equip item
             if i.single_equip:

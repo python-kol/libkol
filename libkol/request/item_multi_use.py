@@ -32,5 +32,7 @@ class item_multi_use(Request):
         ):
             raise WrongKindOfItemError("You cannot multi-use that item.")
 
+        session = kwargs["session"]  # type: libkol.Session
+
         # Find out what happened
-        return await parsing.resource_gain(content)
+        return await parsing.resource_gain(content, session)

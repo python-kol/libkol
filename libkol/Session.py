@@ -174,6 +174,14 @@ class Session:
     def adventures(self):
         return self.state["adventures"]
 
+    @property
+    def hp(self):
+        return self.state["current_hp"]
+
+    @property
+    def mp(self):
+        return self.state["current_mp"]
+
     @logged_in
     async def get_status(self):
         """
@@ -184,6 +192,9 @@ class Session:
         self.state["username"] = data["name"]
         self.state["user_id"] = int(data["playerid"])
         self.state["rollover"] = int(data["rollover"])
+        self.state["inebriety"] = int(data["drunk"])
+        self.state["fullness"] = int(data["full"])
+        self.state["spleenhit"] = int(data["spleen"])
 
     @logged_in
     async def get_profile(self) -> Dict[str, Any]:
@@ -212,13 +223,25 @@ class Session:
     def get_character_class(self) -> CharacterClass:
         return self.state["character_class"]
 
-    @logged_in
-    def get_inebriety(self) -> int:
+    @property
+    def inebriety(self) -> int:
         return self.state["inebriety"]
 
-    @logged_in
-    def get_level(self) -> int:
+    @property
+    def fullness(self) -> int:
+        return self.state["fullness"]
+
+    @property
+    def spleenhit(self) -> int:
+        return self.state["spleenhit"]
+
+    @property
+    def level(self) -> int:
         return self.state["level"]
+
+    @property
+    def effects(self) -> Dict[str, int]:
+        return self.state["effects"]
 
     @logged_in
     def get_num_ascensions(self) -> int:

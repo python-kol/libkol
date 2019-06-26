@@ -86,18 +86,18 @@ class mall_purchase(Request[Response]):
         if "<td>That doesn't make any sense.</td>" in content:
             raise TypeError("Request malformed")
 
-        items = await parsing.item(content)
+        session = kwargs["session"]  # type: libkol.Session
 
-        if len(items) == 0:
+        rg = await parsing.resource_gain(content, session)
+
+        if len(rg.items) == 0:
             raise UnknownError("Purchase failed for unknown reason")
 
-        if len(items) > 1:
+        if len(rg.items) > 1:
             raise UnknownError(
                 "Managed to purchase two types of item from one mall request"
             )
 
-        meat_gained = parsing.meat(content)
-
         return Response(
-            item=items[0].item, quantity=items[0].quantity, meat_gained=meat_gained
+            item=rg.items[0].item, quantity=rg.items[0].quantity, meat_gained=rg.meat
         )

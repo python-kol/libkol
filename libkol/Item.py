@@ -12,7 +12,7 @@ from .Slot import Slot
 from .Stat import Stat
 from .Model import Model
 from .Error import ItemNotFoundError, WrongKindOfItemError
-from .util import EnumField
+from .util import EnumField, parsing
 from . import types
 
 
@@ -283,6 +283,7 @@ class Item(Model, metaclass=ItemMeta):
             quantity=quantity,
         ).parse()
 
+    @property
     def amount(self):
         return self.kol.inventory[self] + list(self.kol.equipment.values()).count(self)
 
@@ -312,11 +313,11 @@ class Item(Model, metaclass=ItemMeta):
         return await request.equip(self.kol, self, actual_slot).parse()
 
     def have(self):
-        return self.amount() > 0
+        return self.amount > 0
 
     def meet_requirements(self):
         return (
-            self.kol.get_level() >= self.level_required
+            self.kol.level >= self.level_required
             and self.kol.get_stat(Stat.Muscle) >= self.required_muscle
             and self.kol.get_stat(Stat.Mysticality) >= self.required_mysticality
             and self.kol.get_stat(Stat.Moxie) >= self.required_moxie

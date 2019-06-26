@@ -59,10 +59,10 @@ class Bonus(Model):
 
             symbols = {
                 "A": kol.get_num_ascensions(),
-                "D": kol.get_inebriety(),
+                "D": kol.inebriety,
                 "G": today.grimace_darkness,
                 "K": smithsness,
-                "L": kol.get_level(),
+                "L": kol.level,
                 "M": today.moonlight,
                 "R": await kol.get_reagent_potion_duration(),
                 "W": kol.get_familiar_weight(),
