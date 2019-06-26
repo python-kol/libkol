@@ -19,6 +19,16 @@ class Bonus(Model):
     outfit = ForeignKeyField("models.Outfit", related_name="bonuses", null=True)
     outfit_id: Optional[int]
 
+    familiar = ForeignKeyField(
+        "models.Familiar", related_name="passive_bonuses", null=True
+    )
+    familiar_id: Optional[int]
+
+    throne_familiar = ForeignKeyField(
+        "models.Familiar", related_name="throne_bonus", null=True
+    )
+    throne_familiar_id: Optional[int]
+
     modifier = EnumField(enum_type=Modifier)
     numeric_value = IntField(null=True)
     string_value = CharField(max_length=255, null=True)

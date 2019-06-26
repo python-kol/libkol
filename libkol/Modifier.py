@@ -126,7 +126,6 @@ class Modifier(Enum):
     RolloverEffectDuration = "Rollover Effect Duration"
     RubeeDrop = "Rubee Drop"
     ShirtDrop = "Shirt Drop"
-    SingleEquip = "Single Equip"
     SixgunDamage = "Sixgun Damage"
     Skill = "Skill"
     SleazeDamage = "Sleaze Damage"

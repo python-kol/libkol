@@ -8,6 +8,7 @@ from .Clan import Clan
 from .Element import Element
 from .Effect import Effect
 from .Error import Error
+from .Familiar import Familiar
 from .FoldGroup import FoldGroup
 from .Item import Item
 from .Kmail import Kmail
@@ -36,6 +37,7 @@ __all__ = [
     "Element",
     "Effect",
     "Error",
+    "Familiar",
     "FoldGroup",
     "Item",
     "Kmail",

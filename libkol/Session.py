@@ -16,15 +16,16 @@ from .Location import Location
 from .util.decorators import logged_in
 
 models = [
-    "libkol.FoldGroup",
-    "libkol.Item",
-    "libkol.ZapGroup",
-    "libkol.Store",
-    "libkol.Trophy",
     "libkol.Bonus",
     "libkol.Effect",
-    "libkol.Skill",
+    "libkol.Familiar",
+    "libkol.FoldGroup",
+    "libkol.Item",
     "libkol.Outfit",
+    "libkol.Skill",
+    "libkol.Store",
+    "libkol.Trophy",
+    "libkol.ZapGroup",
 ]
 
 
