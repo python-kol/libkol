@@ -3,6 +3,7 @@ from tortoise.fields import IntField, CharField, BooleanField
 from tortoise.models import ModelMeta
 from typing import Union
 
+from . import request
 from .Model import Model
 
 
@@ -46,5 +47,12 @@ class Skill(Model, metaclass=SkillMeta):
     walk = BooleanField(default=False)
     mutex_song = BooleanField(default=False)
 
+    @property
+    def buff(self) -> bool:
+        return self.shruggable
+
     def have(self):
         return self in self.kol.state["skills"]
+
+    async def cast(self, times: int = 1):
+        return await request.skill_use(self.kol, self, times).parse()

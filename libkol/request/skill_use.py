@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional
 
 import libkol
 
@@ -16,17 +16,19 @@ class skill_use(Request):
         session: "libkol.Session",
         skill: Skill,
         times: int = 1,
-        target: Union[int, str] = None,
+        target: Optional[int] = None,
     ) -> None:
+        super().__init__(session)
         params = {"action": "Skillz", "whichskill": skill.id}
 
-        params["bufftimes" if skill.buff else "quantity"] = times
+        params["quantity"] = times
 
         if skill.buff:
-            params["specificplayer"] = "" if target is None else target
-            params["targetplayer"] = session.get_user_id() if target is None else ""
+            params["targetplayer"] = session.get_user_id() if target is None else target
 
-        self.request = session.request("skills.php", pwd=True, params=params)
+        self.request = session.request(
+            "runskillz.php", ajax=True, pwd=True, params=params
+        )
 
     @staticmethod
     async def parser(content: str, **kwargs) -> str:
