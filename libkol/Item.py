@@ -370,7 +370,7 @@ class Item(Model, metaclass=ItemMeta):
         if self.usable is False:
             raise WrongKindOfItemError("This item cannot be used")
 
-        if self.multiusable and multi_use:
+        if self.multiusable and multi_use and quantity > 1:
             await request.item_multi_use(self.kol, self, quantity).parse()
             return
 
