@@ -211,7 +211,7 @@ class Item(Model, metaclass=ItemMeta):
     async def get_description(self):
         return await request.item_description(self.kol, self.desc_id).parse()
 
-    async def get_mall_price(self, limited: bool = False) -> int:
+    async def get_mall_price(self, limited: bool = False) -> Optional[int]:
         """
         Get the lowest price for this item in the mall
 
@@ -219,10 +219,13 @@ class Item(Model, metaclass=ItemMeta):
         """
         prices = await request.mall_price(self.kol, self).parse()
 
-        if limited:
+        if limited and len(prices.limited) > 0:
             return prices.limited[0].price
 
-        return prices.unlimited[0].price
+        if len(prices.unlimited) > 0:
+            return prices.unlimited[0].price
+
+        return None
 
     async def get_mall_listings(self, **kwargs) -> List["types.Listing"]:
         return await request.mall_search(self.kol, query=self, **kwargs).parse()
