@@ -3,6 +3,8 @@ from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from tortoise.models import ModelMeta
 from typing import List, Optional, Union, Tuple
 import re
+import time
+from statistics import mean
 
 from libkol import request
 from .CharacterClass import CharacterClass
@@ -226,6 +228,31 @@ class Item(Model, metaclass=ItemMeta):
             return prices.unlimited[0].price
 
         return None
+
+    async def get_cf_price(self, days: int = 30) -> Optional[int]:
+        """
+        Get the average transaction price from Coldfront logs
+
+        :param days: Number of days of transactions to consider (default 30)
+        """
+        ts = int(time.time())
+        params = {
+            "itemid": self.id,
+            "starttime": ts - 60 * 68 * 24 * days,
+            "endtime": ts,
+        }
+        response = await self.kol.request(
+            "http://kol.coldfront.net/newmarket/translist.php", "GET", params=params
+        )
+        result = await response.text()
+
+        transactions = [
+            float(t[(t.rfind("@") + 1) :].replace(",", "").strip())
+            for t in result[result.find("\n") :].split("\n")
+            if t not in ["", "."]
+        ]
+
+        return int(mean(transactions)) if len(transactions) > 0 else None
 
     async def get_mall_listings(self, **kwargs) -> List["types.Listing"]:
         return await request.mall_search(self.kol, query=self, **kwargs).parse()
