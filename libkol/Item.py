@@ -1,7 +1,7 @@
 import asyncio
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from tortoise.models import ModelMeta
-from typing import List, Optional, Union, Tuple
+from typing import Coroutine, List, Optional, Union, Tuple
 import re
 import time
 from statistics import mean
@@ -146,6 +146,23 @@ class Item(Model, metaclass=ItemMeta):
         return "{}s".format(self.name) if self.plural is None else self.plural
 
     @property
+    def space(self):
+        s = (
+            self.fullness
+            if self.food
+            else self.inebriety
+            if self.booze
+            else self.spleenhit
+            if self.spleen
+            else None
+        )
+
+        if s is None:
+            raise WrongKindOfItemError("You cannot consume this item")
+
+        return s
+
+    @property
     def cleans_organ(self) -> Optional[Tuple[int, str]]:
         m = re.match(r"-(\d+) spleen", self.notes)
 
@@ -153,6 +170,16 @@ class Item(Model, metaclass=ItemMeta):
             return None
 
         return (int(m.group(1)), "spleen")
+
+    async def consume(self, utensil: Optional["Item"] = None) -> parsing.ResourceGain:
+        if self.food:
+            return await request.eat(self.kol, self, utensil=utensil).parse()
+        elif self.booze:
+            return await request.drink(self.kol, self, utensil=utensil).parse()
+        elif self.spleen:
+            return await request.chew(self.kol, self).parse()
+        else:
+            raise WrongKindOfItemError("You cannot consume this item")
 
     @classmethod
     async def get_or_discover(cls, *args, **kwargs) -> "Item":
