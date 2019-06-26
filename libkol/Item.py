@@ -1,7 +1,8 @@
 import asyncio
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from tortoise.models import ModelMeta
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Tuple
+import re
 
 from libkol import request
 from .CharacterClass import CharacterClass
@@ -141,6 +142,15 @@ class Item(Model, metaclass=ItemMeta):
 
     def pluralize(self):
         return "{}s".format(self.name) if self.plural is None else self.plural
+
+    @property
+    def cleans_organ(self) -> Optional[Tuple[int, str]]:
+        m = re.match(r"-(\d+) spleen", self.notes)
+
+        if m is None:
+            return None
+
+        return (int(m.group(1)), "spleen")
 
     @classmethod
     async def get_or_discover(cls, *args, **kwargs) -> "Item":
