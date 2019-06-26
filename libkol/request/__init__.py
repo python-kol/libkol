@@ -11,6 +11,7 @@ from .charpane import charpane
 from .chat_channel import chat_channel
 from .chat_receive import chat_receive
 from .chat_send import chat_send
+from .chew import chew
 from .choice import choice
 from .clan_accepting_applications import clan_accepting_applications
 from .clan_apply import clan_apply
@@ -110,6 +111,7 @@ __all__ = [
     "chat_channel",
     "chat_receive",
     "chat_send",
+    "chew",
     "choice",
     "clan_accepting_applications",
     "clan_apply",
