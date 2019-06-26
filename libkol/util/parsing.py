@@ -1,10 +1,13 @@
 import re
+from typing import Optional
 from copy import copy
 from itertools import groupby
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
 from bs4 import BeautifulSoup, Tag
+
+import libkol
 
 from .. import types
 from ..pattern import PatternManager
@@ -109,7 +112,7 @@ def substat(text: str, stat: Stat = None) -> Dict[str, int]:
     return substats
 
 
-def stat(text: str, stat: Stat = None) -> Dict[str, int]:
+def stats(text: str, stat: Stat = None) -> Dict[Stat, int]:
     """
     Returns a dictionary describing how many stat points the user gained or lost. Please note that
     the user interface does not say how many points were gained or lost if the number is greater
@@ -126,9 +129,9 @@ def stat(text: str, stat: Stat = None) -> Dict[str, int]:
             if muscMatch.group(1) == "lose":
                 modifier = -1
             if muscMatch.group(2) == "a":
-                statPoints["muscle"] = 1 * modifier
+                statPoints[Stat.Muscle] = 1 * modifier
             else:
-                statPoints["muscle"] = 2 * modifier
+                statPoints[Stat.Muscle] = 2 * modifier
 
     if stat in [Stat.Mysticality, None]:
         mystPattern = PatternManager.getOrCompilePattern("mystPointGainLoss")
@@ -138,9 +141,9 @@ def stat(text: str, stat: Stat = None) -> Dict[str, int]:
             if mystMatch.group(1) == "lose":
                 modifier = -1
             if mystMatch.group(2) == "a":
-                statPoints["mysticality"] = 1 * modifier
+                statPoints[Stat.Mysticality] = 1 * modifier
             else:
-                statPoints["mysticality"] = 2 * modifier
+                statPoints[Stat.Mysticality] = 2 * modifier
 
     if stat in [Stat.Moxie, None]:
         moxPattern = PatternManager.getOrCompilePattern("moxiePointGainLoss")
@@ -150,9 +153,9 @@ def stat(text: str, stat: Stat = None) -> Dict[str, int]:
             if moxMatch.group(1) == "lose":
                 modifier = -1
             if moxMatch.group(2) == "a":
-                statPoints["moxie"] = 1 * modifier
+                statPoints[Stat.Moxie] = 1 * modifier
             else:
-                statPoints["moxie"] = 2 * modifier
+                statPoints[Stat.Moxie] = 2 * modifier
 
     return statPoints
 
@@ -223,22 +226,50 @@ class ResourceGain:
     adventures: int
     inebriety: int
     substats: Dict[str, int]
-    stats: Dict[str, int]
+    stats: Dict[Stat, int]
     levels: int
     effects: List[Dict[str, Any]]
     hp: int
     mp: int
+    meat: int
 
 
-async def resource_gain(html: str) -> ResourceGain:
-    return ResourceGain(
+async def resource_gain(
+    html: str, session: Optional["libkol.Session"] = None
+) -> ResourceGain:
+    rg = ResourceGain(
         items=(await item(html)),
         adventures=adventures(html),
         inebriety=inebriety(html),
         substats=substat(html),
-        stats=stat(html),
+        stats=stats(html),
         levels=level(html),
         effects=effects(html),
         hp=hp(html),
         mp=mp(html),
+        meat=meat(html),
     )
+
+    if session:
+        for iq in rg.items:
+            session.state["inventory"][iq.item] += iq.quantity
+        session.state["adventures"] += rg.adventures
+        session.state["inebriety"] += rg.inebriety
+
+        for stat, change in rg.stats.items():
+            session.state[f"base_{stat.value}"] += change
+            session.state[f"buffed_{stat.value}"] += change
+
+        session.state["level"] += rg.levels
+
+        for effect in rg.effects:
+            session.state["effects"][effect["name"]] = (
+                session.state["effects"].get(effect["name"], 0) + effect["turns"]
+            )
+
+        session.state["meat"] += rg.meat
+
+        session.state["current_hp"] += rg.hp
+        session.state["current_mp"] += rg.mp
+
+    return rg
