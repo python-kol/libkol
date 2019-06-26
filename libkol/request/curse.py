@@ -13,13 +13,12 @@ from ..Error import (
     UserNotFoundError,
     WrongKindOfItemError,
 )
-from ..Item import Item
 from .request import Request
 
 
 class curse(Request[bool]):
     def __init__(
-        self, session: "libkol.Session", player: Union[str, int], item: Item
+        self, session: "libkol.Session", player: Union[str, int], item: "libkol.Item"
     ) -> None:
         params = {"action": "use", "whichitem": item.id, "targetplayer": player}
 

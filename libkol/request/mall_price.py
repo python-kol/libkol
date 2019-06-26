@@ -5,21 +5,13 @@ from dataclasses import dataclass
 
 import libkol
 
-from ..Item import Item
 from .request import Request
 
 
 @dataclass
-class Listing:
-    price: int
-    quantity: int
-    limit: int
-
-
-@dataclass
 class Response:
-    unlimited: List[Listing]
-    limited: List[Listing]
+    unlimited: List["libkol.types.Listing"]
+    limited: List["libkol.types.Listing"]
 
 
 class mall_price(Request[Response]):
@@ -34,7 +26,7 @@ class mall_price(Request[Response]):
     :param item: Item for which to get prices
     """
 
-    def __init__(self, session: "libkol.Session", item: Item) -> None:
+    def __init__(self, session: "libkol.Session", item: "libkol.Item") -> None:
         super().__init__(session)
 
         data = {"action": "prices", "iid": item.id}
@@ -42,6 +34,8 @@ class mall_price(Request[Response]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> Response:
+        from libkol.types import Listing
+
         soup = BeautifulSoup(content, "html.parser")
 
         unlimited = soup.find("td", text="unlimited:")
@@ -49,14 +43,16 @@ class mall_price(Request[Response]):
 
         return Response(
             unlimited=[
-                Listing(int(p.b.string.replace(",", "")), int(p.contents[1][2:]), 0)
+                Listing(
+                    price=int(p.b.string.replace(",", "")), stock=int(p.contents[1][2:])
+                )
                 for p in unlimited.find_next_siblings("td")
             ],
             limited=[
                 Listing(
-                    int(p.b.string.replace(",", "")),
-                    int(p.contents[1].split(" ")[1][1:]),
-                    int(p.contents[1].split(" ")[0][1:-5]),
+                    price=int(p.b.string.replace(",", "")),
+                    stock=int(p.contents[1].split(" ")[1][1:]),
+                    limit=int(p.contents[1].split(" ")[0][1:-5]),
                 )
                 for p in limited.find_next_siblings("td")
             ],

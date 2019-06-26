@@ -14,6 +14,7 @@ setuptools.setup(
     url="https://github.com/python-kol/libkol",
     packages=setuptools.find_packages(),
     install_requires=[
+        "aioitertools==0.4.0",
         "aiohttp",
         "beautifulsoup4",
         "multidict",

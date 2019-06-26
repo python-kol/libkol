@@ -1,7 +1,6 @@
 import libkol
 
 from ..Error import ItemNotFoundError, UnknownError
-from ..Item import Item
 from ..pattern import PatternManager
 from .request import Request
 
@@ -21,7 +20,7 @@ class store_item_remove(Request[bool]):
     """
 
     def __init__(
-        self, session: "libkol.Session", item: Item, quantity: int = 1
+        self, session: "libkol.Session", item: "libkol.Item", quantity: int = 1
     ) -> None:
         super().__init__(session)
 

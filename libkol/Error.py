@@ -88,6 +88,10 @@ class UserIsIgnoringError(Error):
     pass
 
 
+class RequirementError(Error):
+    pass
+
+
 class UserIsDrunkError(Error):
     pass
 

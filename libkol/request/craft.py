@@ -11,8 +11,6 @@ from ..Error import (
     RecipeNotFoundError,
     SkillNotFoundError,
 )
-from ..types import ItemQuantity
-from ..Item import Item
 from ..util import parsing
 from .request import Request
 
@@ -24,7 +22,7 @@ class Mode(Enum):
 
 
 class Response(NamedTuple):
-    created: List[ItemQuantity]
+    created: List["libkol.types.ItemQuantity"]
     explosion: bool
 
 
@@ -33,7 +31,7 @@ class craft(Request[Response]):
         self,
         session: "libkol.Session",
         mode: Mode,
-        ingredients: Tuple[Item, Item],
+        ingredients: Tuple["libkol.Item", "libkol.Item"],
         quantity: int = 1,
         max: bool = False,
     ) -> None:

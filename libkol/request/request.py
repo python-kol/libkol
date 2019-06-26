@@ -1,9 +1,12 @@
 from typing import Any, Coroutine, Dict, Generic, Optional, TypeVar
 from yarl import URL
+from time import time
+import json
 
 from aiohttp import ClientResponse
 
 import libkol
+from libkol.Error import UnknownError
 
 ParserReturn = TypeVar("ParserReturn")
 
@@ -45,4 +48,15 @@ class Request(Generic[ParserReturn]):
 
         url = self.response.url  # type: URL
 
-        return await self.parser(content, url=url, session=self.session, **kwargs)
+        try:
+            return await self.parser(content, url=url, session=self.session, **kwargs)
+        except (TypeError, UnknownError) as e:
+            package = {
+                "content": str(content).replace(self.session.pwd, "abc123"),
+                "url": str(url),
+                "error": str(e),
+            }
+            with open(f"ERROR-{time()}.txt", "w") as log:
+                json.dump(package, log)
+
+            raise e

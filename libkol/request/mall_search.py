@@ -6,8 +6,6 @@ from yarl import URL
 
 import libkol
 
-from ..types import Listing
-from ..Item import Item
 from .request import Request
 
 
@@ -69,7 +67,7 @@ sortable_categories = [
 ]
 
 
-class mall_search(Request[List[Listing]]):
+class mall_search(Request[List["libkol.types.Listing"]]):
     """
     Searches for an item at the mall
 
@@ -105,7 +103,7 @@ class mall_search(Request[List[Listing]]):
     def __init__(
         self,
         session: "libkol.Session",
-        query: Union[str, Item],
+        query: Union[str, "libkol.Item"],
         category: Category = Category.All,
         no_limits: bool = False,
         max_price: int = 0,
@@ -119,6 +117,8 @@ class mall_search(Request[List[Listing]]):
         wearable_by_me: bool = False,
         start: int = 0,
     ) -> None:
+        from libkol import Item
+
         super().__init__(session)
 
         pudnuggler = '"{}"'.format(query.name) if isinstance(query, Item) else query
@@ -154,7 +154,10 @@ class mall_search(Request[List[Listing]]):
         self.request = session.request("mall.php", params=params)
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> List[Listing]:
+    async def parser(content: str, **kwargs) -> List["libkol.types.Listing"]:
+        from libkol import Item
+        from libkol.types import Listing
+
         include_limit_reached = kwargs.get("include_limit_reached", False)
 
         soup = BeautifulSoup(content, "html.parser")
@@ -162,17 +165,17 @@ class mall_search(Request[List[Listing]]):
 
         return [
             Listing(
-                await Item.get_or_discover(id=int(url.query["searchitem"])),
-                int(url.query["searchprice"]),
-                int(url.query["whichstore"]),
-                store_name,
-                int(stock.replace(",", "")),
-                (
+                item=await Item.get_or_discover(id=int(url.query["searchitem"])),
+                price=int(url.query["searchprice"]),
+                store_id=int(url.query["whichstore"]),
+                store_name=store_name,
+                stock=int(stock.replace(",", "")),
+                limit=(
                     0
                     if limit == "\xa0"
                     else int(limit.replace("\xa0", "").replace("/day", ""))
                 ),
-                limit_reached,
+                limit_reached=limit_reached,
             )
             for url, store_name, stock, limit, limit_reached in (
                 (

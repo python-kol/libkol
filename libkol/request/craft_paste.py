@@ -4,16 +4,16 @@ import libkol
 from ..Error import WrongKindOfItemError, NotEnoughMeatError, UnknownError
 from .request import Request
 from ..util import parsing
-from ..Item import Item
-from ..types import ItemQuantity
 
 
-class craft_paste(Request[List[ItemQuantity]]):
+class craft_paste(Request[List["libkol.types.ItemQuantity"]]):
     """
     Creates meat paste, meat stacks, or dense meat stacks.
     """
 
-    def __init__(self, session: "libkol.Session", item: Item, quantity: int = 1):
+    def __init__(
+        self, session: "libkol.Session", item: "libkol.Item", quantity: int = 1
+    ):
         super().__init__(session)
 
         if item.id not in [25, 88, 258]:
@@ -25,7 +25,7 @@ class craft_paste(Request[List[ItemQuantity]]):
         self.request = session.request("craft.php", pwd=True, data=data)
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
+    async def parser(content: str, **kwargs) -> List["libkol.types.ItemQuantity"]:
         if "<td>You don't have enough Meat to make that many.</td>" in content:
             raise NotEnoughMeatError(
                 "Unable to make the requested item. You don't have enough meat."

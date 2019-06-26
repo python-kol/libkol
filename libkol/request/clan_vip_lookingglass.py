@@ -2,12 +2,11 @@ from typing import List
 
 import libkol
 
-from ..types import ItemQuantity
 from ..util import parsing
 from .request import Request
 
 
-class clan_vip_lookingglass(Request[List[ItemQuantity]]):
+class clan_vip_lookingglass(Request[List["libkol.types.ItemQuantity"]]):
     """
     Uses the Looking Glass in the clan VIP room.
     """
@@ -19,5 +18,5 @@ class clan_vip_lookingglass(Request[List[ItemQuantity]]):
         self.request = session.request("clan_viplounge.php", params=params)
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
+    async def parser(content: str, **kwargs) -> List["libkol.types.ItemQuantity"]:
         return await parsing.item(content)

@@ -49,9 +49,13 @@ class charpane(Request[Dict[str, Any]]):
         self.request = session.request("charpane.php")
 
     @staticmethod
-    def get_stat(soup: Tag, key: str) -> Tuple[int]:
-        values = soup.find("td", text=key).next_sibling.b.stripped_strings
-        return int(next(values, None)), int(next(values, "()")[1:-1])
+    def get_stat(soup: Tag, key: str) -> Tuple[int, int]:
+        values = list(soup.find("td", text=key).next_sibling.b.stripped_strings)
+
+        if len(values) == 1:
+            return int(values[0]), int(values[0])
+        else:
+            return int(values[0]), int(values[1][1:-1])
 
     @classmethod
     async def parser(cls, content: str, **kwargs) -> Dict[str, Any]:
@@ -64,9 +68,6 @@ class charpane(Request[Dict[str, Any]]):
         user_id_matcher = user_id_pattern.search(content)
 
         if pwd_matcher is None or username_matcher is None or user_id_matcher is None:
-            print(
-                pwd_matcher is None, username_matcher is None, user_id_matcher is None
-            )
             raise UnknownError("Failed to parse basic information from charpane")
 
         data = {

@@ -4,16 +4,13 @@ from typing import List, NamedTuple
 
 import libkol
 
-from libkol import types
 from .request import Request
-
-ItemQuantity = types.ItemQuantity
 
 response_pattern = re.compile(r"You sell your (.*?) to (?:.*?) for ([0-9,]+) Meat.")
 
 
 class Response(NamedTuple):
-    items: List[ItemQuantity]
+    items: List["libkol.types.ItemQuantity"]
     meat_gained: int
 
 
@@ -55,12 +52,14 @@ class autosell_items(Request[Response]):
     async def parser(
         content: str, items: List["libkol.Item"] = [], **kwargs
     ) -> Response:
+        from libkol.types import ItemQuantity
+
         response_match = response_pattern.search(content)
 
         if response_match is None:
             return Response([], 0)
 
-        item_quantities = []  # type: List[ItemQuantity]
+        item_quantities = []  # type: List["libkol.types.ItemQuantity"]
 
         for item in items:
             pattern = re.compile(

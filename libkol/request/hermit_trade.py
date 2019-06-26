@@ -3,21 +3,19 @@ from typing import List
 import libkol
 
 from ..Error import ItemNotFoundError, UnknownError, WrongKindOfItemError
-from ..types import ItemQuantity
-from ..Item import Item
 from ..util import parsing
 from .request import Request
 
 
 class hermit_trade(Request):
     def __init__(
-        self, session: "libkol.Session", item: Item, quantity: int = 1
+        self, session: "libkol.Session", item: "libkol.Item", quantity: int = 1
     ) -> None:
         data = {"action": "trade", "quantity": quantity, "whichitem": item.id}
         self.request = session.request("hermit.php", data=data)
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> List[ItemQuantity]:
+    async def parser(content: str, **kwargs) -> List["libkol.types.ItemQuantity"]:
         if (
             "you are able to infer that he doesn't have enough clovers to make that trade"
             in content

@@ -1,7 +1,6 @@
 import libkol
 
 from ..Error import NotEnoughItemsError, WrongKindOfItemError
-from ..Item import Item
 from ..util import parsing
 from .request import Request
 
@@ -11,7 +10,9 @@ class item_multi_use(Request):
     Uses multiple items at once
     """
 
-    def __init__(self, session: "libkol.Session", item: Item, quantity: int) -> None:
+    def __init__(
+        self, session: "libkol.Session", item: "libkol.Item", quantity: int
+    ) -> None:
         super().__init__(session)
 
         params = {"action": "useitem", "whichitem": item.id, "quantity": quantity}

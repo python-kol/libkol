@@ -8,15 +8,13 @@ from ..Error import (
     UnknownError,
     WrongKindOfItemError,
 )
-from ..types import ItemQuantity
-from ..Item import Item
 from ..util import parsing
 from .request import Request
 from ..Store import Store
 
 
 class Response(NamedTuple):
-    items: List[ItemQuantity]
+    items: List["libkol.types.ItemQuantity"]
     meat_gained: int
 
 
@@ -31,7 +29,11 @@ class npc_buy(Request):
     """
 
     def __init__(
-        self, session: "libkol.Session", store: Store, item: Item, quantity: int = 1
+        self,
+        session: "libkol.Session",
+        store: Store,
+        item: "libkol.Item",
+        quantity: int = 1,
     ) -> None:
         if item.store_id != store.id:
             raise WrongKindOfItemError("This item cannot be purchased in that store")

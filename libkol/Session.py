@@ -4,11 +4,10 @@ from typing import Any, Callable, DefaultDict, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from tortoise import Tortoise
 from collections import defaultdict
-
 from aiohttp import ClientResponse, ClientSession
+import libkol
+from libkol import Clan, Kmail, request, Item
 
-from . import Clan, Kmail, request, Item
-from .maximize import maximize
 from .Model import Model
 from .Stat import Stat
 from .CharacterClass import CharacterClass
@@ -21,7 +20,7 @@ models = [
     "libkol.ZapGroup",
     "libkol.Store",
     "libkol.Trophy",
-    "libkol.Modifier",
+    "libkol.Bonus",
     "libkol.Effect",
     "libkol.Skill",
     "libkol.Outfit",
@@ -123,7 +122,8 @@ class Session:
 
         await self.get_status()
         await self.get_profile()
-        await self.get_inventory()
+        await self.refresh_inventory()
+        await self.refresh_equipment()
         await self.get_skills()
 
         return True
@@ -174,7 +174,7 @@ class Session:
         return await request.player_profile(self, user_id).parse()
 
     @logged_in
-    async def get_skills(self) -> List["Skill"]:
+    async def get_skills(self) -> List["libkol.Skill"]:
         """
         Return list of player's known skills
         """
@@ -226,11 +226,26 @@ class Session:
         return duration
 
     @logged_in
-    async def get_inventory(self) -> DefaultDict[Item, int]:
-        sparse_inventory = await request.inventory(self).parse()
-        inventory = defaultdict(int, sparse_inventory)
-        self.state["inventory"] = inventory
-        return inventory
+    async def refresh_equipment(self) -> bool:
+        await request.equipment(self).parse()
+        return True
+
+    @property
+    def equipment(self) -> Dict["libkol.Slot", Optional[Item]]:
+        return self.state["equipment"]
+
+    @logged_in
+    async def unequip(self, slot: Optional["libkol.Slot"] = None):
+        return await request.unequip(self, slot).parse()
+
+    @logged_in
+    async def refresh_inventory(self) -> bool:
+        await request.inventory(self).parse()
+        return True
+
+    @property
+    def inventory(self) -> DefaultDict[Item, int]:
+        return defaultdict(int, self.state["inventory"])
 
     @logged_in
     async def adventure(
@@ -251,9 +266,6 @@ class Session:
         """
         location = Location(self, id=location_id)
         return await (await location.visit()).text()
-
-    async def maximize(self, *args, **kwargs):
-        return await maximize(self, *args, **kwargs)
 
     @logged_in
     async def logout(self):

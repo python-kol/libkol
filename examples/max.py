@@ -1,13 +1,19 @@
-from libkol import Session, run
-from libkol.maximize import maximize
+from libkol import Session, run, Modifier, Maximizer, Item
 
 
 async def main():
     async with Session() as kol:
-        items = await maximize(kol, modifier="Spooky Damage")
+        problem = Maximizer(kol)
+        problem += Modifier.HotResistance
+        problem += await Item["high-temperature mining drill"]
 
-        for i in items:
-            print(f"{i.type}: {i.name}")
+        try:
+            items = await problem.solve()
+
+            for slot, i in items.items():
+                print(f"{slot.value}: {i.name}")
+        except ValueError as e:
+            print(f"Not possible ({e})")
 
 
 if __name__ == "__main__":
