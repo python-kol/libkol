@@ -20,6 +20,8 @@ async def load(session: ClientSession):
 async def load_consumables(session: ClientSession, consumable_type):
     tasks = []  # type: List[Coroutine[Any, Any, Item]]
 
+    flags = json.load(open("./consumable_flags.json"))
+
     async for bytes in (await load_mafia_data(session, consumable_type)).content:
         line = unescape(bytes.decode("utf-8")).strip()
 
@@ -79,6 +81,10 @@ async def load_consumables(session: ClientSession, consumable_type):
                 item.required_class = CharacterClass.ZombieMaster
             else:
                 item.notes = parts[8]
+
+        for flag, item_ids in flags.items():
+            if item.id in item_ids:
+                setattr(item, flag, True)
 
         tasks += [item.save()]
 

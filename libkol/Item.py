@@ -127,6 +127,13 @@ class Item(Model, metaclass=ItemMeta):
     gift = BooleanField(default=False)  # is a gift item
     tradeable = BooleanField(default=False)  # is tradeable
     discardable = BooleanField(default=False)  # is discardable
+    salad = BooleanField(default=False)  # is considered salad when consumed
+    beer = BooleanField(default=False)  # is considered beer when consumed
+    wine = BooleanField(default=False)  # is considered wine when consumed
+    martini = BooleanField(default=False)  # is considered martini when consumed
+    saucy = BooleanField(default=False)  # is considered saucy when consumed
+    lasagna = BooleanField(default=False)  # is considered lasagna when consumed
+    pasta = BooleanField(default=False)  # is considered pasta when consumed
 
     @property
     def adventures(self):
