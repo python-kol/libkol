@@ -117,7 +117,7 @@ class Item(Model, metaclass=ItemMeta):
     bootspur = BooleanField(default=False)
     bootskin = BooleanField(default=False)
     food_helper = BooleanField(default=False)
-    drink_helper = BooleanField(default=False)
+    booze_helper = BooleanField(default=False)
     guardian = BooleanField(default=False)
     single_equip = BooleanField(default=True)
     bounty = BooleanField(default=False)  # Can appear as a bounty item
