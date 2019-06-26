@@ -6,9 +6,10 @@ from tortoise import Tortoise
 from collections import defaultdict
 from aiohttp import ClientResponse, ClientSession
 import libkol
-from libkol import Clan, Kmail, request, Item
+from libkol import Clan, Kmail, request, Item, Bonus
 
 from .Model import Model
+from .Element import Element
 from .Stat import Stat
 from .CharacterClass import CharacterClass
 from .Location import Location
@@ -149,6 +150,25 @@ class Session:
         Returns the current player's user id
         """
         return self.state.get("user_id", None)
+
+    async def get_elemental_resistance(
+        self, element: Element, percentage: bool = False
+    ) -> Union[float, int]:
+        query = Bonus.filter(
+            item_id__in=[
+                item.id for item in self.equipment.values() if item is not None
+            ],
+            modifier=element.resistance,
+        )
+        flat = sum([await b.get_value() async for b in query])
+
+        if percentage is False:
+            return flat
+
+        extra = 0.05 if self.get_character_class().stat is Stat.Mysticality else 0
+        return (
+            (flat * 0.1) if flat < 4 else (0.9 - (0.5 * (5 / 6) ** (flat - 4)))
+        ) + extra
 
     @property
     def adventures(self):
