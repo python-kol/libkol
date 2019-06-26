@@ -5,6 +5,7 @@ from . import types
 from .Bonus import Bonus
 from .CharacterClass import CharacterClass
 from .Clan import Clan
+from .Element import Element
 from .Effect import Effect
 from .Error import Error
 from .FoldGroup import FoldGroup
@@ -32,6 +33,7 @@ __all__ = [
     "Bonus",
     "CharacterClass",
     "Clan",
+    "Element",
     "Effect",
     "Error",
     "FoldGroup",
