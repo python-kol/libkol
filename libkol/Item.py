@@ -295,10 +295,18 @@ class Item(Model, metaclass=ItemMeta):
             listings = await self.get_mall_listings(
                 num_results=quantity, max_price=price
             )
-            tasks = [
-                request.mall_purchase(self.kol, item=self, listing=l).parse()
-                for l in listings
-            ]
+
+            tasks = []  # type: List[Coroutine]
+
+            for l in listings:
+                q = min(quantity, (l.limit if l.limit > 0 else quantity), l.stock)
+                tasks += [
+                    request.mall_purchase(
+                        self.kol, item=self, listing=l, quantity=q
+                    ).parse()
+                ]
+                quantity -= q
+
             return await asyncio.gather(*tasks)
 
         return await request.mall_purchase(
@@ -309,6 +317,14 @@ class Item(Model, metaclass=ItemMeta):
             price=price,
             quantity=quantity,
         ).parse()
+
+    async def acquire(self, quantity: int = 1):
+        need = quantity - self.amount
+
+        if need > 0:
+            await self.buy_from_mall(quantity=need)
+
+        return True
 
     @property
     def amount(self):

@@ -41,7 +41,9 @@ class mall_purchase(Request[Response]):
             item = listing.item
             price = listing.price
             quantity = (
-                listing.stock
+                quantity
+                if quantity is not None
+                else listing.stock
                 if listing.limit == 0
                 else min(listing.stock, listing.limit)
             )
