@@ -162,6 +162,9 @@ class Item(Model, metaclass=ItemMeta):
 
         return s
 
+    async def autosell(self, quantity: int = 1):
+        return await request.autosell_items(self.kol, [self])
+
     @property
     def cleans_organ(self) -> Optional[Tuple[int, str]]:
         m = re.match(r"-(\d+) spleen", self.notes)
