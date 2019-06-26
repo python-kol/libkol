@@ -9,7 +9,7 @@ class MiningTestCase(TestCase):
 
     def test_mining_mid_mine(self):
         async def run_test(file):
-            result = await mining.parser(file.read())
+            result = await mining.parser(file.read(), session=self.session)
             self.assertEqual(result.resource_gain.hp, 0)
             self.assertEqual(result.resource_gain.mp, 0)
             self.assertEqual(result.resource_gain.adventures, 0)
