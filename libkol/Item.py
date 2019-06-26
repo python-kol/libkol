@@ -4,10 +4,12 @@ from tortoise.models import ModelMeta
 from typing import List, Optional, Union
 
 from libkol import request
+from .CharacterClass import CharacterClass
 from .Slot import Slot
 from .Stat import Stat
 from .Model import Model
 from .Error import ItemNotFoundError, WrongKindOfItemError
+from .util import EnumField
 from . import types
 
 
@@ -89,6 +91,8 @@ class Item(Model, metaclass=ItemMeta):
     required_muscle = IntField(default=0)
     required_mysticality = IntField(default=0)
     required_moxie = IntField(default=0)
+    required_class = EnumField(enum_type=CharacterClass, null=True)
+    notes = CharField(max_length=255, default="")
 
     # Collections
     foldgroup = ForeignKeyField("models.FoldGroup", related_name="items", null=True)

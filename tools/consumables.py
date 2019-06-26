@@ -3,9 +3,10 @@ from tortoise.transactions import atomic
 from tortoise.exceptions import DoesNotExist
 from html import unescape
 from aiohttp import ClientSession
+import json
 
 from typing import Any, Coroutine, List
-from libkol import Item
+from libkol import Item, CharacterClass
 
 from util import load_mafia_data, split_range
 
@@ -68,6 +69,16 @@ async def load_consumables(session: ClientSession, consumable_type):
             min, max = split_range(parts[7])
             item.gained_moxie_min = min
             item.gained_moxie_max = max
+
+        if len(parts) > 8:
+            notes = parts[8]
+
+            if notes == "Vampyre":
+                item.required_class = CharacterClass.Vampyre
+            elif notes == "Zombie Slayer":
+                item.required_class = CharacterClass.ZombieMaster
+            else:
+                item.notes = parts[8]
 
         tasks += [item.save()]
 
