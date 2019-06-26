@@ -10,8 +10,6 @@ from .Model import Model
 from .Error import ItemNotFoundError, WrongKindOfItemError
 from . import types
 
-# weird
-
 
 class ItemMeta(ModelMeta):
     def __getitem__(self, key: Union[int, str]):
