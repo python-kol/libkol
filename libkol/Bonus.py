@@ -50,8 +50,16 @@ class Bonus(Model):
         "zone": lambda zone: 0,
     }
 
-    async def get_value(self, normalise: bool = False, smithsness: int = 0):
+    async def get_value(
+        self,
+        normalise: bool = False,
+        smithsness: int = 0,
+        familiar_weight: Optional[int] = None,
+    ):
         kol = self.kol
+
+        if familiar_weight is None:
+            familiar_weight = kol.get_familiar_weight()
 
         if self.string_value:
             return 1
@@ -75,7 +83,7 @@ class Bonus(Model):
                 "L": kol.level,
                 "M": today.moonlight,
                 "R": await kol.get_reagent_potion_duration(),
-                "W": kol.get_familiar_weight(),
+                "W": familiar_weight,
                 "X": 1 if (await kol.get_gender()) == "f" else 0,
             }
 

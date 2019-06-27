@@ -66,3 +66,7 @@ class Familiar(Model):
     is_sleazy = BooleanField(default=False)
     is_undead = BooleanField(default=False)
     wears_clothes = BooleanField(default=False)
+
+    @property
+    def have(self) -> bool:
+        return True
