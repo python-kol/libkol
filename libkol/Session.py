@@ -9,7 +9,7 @@ import libkol
 from dataclasses import dataclass, field
 from libkol import Clan, Kmail, request, Item, Bonus, Familiar
 
-from .Familiar import FamiliarState
+from .types import FamiliarState
 from .Skill import Skill
 from .Slot import Slot
 from .Model import Model

@@ -67,7 +67,7 @@ class charpane(Request[bool]):
             raise UnknownError("Failed to parse basic information from charpane")
 
         from libkol import Familiar, Stat
-        from libkol.Familiar import FamiliarState
+        from libkol.types import FamiliarState
 
         session = kwargs["session"]  # type: "libkol.Session"
 

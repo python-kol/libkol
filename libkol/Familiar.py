@@ -101,10 +101,3 @@ class Familiar(Model, metaclass=FamiliarMeta):
     @property
     def have(self) -> bool:
         return True
-
-
-@dataclass
-class FamiliarState:
-    familiar: Familiar
-    weight: int
-    nickname: str
