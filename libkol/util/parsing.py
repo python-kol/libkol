@@ -252,24 +252,24 @@ async def resource_gain(
 
     if session:
         for iq in rg.items:
-            session.state["inventory"][iq.item] += iq.quantity
-        session.state["adventures"] += rg.adventures
-        session.state["inebriety"] += rg.inebriety
+            session.state.inventory[iq.item] += iq.quantity
+        session.state.adventures += rg.adventures
+        session.state.inebriety += rg.inebriety
 
         for stat, change in rg.stats.items():
-            session.state[f"base_{stat.value}"] += change
-            session.state[f"buffed_{stat.value}"] += change
+            session.state.stats[stat].base += change
+            session.state.stats[stat].buffed += change
 
-        session.state["level"] += rg.levels
+        session.state.level += rg.levels
 
         for effect in rg.effects:
-            session.state["effects"][effect["name"]] = (
-                session.state["effects"].get(effect["name"], 0) + effect["turns"]
+            session.state.effects[effect["name"]] = (
+                session.state.effects.get(effect["name"], 0) + effect["turns"]
             )
 
-        session.state["meat"] += rg.meat
+        session.state.meat += rg.meat
 
-        session.state["current_hp"] += rg.hp
-        session.state["current_mp"] += rg.mp
+        session.state.current_hp += rg.hp
+        session.state.current_mp += rg.mp
 
     return rg

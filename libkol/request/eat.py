@@ -51,11 +51,11 @@ class eat(Request[parsing.ResourceGain]):
         url = kwargs["url"]  # type: URL
 
         eaten = await Item[int(url.query["whichitem"])]
-        session.state["inventory"][eaten] -= 1
+        session.state.inventory[eaten] -= 1
 
         if url.query.get("utensil"):
             utensil = await Item[int(url.query["utensil"])]
-            session.state["inventory"][utensil] -= 1
+            session.state.inventory[utensil] -= 1
 
         # Check the results
         return await parsing.resource_gain(content, session=session)

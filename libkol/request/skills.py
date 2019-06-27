@@ -24,5 +24,5 @@ class skills(Request[List[Skill]]):
         tasks = [Skill[int(box["rel"])] for box in soup.find_all("div", class_="skill")]
         knowledge = await asyncio.gather(*tasks)
 
-        session.state["skills"] = knowledge
+        session.state.skills = knowledge
         return knowledge

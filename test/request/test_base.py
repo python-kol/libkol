@@ -3,6 +3,7 @@ from tortoise.models import Model
 from unittest.mock import MagicMock
 from collections import namedtuple
 from libkol import models
+from libkol.Session import State
 import unittest
 import asyncio
 from os import path
@@ -15,9 +16,9 @@ def open_test_data(request, variant: str, ext: str = "html"):
 
 
 class MockSession:
-    state = {}
+    state = State()
 
-    def __init__(self, test, request_mocks, state):
+    def __init__(self, test, request_mocks):
         Response = namedtuple(
             "ClientResponse", ["url", "content", "get_encoding", "text"]
         )
@@ -31,9 +32,11 @@ class MockSession:
                 try:
                     file = open_test_data(test.request, data_file)
                     content = file.read()
-                    file.close()
                 except:
                     content = data_file
+                finally:
+                    if file:
+                        file.close()
 
             request = asyncio.Future()
             text = asyncio.Future()
@@ -56,13 +59,10 @@ class TestCase(unittest.TestCase):
     session = None
     db_file = path.join(path.dirname(__file__), "../../libkol/libkol.db")
 
-    def run_async(
-        self, data, async_test, ext: str = "html", request_mocks={}, state={}
-    ):
+    def run_async(self, data, async_test, ext: str = "html", request_mocks={}):
         event_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(event_loop)
-
-        self.session = MockSession(self, request_mocks, state)
+        self.session = MockSession(self, request_mocks)
 
         async def run_test():
             await Tortoise.init(
@@ -72,9 +72,11 @@ class TestCase(unittest.TestCase):
             Model.kol = self.session
 
             try:
-                with open_test_data(self.request, data, ext) as file:
-                    await async_test(file)
+                file = open_test_data(self.request, data, ext)
+                await async_test(file)
             finally:
+                if file:
+                    file.close()
                 await Tortoise.close_connections()
                 event_loop.stop()
 

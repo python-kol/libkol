@@ -40,7 +40,7 @@ class chew(Request[parsing.ResourceGain]):
         url = kwargs["url"]  # type: URL
 
         chewed = await Item[int(url.query["whichitem"])]
-        session.state["inventory"][chewed] -= 1
+        session.state.inventory[chewed] -= 1
 
         # Check the results
         return await parsing.resource_gain(content, session=session)

@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict, Tuple
+from typing import Tuple
 from bs4 import BeautifulSoup, Tag
 
 import libkol
@@ -38,7 +38,7 @@ characterDrunk = re.compile(
 )
 
 
-class charpane(Request[Dict[str, Any]]):
+class charpane(Request[bool]):
     """
     Requests the user's character pane.
     """
@@ -58,11 +58,7 @@ class charpane(Request[Dict[str, Any]]):
             return int(values[0]), int(values[1][1:-1])
 
     @classmethod
-    async def parser(cls, content: str, **kwargs) -> Dict[str, Any]:
-        session = kwargs["session"]  # type: "libkol.Session"
-
-        soup = BeautifulSoup(content, "html.parser")
-
+    async def parser(cls, content: str, **kwargs) -> bool:
         pwd_matcher = pwd_pattern.search(content)
         username_matcher = username_pattern.search(content)
         user_id_matcher = user_id_pattern.search(content)
@@ -70,60 +66,68 @@ class charpane(Request[Dict[str, Any]]):
         if pwd_matcher is None or username_matcher is None or user_id_matcher is None:
             raise UnknownError("Failed to parse basic information from charpane")
 
-        data = {
-            "pwd": pwd_matcher.group(1),
-            "username": username_matcher.group(1),
-            "user_id": int(user_id_matcher.group(1)),
-        }
+        from libkol import Familiar, Stat
+        from libkol.Familiar import FamiliarState
+
+        session = kwargs["session"]  # type: "libkol.Session"
+
+        soup = BeautifulSoup(content, "html.parser")
+
+        session.state.pwd = pwd_matcher.group(1)
+        session.state.username = username_matcher.group(1)
+        session.state.user_id = int(user_id_matcher.group(1))
 
         avatar = soup.find("img", crossorigin="Anonymous")
         if avatar and avatar["src"].endswith("_f.gif"):
-            data["gender"] = "f"
+            session.state.gender = "f"
 
         match = characterLevel.search(content)
         if match:
             title = str(match.group(2))
-            data["level"] = int(match.group(1))
-            data["title"] = title
-            data["character_class"] = CharacterClass.from_title(title)
+            session.state.level = int(match.group(1))
+            session.state.title = title
+            session.state.character_class = CharacterClass.from_title(title)
         else:
             match = characterLevelCustomTitle.search(content)
             if match:
-                data["level"] = int(match.group(2))
-                data["custom_title"] = str(match.group(1))
+                session.state.level = int(match.group(2))
+                session.state.custom_title = str(match.group(1))
 
         match = characterHP.search(content)
         if match:
-            data["current_hp"] = int(match.group(1))
-            data["max_hp"] = int(match.group(2))
+            session.state.current_hp = int(match.group(1))
+            session.state.max_hp = int(match.group(2))
 
         match = characterMP.search(content)
         if match:
-            data["current_mp"] = int(match.group(1))
-            data["max_mp"] = int(match.group(2))
+            session.state.current_mp = int(match.group(1))
+            session.state.max_mp = int(match.group(2))
 
         match = characterMeat.search(content)
         if match:
-            data["meat"] = int(match.group(1).replace(",", ""))
+            session.state.meat = int(match.group(1).replace(",", ""))
 
-        data["adventures"] = int(
+        session.state.adventures = int(
             soup.find("img", alt="Adventures Remaining")
             .find_next_sibling("span")
             .string
         )
 
         match = characterDrunk.search(content)
-        data["inebriety"] = int(match.group(1)) if match else 0
+        session.state.inebriety = int(match.group(1)) if match else 0
 
         match = currentFamiliar.search(content)
         if match:
-            data["familiar"] = {
-                "name": str(match.group(1)),
-                "type": str(match.group(3)),
-                "weight": int(match.group(2)),
-            }
+            familiar = await Familiar[str(match.group(3))]
+            session.state.familiar = familiar
 
-        data["effects"] = {
+            session.state.familiars[familiar] = FamiliarState(
+                familiar=familiar,
+                nickname=str(match.group(1)),
+                weight=int(match.group(2)),
+            )
+
+        session.state.effects = {
             str(match.group(1)): int(match.group(2))
             for match in (
                 match
@@ -132,20 +136,18 @@ class charpane(Request[Dict[str, Any]]):
             )
         }
 
-        data["buffed_muscle"], data["base_muscle"] = cls.get_stat(soup, "Muscle:")
-        data["buffed_moxie"], data["base_moxie"] = cls.get_stat(soup, "Moxie:")
-        data["buffed_mysticality"], data["base_mysticality"] = cls.get_stat(
-            soup, "Mysticality:"
+        session.state.stats[Stat.Muscle].from_tuple(cls.get_stat(soup, "Muscle:"))
+        session.state.stats[Stat.Moxie].from_tuple(cls.get_stat(soup, "Moxie:"))
+        session.state.stats[Stat.Mysticality].from_tuple(
+            cls.get_stat(soup, "Mysticality:")
         )
 
         match = characterRonin.search(content)
         if match:
-            data["ronin_left"] = int(match.group(1))
+            session.state.ronin_left = int(match.group(1))
 
         match = characterMindControl.search(content)
         if match:
-            data["mind_control"] = int(match.group(1))
+            session.state.mind_control = int(match.group(1))
 
-        session.state.update(data)
-
-        return data
+        return True

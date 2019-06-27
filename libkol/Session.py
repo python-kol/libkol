@@ -6,8 +6,12 @@ from tortoise import Tortoise
 from collections import defaultdict
 from aiohttp import ClientResponse, ClientSession
 import libkol
-from libkol import Clan, Kmail, request, Item, Bonus
+from dataclasses import dataclass, field
+from libkol import Clan, Kmail, request, Item, Bonus, Familiar
 
+from .Familiar import FamiliarState
+from .Skill import Skill
+from .Slot import Slot
 from .Model import Model
 from .Element import Element
 from .Stat import Stat
@@ -29,6 +33,56 @@ models = [
 ]
 
 
+@dataclass
+class Stats:
+    base: int = 0
+    buffed: int = 0
+
+    def from_tuple(self, tuple):
+        buffed, base = tuple
+        self.buffed = buffed
+        self.base = base
+
+
+@dataclass
+class State:
+    adventures: int = 0
+    character_class: Optional[CharacterClass] = None
+    clan: Optional[Clan] = None
+    current_hp: int = 0
+    current_mp: int = 0
+    custom_title: Optional[str] = None
+    effects: Dict[str, int] = field(default_factory=dict)
+    equipment: Dict[Slot, Optional[Item]] = field(default_factory=dict)
+    familiar: Optional[Familiar] = None
+    familiars: Dict[Familiar, FamiliarState] = field(default_factory=defaultdict)
+    fullness: int = 0
+    gender: str = "n"
+    inebriety: int = 0
+    inventory: DefaultDict[Item, int] = field(default_factory=lambda: defaultdict(int))
+    level: int = 0
+    max_hp: int = 0
+    max_mp: int = 0
+    meat: int = 0
+    num_ascensions: int = 0
+    num_tattoos: int = 0
+    num_trophies: int = 0
+    pwd: str = ""
+    rollover: int = 0
+    skills: List[Skill] = field(default_factory=list)
+    spleenhit: int = 0
+    stats: Dict[Stat, Stats] = field(
+        default_factory=lambda: {
+            Stat.Moxie: Stats(),
+            Stat.Muscle: Stats(),
+            Stat.Mysticality: Stats(),
+        }
+    )
+    title: Optional[str] = None
+    user_id: int = 0
+    username: str = ""
+
+
 class Session:
     "This class represents a user's session with The Kingdom of Loathing."
 
@@ -37,10 +91,8 @@ class Session:
         self.client = ClientSession()
         self.opener = self.client
         self.is_connected = False
-        self.state = {}
+        self.state = State()
         self.server_url = None
-        self.pwd = None
-        self.clan = None
         self.kmail = Kmail(self)
         self.db_file = db_file or path.join(path.dirname(__file__), "libkol.db")
 
@@ -116,7 +168,7 @@ class Session:
             self, username, password, stealth=stealth
         ).parse()
         self.is_connected = logged_in
-        self.state["username"] = username
+        self.state.username = username
 
         # Loading these both makes various things work
         await request.main(self).parse()
@@ -173,29 +225,26 @@ class Session:
 
     @property
     def adventures(self):
-        return self.state["adventures"]
+        return self.state.adventures
 
     @property
     def hp(self):
-        return self.state["current_hp"]
+        return self.state.current_hp
 
     @property
     def mp(self):
-        return self.state["current_mp"]
+        return self.state.current_mp
+
+    @property
+    def pwd(self):
+        return self.state.pwd
 
     @logged_in
-    async def get_status(self):
+    async def get_status(self) -> bool:
         """
         Load the current username, user_id, pwd and rollover time into the state
         """
-        data = await request.status(self).parse()
-        self.pwd = data["pwd"]
-        self.state["username"] = data["name"]
-        self.state["user_id"] = int(data["playerid"])
-        self.state["rollover"] = int(data["rollover"])
-        self.state["inebriety"] = int(data["drunk"])
-        self.state["fullness"] = int(data["full"])
-        self.state["spleenhit"] = int(data["spleen"])
+        return await request.status(self).parse()
 
     @logged_in
     async def get_profile(self) -> Dict[str, Any]:
@@ -218,51 +267,55 @@ class Session:
 
     @logged_in
     def get_stat(self, stat: Stat, buffed: bool = False) -> int:
-        return self.state["{}_{}".format("buffed" if buffed else "base", stat.value)]
+        return getattr(
+            self.state, "{}_{}".format("buffed" if buffed else "base", stat.value)
+        )
 
     @logged_in
     def get_character_class(self) -> CharacterClass:
-        return self.state["character_class"]
+        return self.state.character_class
 
     @property
     def inebriety(self) -> int:
-        return self.state["inebriety"]
+        return self.state.inebriety
 
     @property
     def fullness(self) -> int:
-        return self.state["fullness"]
+        return self.state.fullness
 
     @property
     def spleenhit(self) -> int:
-        return self.state["spleenhit"]
+        return self.state.spleenhit
 
     @property
     def level(self) -> int:
-        return self.state["level"]
+        return self.state.level
 
     @property
     def effects(self) -> Dict[str, int]:
-        return self.state["effects"]
+        return self.state.effects
 
     @logged_in
     def get_num_ascensions(self) -> int:
-        return self.state["num_ascensions"]
+        return self.state.num_ascensions
 
     @logged_in
-    async def get_gender(self) -> str:
-        if "gender" in self.state:
-            pass
-        elif self.get_character_class() == CharacterClass.AstralSpirit:
-            self.state["gender"] = "n"
+    async def refresh_gender(self) -> bool:
+        if self.get_character_class() == CharacterClass.AstralSpirit:
+            self.state.gender = "n"
         else:
             d = await (await Item["vinyl boots"]).get_description()
-            self.state["gender"] = "f" if "+15% Moxie" in d["enchantments"] else "m"
+            self.state.gender = "f" if "+15% Moxie" in d["enchantments"] else "m"
 
-        return self.state["gender"]
+        return True
+
+    @property
+    def gender(self) -> str:
+        return self.state.gender
 
     @logged_in
     def get_familiar_weight(self) -> int:
-        return self.state["familiar"]["weight"]
+        return self.state.familiars[self.state.familiar].weight
 
     @logged_in
     async def get_reagent_potion_duration(self) -> int:
@@ -280,7 +333,7 @@ class Session:
 
     @property
     def equipment(self) -> Dict["libkol.Slot", Optional[Item]]:
-        return self.state["equipment"]
+        return self.state.equipment
 
     @logged_in
     async def unequip(self, slot: Optional["libkol.Slot"] = None):
@@ -293,7 +346,7 @@ class Session:
 
     @property
     def inventory(self) -> DefaultDict[Item, int]:
-        return defaultdict(int, self.state["inventory"])
+        return defaultdict(int, self.state.inventory)
 
     @logged_in
     async def mine(

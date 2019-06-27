@@ -61,7 +61,7 @@ class equip(Request):
             unequipped = first
             equipped_onclick = items[0]["onclick"]
             equipped = await Item[int(equipped_onclick[9 : equipped_onclick.find(",")])]
-            session.state["inventory"][unequipped] += 1
+            session.state.inventory[unequipped] += 1
 
         query_slot = url.query.get("slot")
         slot = (
@@ -69,6 +69,6 @@ class equip(Request):
             if query_slot is not None
             else equipped.slot
         )
-        session.state["equipment"][slot] = equipped
+        session.state.equipment[slot] = equipped
 
         return True

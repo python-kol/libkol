@@ -45,7 +45,7 @@ class Bonus(Model):
         "path": lambda path: 0,
         "pref": lambda pref: 0,
         "skill": lambda name: next(
-            (1 for s in Bonus.kol.state["skills"] if s.name == name), 0
+            (1 for s in Bonus.kol.state.skills if s.name == name), 0
         ),
         "zone": lambda zone: 0,
     }

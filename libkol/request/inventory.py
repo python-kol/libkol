@@ -25,5 +25,5 @@ class inventory(Request[Dict["libkol.Item", int]]):
 
         session = kwargs["session"]  # type: "libkol.Session"
         inv = {await Item[int(id)]: int(quantity) for id, quantity in content.items()}
-        session.state["inventory"] = defaultdict(int, inv)
+        session.state.inventory = defaultdict(int, inv)
         return inv

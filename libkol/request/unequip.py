@@ -37,7 +37,7 @@ class unequip(Request):
             return []
 
         if "All items unequipped." in content:
-            unequipped = session.state["equipment"]
+            unequipped = session.state.equipment
         else:
             soup = BeautifulSoup(content, "html.parser")
             img = soup.find("img", class_="hand")
@@ -47,7 +47,7 @@ class unequip(Request):
             unequipped = {slot: item}
 
         for slot, item in unequipped.items():
-            session.state["equipment"][slot] = None
-            session.state["inventory"][item] += 1
+            session.state.equipment[slot] = None
+            session.state.inventory[item] += 1
 
         return unequipped.values()

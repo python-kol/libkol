@@ -52,7 +52,7 @@ class Skill(Model, metaclass=SkillMeta):
         return self.shruggable
 
     def have(self):
-        return self in self.kol.state["skills"]
+        return self in self.kol.state.skills
 
     async def cast(self, times: int = 1):
         return await request.skill_use(self.kol, self, times).parse()

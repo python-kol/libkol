@@ -81,7 +81,7 @@ class mining(Request[Response]):
 
         if "<td>You wander around randomly in the mine" not in content:
             session = kwargs["session"]  # type: libkol.Session
-            session.state["adventures"] -= 1
+            session.state.adventures -= 1
 
         mine = cls.parse_mine(content)
 
