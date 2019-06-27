@@ -121,12 +121,6 @@ class charpane(Request[bool]):
             familiar = await Familiar[str(match.group(3))]
             session.state.familiar = familiar
 
-            session.state.familiars[familiar] = FamiliarState(
-                familiar=familiar,
-                nickname=str(match.group(1)),
-                weight=int(match.group(2)),
-            )
-
         session.state.effects = {
             str(match.group(1)): int(match.group(2))
             for match in (

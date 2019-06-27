@@ -86,10 +86,6 @@ class Maximizer:
     ]:
         from libkol import Modifier, Slot, Item
 
-        familiar_weights = defaultdict(
-            lambda: 10
-        )  # type: DefaultDict[libkol.Familiar, int]
-
         # Load smithsness bonuses for tracking smithsness
         smithsness_bonuses = {
             s.item.id: await s.get_value()
@@ -148,8 +144,7 @@ class Maximizer:
 
         # Value of our familiar weight
         familiar_weight = next(
-            (familiar_weights[f] for f in possible_familiars if solution[repr(f)] == 1),
-            0,
+            (f.weight for f in possible_familiars if solution[repr(f)] == 1), 0
         )
 
         # Objective

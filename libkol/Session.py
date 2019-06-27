@@ -342,6 +342,15 @@ class Session:
         return self.state.equipment
 
     @logged_in
+    async def refresh_familiars(self) -> bool:
+        await request.familiar(self).parse()
+        return True
+
+    @property
+    def familiars(self) -> Dict["libkol.Familiar", "libkol.types.FamiliarState"]:
+        return self.state.familiars
+
+    @logged_in
     async def unequip(self, slot: Optional["libkol.Slot"] = None):
         return await request.unequip(self, slot).parse()
 

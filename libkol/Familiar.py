@@ -100,4 +100,11 @@ class Familiar(Model, metaclass=FamiliarMeta):
 
     @property
     def have(self) -> bool:
-        return True
+        return self in self.kol.familiars
+
+    @property
+    def weight(self) -> Optional[int]:
+        if self.have is False:
+            return None
+
+        return self.kol.familiars[self].weight

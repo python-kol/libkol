@@ -46,4 +46,6 @@ class MiningTestCase(TestCase):
             self.assertEqual(result[5].experience, 0)
             self.assertEqual(result[5].kills, 0)
 
+            self.assertEqual(len(self.session.state.familiars), 6)
+
         self.run_async("basic", run_test)

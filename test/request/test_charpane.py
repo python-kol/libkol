@@ -28,8 +28,6 @@ class CharpaneTestCase(TestCase):
             self.assertEqual(state.meat, 2975747)
             self.assertEqual(state.inebriety, 0)
             self.assertGreaterEqual(state.familiar, "Mosquito")
-            self.assertEqual(state.familiars[state.familiar].nickname, "Ass")
-            self.assertEqual(state.familiars[state.familiar].weight, 4)
             self.assertEqual(state.adventures, 200)
             self.assertEqual(state.stats[Stat.Muscle].base, 118)
             self.assertEqual(state.stats[Stat.Muscle].buffed, 71)

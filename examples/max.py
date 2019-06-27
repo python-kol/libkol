@@ -10,7 +10,8 @@ async def main():
         try:
             items, familiar = await problem.solve()
 
-            print(f"Familiar: {familiar.name}")
+            if familiar:
+                print(f"Familiar: {familiar.name}")
 
             for slot, i in items.items():
                 print(f"{slot.value}: {i.name}")

@@ -14,6 +14,7 @@ stat_pattern = re.compile(
 
 class familiar(Request):
     def __init__(self, session: "libkol.Session") -> None:
+        super().__init__(session)
         self.request = session.request("familiar.php")
 
     @staticmethod
@@ -63,5 +64,9 @@ class familiar(Request):
             familiar_states += [
                 await cls.make_familiar_state(f, info, info.next_sibling.string)
             ]
+
+        session = kwargs["session"]  # type: libkol.Session
+
+        session.state.familiars = {f.familiar: f for f in familiar_states}
 
         return familiar_states
