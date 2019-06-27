@@ -80,7 +80,7 @@ jobs:
             sudo pip3 install circleci
   integration:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.6.8
     steps:
       - run: echo "It works!"
       - run: echo $RUN_EXTRA_TESTS
