@@ -3,7 +3,9 @@ from aioitertools import iter
 from tortoise.query_utils import Q
 from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus, LpStatusOptimal
 from collections import defaultdict
-from typing import DefaultDict, Optional
+from typing import DefaultDict, Dict, List, Optional, Tuple
+
+import libkol
 
 
 class Maximizer:
@@ -77,10 +79,16 @@ class Maximizer:
             ]
         )
 
-    async def solve(self):
+    async def solve(
+        self
+    ) -> Tuple[
+        DefaultDict["libkol.Slot", Optional["libkol.Item"]], Optional["libkol.Familiar"]
+    ]:
         from libkol import Modifier, Slot, Item
 
-        familiar_weights = defaultdict(lambda: 10)
+        familiar_weights = defaultdict(
+            lambda: 10
+        )  # type: DefaultDict[libkol.Familiar, int]
 
         # Load smithsness bonuses for tracking smithsness
         smithsness_bonuses = {
@@ -118,7 +126,7 @@ class Maximizer:
             )
         ]
 
-        grouped_bonuses = {}
+        grouped_bonuses = {}  # type: Dict[libkol.Modifier, List[libkol.Bonus]]
         for b in bonuses:
             grouped_bonuses[b.modifier] = grouped_bonuses.get(b.modifier, []) + [b]
 
@@ -153,6 +161,7 @@ class Maximizer:
                             smithsness=smithsness, familiar_weight=familiar_weight
                         )
                         * (solution[repr(b.item)] if b.item else 1)
+                        * (solution[repr(b.familiar)] if b.familiar else 1)
                         for b in bonuses
                         if b.outfit is None
                         or (
@@ -273,24 +282,24 @@ class Maximizer:
 
             item = next(i for i in possible_items if i.id == id)
 
-            slot = item.slot
+            item_slot = item.slot  # type: Slot
 
-            if slot == Slot.Acc1:
+            if item_slot == Slot.Acc1:
                 if result[Slot.Acc1] is None:
-                    slot = Slot.Acc1
+                    item_slot = Slot.Acc1
                 elif result[Slot.Acc2] is None:
-                    slot = Slot.Acc2
+                    item_slot = Slot.Acc2
                 elif result[Slot.Acc3] is None:
-                    slot = Slot.Acc3
+                    item_slot = Slot.Acc3
                 else:
                     raise Exception("Pulp has done something wrong")
 
-            result[slot] = item
+            result[item_slot] = item
 
-        return result
+        return result, familiar
 
     async def solve_and_equip(self):
-        outfit = await self.solve()
+        outfit, familiar = await self.solve()
 
         await self.session.unequip()
 

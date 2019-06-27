@@ -144,7 +144,6 @@ async def load_bonus(base, info, entity):
         entity.single_equip = True
         return entity.save()
     elif key == "Volleyball Effectiveness":
-        print(entity.id)
         bonus = await Bonus.get(familiar_id=entity.id, modifier=Modifier.Experience)
     elif key == "Fairy Effectiveness":
         bonus = await Bonus.get(familiar_id=entity.id, modifier=Modifier.ItemDrop)

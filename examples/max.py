@@ -8,7 +8,9 @@ async def main():
         problem += await Item["high-temperature mining drill"]
 
         try:
-            items = await problem.solve()
+            items, familiar = await problem.solve()
+
+            print(f"Familiar: {familiar.name}")
 
             for slot, i in items.items():
                 print(f"{slot.value}: {i.name}")

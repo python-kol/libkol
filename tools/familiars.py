@@ -89,25 +89,25 @@ async def load(session: ClientSession):
 
         if "stat0" in fam_type:
             # Volleyball-like
-            b = Bonus(familiar=familiar, modifier=Modifier.Experience)
+            b = Bonus(familiar_id=familiar.id, modifier=Modifier.Experience)
             b.expression_value = volleyball
             tasks += [b.save()]
 
         if "stat1" in fam_type:
             # Sombrero-like
-            b = Bonus(familiar=familiar, modifier=Modifier.Experience)
+            b = Bonus(familiar_id=familiar.id, modifier=Modifier.Experience)
             b.expression_value = sombrero
             tasks += [b.save()]
 
         if "item0" in fam_type:
             # Fairy-like
-            b = Bonus(familiar=familiar, modifier=Modifier.ItemDrop)
+            b = Bonus(familiar_id=familiar.id, modifier=Modifier.ItemDrop)
             b.expression_value = fairy
             tasks += [b.save()]
 
         if "meat0" in fam_type:
             # Leprechaun-like
-            b = Bonus(familiar=familiar, modifier=Modifier.MeatDrop)
+            b = Bonus(familiar_id=familiar.id, modifier=Modifier.MeatDrop)
             b.expression_value = leprechaun
             tasks += [b.save()]
 
