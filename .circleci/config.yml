@@ -2,7 +2,6 @@ version: 2.1
 workflows:
   build_and_deploy:
     jobs:
-      - build:
       - test-python-install:
           version: "3.6"
           requires:
