@@ -1,11 +1,36 @@
+import asyncio
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
-from typing import Optional
+from tortoise.models import ModelMeta
+from typing import Optional, Union
+from dataclasses import dataclass
 
 from .Model import Model
 
 
-class Familiar(Model):
-    id: int
+class FamiliarMeta(ModelMeta):
+    def __getitem__(self, key: Union[int, str]):
+        """
+        Syntactic sugar for synchronously grabbing a Familiar by id or name.
+
+        :param key: id or name of skill you want to grab
+        """
+        loop = asyncio.get_event_loop()
+        future = loop.create_future()
+
+        async def getitem():
+            if isinstance(key, int):
+                result = await self.get(id=key)
+            else:
+                result = await self.get(name=key)
+
+            future.set_result(result)
+
+        asyncio.ensure_future(getitem())
+        return future
+
+
+class Familiar(Model, metaclass=FamiliarMeta):
+    id = IntField()
     name = CharField(max_length=255)
     image = CharField(max_length=255)
 
@@ -65,6 +90,21 @@ class Familiar(Model):
     is_undead = BooleanField(default=False)
     wears_clothes = BooleanField(default=False)
 
+    def __ge__(self, other):
+        if isinstance(other, str):
+            return self.name == other
+        elif isinstance(other, int):
+            return self.id == other
+        else:
+            return self == other
+
     @property
     def have(self) -> bool:
         return True
+
+
+@dataclass
+class FamiliarState:
+    familiar: Familiar
+    weight: int
+    nickname: str
