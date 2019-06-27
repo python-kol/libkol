@@ -13,7 +13,7 @@ class status(Request[bool]):
         Fetch status from KoL API
         """
         super().__init__(session)
-        payload = {"for": session.state.get("user_agent", "libkol"), "what": "status"}
+        payload = {"for": session.user_agent, "what": "status"}
         self.request = session.request("api.php", json=True, data=payload)
 
     @staticmethod

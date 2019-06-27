@@ -24,7 +24,7 @@ class skill_use(Request):
         params["quantity"] = times
 
         if skill.buff:
-            params["targetplayer"] = session.get_user_id() if target is None else target
+            params["targetplayer"] = session.user_id if target is None else target
 
         self.request = session.request(
             "runskillz.php", ajax=True, pwd=True, params=params

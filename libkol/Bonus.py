@@ -76,7 +76,7 @@ class Bonus(Model):
             expression, expression_symbols = self.expression_value
 
             symbols = {
-                "A": kol.get_num_ascensions(),
+                "A": kol.num_ascensions,
                 "D": kol.inebriety,
                 "G": today.grimace_darkness,
                 "K": smithsness,
@@ -84,7 +84,7 @@ class Bonus(Model):
                 "M": today.moonlight,
                 "R": await kol.get_reagent_potion_duration(),
                 "W": familiar_weight,
-                "X": 1 if (await kol.get_gender()) == "f" else 0,
+                "X": 1 if kol.gender == "f" else 0,
             }
 
             for f, a in expression_symbols:

@@ -1,12 +1,13 @@
+from aiohttp import ClientResponse, ClientSession
+from collections import defaultdict
+from dataclasses import dataclass, field
 from os import path
 from time import time
+from tortoise import Tortoise
 from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
-from tortoise import Tortoise
-from collections import defaultdict
-from aiohttp import ClientResponse, ClientSession
+
 import libkol
-from dataclasses import dataclass, field
 from libkol import Clan, Kmail, request, Item, Bonus, Familiar
 
 from .types import FamiliarState
@@ -85,6 +86,8 @@ class State:
 
 class Session:
     "This class represents a user's session with The Kingdom of Loathing."
+
+    user_agent = "libkol"
 
     def __init__(self, db_file=None):
         super().__init__()
@@ -175,9 +178,11 @@ class Session:
         await request.charpane(self).parse()
 
         await self.get_status()
-        await self.get_profile()
+        await self.refresh_profile()
         await self.refresh_inventory()
         await self.refresh_equipment()
+        await self.refresh_familiars()
+        await self.refresh_gender()
         await self.get_skills()
 
         return True
@@ -192,17 +197,19 @@ class Session:
         """
         return await Clan(self, id=id, name=name).join()
 
-    def get_username(self) -> Optional[str]:
+    @property
+    def username(self) -> Optional[str]:
         """
         Returns the current player's username
         """
-        return self.state.get("username", None)
+        return self.state.username
 
-    def get_user_id(self) -> Optional[int]:
+    @property
+    def user_id(self) -> Optional[int]:
         """
         Returns the current player's user id
         """
-        return self.state.get("user_id", None)
+        return self.state.user_id
 
     async def get_elemental_resistance(
         self, element: Element, percentage: bool = False
@@ -247,14 +254,14 @@ class Session:
         return await request.status(self).parse()
 
     @logged_in
-    async def get_profile(self) -> Dict[str, Any]:
+    async def refresh_profile(self) -> bool:
         """
         Return information from the player's profile
         """
-        user_id = self.get_user_id()
+        user_id = self.user_id
 
         if user_id is None:
-            return {}
+            return False
 
         return await request.player_profile(self, user_id).parse()
 
@@ -267,9 +274,8 @@ class Session:
 
     @logged_in
     def get_stat(self, stat: Stat, buffed: bool = False) -> int:
-        return getattr(
-            self.state, "{}_{}".format("buffed" if buffed else "base", stat.value)
-        )
+        stats = self.state.stats[stat]
+        return stats.buffed if buffed else stats.base
 
     @logged_in
     def get_character_class(self) -> CharacterClass:
@@ -295,8 +301,8 @@ class Session:
     def effects(self) -> Dict[str, int]:
         return self.state.effects
 
-    @logged_in
-    def get_num_ascensions(self) -> int:
+    @property
+    def num_ascensions(self) -> int:
         return self.state.num_ascensions
 
     @logged_in
