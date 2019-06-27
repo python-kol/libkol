@@ -51,6 +51,7 @@ from .drink import drink
 from .eat import eat
 from .equip import equip
 from .equipment import equipment
+from .familiar import familiar
 from .guild_malus import guild_malus
 from .guild_train import guild_train
 from .hermit_menu import hermit_menu
@@ -151,6 +152,7 @@ __all__ = [
     "eat",
     "equip",
     "equipment",
+    "familiar",
     "guild_malus",
     "guild_train",
     "hermit_menu",
