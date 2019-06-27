@@ -120,6 +120,10 @@ class NotEnoughMeatError(Error):
     pass
 
 
+class NotEnoughHPError(Error):
+    pass
+
+
 class LimitReachedError(Error):
     pass
 

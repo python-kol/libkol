@@ -33,4 +33,4 @@ class eat(Request[parsing.ResourceGain]):
             raise ItemNotFoundError("Item not in inventory.")
 
         # Check the results
-        return parsing.resource_gain(content)
+        return await parsing.resource_gain(content)

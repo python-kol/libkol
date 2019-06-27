@@ -37,4 +37,4 @@ class cafe_consume(Request[parsing.ResourceGain]):
                 "You do not have enough meat to purchase the item(s)."
             )
 
-        return parsing.resource_gain(content)
+        return await parsing.resource_gain(content)

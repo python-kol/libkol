@@ -33,4 +33,4 @@ class item_multi_use(Request):
             raise WrongKindOfItemError("You cannot multi-use that item.")
 
         # Find out what happened
-        return parsing.resource_gain(content)
+        return await parsing.resource_gain(content)
