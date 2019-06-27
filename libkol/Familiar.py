@@ -1,13 +1,11 @@
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from typing import Optional
 
-from .util import EnumField, PickleField
-from .Modifier import Modifier
 from .Model import Model
 
 
 class Familiar(Model):
-    id = IntField()
+    id: int
     name = CharField(max_length=255)
     image = CharField(max_length=255)
 
