@@ -4,6 +4,8 @@ import sys
 from setuptools import setup
 from setuptools.command.install import install
 
+VERSION = "0.5.0"
+
 def readme():
     with open("README.md", "r") as fh:
         return fh.read()
