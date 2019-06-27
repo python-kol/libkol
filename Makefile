@@ -14,9 +14,14 @@ coverage:
 install:
 	pip install -r requirements.txt --user
 
+dev:
+	pip install -r requirements.dev.txt
+	pip install -e .
+
 install-dev:
 	pip install -r requirements.txt --user
 	pip install -r requirements.dev.txt --user
+
 ifndef CI
 	pre-commit install
 endif
