@@ -3,6 +3,10 @@ workflows:
   build_and_deploy:
     jobs:
       - build:
+          pre-steps:
+            command: |
+              pip install --upgrade pip
+              pip install --upgrade
           filters:
             tags:
               only: /.*/
@@ -51,10 +55,6 @@ jobs:
         default: latest
     docker:
       - image: circleci/python:<< parameters.version >>
-    pre-steps:
-      command: |
-        pip install --upgrade pip
-        pip install --upgrade
     steps:
       - checkout
       - restore_cache:
