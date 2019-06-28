@@ -6,7 +6,7 @@ from .Model import Model
 
 
 class Outfit(Model):
-    id = IntField(pk=True)
+    id = IntField(pk=True, generated=False)
     name = CharField(max_length=255)
     image = CharField(max_length=255)
 

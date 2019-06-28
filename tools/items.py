@@ -79,6 +79,6 @@ async def load(session: ClientSession):
             plural=plural,
         )
 
-        tasks += [item._insert_instance()]
+        tasks += [item.save()]
 
     return await asyncio.gather(*tasks)
