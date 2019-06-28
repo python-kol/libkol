@@ -29,7 +29,7 @@ setup(
     author="",
     author_email="dan@heathmailbox.com",
     description="Python library for interacting with the Kingdom of Loathing ",
-    long_description=long_description,
+    long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/python-kol/libkol",
     packages=setuptools.find_packages(),
