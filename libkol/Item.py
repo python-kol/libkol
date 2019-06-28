@@ -50,7 +50,7 @@ class Item(Model, metaclass=ItemMeta):
     desc_id = IntField()
     plural = CharField(max_length=255, null=True)
     image = CharField(max_length=255)
-    autosell = IntField(default=0)
+    autosell_value = IntField(default=0)
     level_required = IntField(default=0)  # Level required
 
     # Consumables
