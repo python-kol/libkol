@@ -56,10 +56,10 @@ class Maximizer:
         return self
 
     @staticmethod
-    def calculate_smithsness(outfit, smithsness) -> int:
+    def calculate_smithsness(solution, smithsness) -> int:
         return sum(
             smithsness[id]
-            for id, quantity in outfit.items()
+            for id, quantity in solution.items()
             if quantity != 0 and id in smithsness
         )
 
@@ -115,7 +115,9 @@ class Maximizer:
                     | Q(item__accessory=True)
                     | Q(item__familiar_equipment=True)
                 )
-                .prefetch_related("item", "outfit", "outfit__pieces")
+                .prefetch_related(
+                    "item", "outfit", "outfit__variants", "outfit__variants__pieces"
+                )
             )
         ]
 
@@ -145,7 +147,7 @@ class Maximizer:
                         if b.item
                         or (
                             b.outfit
-                            and b.outfit.is_fulfilled(
+                            and await b.outfit.is_fulfilled(
                                 [
                                     sb.item
                                     for sb in bonuses
@@ -259,11 +261,11 @@ class Maximizer:
         return result
 
     async def solve_and_equip(self):
-        outfit = await self.solve()
+        solution = await self.solve()
 
         await self.session.unequip()
 
-        for slot, item in outfit.items():
+        for slot, item in solution.items():
             await item.equip(slot)
 
         return True
