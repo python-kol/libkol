@@ -101,8 +101,10 @@ class Item(Model, metaclass=ItemMeta):
     foldgroup_id: Optional[int]
     zapgroup = ForeignKeyField("models.ZapGroup", related_name="items", null=True)
     zapgroup_id: Optional[int]
-    outfit = ForeignKeyField("models.Outfit", related_name="pieces", null=True)
-    outfit_id: Optional[int]
+
+    outfit_variants = ManyToManyField(
+        "models.OutfitVariant", related_name="pieces", null=True
+    )
 
     # NPC Store Info
     store_row = IntField(null=True)

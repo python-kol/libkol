@@ -24,6 +24,7 @@ models = [
     "libkol.Effect",
     "libkol.Skill",
     "libkol.Outfit",
+    "libkol.OutfitVariant",
 ]
 
 
