@@ -4,9 +4,10 @@ workflows:
     jobs:
       - build:
           pre-steps:
-            command: |
-              pip install --upgrade pip
-              pip install --upgrade
+            - run:
+                command: |
+                  pip install --upgrade pip
+                  pip install --upgrade
           filters:
             tags:
               only: /.*/
