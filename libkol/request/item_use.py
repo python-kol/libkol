@@ -1,3 +1,6 @@
+from typing import Tuple
+from yarl import URL
+
 import libkol
 
 from ..Error import NotEnoughItemsError, WrongKindOfItemError
@@ -5,7 +8,7 @@ from .request import Request
 from ..util import parsing
 
 
-class item_use(Request[str]):
+class item_use(Request[Tuple[str, parsing.ResourceGain]]):
     """
     Uses the requested item.
     """
@@ -19,7 +22,7 @@ class item_use(Request[str]):
         )
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> str:
+    async def parser(content: str, **kwargs) -> Tuple[str, parsing.ResourceGain]:
         if "<td>You don't have the item you're trying to use.</td>" in content:
             raise NotEnoughItemsError("You do not have that item")
 
@@ -29,4 +32,14 @@ class item_use(Request[str]):
         ):
             raise WrongKindOfItemError("This item cannot be used")
 
-        return str(parsing.panel(content))
+        from libkol import Item
+
+        session = kwargs["session"]  # type: libkol.Session
+        url = kwargs["url"]  # type: URL
+
+        used = await Item[int(url.query["whichitem"])]
+        session.state["inventory"][used] -= 1
+
+        result = str(parsing.panel(content))
+
+        return result, await parsing.resource_gain(result)

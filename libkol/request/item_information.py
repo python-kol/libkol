@@ -11,7 +11,7 @@ class Response(NamedTuple):
     plural: Optional[str]
     image: Optional[str]
     type: Optional[str]
-    autosell: int
+    autosell_value: int
     power: int
     num_hands: int
     can_transfer: bool
@@ -51,7 +51,7 @@ class item_information(Request):
                 else None
             ),
             type=json["type"] if "type" in json else None,
-            autosell=(
+            autosell_value=(
                 int(json["sellvalue"])
                 if "sellvalue" in json and int(json["sellvalue"] > 0)
                 else 0
