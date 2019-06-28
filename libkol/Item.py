@@ -1,5 +1,11 @@
 import asyncio
-from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
+from tortoise.fields import (
+    IntField,
+    CharField,
+    BooleanField,
+    ForeignKeyField,
+    ManyToManyField,
+)
 from tortoise.models import ModelMeta
 from typing import List, Optional, Union
 
@@ -39,7 +45,7 @@ class ItemMeta(ModelMeta):
 
 
 class Item(Model, metaclass=ItemMeta):
-    id = IntField()
+    id = IntField(pk=True, generated=False)
     name = CharField(max_length=255)
     desc_id = IntField()
     plural = CharField(max_length=255, null=True)
@@ -151,10 +157,6 @@ class Item(Model, metaclass=ItemMeta):
         the desc_id.
 
         Note that this Returns an Item object but it is not automatically committed to the database.
-        It is not sufficient to run `await item.save()` to do this however as tortoise-orm will attempt to
-        `UPDATE` the row because it already has an `id` set. Instead you need to run
-        `awaititem._insert_instance()` explicitly.
-
 
         :param id: Id of the item to discover
         :param desc_id: Description id of the item to discover
