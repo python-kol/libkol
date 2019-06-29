@@ -74,8 +74,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            make test
-            codecov
+            make coverage
       - store_artifacts:
           path: htmlcov/
       - run:
