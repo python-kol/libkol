@@ -2,7 +2,6 @@ from typing import List, NamedTuple
 
 import libkol
 
-from ..Item import Item
 from ..pattern import PatternManager
 from .request import Request
 
@@ -10,7 +9,7 @@ store_inventory_pattern = PatternManager.getOrCompilePattern("storeInventory")
 
 
 class Listing(NamedTuple):
-    item: Item  # The item
+    item: "libkol.Item"  # The item
     order: int  #  Item order in your store. 0 is the first listed and so on
     quantity: int  # The number of the item in your mall store.
     price: int  # The price of the item in your mall store.
@@ -34,6 +33,8 @@ class store_inventory(Request):
         """
         Searches backoffice.php for item name, quantity, price, limit, and ID.
         """
+        from libkol import Item
+
         return [
             Listing(
                 item=await Item.get_or_discover(id=int(match.group(7))),

@@ -1,9 +1,17 @@
 import asyncio
-from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
+from tortoise.fields import (
+    IntField,
+    CharField,
+    BooleanField,
+    ForeignKeyField,
+    ManyToManyField,
+)
 from tortoise.models import ModelMeta
 from typing import List, Optional, Union
 
 from libkol import request
+from .Slot import Slot
+from .Stat import Stat
 from .Model import Model
 from .Error import ItemNotFoundError, WrongKindOfItemError
 from . import types
@@ -37,12 +45,12 @@ class ItemMeta(ModelMeta):
 
 
 class Item(Model, metaclass=ItemMeta):
-    id = IntField()
+    id = IntField(pk=True, generated=False)
     name = CharField(max_length=255)
     desc_id = IntField()
     plural = CharField(max_length=255, null=True)
     image = CharField(max_length=255)
-    autosell = IntField(default=0)
+    autosell_value = IntField(default=0)
     level_required = IntField(default=0)  # Level required
 
     # Consumables
@@ -93,8 +101,10 @@ class Item(Model, metaclass=ItemMeta):
     foldgroup_id: Optional[int]
     zapgroup = ForeignKeyField("models.ZapGroup", related_name="items", null=True)
     zapgroup_id: Optional[int]
-    outfit = ForeignKeyField("models.Outfit", related_name="pieces", null=True)
-    outfit_id: Optional[int]
+
+    outfit_variants = ManyToManyField(
+        "models.OutfitVariant", related_name="pieces", null=True
+    )
 
     # NPC Store Info
     store_row = IntField(null=True)
@@ -122,6 +132,10 @@ class Item(Model, metaclass=ItemMeta):
     tradeable = BooleanField(default=False)  # is tradeable
     discardable = BooleanField(default=False)  # is discardable
 
+    @property
+    def adventures(self):
+        return (self.gained_adventures_min + self.gained_adventures_max) / 2
+
     def pluralize(self):
         return "{}s".format(self.name) if self.plural is None else self.plural
 
@@ -145,10 +159,6 @@ class Item(Model, metaclass=ItemMeta):
         the desc_id.
 
         Note that this Returns an Item object but it is not automatically committed to the database.
-        It is not sufficient to run `await item.save()` to do this however as tortoise-orm will attempt to
-        `UPDATE` the row because it already has an `id` set. Instead you need to run
-        `awaititem._insert_instance()` explicitly.
-
 
         :param id: Id of the item to discover
         :param desc_id: Description id of the item to discover
@@ -166,22 +176,20 @@ class Item(Model, metaclass=ItemMeta):
 
     @property
     def type(self):
-        if self.hat:
-            return "hat"
-        elif self.shirt:
-            return "shirt"
-        elif self.weapon:
-            return "weapon"
-        elif self.offhand:
-            return "offhand"
-        elif self.pants:
-            return "pants"
-        elif self.familiar_equipment:
-            return "familiar_equipment"
-        elif self.accessory:
-            return "accessory"
+        types = [
+            "hat",
+            "shirt",
+            "weapon",
+            "offhand",
+            "pants",
+            "familiar_equipment",
+            "accessory",
+        ]
+        return next((t for t in types if getattr(self, t)), "other")
 
-        return "other"
+    @property
+    def slot(self) -> Optional[Slot]:
+        return Slot.from_db(self.type)
 
     async def get_description(self):
         return await request.item_description(self.kol, self.desc_id).parse()
@@ -229,10 +237,43 @@ class Item(Model, metaclass=ItemMeta):
         ).parse()
 
     def amount(self):
-        return self.kol.state["inventory"][self]
+        return self.kol.inventory[self] + list(self.kol.equipment.values()).count(self)
+
+    def equipped(self):
+        return self in self.kol.equipment.values()
+
+    async def equip(self, slot: Optional[Slot] = None) -> bool:
+        actual_slot = self.slot if slot is None else slot
+
+        if actual_slot is None:
+            raise WrongKindOfItemError("This item cannot be equipped")
+
+        curr = self.kol.equipment
+
+        # If it's already there don't worry
+        if curr[actual_slot] == self:
+            return True
+
+        # If user didn't specify an accessory and we have it in a slot, don't worry
+        if (
+            actual_slot is Slot.Acc1
+            and slot is None
+            and (curr[Slot.Acc2] == self or curr[Slot.Acc3] == self)
+        ):
+            return True
+
+        return await request.equip(self.kol, self, actual_slot).parse()
 
     def have(self):
         return self.amount() > 0
+
+    def meet_requirements(self):
+        return (
+            self.kol.get_level() >= self.level_required
+            and self.kol.get_stat(Stat.Muscle) >= self.required_muscle
+            and self.kol.get_stat(Stat.Mysticality) >= self.required_mysticality
+            and self.kol.get_stat(Stat.Moxie) >= self.required_moxie
+        )
 
     async def use(self, quantity: int = 1, multi_use: bool = True):
         if self.usable is False:

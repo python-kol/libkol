@@ -2,7 +2,6 @@ import re
 import libkol
 
 from ..Error import ItemNotFoundError, UnknownError
-from ..Item import Item
 from .request import Request
 
 
@@ -25,7 +24,7 @@ class store_item_add(Request[bool]):
     def __init__(
         self,
         session: "libkol.Session",
-        item: Item,
+        item: "libkol.Item",
         quantity: int = 1,
         limit: int = 0,
         price: int = 999999999,

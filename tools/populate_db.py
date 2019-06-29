@@ -4,7 +4,7 @@ from tortoise import Tortoise
 from aiohttp import ClientSession
 from libkol import models
 
-import items, equipment, consumables, zapgroups, foldgroups, npcstores, trophies, effects, modifiers, skills, outfits
+import items, equipment, consumables, zapgroups, foldgroups, npcstores, trophies, effects, bonuses, skills, outfits
 
 
 async def populate():
@@ -43,8 +43,8 @@ async def populate():
         print("Inserting effects")
         await effects.load(session)
 
-        print("Inserting modifiers")
-        await modifiers.load(session)
+        print("Inserting bonuses")
+        await bonuses.load(session)
 
     await Tortoise.close_connections()
 

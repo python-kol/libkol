@@ -3,7 +3,6 @@ from typing import List, Union
 from bs4 import BeautifulSoup
 import libkol
 
-from ..Item import Item
 from .request import Request
 
 
@@ -65,7 +64,7 @@ sortable_categories = [
 ]
 
 
-class item_search(Request[List[Item]]):
+class item_search(Request[List["libkol.Item"]]):
     """
     Searches for an item by name using the mall justitems parameter
 
@@ -94,7 +93,7 @@ class item_search(Request[List[Item]]):
     def __init__(
         self,
         session: "libkol.Session",
-        query: Union[str, Item],
+        query: Union[str, "libkol.Item"],
         category: Category = Category.All,
         sort_items_by: SortBy = SortBy.Name,
         tiers: List[Tier] = [t for t in Tier],
@@ -104,6 +103,8 @@ class item_search(Request[List[Item]]):
         wearable_by_me: bool = False,
         start: int = 0,
     ) -> None:
+        from libkol import Item
+
         super().__init__(session)
 
         pudnuggler = '"{}"'.format(query.name) if isinstance(query, Item) else query
@@ -135,7 +136,9 @@ class item_search(Request[List[Item]]):
         self.request = session.request("mall.php", params=params)
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> List[Item]:
+    async def parser(content: str, **kwargs) -> List["libkol.Item"]:
+        from libkol import Item
+
         soup = BeautifulSoup(content, "html.parser")
 
         return [

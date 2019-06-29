@@ -4,7 +4,6 @@ from typing import List, Optional, Union
 import libkol
 
 from ..Error import InvalidActionError
-from ..Item import Item
 from ..Skill import Skill
 from .request import Request
 
@@ -41,8 +40,10 @@ class combat(Request):
         session: "libkol.Session",
         action: Action,
         skill: Optional[Skill] = None,
-        item: Union[Item, List[Item]] = None,
+        item: Union["libkol.Item", List["libkol.Item"]] = None,
     ) -> None:
+        from libkol import Item
+
         params = {"action": action.value}
 
         if action == Action.Item:

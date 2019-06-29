@@ -1,24 +1,10 @@
-from typing import NamedTuple, Optional
-
+from typing import Dict, Optional
+from dataclasses import dataclass
 from bs4 import BeautifulSoup, Tag
 
 import libkol
 
-from ..Item import Item
 from .request import Request
-
-
-class Outfit(NamedTuple):
-    hat: Optional[Item]
-    back: Optional[Item]
-    shirt: Optional[Item]
-    weapon: Optional[Item]
-    offhand: Optional[Item]
-    pants: Optional[Item]
-    acc1: Optional[Item]
-    acc2: Optional[Item]
-    acc3: Optional[Item]
-    familiar: Optional[Item]
 
 
 class equipment(Request):
@@ -35,29 +21,46 @@ class equipment(Request):
         self.request = session.request("inventory.php", params=params)
 
     @staticmethod
-    async def slot_to_item(soup: Tag, link: str, index: int = 0) -> Optional[Item]:
-        slot_title = soup.find_all("a", href="#{}".format(link))
+    async def slot_to_item(
+        soup: Tag, link: str, index: int = 0
+    ) -> Optional["libkol.Item"]:
+        from libkol import Item
 
-        if len(slot_title) == 0:
+        slot_title = soup.find_all("a", href=f"#{link}")
+
+        if len(slot_title) <= index:
             return None
 
-        descid = slot_title[index].parent.next_sibling.img["rel"]
-        return await Item.get_or_discover(desc_id=descid)
+        desc_img = slot_title[index].parent.next_sibling.img
+
+        if desc_img is None:
+            return None
+
+        return await Item.get_or_discover(desc_id=desc_img["rel"])
 
     @classmethod
-    async def parser(cls, content: str, **kwargs) -> Outfit:
+    async def parser(
+        cls, content: str, **kwargs
+    ) -> Dict["libkol.Slot", Optional["libkol.Item"]]:
+        from libkol import Slot
+
+        session = kwargs["session"]  # type: libkol.Session
+
         soup = BeautifulSoup(content, "html.parser")
         current = soup.find(id="curequip")
 
-        return Outfit(
-            hat=(await cls.slot_to_item(current, "Hats")),
-            back=(await cls.slot_to_item(current, "Back")),
-            shirt=(await cls.slot_to_item(current, "Shirts")),
-            weapon=(await cls.slot_to_item(current, "Weapons")),
-            offhand=(await cls.slot_to_item(current, "Off-Hand")),
-            pants=(await cls.slot_to_item(current, "Pants")),
-            acc1=(await cls.slot_to_item(current, "Accessories", 0)),
-            acc2=(await cls.slot_to_item(current, "Accessories", 1)),
-            acc3=(await cls.slot_to_item(current, "Accessories", 2)),
-            familiar=(await cls.slot_to_item(current, "Familiar")),
-        )
+        eq = {
+            Slot.Hat: (await cls.slot_to_item(current, "Hats")),
+            Slot.Back: (await cls.slot_to_item(current, "Back")),
+            Slot.Shirt: (await cls.slot_to_item(current, "Shirts")),
+            Slot.Weapon: (await cls.slot_to_item(current, "Weapons")),
+            Slot.Offhand: (await cls.slot_to_item(current, "Off-Hand")),
+            Slot.Pants: (await cls.slot_to_item(current, "Pants")),
+            Slot.Acc1: (await cls.slot_to_item(current, "Accessories", 0)),
+            Slot.Acc2: (await cls.slot_to_item(current, "Accessories", 1)),
+            Slot.Acc3: (await cls.slot_to_item(current, "Accessories", 2)),
+            Slot.FamiliarEquipment: (await cls.slot_to_item(current, "Familiar")),
+        }
+
+        session.state["equipment"] = eq
+        return eq

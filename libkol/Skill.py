@@ -29,10 +29,9 @@ class SkillMeta(ModelMeta):
 
 
 class Skill(Model, metaclass=SkillMeta):
-    id = IntField()
+    id = IntField(pk=True, generated=False)
     name = CharField(max_length=255)
     image = CharField(max_length=255)
-    autosell = IntField(default=0)
     level_required = IntField(default=0)
     mp_cost = IntField(default=0)
 

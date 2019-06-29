@@ -88,6 +88,10 @@ class UserIsIgnoringError(Error):
     pass
 
 
+class RequirementError(Error):
+    pass
+
+
 class UserIsDrunkError(Error):
     pass
 
@@ -113,6 +117,10 @@ class NotEnoughAdventuresError(Error):
 
 
 class NotEnoughMeatError(Error):
+    pass
+
+
+class NotEnoughHPError(Error):
     pass
 
 

@@ -4,7 +4,6 @@ from typing import List
 import libkol
 
 from ..Error import InvalidLocationError, RequestGenericError
-from ..Item import Item
 from ..pattern import PatternManager
 from .request import Request
 
@@ -18,7 +17,7 @@ class Cafe(Enum):
     HellsKitchen = 3
 
 
-class cafe_menu(Request[List[Item]]):
+class cafe_menu(Request[List["libkol.Item"]]):
     """
     Check the current menu at a given cafe.
 
@@ -31,11 +30,13 @@ class cafe_menu(Request[List[Item]]):
         self.request = session.request("cafe.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> List[Item]:
+    async def parser(content: str, **kwargs) -> List["libkol.Item"]:
+        from libkol import Item
+
         if cannot_go_pattern.search(content):
             raise InvalidLocationError("You cannot reach that cafe.")
 
-        items = []  # type: List[Item]
+        items = []  # type: List[libkol.Item]
         for match in menu_item_pattern.finditer(content):
             desc_id = match.group(2)
             if desc_id.isdigit() is False:

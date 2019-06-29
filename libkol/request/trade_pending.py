@@ -5,8 +5,6 @@ from typing import List, NamedTuple
 import libkol
 
 from ..Error import UnknownError
-from ..types import ItemQuantity
-from ..Item import Item
 from .request import Request
 
 item_pattern = re.compile(
@@ -53,10 +51,10 @@ class Trade(NamedTuple):
     user_id: int  # The ID of the other player involved in this trade.
     username: str  # The name of the other player involved in this trade.
     incoming_items: List[
-        ItemQuantity
+        "libkol.types.ItemQuantity"
     ]  # An array of items being offered to you in the format of a dictionary with keys itemID, quantity, and itemName.
     outgoing_items: List[
-        ItemQuantity
+        "libkol.types.ItemQuantity"
     ]  # An array of items being offered to the other player in the format of a dictionary with keys itemID, quantity, and itemName.
     incoming_meat: int  # The amount of meat being offered by the other player.
     outgoing_meat: int  # The amount of meat being offered to the other player.
@@ -68,7 +66,10 @@ class trade_pending(Request[List[Trade]]):
         self.request = session.request("makeoffer.php")
 
     @staticmethod
-    async def parse_trade_items(content: str) -> List[ItemQuantity]:
+    async def parse_trade_items(content: str) -> List["libkol.types.ItemQuantity"]:
+        from libkol import Item
+        from libkol.types import ItemQuantity
+
         if content is None:
             return []
 

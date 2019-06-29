@@ -1,21 +1,26 @@
 import asyncio
 from typing import Callable
 
+from . import types
+from .Bonus import Bonus
+from .CharacterClass import CharacterClass
 from .Clan import Clan
+from .Effect import Effect
 from .Error import Error
 from .FoldGroup import FoldGroup
 from .Item import Item
-from . import types
 from .Kmail import Kmail
-from .Session import Session, models
-from .ZapGroup import ZapGroup
-from .Store import Store
-from .Trophy import Trophy
-from .Effect import Effect
+from .Maximizer import Maximizer
 from .Modifier import Modifier
-from .Skill import Skill
 from .Outfit import Outfit
-from .CharacterClass import CharacterClass
+from .OutfitVariant import OutfitVariant
+from .Session import Session, models
+from .Skill import Skill
+from .Store import Store
+from .Stat import Stat
+from .Slot import Slot
+from .Trophy import Trophy
+from .ZapGroup import ZapGroup
 
 
 def run(func: Callable):
@@ -25,20 +30,25 @@ def run(func: Callable):
 
 
 __all__ = [
-    "Clan",
+    "Bonus",
     "CharacterClass",
-    "Error",
-    "Session",
-    "Kmail",
-    "Item",
-    "types",
-    "FoldGroup",
-    "ZapGroup",
-    "Store",
-    "Trophy",
+    "Clan",
     "Effect",
+    "Error",
+    "FoldGroup",
+    "Item",
+    "Kmail",
+    "Maximizer",
+    "models",
     "Modifier",
     "Outfit",
-    "models",
+    "OutfitVariant",
+    "Session",
     "Skill",
+    "Store",
+    "Stat",
+    "Slot",
+    "Trophy",
+    "types",
+    "ZapGroup",
 ]

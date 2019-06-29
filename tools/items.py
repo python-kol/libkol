@@ -75,10 +75,10 @@ async def load(session: ClientSession):
             gift="g" in access,
             tradeable="t" in access,
             discardable="d" in access,
-            autosell=int(parts[6]),
+            autosell_value=int(parts[6]),
             plural=plural,
         )
 
-        tasks += [item._insert_instance()]
+        tasks += [item.save()]
 
     return await asyncio.gather(*tasks)

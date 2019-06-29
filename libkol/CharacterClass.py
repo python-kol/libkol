@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Optional
 
+import libkol
 from .Error import UnknownError
 
 
@@ -14,7 +15,7 @@ class CharacterClass(Enum):
     AstralSpirit = "Astral Spirit"
 
     @property
-    def stat(self) -> Optional["Stat"]:
+    def stat(self) -> Optional["libkol.Stat"]:
         from .Stat import Stat
 
         if self in [CharacterClass.SealClubber, CharacterClass.TurtleTamer]:
@@ -53,7 +54,7 @@ class CharacterClass(Enum):
             "Walrus Bludgeoner",
             "Whale Boxer",
         ]:
-            return "Seal Clubber"
+            return CharacterClass.SealClubber
 
         if title in [
             "Toad Coach",
@@ -71,7 +72,7 @@ class CharacterClass(Enum):
             "Alligator Subjugator",
             "Asp Master",
         ]:
-            return "Turtle Tamer"
+            return CharacterClass.TurtleTamer
 
         if title in [
             "Dough Acolyte",
@@ -89,7 +90,7 @@ class CharacterClass(Enum):
             "Cannelloni Conjurer",
             "Angel-Hair Archmage",
         ]:
-            return "Pastamancer"
+            return CharacterClass.Pastamancer
 
         if title in [
             "Allspice Acolyte",
@@ -107,7 +108,7 @@ class CharacterClass(Enum):
             "Marinara Mage",
             "Alfredo Archmage",
         ]:
-            return "Sauceror"
+            return CharacterClass.Sauceror
 
         if title in [
             "Funk Footpad",
@@ -125,7 +126,7 @@ class CharacterClass(Enum):
             "Jive Pillager",
             "Rhymer And Stealer",
         ]:
-            return "Disco Bandit"
+            return CharacterClass.DiscoBandit
 
         if title in [
             "Polka Criminal",
@@ -143,6 +144,6 @@ class CharacterClass(Enum):
             "Hemi-Apprentice Accordion Thief",
             "Apprentice Accordion Thief",
         ]:
-            return "Accordion Thief"
+            return CharacterClass.AccordionThief
 
         raise UnknownError("Did not recognise player class from title {}".format(title))

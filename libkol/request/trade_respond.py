@@ -3,7 +3,6 @@ from typing import List
 import libkol
 
 from ..Error import NotEnoughItemsError, NotEnoughMeatError, UnknownError
-from ..types import ItemQuantity
 from ..pattern import PatternManager
 from .request import Request
 
@@ -13,7 +12,7 @@ class trade_respond(Request[bool]):
         self,
         session: "libkol.Session",
         trade_id: int,
-        item_quantities: List[ItemQuantity] = [],
+        item_quantities: List["libkol.types.ItemQuantity"] = [],
         meat: int = 0,
         message: str = "",
     ) -> None:
