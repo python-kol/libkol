@@ -76,11 +76,6 @@ jobs:
             make coverage
       - store_artifacts:
           path: htmlcov/
-      - run:
-          name: Smoke Test Install 
-          command: |
-            python --version
-            sudo pip3 install circleci
   integration:
     docker:
       - image: circleci/python:3.6.8
@@ -95,7 +90,7 @@ jobs:
       - restore_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
       - run:
-          name: install python dependencies
+          name: Install Python Dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
@@ -117,12 +112,17 @@ jobs:
             echo -e "username = pythonkol" >> ~/.pypirc
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
       - run:
-          name: create packages
+          name: Create Packages
           command: |
             make package
       - run:
-          name: upload to pypi
+          name: Upload To test.pypi
           command: |
             . venv/bin/activate
             #twine upload dist/*
             twine upload --repository-url https://test.pypi.org/legacy dist/*
+      - run:
+          name: Smoke Test Install From test.pypi
+          command: |
+            python --version
+            sudo pip3 install --index-url https://test.pypi.org/simple/ libkol
