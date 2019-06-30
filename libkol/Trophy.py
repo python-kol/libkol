@@ -4,7 +4,7 @@ from .Model import Model
 
 
 class Trophy(Model):
-    id = IntField()
+    id = IntField(pk=True, generated=False)
     name = CharField(max_length=255)
     image = CharField(max_length=255)
     before_ascending = BooleanField(default=False)

@@ -85,7 +85,7 @@ async def load(session: ClientSession):
         if parts[5] != "":
             familiar.equipment = await Item[parts[5]]
 
-        tasks += [familiar._insert_instance()]
+        tasks += [familiar.save()]
 
         if "stat0" in fam_type:
             # Volleyball-like

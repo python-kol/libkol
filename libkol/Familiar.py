@@ -30,7 +30,7 @@ class FamiliarMeta(ModelMeta):
 
 
 class Familiar(Model, metaclass=FamiliarMeta):
-    id = IntField()
+    id = IntField(pk=True, generated=False)
     name = CharField(max_length=255)
     image = CharField(max_length=255)
 

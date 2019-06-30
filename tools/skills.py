@@ -42,6 +42,6 @@ async def load(session: ClientSession):
             level_required=int(parts[5]) if len(parts) > 5 else 0,
         )
 
-        tasks += [skill._insert_instance()]
+        tasks += [skill.save()]
 
     return await asyncio.gather(*tasks)

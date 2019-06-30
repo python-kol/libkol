@@ -27,6 +27,7 @@ models = [
     "libkol.FoldGroup",
     "libkol.Item",
     "libkol.Outfit",
+    "libkol.OutfitVariant",
     "libkol.Skill",
     "libkol.Store",
     "libkol.Trophy",

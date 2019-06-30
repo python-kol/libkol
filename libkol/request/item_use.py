@@ -1,4 +1,5 @@
 from typing import Tuple
+from yarl import URL
 
 import libkol
 
@@ -31,8 +32,14 @@ class item_use(Request[Tuple[str, parsing.ResourceGain]]):
         ):
             raise WrongKindOfItemError("This item cannot be used")
 
+        from libkol import Item
+
         session = kwargs["session"]  # type: libkol.Session
+        url = kwargs["url"]  # type: URL
+
+        used = await Item[int(url.query["whichitem"])]
+        session.state["inventory"][used] -= 1
 
         result = str(parsing.panel(content))
 
-        return result, await parsing.resource_gain(result, session)
+        return result, await parsing.resource_gain(result)

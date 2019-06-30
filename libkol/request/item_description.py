@@ -29,7 +29,7 @@ class item_description(Request):
         id = int(main.find(string=lambda text: isinstance(text, Comment))[9:])
         name = container.center.img["alt"]
         image = URL(container.center.img["src"]).parts[-1]
-        autosell = next(
+        autosell_value = next(
             (
                 int(line[1].string.split(" ")[0].replace(",", ""))
                 for line in lines
@@ -66,7 +66,7 @@ class item_description(Request):
             "id": id,
             "name": name,
             "image": image,
-            "autosell": autosell,
+            "autosell_value": autosell_value,
             "level_required": level_required,
             "food": food,
             "booze": booze,

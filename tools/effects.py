@@ -27,6 +27,6 @@ async def load(session: ClientSession):
         effect = Effect(
             id=int(parts[0]), name=parts[1], image=parts[2], desc_id=parts[3]
         )
-        tasks += [effect._insert_instance()]
+        tasks += [effect.save()]
 
     return await asyncio.gather(*tasks)
