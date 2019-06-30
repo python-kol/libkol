@@ -1,7 +1,9 @@
 import os
 import sys
 
-import setuptools
+from setuptools import setup
+from setuptools import find_packages
+from setuptools.command.install import install
 
 VERSION = "0.5.3"
 
@@ -31,7 +33,8 @@ setup(
     long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/python-kol/libkol",
-    packages=setuptools.find_packages(),
+    #packages=setuptools.find_packages(),
+    packages=find_packages(),
     install_requires=[
         "aioitertools==0.4.0",
         "aiohttp==3.5.4",
