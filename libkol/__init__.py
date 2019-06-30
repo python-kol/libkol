@@ -13,6 +13,7 @@ from .Kmail import Kmail
 from .Maximizer import Maximizer
 from .Modifier import Modifier
 from .Outfit import Outfit
+from .OutfitVariant import OutfitVariant
 from .Session import Session, models
 from .Skill import Skill
 from .Store import Store
@@ -41,6 +42,7 @@ __all__ = [
     "models",
     "Modifier",
     "Outfit",
+    "OutfitVariant",
     "Session",
     "Skill",
     "Store",
