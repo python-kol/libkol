@@ -17,7 +17,6 @@ install:
 dev:
 	pip install -r requirements.dev.txt
 	pip install -e .
-	pip install setuptools
 
 install-dev:
 	pip install -r requirements.txt --user

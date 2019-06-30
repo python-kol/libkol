@@ -1,8 +1,7 @@
 import os
 import sys
 
-from setuptools import setup
-from setuptools.command.install import install
+import setuptools
 
 VERSION = "0.5.0"
 
