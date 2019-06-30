@@ -41,6 +41,10 @@ jobs:
           command: |
             . venv/bin/activate
             make coverage
+      - run:
+          name: Git command testing
+          command: |
+            git status
       - store_artifacts:
           path: htmlcov/
   test-python-install:
