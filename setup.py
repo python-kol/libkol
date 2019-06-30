@@ -3,7 +3,7 @@ import sys
 
 import setuptools
 
-VERSION = "0.5.0"
+VERSION = "0.5.3"
 
 def readme():
     with open("README.md", "r") as fh:
