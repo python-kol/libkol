@@ -5,7 +5,7 @@ from setuptools import setup
 from setuptools import find_packages
 from setuptools.command.install import install
 
-VERSION = "0.5.9"
+VERSION = "0.5.10"
 
 def readme():
     with open("README.md", "r") as fh:
