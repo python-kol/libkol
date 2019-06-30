@@ -1,45 +1,102 @@
+from aiohttp import ClientResponse, ClientSession
+from collections import defaultdict
+from dataclasses import dataclass, field
 from os import path
 from time import time
+from tortoise import Tortoise
 from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
-from tortoise import Tortoise
-from collections import defaultdict
-from aiohttp import ClientResponse, ClientSession
-import libkol
-from libkol import Clan, Kmail, request, Item
 
+import libkol
+from libkol import Clan, Kmail, request, Item, Bonus, Familiar
+
+from .types import FamiliarState
+from .Skill import Skill
+from .Slot import Slot
 from .Model import Model
+from .Element import Element
 from .Stat import Stat
 from .CharacterClass import CharacterClass
 from .Location import Location
 from .util.decorators import logged_in
 
 models = [
-    "libkol.FoldGroup",
-    "libkol.Item",
-    "libkol.ZapGroup",
-    "libkol.Store",
-    "libkol.Trophy",
     "libkol.Bonus",
     "libkol.Effect",
-    "libkol.Skill",
+    "libkol.Familiar",
+    "libkol.FoldGroup",
+    "libkol.Item",
     "libkol.Outfit",
     "libkol.OutfitVariant",
+    "libkol.Skill",
+    "libkol.Store",
+    "libkol.Trophy",
+    "libkol.ZapGroup",
 ]
+
+
+@dataclass
+class Stats:
+    base: int = 0
+    buffed: int = 0
+
+    def from_tuple(self, tuple):
+        buffed, base = tuple
+        self.buffed = buffed
+        self.base = base
+
+
+@dataclass
+class State:
+    adventures: int = 0
+    character_class: Optional[CharacterClass] = None
+    clan: Optional[Clan] = None
+    current_hp: int = 0
+    current_mp: int = 0
+    custom_title: Optional[str] = None
+    effects: Dict[str, int] = field(default_factory=dict)
+    equipment: Dict[Slot, Optional[Item]] = field(default_factory=dict)
+    familiar: Optional[Familiar] = None
+    familiars: Dict[Familiar, FamiliarState] = field(default_factory=defaultdict)
+    fullness: int = 0
+    gender: str = "n"
+    inebriety: int = 0
+    inventory: DefaultDict[Item, int] = field(default_factory=lambda: defaultdict(int))
+    level: int = 0
+    max_hp: int = 0
+    max_mp: int = 0
+    meat: int = 0
+    num_ascensions: int = 0
+    num_tattoos: int = 0
+    num_trophies: int = 0
+    pwd: str = ""
+    rollover: int = 0
+    skills: List[Skill] = field(default_factory=list)
+    spleenhit: int = 0
+    stats: Dict[Stat, Stats] = field(
+        default_factory=lambda: {
+            Stat.Moxie: Stats(),
+            Stat.Muscle: Stats(),
+            Stat.Mysticality: Stats(),
+        }
+    )
+    title: Optional[str] = None
+    user_id: int = 0
+    username: str = ""
 
 
 class Session:
     "This class represents a user's session with The Kingdom of Loathing."
+
+    user_agent = "libkol"
 
     def __init__(self, db_file=None):
         super().__init__()
         self.client = ClientSession()
         self.opener = self.client
         self.is_connected = False
-        self.state = {}
+        self.state = State()
         self.server_url = None
-        self.pwd = None
-        self.clan = None
         self.kmail = Kmail(self)
         self.db_file = db_file or path.join(path.dirname(__file__), "libkol.db")
 
@@ -115,16 +172,18 @@ class Session:
             self, username, password, stealth=stealth
         ).parse()
         self.is_connected = logged_in
-        self.state["username"] = username
+        self.state.username = username
 
         # Loading these both makes various things work
         await request.main(self).parse()
         await request.charpane(self).parse()
 
         await self.get_status()
-        await self.get_profile()
+        await self.refresh_profile()
         await self.refresh_inventory()
         await self.refresh_equipment()
+        await self.refresh_familiars()
+        await self.refresh_gender()
         await self.get_skills()
 
         return True
@@ -139,42 +198,71 @@ class Session:
         """
         return await Clan(self, id=id, name=name).join()
 
-    def get_username(self) -> Optional[str]:
+    @property
+    def username(self) -> Optional[str]:
         """
         Returns the current player's username
         """
-        return self.state.get("username", None)
+        return self.state.username
 
-    def get_user_id(self) -> Optional[int]:
+    @property
+    def user_id(self) -> Optional[int]:
         """
         Returns the current player's user id
         """
-        return self.state.get("user_id", None)
+        return self.state.user_id
+
+    async def get_elemental_resistance(
+        self, element: Element, percentage: bool = False
+    ) -> Union[float, int]:
+        query = Bonus.filter(
+            item_id__in=[
+                item.id for item in self.equipment.values() if item is not None
+            ],
+            modifier=element.resistance,
+        )
+        flat = sum([await b.get_value() async for b in query])
+
+        if percentage is False:
+            return flat
+
+        extra = 0.05 if self.get_character_class().stat is Stat.Mysticality else 0
+        return (
+            (flat * 0.1) if flat < 4 else (0.9 - (0.5 * (5 / 6) ** (flat - 4)))
+        ) + extra
 
     @property
     def adventures(self):
-        return self.state["adventures"]
+        return self.state.adventures
+
+    @property
+    def hp(self):
+        return self.state.current_hp
+
+    @property
+    def mp(self):
+        return self.state.current_mp
+
+    @property
+    def pwd(self):
+        return self.state.pwd
 
     @logged_in
-    async def get_status(self):
+    async def get_status(self) -> bool:
         """
         Load the current username, user_id, pwd and rollover time into the state
         """
-        data = await request.status(self).parse()
-        self.pwd = data["pwd"]
-        self.state["username"] = data["name"]
-        self.state["user_id"] = int(data["playerid"])
-        self.state["rollover"] = int(data["rollover"])
+        return await request.status(self).parse()
 
     @logged_in
-    async def get_profile(self) -> Dict[str, Any]:
+    async def refresh_profile(self) -> bool:
         """
         Return information from the player's profile
         """
-        user_id = self.get_user_id()
+        user_id = self.user_id
 
         if user_id is None:
-            return {}
+            return False
 
         return await request.player_profile(self, user_id).parse()
 
@@ -187,39 +275,54 @@ class Session:
 
     @logged_in
     def get_stat(self, stat: Stat, buffed: bool = False) -> int:
-        return self.state["{}_{}".format("buffed" if buffed else "base", stat.value)]
+        stats = self.state.stats[stat]
+        return stats.buffed if buffed else stats.base
 
     @logged_in
     def get_character_class(self) -> CharacterClass:
-        return self.state["character_class"]
+        return self.state.character_class
+
+    @property
+    def inebriety(self) -> int:
+        return self.state.inebriety
+
+    @property
+    def fullness(self) -> int:
+        return self.state.fullness
+
+    @property
+    def spleenhit(self) -> int:
+        return self.state.spleenhit
+
+    @property
+    def level(self) -> int:
+        return self.state.level
+
+    @property
+    def effects(self) -> Dict[str, int]:
+        return self.state.effects
+
+    @property
+    def num_ascensions(self) -> int:
+        return self.state.num_ascensions
 
     @logged_in
-    def get_inebriety(self) -> int:
-        return self.state["inebriety"]
-
-    @logged_in
-    def get_level(self) -> int:
-        return self.state["level"]
-
-    @logged_in
-    def get_num_ascensions(self) -> int:
-        return self.state["num_ascensions"]
-
-    @logged_in
-    async def get_gender(self) -> str:
-        if "gender" in self.state:
-            pass
-        elif self.get_character_class() == CharacterClass.AstralSpirit:
-            self.state["gender"] = "n"
+    async def refresh_gender(self) -> bool:
+        if self.get_character_class() == CharacterClass.AstralSpirit:
+            self.state.gender = "n"
         else:
             d = await (await Item["vinyl boots"]).get_description()
-            self.state["gender"] = "f" if "+15% Moxie" in d["enchantments"] else "m"
+            self.state.gender = "f" if "+15% Moxie" in d["enchantments"] else "m"
 
-        return self.state["gender"]
+        return True
+
+    @property
+    def gender(self) -> str:
+        return self.state.gender
 
     @logged_in
     def get_familiar_weight(self) -> int:
-        return self.state["familiar"]["weight"]
+        return self.state.familiars[self.state.familiar].weight
 
     @logged_in
     async def get_reagent_potion_duration(self) -> int:
@@ -237,7 +340,16 @@ class Session:
 
     @property
     def equipment(self) -> Dict["libkol.Slot", Optional[Item]]:
-        return self.state["equipment"]
+        return self.state.equipment
+
+    @logged_in
+    async def refresh_familiars(self) -> bool:
+        await request.familiar(self).parse()
+        return True
+
+    @property
+    def familiars(self) -> Dict["libkol.Familiar", "libkol.types.FamiliarState"]:
+        return self.state.familiars
 
     @logged_in
     async def unequip(self, slot: Optional["libkol.Slot"] = None):
@@ -250,7 +362,7 @@ class Session:
 
     @property
     def inventory(self) -> DefaultDict[Item, int]:
-        return defaultdict(int, self.state["inventory"])
+        return defaultdict(int, self.state.inventory)
 
     @logged_in
     async def mine(

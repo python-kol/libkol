@@ -41,12 +41,15 @@ class mall_price(Request[Response]):
         unlimited = soup.find("td", text="unlimited:")
         limited = soup.find("td", text="limited:")
 
+        if unlimited is None and limited is None:
+            print(content)
+
         return Response(
             unlimited=[
                 Listing(
                     price=int(p.b.string.replace(",", "")), stock=int(p.contents[1][2:])
                 )
-                for p in unlimited.find_next_siblings("td")
+                for p in (unlimited.find_next_siblings("td") if unlimited else [])
             ],
             limited=[
                 Listing(
@@ -54,6 +57,6 @@ class mall_price(Request[Response]):
                     stock=int(p.contents[1].split(" ")[1][1:]),
                     limit=int(p.contents[1].split(" ")[0][1:-5]),
                 )
-                for p in limited.find_next_siblings("td")
+                for p in (limited.find_next_siblings("td") if limited else [])
             ],
         )

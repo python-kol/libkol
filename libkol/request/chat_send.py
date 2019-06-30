@@ -19,11 +19,7 @@ class chat_send(Request[Response]):
     def __init__(self, session: "libkol.Session", text: str = ""):
         super().__init__(session)
 
-        params = {
-            "playerid": session.get_user_id(),
-            "graf": normalize("NFKD", text),
-            "j": 1,
-        }
+        params = {"playerid": session.user_id, "graf": normalize("NFKD", text), "j": 1}
 
         self.request = session.request("submitnewchat.php", pwd=True, params=params)
 

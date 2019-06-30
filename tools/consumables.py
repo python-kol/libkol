@@ -3,9 +3,10 @@ from tortoise.transactions import atomic
 from tortoise.exceptions import DoesNotExist
 from html import unescape
 from aiohttp import ClientSession
+import json
 
 from typing import Any, Coroutine, List
-from libkol import Item
+from libkol import Item, CharacterClass
 
 from util import load_mafia_data, split_range
 
@@ -18,6 +19,8 @@ async def load(session: ClientSession):
 @atomic()
 async def load_consumables(session: ClientSession, consumable_type):
     tasks = []  # type: List[Coroutine[Any, Any, Item]]
+
+    flags = json.load(open("./consumable_flags.json"))
 
     async for bytes in (await load_mafia_data(session, consumable_type)).content:
         line = unescape(bytes.decode("utf-8")).strip()
@@ -68,6 +71,20 @@ async def load_consumables(session: ClientSession, consumable_type):
             min, max = split_range(parts[7])
             item.gained_moxie_min = min
             item.gained_moxie_max = max
+
+        if len(parts) > 8:
+            notes = parts[8]
+
+            if notes == "Vampyre":
+                item.required_class = CharacterClass.Vampyre
+            elif notes == "Zombie Slayer":
+                item.required_class = CharacterClass.ZombieMaster
+            else:
+                item.notes = parts[8]
+
+        for flag, item_ids in flags.items():
+            if item.id in item_ids:
+                setattr(item, flag, True)
 
         tasks += [item.save()]
 

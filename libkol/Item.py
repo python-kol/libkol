@@ -7,13 +7,18 @@ from tortoise.fields import (
     ManyToManyField,
 )
 from tortoise.models import ModelMeta
-from typing import List, Optional, Union
+from typing import Coroutine, List, Optional, Union, Tuple
+import re
+import time
+from statistics import mean
 
 from libkol import request
+from .CharacterClass import CharacterClass
 from .Slot import Slot
 from .Stat import Stat
 from .Model import Model
 from .Error import ItemNotFoundError, WrongKindOfItemError
+from .util import EnumField, parsing
 from . import types
 
 
@@ -95,6 +100,8 @@ class Item(Model, metaclass=ItemMeta):
     required_muscle = IntField(default=0)
     required_mysticality = IntField(default=0)
     required_moxie = IntField(default=0)
+    required_class = EnumField(enum_type=CharacterClass, null=True)
+    notes = CharField(max_length=255, default="")
 
     # Collections
     foldgroup = ForeignKeyField("models.FoldGroup", related_name="items", null=True)
@@ -121,7 +128,7 @@ class Item(Model, metaclass=ItemMeta):
     bootspur = BooleanField(default=False)
     bootskin = BooleanField(default=False)
     food_helper = BooleanField(default=False)
-    drink_helper = BooleanField(default=False)
+    booze_helper = BooleanField(default=False)
     guardian = BooleanField(default=False)
     single_equip = BooleanField(default=True)
     bounty = BooleanField(default=False)  # Can appear as a bounty item
@@ -131,6 +138,13 @@ class Item(Model, metaclass=ItemMeta):
     gift = BooleanField(default=False)  # is a gift item
     tradeable = BooleanField(default=False)  # is tradeable
     discardable = BooleanField(default=False)  # is discardable
+    salad = BooleanField(default=False)  # is considered salad when consumed
+    beer = BooleanField(default=False)  # is considered beer when consumed
+    wine = BooleanField(default=False)  # is considered wine when consumed
+    martini = BooleanField(default=False)  # is considered martini when consumed
+    saucy = BooleanField(default=False)  # is considered saucy when consumed
+    lasagna = BooleanField(default=False)  # is considered lasagna when consumed
+    pasta = BooleanField(default=False)  # is considered pasta when consumed
 
     @property
     def adventures(self):
@@ -138,6 +152,45 @@ class Item(Model, metaclass=ItemMeta):
 
     def pluralize(self):
         return "{}s".format(self.name) if self.plural is None else self.plural
+
+    @property
+    def space(self):
+        s = (
+            self.fullness
+            if self.food
+            else self.inebriety
+            if self.booze
+            else self.spleenhit
+            if self.spleen
+            else None
+        )
+
+        if s is None:
+            raise WrongKindOfItemError("You cannot consume this item")
+
+        return s
+
+    async def autosell(self, quantity: int = 1):
+        return await request.autosell_items(self.kol, [self])
+
+    @property
+    def cleans_organ(self) -> Optional[Tuple[int, str]]:
+        m = re.match(r"-(\d+) spleen", self.notes)
+
+        if m is None:
+            return None
+
+        return (int(m.group(1)), "spleen")
+
+    async def consume(self, utensil: Optional["Item"] = None) -> parsing.ResourceGain:
+        if self.food:
+            return await request.eat(self.kol, self, utensil=utensil).parse()
+        elif self.booze:
+            return await request.drink(self.kol, self, utensil=utensil).parse()
+        elif self.spleen:
+            return await request.chew(self.kol, self).parse()
+        else:
+            raise WrongKindOfItemError("You cannot consume this item")
 
     @classmethod
     async def get_or_discover(cls, *args, **kwargs) -> "Item":
@@ -194,7 +247,7 @@ class Item(Model, metaclass=ItemMeta):
     async def get_description(self):
         return await request.item_description(self.kol, self.desc_id).parse()
 
-    async def get_mall_price(self, limited: bool = False) -> int:
+    async def get_mall_price(self, limited: bool = False) -> Optional[int]:
         """
         Get the lowest price for this item in the mall
 
@@ -202,10 +255,38 @@ class Item(Model, metaclass=ItemMeta):
         """
         prices = await request.mall_price(self.kol, self).parse()
 
-        if limited:
+        if limited and len(prices.limited) > 0:
             return prices.limited[0].price
 
-        return prices.unlimited[0].price
+        if len(prices.unlimited) > 0:
+            return prices.unlimited[0].price
+
+        return None
+
+    async def get_cf_price(self, days: int = 30) -> Optional[int]:
+        """
+        Get the average transaction price from Coldfront logs
+
+        :param days: Number of days of transactions to consider (default 30)
+        """
+        ts = int(time.time())
+        params = {
+            "itemid": self.id,
+            "starttime": ts - 60 * 68 * 24 * days,
+            "endtime": ts,
+        }
+        response = await self.kol.request(
+            "http://kol.coldfront.net/newmarket/translist.php", "GET", params=params
+        )
+        result = await response.text()
+
+        transactions = [
+            float(t[(t.rfind("@") + 1) :].replace(",", "").strip())
+            for t in result[result.find("\n") :].split("\n")
+            if t not in ["", "."]
+        ]
+
+        return int(mean(transactions)) if len(transactions) > 0 else None
 
     async def get_mall_listings(self, **kwargs) -> List["types.Listing"]:
         return await request.mall_search(self.kol, query=self, **kwargs).parse()
@@ -221,10 +302,18 @@ class Item(Model, metaclass=ItemMeta):
             listings = await self.get_mall_listings(
                 num_results=quantity, max_price=price
             )
-            tasks = [
-                request.mall_purchase(self.kol, item=self, listing=l).parse()
-                for l in listings
-            ]
+
+            tasks = []  # type: List[Coroutine]
+
+            for l in listings:
+                q = min(quantity, (l.limit if l.limit > 0 else quantity), l.stock)
+                tasks += [
+                    request.mall_purchase(
+                        self.kol, item=self, listing=l, quantity=q
+                    ).parse()
+                ]
+                quantity -= q
+
             return await asyncio.gather(*tasks)
 
         return await request.mall_purchase(
@@ -236,6 +325,15 @@ class Item(Model, metaclass=ItemMeta):
             quantity=quantity,
         ).parse()
 
+    async def acquire(self, quantity: int = 1):
+        need = quantity - self.amount
+
+        if need > 0:
+            await self.buy_from_mall(quantity=need)
+
+        return True
+
+    @property
     def amount(self):
         return self.kol.inventory[self] + list(self.kol.equipment.values()).count(self)
 
@@ -265,11 +363,11 @@ class Item(Model, metaclass=ItemMeta):
         return await request.equip(self.kol, self, actual_slot).parse()
 
     def have(self):
-        return self.amount() > 0
+        return self.amount > 0
 
     def meet_requirements(self):
         return (
-            self.kol.get_level() >= self.level_required
+            self.kol.level >= self.level_required
             and self.kol.get_stat(Stat.Muscle) >= self.required_muscle
             and self.kol.get_stat(Stat.Mysticality) >= self.required_mysticality
             and self.kol.get_stat(Stat.Moxie) >= self.required_moxie
@@ -279,7 +377,7 @@ class Item(Model, metaclass=ItemMeta):
         if self.usable is False:
             raise WrongKindOfItemError("This item cannot be used")
 
-        if self.multiusable and multi_use:
+        if self.multiusable and multi_use and quantity > 1:
             await request.item_multi_use(self.kol, self, quantity).parse()
             return
 

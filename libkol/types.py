@@ -19,3 +19,12 @@ class Listing:
     limit_reached: bool = False
     store_id: Optional[int] = None
     store_name: Optional[str] = None
+
+
+@dataclass
+class FamiliarState:
+    familiar: "libkol.Familiar"
+    weight: int
+    nickname: str
+    experience: int = 0
+    kills: int = 0

@@ -100,6 +100,10 @@ class UserIsFullError(Error):
     pass
 
 
+class UserIsSpleenedError(Error):
+    pass
+
+
 class UserIsLowLevelError(Error):
     pass
 

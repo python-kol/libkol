@@ -13,6 +13,8 @@ class CharacterClass(Enum):
     DiscoBandit = "Disco Bandit"
     AccordionThief = "Accordion Thief"
     AstralSpirit = "Astral Spirit"
+    ZombieMaster = "Zombie Master"
+    Vampyre = "Vampyre"
 
     @property
     def stat(self) -> Optional["libkol.Stat"]:

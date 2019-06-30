@@ -19,6 +19,16 @@ class Bonus(Model):
     outfit = ForeignKeyField("models.Outfit", related_name="bonuses", null=True)
     outfit_id: Optional[int]
 
+    familiar = ForeignKeyField(
+        "models.Familiar", related_name="passive_bonuses", null=True
+    )
+    familiar_id: Optional[int]
+
+    throne_familiar = ForeignKeyField(
+        "models.Familiar", related_name="throne_bonus", null=True
+    )
+    throne_familiar_id: Optional[int]
+
     modifier = EnumField(enum_type=Modifier)
     numeric_value = IntField(null=True)
     string_value = CharField(max_length=255, null=True)
@@ -35,13 +45,21 @@ class Bonus(Model):
         "path": lambda path: 0,
         "pref": lambda pref: 0,
         "skill": lambda name: next(
-            (1 for s in Bonus.kol.state["skills"] if s.name == name), 0
+            (1 for s in Bonus.kol.state.skills if s.name == name), 0
         ),
         "zone": lambda zone: 0,
     }
 
-    async def get_value(self, normalise: bool = False, smithsness: int = 0):
+    async def get_value(
+        self,
+        normalise: bool = False,
+        smithsness: int = 0,
+        familiar_weight: Optional[int] = None,
+    ):
         kol = self.kol
+
+        if familiar_weight is None:
+            familiar_weight = kol.get_familiar_weight()
 
         if self.string_value:
             return 1
@@ -58,15 +76,15 @@ class Bonus(Model):
             expression, expression_symbols = self.expression_value
 
             symbols = {
-                "A": kol.get_num_ascensions(),
-                "D": kol.get_inebriety(),
+                "A": kol.num_ascensions,
+                "D": kol.inebriety,
                 "G": today.grimace_darkness,
                 "K": smithsness,
-                "L": kol.get_level(),
+                "L": kol.level,
                 "M": today.moonlight,
                 "R": await kol.get_reagent_potion_duration(),
-                "W": kol.get_familiar_weight(),
-                "X": 1 if (await kol.get_gender()) == "f" else 0,
+                "W": familiar_weight,
+                "X": 1 if kol.gender == "f" else 0,
             }
 
             for f, a in expression_symbols:

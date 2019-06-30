@@ -3,7 +3,9 @@ from aioitertools import iter
 from tortoise.query_utils import Q
 from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus, LpStatusOptimal
 from collections import defaultdict
-from typing import DefaultDict, Optional
+from typing import DefaultDict, Dict, List, Optional, Tuple
+
+import libkol
 
 
 class Maximizer:
@@ -77,7 +79,11 @@ class Maximizer:
             ]
         )
 
-    async def solve(self):
+    async def solve(
+        self
+    ) -> Tuple[
+        DefaultDict["libkol.Slot", Optional["libkol.Item"]], Optional["libkol.Familiar"]
+    ]:
         from libkol import Modifier, Slot, Item
 
         # Load smithsness bonuses for tracking smithsness
@@ -101,10 +107,7 @@ class Maximizer:
         bonuses = [
             b
             async for b in (
-                Bonus.filter(
-                    Q(item_id__not_isnull=True) | Q(outfit_id__not_isnull=True)
-                )
-                .filter(modifier__in=modifiers)
+                Bonus.filter(effect_id__isnull=True, modifier__in=modifiers)
                 .filter(
                     Q(item_id__isnull=True)
                     | Q(item__hat=True)
@@ -121,37 +124,50 @@ class Maximizer:
             )
         ]
 
-        grouped_bonuses = {}
+        grouped_bonuses = {}  # type: Dict[libkol.Modifier, List[libkol.Bonus]]
         for b in bonuses:
             grouped_bonuses[b.modifier] = grouped_bonuses.get(b.modifier, []) + [b]
 
         possible_items = [b.item for b in bonuses if b.item] + self.must_equip
+        possible_familiars = [b.familiar for b in bonuses if b.familiar]
 
         # Define the problem
         prob = LpProblem(self.summarise(), LpMaximize)
         solution = LpVariable.dicts(
-            "outfit", {i.id for i in possible_items}, 0, 3, cat="Integer"
+            "outfit",
+            {repr(i) for i in possible_items + possible_familiars},
+            0,
+            3,
+            cat="Integer",
         )
 
         # Value of our Smithsness bonus
         smithsness = self.calculate_smithsness(solution, smithsness_bonuses)
+
+        # Value of our familiar weight
+        familiar_weight = next(
+            (f.weight for f in possible_familiars if solution[repr(f)] == 1), 0
+        )
 
         # Objective
         prob += lpSum(
             [
                 m.sum(
                     [
-                        await b.get_value(smithsness=smithsness)
-                        * (solution[b.item.id] if b.item else 1)
+                        await b.get_value(
+                            smithsness=smithsness, familiar_weight=familiar_weight
+                        )
+                        * (solution[repr(b.item)] if b.item else 1)
+                        * (solution[repr(b.familiar)] if b.familiar else 1)
                         for b in bonuses
-                        if b.item
+                        if b.outfit is None
                         or (
                             b.outfit
                             and await b.outfit.is_fulfilled(
                                 [
                                     sb.item
                                     for sb in bonuses
-                                    if sb.item and solution[sb.item.id] >= 1
+                                    if sb.item and solution[repr(sb.item)] >= 1
                                 ]
                             )
                         )
@@ -167,7 +183,10 @@ class Maximizer:
         for m, bonuses in grouped_bonuses.items():
             total = lpSum(
                 [
-                    await b.get_value(smithsness=smithsness) * solution[b.item.id]
+                    await b.get_value(
+                        smithsness=smithsness, familiar_weight=familiar_weight
+                    )
+                    * solution[repr(b.item)]
                     for b in bonuses
                     if b.item
                 ]
@@ -190,15 +209,23 @@ class Maximizer:
 
         for slot, size in slot_sizes:
             prob += (
-                lpSum([solution[i.id] for i in possible_items if getattr(i, slot)])
+                lpSum([solution[repr(i)] for i in possible_items if getattr(i, slot)])
                 <= size
             )
+
+        # Only use one familiar
+        prob += lpSum([solution[repr(f)] for f in possible_familiars]) <= 1
+
+        # Do not use familiars we don't  have
+        for f in possible_familiars:
+            if f.have is False:
+                prob += solution[repr(f)] == 0
 
         # You've only got so many hands!
         prob += (
             lpSum(
                 [
-                    solution[i.id]
+                    solution[repr(i)]
                     for i in possible_items
                     if (i.weapon and i.weapon_hands >= 2) or i.offhand
                 ]
@@ -210,22 +237,22 @@ class Maximizer:
         for i in possible_items:
             # Don't plan to equip things we can't wear
             if i.meet_requirements() is False:
-                prob += solution[i.id] == 0
+                prob += solution[repr(i)] == 0
 
             # We can only equip as many as we have
-            prob += solution[i.id] <= i.amount()
+            prob += solution[repr(i)] <= i.amount
 
             # We can only equip one single equip item
             if i.single_equip:
-                prob += solution[i.id] <= 1
+                prob += solution[repr(i)] <= 1
 
         # Forced equips
         for i in self.must_equip:
-            prob += solution[i.id] >= 1
+            prob += solution[repr(i)] >= 1
 
         # Forced non-equips
         for i in self.must_not_equip:
-            prob += solution[i.id] == 0
+            prob += solution[repr(i)] == 0
 
         prob.writeLP("maximizer.lp")
         prob.solve()
@@ -233,35 +260,43 @@ class Maximizer:
         if prob.status is not LpStatusOptimal:
             raise ValueError(LpStatus[prob.status])
 
+        familiar = None
         result = defaultdict(lambda: None)  # type: DefaultDict[Slot, Optional[Item]]
 
         for v in prob.variables():
             index = v.name
             q = v.varValue
+            index_parts = index.split("_")
 
-            if q == 0 or q is None:
+            if q == 0 or q is None or len(index_parts) < 3:
                 continue
 
-            item = next(i for i in possible_items if i.id == int(index[7:]))
+            id = int(index_parts[2])
 
-            slot = item.slot
+            if index_parts[1] == "<Familiar:":
+                familiar = next(f for f in possible_familiars if f.id == id)
+                continue
 
-            if slot == Slot.Acc1:
+            item = next(i for i in possible_items if i.id == id)
+
+            item_slot = item.slot  # type: Slot
+
+            if item_slot == Slot.Acc1:
                 if result[Slot.Acc1] is None:
-                    slot = Slot.Acc1
+                    item_slot = Slot.Acc1
                 elif result[Slot.Acc2] is None:
-                    slot = Slot.Acc2
+                    item_slot = Slot.Acc2
                 elif result[Slot.Acc3] is None:
-                    slot = Slot.Acc3
+                    item_slot = Slot.Acc3
                 else:
                     raise Exception("Pulp has done something wrong")
 
-            result[slot] = item
+            result[item_slot] = item
 
-        return result
+        return result, familiar
 
     async def solve_and_equip(self):
-        solution = await self.solve()
+        outfit, familiar = await self.solve()
 
         await self.session.unequip()
 

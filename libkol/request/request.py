@@ -26,10 +26,6 @@ class Request(Generic[ParserReturn]):
 
     async def text(self, encoding: Optional[str] = None) -> str:
         response = self.response or await self.run()
-
-        if encoding is None:
-            encoding = response.get_encoding()
-
         return await response.text(encoding)
 
     async def json(self) -> Dict[str, Any]:

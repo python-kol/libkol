@@ -15,7 +15,7 @@ class inventory(Request[Dict["libkol.Item", int]]):
 
     def __init__(self, session: "libkol.Session") -> None:
         super().__init__(session)
-        data = {"for": session.state.get("user_agent", "libkol"), "what": "inventory"}
+        data = {"for": session.user_agent, "what": "inventory"}
 
         self.request = session.request("api.php", json=True, data=data)
 
@@ -25,5 +25,5 @@ class inventory(Request[Dict["libkol.Item", int]]):
 
         session = kwargs["session"]  # type: "libkol.Session"
         inv = {await Item[int(id)]: int(quantity) for id, quantity in content.items()}
-        session.state["inventory"] = defaultdict(int, inv)
+        session.state.inventory = defaultdict(int, inv)
         return inv

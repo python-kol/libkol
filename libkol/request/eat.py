@@ -1,3 +1,6 @@
+from typing import Optional
+from yarl import URL
+
 import libkol
 
 from ..Error import ItemNotFoundError, UserIsDrunkError, WrongKindOfItemError
@@ -13,10 +16,20 @@ class eat(Request[parsing.ResourceGain]):
     :param item: Consumable to eat
     """
 
-    def __init__(self, session: "libkol.Session", item: "libkol.Item") -> None:
+    def __init__(
+        self,
+        session: "libkol.Session",
+        item: "libkol.Item",
+        utensil: Optional["libkol.Item"] = None,
+    ) -> None:
         super().__init__(session)
 
         params = {"which": 1, "whichitem": item.id}
+
+        if utensil:
+            params["which"] = 99
+            params["utensil"] = utensil.id
+
         self.request = session.request(
             "inv_eat.php", ajax=True, pwd=True, params=params
         )
@@ -32,5 +45,17 @@ class eat(Request[parsing.ResourceGain]):
         if ">You don't have the item you're trying to use.<" in content:
             raise ItemNotFoundError("Item not in inventory.")
 
+        from libkol import Item
+
+        session = kwargs["session"]  # type: libkol.Session
+        url = kwargs["url"]  # type: URL
+
+        eaten = await Item[int(url.query["whichitem"])]
+        session.state.inventory[eaten] -= 1
+
+        if url.query.get("utensil"):
+            utensil = await Item[int(url.query["utensil"])]
+            session.state.inventory[utensil] -= 1
+
         # Check the results
-        return await parsing.resource_gain(content)
+        return await parsing.resource_gain(content, session=session)

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Type
+from typing import Optional, Type
 
 from tortoise import ConfigurationError
 from tortoise.fields import CharField
@@ -17,12 +17,12 @@ class EnumField(CharField):
             raise ConfigurationError("{} is not a subclass of Enum!".format(enum_type))
         self._enum_type = enum_type
 
-    def to_db_value(self, value: Enum, instance) -> str:
-        return value.value
+    def to_db_value(self, value: Optional[Enum], instance) -> Optional[str]:
+        return value.value if value else None
 
-    def to_python_value(self, value: str) -> Enum:
+    def to_python_value(self, value: Optional[str]) -> Optional[Enum]:
         try:
-            return self._enum_type(value)
+            return self._enum_type(value) if value is not None else None
         except Exception:
             raise ValueError(
                 "Database value {} does not exist on Enum {}.".format(

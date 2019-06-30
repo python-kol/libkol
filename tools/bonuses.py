@@ -14,7 +14,7 @@ from sympy.parsing.sympy_parser import (
 )
 from typing import Any, Coroutine, Dict, List
 
-from libkol import Bonus, Effect, Item, Modifier, Skill, Outfit
+from libkol import Bonus, Effect, Item, Modifier, Skill, Outfit, Familiar
 
 from util import load_mafia_data, mafia_dedupe
 
@@ -28,16 +28,23 @@ class ModifierError(Exception):
 
 async def cross_referencer(name: str, value: str, modifier_base):
     name = name.lower()
+    field = name
 
-    if name == "item":
-        Entity = Item
-    elif name == "effect":
-        Entity = Effect
-    elif name == "skill":
-        Entity = Skill
-    elif name == "outfit":
-        Entity = Outfit
-    else:
+    name_to_ent = {
+        "item": Item,
+        "effect": Effect,
+        "skill": Skill,
+        "outfit": Outfit,
+        "familiar": Familiar,
+        "throne": Familiar,
+    }
+
+    Entity = name_to_ent.get(name, None)
+
+    if name == "throne":
+        field = "throne_familiar"
+
+    if Entity is None:
         return False, None
 
     try:
@@ -46,7 +53,7 @@ async def cross_referencer(name: str, value: str, modifier_base):
         print("Couldn't find {} `{}` for modifier".format(name, value))
         return False, None
 
-    modifier_base["{}_id".format(name)] = entity.id
+    modifier_base["{}_id".format(field)] = entity.id
 
     return True, entity
 
@@ -65,25 +72,94 @@ def caret_to_pow(tokens, local_dict, global_dict):
     return tokens
 
 
-def load_bonus(base, info, entity):
-    if info["key"] == "none":
-        return None
+def parse_expression(expr: str):
+    for f in Bonus.custom_functions.keys():
+        original = "class" if f == "charclass" else f
+        if original in expr:
+            expr = re.sub(
+                r"{}\(([^\)]+)\)".format(original), '{}("\\1")'.format(f), expr
+            )
+
+    custom_funcs = []
+
+    def register_custom_func(f_name, arg):
+        custom_funcs.append((f_name, arg))
+        return Symbol(f_name)
+
+    funcs = {
+        "abs": functions.Abs,
+        "min": functions.Min,
+        "max": functions.Max,
+        "sqrt": functions.sqrt,
+        "ceil": functions.ceiling,
+        "floor": functions.floor,
+        "A": Symbol("A"),
+        "B": Symbol("B"),
+        "C": Symbol("C"),
+        "D": Symbol("D"),
+        "E": Symbol("E"),
+        "F": Symbol("F"),
+        "G": Symbol("G"),
+        "H": Symbol("H"),
+        "I": Symbol("I"),
+        "J": Symbol("J"),
+        "K": Symbol("K"),
+        "L": Symbol("L"),
+        "M": Symbol("M"),
+        "N": Symbol("N"),
+        "P": Symbol("P"),
+        "R": Symbol("R"),
+        "S": Symbol("S"),
+        "T": Symbol("T"),
+        "U": Symbol("U"),
+        "W": Symbol("W"),
+        "X": Symbol("X"),
+        "Y": Symbol("Y"),
+        **{f: partial(register_custom_func, f) for f in Bonus.custom_functions.keys()},
+    }
+
+    transformations = standard_transformations + (
+        split_symbols_custom(can_split),
+        caret_to_pow,
+        implicit_multiplication,
+    )
 
     try:
-        modifier = Modifier(info["key"])
-
-    except ValueError:
-        raise ModifierError(
-            "Modifier `{}` not recognised".format(info["key"]), modifier=info["key"]
+        expr = parse_expr(
+            expr, local_dict=funcs, transformations=transformations, evaluate=True
         )
+    except:
+        print("Failed to parse {}".format(expr))
+        return None
 
-    if modifier == "Single Equip" and isinstance(entity, Item):
+    return expr, custom_funcs
+
+
+async def load_bonus(base, info, entity):
+    key = info["key"]
+
+    if key == "none":
+        return None
+    elif key == "Single Equip" and isinstance(entity, Item):
         entity.single_equip = True
         return entity.save()
+    elif key == "Volleyball Effectiveness":
+        bonus = await Bonus.get(familiar_id=entity.id, modifier=Modifier.Experience)
+    elif key == "Fairy Effectiveness":
+        bonus = await Bonus.get(familiar_id=entity.id, modifier=Modifier.ItemDrop)
+    elif key == "Leprechaun Effectiveness":
+        bonus = await Bonus.get(familiar_id=entity.id, modifier=Modifier.MeatDrop)
+    else:
+        try:
+            modifier = Modifier(key)
+        except ValueError:
+            raise ModifierError(
+                "Modifier `{}` not recognised".format(key), modifier=key
+            )
 
-    bonus = Bonus(
-        **base, modifier=modifier, percentage=(info.get("percentage") is not None)
-    )
+        bonus = Bonus(
+            **base, modifier=modifier, percentage=(info.get("percentage") is not None)
+        )
 
     value = info.get("value")
 
@@ -91,70 +167,8 @@ def load_bonus(base, info, entity):
         pass
     elif value[0] == "[":
         expr = value[1:-1]
-
-        for f in Bonus.custom_functions.keys():
-            original = "class" if f == "charclass" else f
-            if original in expr:
-                expr = re.sub(
-                    r"{}\(([^\)]+)\)".format(original), '{}("\\1")'.format(f), expr
-                )
-
-        custom_funcs = []
-
-        def register_custom_func(f_name, arg):
-            custom_funcs.append((f_name, arg))
-            return Symbol(f_name)
-
-        funcs = {
-            "abs": functions.Abs,
-            "min": functions.Min,
-            "max": functions.Max,
-            "sqrt": functions.sqrt,
-            "ceil": functions.ceiling,
-            "floor": functions.floor,
-            "A": Symbol("A"),
-            "B": Symbol("B"),
-            "C": Symbol("C"),
-            "D": Symbol("D"),
-            "E": Symbol("E"),
-            "F": Symbol("F"),
-            "G": Symbol("G"),
-            "H": Symbol("H"),
-            "I": Symbol("I"),
-            "J": Symbol("J"),
-            "K": Symbol("K"),
-            "L": Symbol("L"),
-            "M": Symbol("M"),
-            "N": Symbol("N"),
-            "P": Symbol("P"),
-            "R": Symbol("R"),
-            "S": Symbol("S"),
-            "T": Symbol("T"),
-            "U": Symbol("U"),
-            "W": Symbol("W"),
-            "X": Symbol("X"),
-            "Y": Symbol("Y"),
-            **{
-                f: partial(register_custom_func, f)
-                for f in Bonus.custom_functions.keys()
-            },
-        }
-
-        transformations = standard_transformations + (
-            split_symbols_custom(can_split),
-            caret_to_pow,
-            implicit_multiplication,
-        )
-
-        try:
-            expr = parse_expr(
-                expr, local_dict=funcs, transformations=transformations, evaluate=True
-            )
-        except:
-            print("Failed to parse {}".format(expr))
-            return None
-
-        bonus.expression_value = (expr, custom_funcs)
+        factor = bonus.expression_value or 1
+        bonus.expression_value = factor * parse_expression(expr)
     elif value[0] == '"':
         bonus.string_value = value[1:-1]
     else:
@@ -177,6 +191,9 @@ async def load(session: ClientSession):
 
         parts = line.split("\t")
 
+        if parts[1] == "(none)":
+            continue
+
         base = {}  # type: Dict[str, Any]
         referencable, entity = await cross_referencer(parts[0], parts[1], base)
 
@@ -189,7 +206,7 @@ async def load(session: ClientSession):
 
         for m in bonuses_pattern.finditer(parts[2]):
             try:
-                task = load_bonus(base, m.groupdict(), entity)
+                task = await load_bonus(base, m.groupdict(), entity)
             except ModifierError as e:
                 unknown_modifiers.add(e.modifier)
                 continue

@@ -62,5 +62,5 @@ class equipment(Request):
             Slot.FamiliarEquipment: (await cls.slot_to_item(current, "Familiar")),
         }
 
-        session.state["equipment"] = eq
+        session.state.equipment = eq
         return eq
