@@ -137,5 +137,5 @@ jobs:
             echo -e "[DEFAULT]" >> ~/libkolconfig
             echo -e "username = $KOLUSERNAME" >> ~/libkolconfig
             echo -e "password = $KOLPASSWORD" >> ~/libkolconfig
-            curl https://github.com/python-kol/libkol/ci_test/check_mail.py
+            curl https://github.com/python-kol/libkol/tree/$CIRCLE_TAG/ci_test/check_mail.py
             ./check_mail.py
