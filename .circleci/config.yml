@@ -145,4 +145,5 @@ jobs:
             echo -e "username = $KOLUSERNAME" >> ~/libkolconfig
             echo -e "password = $KOLPASSWORD" >> ~/libkolconfig
             curl -O https://raw.githubusercontent.com/python-kol/libkol/$CIRCLE_TAG/ci_test/check_mail.py
+            chmod 755 check_mail.py
             ./check_mail.py
