@@ -137,7 +137,8 @@ jobs:
           name: Test Install From test.pypi
           command: |
             python --version
-            sudo pip3 install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libkol==$CIRCLE_TAG
+            attempt="0"
+            while [ $attempt -lt 3 ];do sudo pip3 install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libkol==$CIRCLE_TAG;i=$[$attempt+1];done
       - run:
           name: Test Login and Fetch Mail
           command: |
