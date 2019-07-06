@@ -21,6 +21,12 @@ install:
 install-dev:
 	pip install -r requirements.txt --user
 	pip install -r requirements.dev.txt --user
+
+package:
+	python setup.py sdist
+	python setup.py bdist_wheel
+
+
 ifndef CI
 	pre-commit install
 endif
