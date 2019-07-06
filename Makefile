@@ -11,6 +11,10 @@ coverage:
 	coverage html
 	coverage-badge -o htmlcov/coverage.svg
 
+dev:
+	pip install -r requirements.dev.txt
+	pip install -e .
+
 install:
 	pip install -r requirements.txt --user
 
