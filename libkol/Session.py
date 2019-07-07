@@ -101,8 +101,10 @@ class Session:
         self.db_file = db_file or path.join(path.dirname(__file__), "libkol.db")
 
     async def __aenter__(self) -> "Session":
+        db_url = "sqlite://{}?mode=ro".format(self.db_file)
+        print(db_url)
         await Tortoise.init(
-            db_url="sqlite://{}".format(self.db_file), modules={"models": models}
+            db_url=db_url, modules={"models": models}
         )
         Model.kol = self
         return self
