@@ -6,6 +6,8 @@ from time import time
 from tortoise import Tortoise
 from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
+from appdirs import user_data_dir
+import shutil
 
 import libkol
 from libkol import Clan, Kmail, request, Item, Bonus, Familiar
@@ -33,6 +35,8 @@ models = [
     "libkol.Trophy",
     "libkol.ZapGroup",
 ]
+
+data_dir = user_data_dir("libkol", "python-kol")
 
 
 @dataclass
@@ -98,15 +102,18 @@ class Session:
         self.state = State()
         self.server_url = None
         self.kmail = Kmail(self)
-        self.db_file = db_file or path.join(path.dirname(__file__), "libkol.db")
+
+        self.db_file = path.join(data_dir, "libkol.db")
+
+        if path.exists(db_local) is False:
+            db_shipped = path.join(path.dirname(__file__), "libkol.db")
+            shutil.copy2(db_shipped, db_local)
 
     async def __aenter__(self) -> "Session":
         db_url = "sqlite://{}".format(self.db_file)
         print(db_url)
         print(__file__)
-        await Tortoise.init(
-            db_url=db_url, modules={"models": models}
-        )
+        await Tortoise.init(db_url=db_url, modules={"models": models})
         Model.kol = self
         return self
 
