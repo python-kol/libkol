@@ -5,7 +5,7 @@ from setuptools import setup
 from setuptools import find_packages
 from setuptools.command.install import install
 
-VERSION = "0.5.34"
+VERSION = "0.5.35"
 
 
 def readme():
@@ -53,6 +53,7 @@ setup(
         "PuLP==1.6.10",
         "sympy==1.4",
     ],
+    package_data={"libkol": ["libkol.db"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
