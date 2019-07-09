@@ -5,7 +5,7 @@ from setuptools import setup
 from setuptools import find_packages
 from setuptools.command.install import install
 
-VERSION = "0.5.33"
+VERSION = "0.5.34"
 
 
 def readme():
@@ -40,6 +40,7 @@ setup(
     # packages=setuptools.find_packages(),
     packages=find_packages(),
     install_requires=[
+        "appdirs==1.4.3",
         "aioitertools==0.4.0",
         "aiohttp==3.5.4",
         "beautifulsoup4==4.7.1",
