@@ -15,6 +15,7 @@ class PlayerSearchTestCase(TestCase):
             self.assertEqual(profile.tattoo, "kgbtat")
             self.assertEqual(profile.tattoos, 165)
             self.assertGreaterEqual(profile.clan, "The Piglets of Fate")
+            self.assertEqual(len(profile.skills), 337)
 
         self.run_async("public", run_test)
 
@@ -27,5 +28,6 @@ class PlayerSearchTestCase(TestCase):
             self.assertEqual(profile.tattoo, "gtat")
             self.assertEqual(profile.tattoos, None)
             self.assertGreaterEqual(profile.clan, "Reddit United")
+            self.assertEqual(profile.skills, None)
 
         self.run_async("private", run_test)

@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass
 from bs4 import BeautifulSoup
 
@@ -19,12 +19,13 @@ clan_pattern = re.compile(
 
 @dataclass
 class Profile:
-    username: str
     ascensions: Optional[int]
-    trophies: Optional[List["libkol.Trophy"]]
+    clan: Optional["libkol.Clan"]
+    skills: Optional[List[Tuple["libkol.Skill", bool]]]
     tattoo: Optional[str]
     tattoos: Optional[int]
-    clan: Optional["libkol.Clan"]
+    trophies: Optional[List["libkol.Trophy"]]
+    username: str
 
 
 class player_profile(Request[Profile]):
@@ -35,7 +36,7 @@ class player_profile(Request[Profile]):
 
     @staticmethod
     async def parser(content: str, **kwargs) -> Profile:
-        from .. import Clan, Trophy
+        from .. import Clan, Trophy, Skill
 
         username_match = username_pattern.search(content)
 
@@ -58,8 +59,25 @@ class player_profile(Request[Profile]):
         if tatt_link:
             tattoo = tatt_link.img["alt"][8:]
 
+        # Skills
+        skills = None  # type: Optional[List[Tuple[Skill, bool]]]
+        skills_section = soup.find("div", id="pskills")
+        if skills_section is not None:
+            skills = []
+            for s in skills_section.find_all("tr", class_="blahblah"):
+                if s.td.a:
+                    skill = await Skill[int(s.td.a["onclick"][17:-1])]
+                else:
+                    text = s.td.get_text()
+                    skill_name = text[0 : text.find("(") - 1]
+                    skill = await Skill[skill_name]
+
+                hardcore = True if s.td.b else False
+
+                skills += [(skill, hardcore)]
+
         # Trophies
-        trophies = None # Optional[List[Trophy]]
+        trophies = None  # Optional[List[Trophy]]
         if soup.find("center", text="Trophies:") is not None:
             trophies = [
                 await Trophy.filter(name=t["title"]).first()
@@ -75,10 +93,11 @@ class player_profile(Request[Profile]):
             clan = Clan(clan_match, id=clan_id, name=clan_name)
 
         return Profile(
-            username=username_match.group(1),
             ascensions=ascensions,
-            trophies=trophies,
+            clan=clan,
+            skills=skills,
             tattoo=tattoo,
             tattoos=tattoos,
-            clan=clan,
+            trophies=trophies,
+            username=username_match.group(1),
         )
