@@ -8,11 +8,12 @@ from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple, Unio
 from urllib.parse import urlparse
 
 import libkol
-from libkol import Clan, Kmail, request, Item, Bonus, Familiar
+from libkol import Clan, Kmail, request, Item, Bonus, Familiar, Trophy
 
 from .types import FamiliarState
 from .Skill import Skill
 from .Slot import Slot
+from .Trophy import Trophy
 from .Model import Model
 from .Element import Element
 from .Stat import Stat
@@ -66,9 +67,9 @@ class State:
     max_hp: int = 0
     max_mp: int = 0
     meat: int = 0
-    num_ascensions: int = 0
-    num_tattoos: int = 0
-    num_trophies: int = 0
+    ascensions: int = 0
+    tattoos: int = 0
+    trophies: List[Trophy] = field(default_factory=list)
     pwd: str = ""
     rollover: int = 0
     skills: List[Skill] = field(default_factory=list)
@@ -212,6 +213,13 @@ class Session:
         """
         return self.state.user_id
 
+    @property
+    def clan(self) -> Optional[Clan]:
+        """
+        Returns the current player's clan
+        """
+        return self.state.clan
+
     async def get_elemental_resistance(
         self, element: Element, percentage: bool = False
     ) -> Union[float, int]:
@@ -264,7 +272,15 @@ class Session:
         if user_id is None:
             return False
 
-        return await request.player_profile(self, user_id).parse()
+        profile = await request.player_profile(self, user_id).parse()
+
+        self.state.username = profile.username
+        self.state.clan = profile.clan
+        self.state.ascensions = profile.ascensions
+        self.state.tattoos = profile.tattoos
+        self.state.trophies = profile.trophies
+
+        return True
 
     @logged_in
     async def get_skills(self) -> List["libkol.Skill"]:
@@ -303,8 +319,8 @@ class Session:
         return self.state.effects
 
     @property
-    def num_ascensions(self) -> int:
-        return self.state.num_ascensions
+    def ascensions(self) -> int:
+        return self.state.ascensions
 
     @logged_in
     async def refresh_gender(self) -> bool:

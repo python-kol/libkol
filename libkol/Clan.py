@@ -18,6 +18,14 @@ class Clan(object):
         self.website = None
         self.credo = None
 
+    def __ge__(self, other):
+        if isinstance(other, str):
+            return self.name == other
+        elif isinstance(other, int):
+            return self.id == other
+        else:
+            return self == other
+
     @classmethod
     @logged_in
     async def find(self, session, name):
