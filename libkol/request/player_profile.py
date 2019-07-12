@@ -59,10 +59,12 @@ class player_profile(Request[Profile]):
             tattoo = tatt_link.img["alt"][8:]
 
         # Trophies
-        trophies = [
-            await Trophy.filter(name=t["title"]).first()
-            for t in soup.find_all("img", src=lambda u: "/otherimages/trophy/" in u)
-        ]
+        trophies = None # Optional[List[Trophy]]
+        if soup.find("center", text="Trophies:") is not None:
+            trophies = [
+                await Trophy.filter(name=t["title"]).first()
+                for t in soup.find_all("img", src=lambda u: "/otherimages/trophy/" in u)
+            ]
 
         # Clan
         clan = None  # type: Optional[libkol.Clan]

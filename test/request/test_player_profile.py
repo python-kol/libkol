@@ -23,7 +23,7 @@ class PlayerSearchTestCase(TestCase):
             profile = await player_profile.parser(file.read())
             self.assertEqual(profile.username, "Lyft")
             self.assertEqual(profile.ascensions, 326)
-            self.assertEqual(len(profile.trophies), 0)
+            self.assertEqual(profile.trophies, None)
             self.assertEqual(profile.tattoo, "gtat")
             self.assertEqual(profile.tattoos, None)
             self.assertGreaterEqual(profile.clan, "Reddit United")
