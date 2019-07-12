@@ -13,6 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/python-kol/libkol",
     packages=setuptools.find_packages(),
+    package_data={"libkol": ["libkol.db"]},
     install_requires=[
         "aioitertools==0.4.0",
         "aiohttp==3.5.4",
