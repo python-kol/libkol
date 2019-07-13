@@ -1,20 +1,46 @@
-import setuptools
+import os
+import sys
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+from setuptools import setup
+from setuptools import find_packages
+from setuptools.command.install import install
 
-setuptools.setup(
+VERSION = "0.5.35"
+
+
+def readme():
+    with open("README.md", "r") as fh:
+        return fh.read()
+
+
+class VerifyVersionCommand(install):
+    """Custom command to verify that the git tag matches our version"""
+
+    description = "verify that the git tag matches our version"
+
+    def run(self):
+        tag = os.getenv("CIRCLE_TAG")
+
+        if tag != VERSION:
+            info = "Git tag: {0} does not match the version of this app: {1}".format(
+                tag, VERSION
+            )
+            sys.exit(info)
+
+
+setup(
     name="libkol",
-    version="0.9.0",
+    version=VERSION,
     author="",
     author_email="dan@heathmailbox.com",
     description="Python library for interacting with the Kingdom of Loathing ",
-    long_description=long_description,
+    long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/python-kol/libkol",
     packages=setuptools.find_packages(),
     package_data={"libkol": ["libkol.db"]},
     install_requires=[
+        "appdirs==1.4.3",
         "aioitertools==0.4.0",
         "aiohttp==3.5.4",
         "beautifulsoup4==4.7.1",
@@ -27,9 +53,11 @@ setuptools.setup(
         "PuLP==1.6.10",
         "sympy==1.4",
     ],
+    package_data={"libkol": ["libkol.db"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    cmdclass={"verify": VerifyVersionCommand},
 )

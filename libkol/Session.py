@@ -1,11 +1,13 @@
 from aiohttp import ClientResponse, ClientSession
 from collections import defaultdict
 from dataclasses import dataclass, field
-from os import path
+from os import path, makedirs
 from time import time
 from tortoise import Tortoise
 from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
+from appdirs import user_data_dir
+import shutil
 
 import libkol
 from libkol import Clan, Kmail, request, Item, Bonus, Familiar, Trophy
@@ -34,6 +36,8 @@ models = [
     "libkol.Trophy",
     "libkol.ZapGroup",
 ]
+
+data_dir = user_data_dir("libkol", "python-kol")
 
 
 @dataclass
@@ -99,12 +103,14 @@ class Session:
         self.state = State()
         self.server_url = None
         self.kmail = Kmail(self)
-        self.db_file = db_file or path.join(path.dirname(__file__), "libkol.db")
+
+        self.db_file = path.join(data_dir, "libkol.db")
+
+        self.update_db()
 
     async def __aenter__(self) -> "Session":
-        await Tortoise.init(
-            db_url="sqlite://{}".format(self.db_file), modules={"models": models}
-        )
+        db_url = "sqlite://{}".format(self.db_file)
+        await Tortoise.init(db_url=db_url, modules={"models": models})
         Model.kol = self
         return self
 
@@ -113,6 +119,14 @@ class Session:
             await self.logout()
         await self.client.close()
         await Tortoise.close_connections()
+
+    def update_db(self):
+        db_shipped = path.join(path.dirname(__file__), "libkol.db")
+        if path.exists(self.db_file) is False or path.getmtime(
+            self.db_file
+        ) < path.getmtime(db_shipped):
+            makedirs(path.dirname(self.db_file), exist_ok=True)
+            shutil.copy2(db_shipped, self.db_file)
 
     async def request(
         self,

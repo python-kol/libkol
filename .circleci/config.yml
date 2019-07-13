@@ -1,22 +1,150 @@
-version: 2
+version: 2.1
+workflows:
+  build_and_deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - test-python-install:
+          version: "3.6"
+          requires:
+            - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+      - smoke_test:
+          requires:
+            - build
+            - deploy
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
 jobs:
   build:
     docker:
-    - image: circleci/python:3.6
+      - image: circleci/python:3.6
     steps:
-    - checkout
-    - run:
-        name: Setup testing environment
-        command: |
-          make install-dev
-    - run:
-        name: Run tests and measure coverage
-        command: |
-          make coverage
-    - store_artifacts:
-        path: htmlcov
-workflows:
-  version: 2
-  workflow:
-    jobs:
-    - build
+      - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+      - run:
+          name: Install Python Dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            make dev
+      - save_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+          paths:
+            - "venv"
+      - run:
+          name: Run Tests
+          command: |
+            . venv/bin/activate
+            make coverage
+      - run:
+          name: Git command testing
+          command: |
+            git status
+      - store_artifacts:
+          path: htmlcov/
+  test-python-install:
+    parameters:
+      version:
+        type: string
+        default: latest
+    docker:
+      - image: circleci/python:<< parameters.version >>
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+      - run:
+          name: Install Python Dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            make dev
+      - save_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+          paths:
+            - "venv"
+      - run:
+          name: Run Tests
+          command: |
+            . venv/bin/activate
+            make coverage
+      - store_artifacts:
+          path: htmlcov/
+  deploy:
+    docker:
+      - image: circleci/python:3.6
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+      - run:
+          name: Install Python Dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            make dev
+      - save_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+          paths:
+            - "venv"
+      - run:
+          name: verify git tag vs. version
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            python setup.py verify
+      - run:
+          name: init .pypirc
+          command: |
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "repository =  https://pypi.org/legacy/" >> ~/.pypirc
+            echo -e "username = pythonkol" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+            echo -e
+            echo -e "[testpypi]" >> ~/.pypirc
+            echo -e "repository =  https://test.pypi.org/legacy/" >> ~/.pypirc
+            echo -e "username = pythonkol" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+      - run:
+          name: Create Packages
+          command: |
+            make package
+      - run:
+          name: Upload To test.pypi
+          command: |
+            . venv/bin/activate
+            #twine upload dist/*
+            twine upload --repository testpypi dist/*
+  smoke_test:
+    docker:
+      - image: circleci/python:3.6
+    steps:
+      - run:
+          name: Test Install From test.pypi
+          command: |
+            python --version
+            attempt="0"
+            while [ $attempt -lt 3 ];do echo "Attempt $attempt";sudo pip3 install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libkol==$CIRCLE_TAG;if [[ `echo $?` == 0 ]];then echo "install completed";break;else attempt=$[$attempt+1];fi;done
+      - run:
+          name: Test Login and Fetch Mail
+          command: |
+            echo -e "[DEFAULT]" >> ~/libkolconfig
+            echo -e "username = $KOLUSERNAME" >> ~/libkolconfig
+            echo -e "password = $KOLPASSWORD" >> ~/libkolconfig
+            curl -O https://raw.githubusercontent.com/python-kol/libkol/$CIRCLE_TAG/ci_test/check_mail.py
+            chmod 755 check_mail.py
+            ./check_mail.py

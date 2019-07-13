@@ -9,3 +9,4 @@ aiosqlite==0.10.0
 tortoise-orm==0.12.2
 PuLP==1.6.10
 sympy==1.4
+appdirs==1.4.3
