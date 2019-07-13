@@ -19,15 +19,15 @@ async def main():
         await kol.login(config['DEFAULT']['username'], config['DEFAULT']['password'])
 
         print("Getting kmail")
-#        kmails = await kol.kmail.get()
-#        print(kmails)
-#        print("Parsing kmail")
-#        for kmail in kmails:
-#            print("Received kmail from %s (#%s)" % (kmail["userName"], kmail["userId"]))
-#            print("Text: %s" % kmail["text"])
-#            print("Meat: %s" % kmail["meat"])
-#            for item in kmail["items"]:
-#                print("Item: %s (%s)" % (item["name"], item["quantity"]))
+        kmails = await kol.kmail.get()
+        print(kmails)
+        print("Parsing kmail")
+        for kmail in kmails:
+            print("Received kmail from %s (#%s)" % (kmail["userName"], kmail["userId"]))
+            print("Text: %s" % kmail["text"])
+            print("Meat: %s" % kmail["meat"])
+            for item in kmail["items"]:
+                print("Item: %s (%s)" % (item["name"], item["quantity"]))
 
 
 if __name__ == "__main__":
