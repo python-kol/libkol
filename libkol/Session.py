@@ -103,8 +103,6 @@ class Session:
 
     async def __aenter__(self) -> "Session":
         db_url = "sqlite://{}".format(self.db_file)
-        print(db_url)
-        print(__file__)
         await Tortoise.init(db_url=db_url, modules={"models": models})
         Model.kol = self
         return self
