@@ -76,7 +76,7 @@ class Bonus(Model):
             expression, expression_symbols = self.expression_value
 
             symbols = {
-                "A": kol.num_ascensions,
+                "A": kol.ascensions,
                 "D": kol.inebriety,
                 "G": today.grimace_darkness,
                 "K": smithsness,

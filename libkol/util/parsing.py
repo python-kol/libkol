@@ -21,6 +21,13 @@ def panel(html: str, title: str = "Results:") -> Tag:
     return header.parent.parent.next_sibling.td
 
 
+def get_value(soup: Tag, key: str) -> Optional[Tag]:
+    for k in soup.find_all("td", align="right"):
+        if k.get_text() == f"{key}:":
+            return k.next_sibling
+    return None
+
+
 def wrap_elements(wrapper: Tag, elements: List[Tag]):
     w = copy(wrapper)
     elements[0].wrap(w)
