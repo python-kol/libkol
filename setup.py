@@ -37,8 +37,8 @@ setup(
     long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/python-kol/libkol",
-    # packages=setuptools.find_packages(),
-    packages=find_packages(),
+    packages=setuptools.find_packages(),
+    package_data={"libkol": ["libkol.db"]},
     install_requires=[
         "appdirs==1.4.3",
         "aioitertools==0.4.0",
