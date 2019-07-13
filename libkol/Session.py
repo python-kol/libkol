@@ -1,7 +1,7 @@
 from aiohttp import ClientResponse, ClientSession
 from collections import defaultdict
 from dataclasses import dataclass, field
-from os import path, makedirs
+from os import path
 from time import time
 from tortoise import Tortoise
 from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple, Union
@@ -103,6 +103,8 @@ class Session:
 
     async def __aenter__(self) -> "Session":
         db_url = "sqlite://{}".format(self.db_file)
+        print(db_url)
+        print(__file__)
         await Tortoise.init(db_url=db_url, modules={"models": models})
         Model.kol = self
         return self
@@ -112,14 +114,6 @@ class Session:
             await self.logout()
         await self.client.close()
         await Tortoise.close_connections()
-
-    def update_db(self):
-        db_shipped = path.join(path.dirname(__file__), "libkol.db")
-        if path.exists(self.db_file) is False or path.getmtime(
-            self.db_file
-        ) < path.getmtime(db_shipped):
-            makedirs(path.dirname(self.db_file), exist_ok=True)
-            shutil.copy2(db_shipped, self.db_file)
 
     async def request(
         self,
