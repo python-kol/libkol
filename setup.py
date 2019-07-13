@@ -5,7 +5,7 @@ from setuptools import setup
 from setuptools import find_packages
 from setuptools.command.install import install
 
-VERSION = "0.5.37"
+VERSION = "0.5.38"
 
 
 def readme():
@@ -37,7 +37,7 @@ setup(
     long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/python-kol/libkol",
-    packages=setup.find_packages(),
+    packages=find_packages(),
     package_data={"libkol": ["libkol.db"]},
     install_requires=[
         "appdirs==1.4.3",
