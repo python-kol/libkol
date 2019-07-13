@@ -53,7 +53,6 @@ setup(
         "PuLP==1.6.10",
         "sympy==1.4",
     ],
-    package_data={"libkol": ["libkol.db"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
