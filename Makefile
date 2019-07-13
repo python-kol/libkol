@@ -19,6 +19,7 @@ install:
 	pip install -r requirements.txt --user
 
 install-dev:
+	pip install -r requirements.txt --user
 	pip install -r requirements.dev.txt --user
 
 package:
