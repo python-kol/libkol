@@ -40,7 +40,6 @@ setup(
     packages=find_packages(),
     package_data={"libkol": ["libkol.db"]},
     install_requires=[
-        "appdirs==1.4.3",
         "aioitertools==0.4.0",
         "aiohttp==3.5.4",
         "beautifulsoup4==4.7.1",
