@@ -7,9 +7,10 @@ from .Error import UnknownError
 class Element(Enum):
     Cold = "cold"
     Hot = "hot"
-    Sleaze = "sleeze"
+    Sleaze = "sleaze"
     Spooky = "spooky"
     Stench = "stench"
+    Slime = "slime"
 
     @property
     def damage(self) -> Modifier:
