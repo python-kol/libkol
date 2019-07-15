@@ -6,7 +6,7 @@ import json
 from aiohttp import ClientResponse
 
 import libkol
-from libkol.Error import UnknownError
+from libkol.Error import UnknownError, InCombatError
 
 ParserReturn = TypeVar("ParserReturn")
 
@@ -16,6 +16,8 @@ class Request(Generic[ParserReturn]):
     request: Coroutine[Any, Any, ClientResponse]
     response: Optional[ClientResponse] = None
     returns_json: bool = False
+
+    fight: bool = False
 
     def __init__(self, session: "libkol.Session"):
         self.session = session
@@ -43,6 +45,14 @@ class Request(Generic[ParserReturn]):
         assert self.response is not None
 
         url = self.response.url  # type: URL
+
+        if url.path == "/fight.php" and self.fight is False:
+            if (
+                len(self.response.history) > 0
+                and self.response.history[0].url.path != "/fight.php"
+            ):
+                # Redirected to combat
+                raise InCombatError("Player is currently in combat")
 
         try:
             return await self.parser(content, url=url, session=self.session, **kwargs)

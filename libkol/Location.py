@@ -9,4 +9,4 @@ class Location(object):
         self.id = id
 
     async def visit(self):
-        return await self.session.parse(adventure, self.id)
+        return await adventure(self.session, self.id).parse()

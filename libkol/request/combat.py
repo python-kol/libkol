@@ -1,11 +1,22 @@
 from enum import Enum
 from typing import List, Optional, Union
+from dataclasses import dataclass
+from bs4 import BeautifulSoup
+from yarl import URL
+import re
 
 import libkol
 
 from ..Error import InvalidActionError
 from ..Skill import Skill
+from ..Monster import Monster
 from .request import Request
+
+
+@dataclass
+class CombatRound:
+    monster: str
+    turn: int
 
 
 class Action(Enum):
@@ -16,7 +27,10 @@ class Action(Enum):
     PickPocket = "steal"
 
 
-class combat(Request):
+turn_pattern = re.compile("<script>var onturn = (\d+);</script>")
+
+
+class combat(Request[CombatRound]):
     """
     A request used for a single round of combat. The user may attack, use an item or skill, or
     attempt to run away.
@@ -42,6 +56,8 @@ class combat(Request):
         skill: Optional[Skill] = None,
         item: Union["libkol.Item", List["libkol.Item"]] = None,
     ) -> None:
+        super().__init__(session)
+
         from libkol import Item
 
         params = {"action": action.value}
@@ -69,3 +85,18 @@ class combat(Request):
             params["whichskill"] = skill.id
 
         self.request = session.request("fight.php", params=params)
+
+    @staticmethod
+    async def parser(content: str, **kwargs) -> CombatRound:
+        turn_match = turn_pattern.search(content)
+        turn = int(turn_match.group(1)) if turn_match else 1
+
+        soup = BeautifulSoup(content, "html.parser")
+
+        img = soup.find("img", id="monpic")
+        image = URL(img["src"]).parts[-1]
+        monster = await Monster.identify(
+            name=soup.find("span", id="monname"), image=image
+        )
+
+        return CombatRound(turn=turn, monster=monster)

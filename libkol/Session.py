@@ -409,7 +409,7 @@ class Session:
         :param combat: A function that carries out combat
         """
         location = Location(self, id=location_id)
-        return await (await location.visit()).text()
+        return await location.visit()
 
     @logged_in
     async def logout(self):
