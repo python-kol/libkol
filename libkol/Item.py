@@ -171,7 +171,7 @@ class Item(Model, metaclass=ItemMeta):
         return s
 
     async def autosell(self, quantity: int = 1):
-        return await request.autosell_items(self.kol, [self])
+        return await request.autosell_items(self.kol, [self]).parse()
 
     @property
     def cleans_organ(self) -> Optional[Tuple[int, str]]:
