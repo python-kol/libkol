@@ -4,13 +4,17 @@ and start listening to chat.
 """
 
 import asyncio
+import os
+from dotenv import load_dotenv
 from libkol import Session
 from libkol.request import getChatMessagesRequest, openChatRequest
+
+load_dotenv()
 
 
 async def main():
     async with Session() as kol:
-        await kol.login("username", "password")
+        await kol.login(os.getenv("USERNAME"), os.getenv("PASSWORD"))
 
         kmails = await kol.kmail.get()
         for kmail in kmails:
