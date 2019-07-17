@@ -26,6 +26,10 @@ class CombatRound:
     turn: int
     events: List[CombatEvent]
     resource_gain: parsing.ResourceGain
+    damage: int
+    finished: bool
+    choice_follows: bool
+    fight_follows: bool
 
 
 class CombatAction(Enum):
@@ -178,6 +182,19 @@ class combat(Request[CombatRound]):
             if isinstance(e.contents[0], NavigableString)
         ]
 
+        damage = sum(e.damage for e in events)
+
+        finished = "<!--WINWINWIN-->" in content or "action=fight.php" not in content
+        choice_follows = finished and 'href="choice.php' in content
+        fight_follows = finished and 'href="fight.php' in content
+
         return CombatRound(
-            turn=turn, monster=monster, events=events, resource_gain=resource_gain
+            turn=turn,
+            monster=monster,
+            events=events,
+            damage=damage,
+            resource_gain=resource_gain,
+            finished=finished,
+            choice_follows=choice_follows,
+            fight_follows=fight_follows,
         )

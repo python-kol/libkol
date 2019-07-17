@@ -5,7 +5,7 @@ import libkol
 from .request import Request
 from .combat import combat, CombatRound
 
-Response = Union[CombatRound, bool]
+Response = Union[CombatRound, None]
 
 
 class adventure(Request[Response]):
@@ -31,4 +31,7 @@ class adventure(Request[Response]):
         if url.path == "/fight.php":
             return await combat.parser(content, **kwargs)
 
-        return True
+        if url.path == "/choice.php":
+            print("We don't support choices yet")
+
+        return None

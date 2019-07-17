@@ -396,7 +396,7 @@ class Session:
         self,
         location_id: int,
         choices: Union[Dict[str, int], Callable[[str], int]] = {},
-        combat: Callable = None,
+        combat_function: Callable = None,
     ):
         """
         Run adventure in a location
@@ -406,10 +406,10 @@ class Session:
         :param location_id: The id of the location to visit
         :param choices: Either a dictionary of choices to make, or a callable that can make that
                         decision
-        :param combat: A function that carries out combat
+        :param combat_function: A function that carries out combat
         """
         location = Location(self, id=location_id)
-        return await location.visit()
+        return await location.visit(choices, combat_function)
 
     @logged_in
     async def logout(self):
