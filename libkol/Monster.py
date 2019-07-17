@@ -60,4 +60,4 @@ class Monster(Model):
         if name.startswith(("a ", "an")):
             name = name[name.find(" ") :]
 
-        return cls.get(name=name)
+        return await cls.get(name=name)
