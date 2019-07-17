@@ -6,6 +6,7 @@ from libkol import models
 from libkol.Session import State
 import unittest
 import asyncio
+from yarl import URL
 from os import path
 
 TEST_DATA = path.join(path.dirname(path.abspath(__file__)), "test_data")
@@ -25,6 +26,7 @@ class MockSession:
 
         def async_return(url, *args, **kwargs):
             data_file = request_mocks.get(url, None)
+            url = URL(url)
 
             if data_file is None:
                 content = ""
