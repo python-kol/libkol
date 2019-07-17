@@ -50,7 +50,7 @@ def caret_to_pow(tokens, local_dict, global_dict):
 
 
 def parse_expression(value: str):
-    funcs = {"min": functions.Min}
+    funcs = {"min": functions.Min, "max": functions.Max}
 
     transformations = standard_transformations + (
         split_symbols_custom(can_split),
@@ -75,7 +75,7 @@ def apply_params(monster: Monster, param_list: str):
             value = m[2]
             if value[0] == "[":
                 value = value[1:-1]
-            setattr(monster, param_map[m[1]], parse_expression(value))
+            setattr(monster, "_" + param_map[m[1]], parse_expression(value))
         elif m[1] == "Meat":
             start, end = split_range(m[2])
             monster.meat = (start + end) / 2
