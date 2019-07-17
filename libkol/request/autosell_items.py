@@ -5,6 +5,7 @@ from typing import List, NamedTuple
 import libkol
 
 from .request import Request
+from ..util import parsing
 
 response_pattern = re.compile(r"You sell your (.*?) to (?:.*?) for ([0-9,]+) Meat.")
 
@@ -73,11 +74,10 @@ class autosell_items(Request[Response]):
                 if match is None
                 else 1
                 if match.group(1) is None
-                else int(match.group(1).replace(",", ""))
+                else parsing.to_int(match.group(1))
             )
             item_quantities += [ItemQuantity(item, quantity)]
 
         return Response(
-            items=item_quantities,
-            meat_gained=int(response_match.group(2).replace(",", "")),
+            items=item_quantities, meat_gained=parsing.to_int(response_match.group(2))
         )

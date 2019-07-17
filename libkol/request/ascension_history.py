@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 
 import libkol
 
+from ..util import parsing
 from .request import Request
 
 
@@ -41,7 +42,7 @@ class Ascension:
 
 
 def get_int_cell(c: BeautifulSoup) -> int:
-    return int((c.span if c.span else c).string.replace(",", ""))
+    return parsing.to_int((c.span if c.span else c).string)
 
 
 familiar_pattern = re.compile(

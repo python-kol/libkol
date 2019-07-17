@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import libkol
 
 from .request import Request
+from ..util import parsing
 
 
 @dataclass
@@ -46,14 +47,12 @@ class mall_price(Request[Response]):
 
         return Response(
             unlimited=[
-                Listing(
-                    price=int(p.b.string.replace(",", "")), stock=int(p.contents[1][2:])
-                )
+                Listing(price=parsing.to_int(p.b.string), stock=int(p.contents[1][2:]))
                 for p in (unlimited.find_next_siblings("td") if unlimited else [])
             ],
             limited=[
                 Listing(
-                    price=int(p.b.string.replace(",", "")),
+                    price=parsing.to_int(p.b.string),
                     stock=int(p.contents[1].split(" ")[1][1:]),
                     limit=int(p.contents[1].split(" ")[0][1:-5]),
                 )

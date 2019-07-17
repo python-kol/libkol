@@ -281,7 +281,7 @@ class Item(Model, metaclass=ItemMeta):
         result = await response.text()
 
         transactions = [
-            float(t[(t.rfind("@") + 1) :].replace(",", "").strip())
+            parsing.to_float(t[(t.rfind("@") + 1) :])
             for t in result[result.find("\n") :].split("\n")
             if t not in ["", "."]
         ]

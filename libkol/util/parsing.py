@@ -28,6 +28,14 @@ def get_value(soup: Tag, key: str) -> Optional[Tag]:
     return None
 
 
+def to_float(s: str) -> float:
+    return float(s.replace(",", "").strip())
+
+
+def to_int(s: str) -> int:
+    return int(s.replace(",", "").strip())
+
+
 def wrap_elements(wrapper: Tag, elements: List[Tag]):
     w = copy(wrapper)
     elements[0].wrap(w)
@@ -73,7 +81,7 @@ async def item(text: str) -> List["types.ItemQuantity"]:
         item_quantities += [types.ItemQuantity(item, 1)]
 
     for match in multi_item_pattern.finditer(text):
-        quantity = int(match.group(2).replace(",", ""))
+        quantity = to_int(match.group(2))
         item = await Item.get_or_discover(desc_id=int(match.group(1)))
         item_quantities += [types.ItemQuantity(item, quantity)]
 

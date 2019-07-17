@@ -7,6 +7,7 @@ from yarl import URL
 import libkol
 
 from .request import Request
+from ..util import parsing
 
 
 class Category(Enum):
@@ -169,7 +170,7 @@ class mall_search(Request[List["libkol.types.Listing"]]):
                 price=int(url.query["searchprice"]),
                 store_id=int(url.query["whichstore"]),
                 store_name=store_name,
-                stock=int(stock.replace(",", "")),
+                stock=parsing.to_int(stock),
                 limit=(
                     0
                     if limit == "\xa0"
