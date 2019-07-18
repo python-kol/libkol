@@ -6,7 +6,7 @@ import asyncio
 import os
 from dotenv import load_dotenv
 from libkol import Session
-from libkol.request.combat import combat, CombatRound
+from libkol.request.combat import CombatRound
 
 load_dotenv()
 
@@ -24,7 +24,7 @@ async def do_combat(combat, start: CombatRound):
 
 async def main():
     async with Session() as kol:
-        await kol.login(os.getenv("USERNAME"), os.getenv("PASSWORD"))
+        await kol.login(os.getenv("KOL_USERNAME"), os.getenv("KOL_PASSWORD"))
         result = await kol.adventure(92, combat_function=do_combat)
         print(result)
 

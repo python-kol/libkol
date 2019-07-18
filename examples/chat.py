@@ -14,7 +14,7 @@ load_dotenv()
 
 async def main():
     async with Session() as kol:
-        await kol.login(os.getenv("USERNAME"), os.getenv("PASSWORD"))
+        await kol.login(os.getenv("KOL_USERNAME"), os.getenv("KOL_PASSWORD"))
 
         kmails = await kol.kmail.get()
         for kmail in kmails:
