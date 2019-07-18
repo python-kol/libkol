@@ -1,20 +1,13 @@
 import asyncio
 from tortoise.transactions import atomic
 from html import unescape
-from functools import partial
 from aiohttp import ClientSession
 import re
-from sympy import functions, Symbol
-from sympy.parsing.sympy_parser import (
-    parse_expr,
-    _token_splittable,
-    standard_transformations,
-    implicit_multiplication,
-    split_symbols_custom,
-)
+
 from typing import Any, Coroutine, Dict, List
 
 from libkol import Bonus, Effect, Item, Modifier, Skill, Outfit, Familiar
+from libkol.util import expression
 
 from util import load_mafia_data, mafia_dedupe
 
@@ -58,83 +51,6 @@ async def cross_referencer(name: str, value: str, modifier_base):
     return True, entity
 
 
-def can_split(symbol):
-    if symbol not in Bonus.custom_functions:
-        return _token_splittable(symbol)
-    return False
-
-
-def caret_to_pow(tokens, local_dict, global_dict):
-    for i, token in enumerate(tokens):
-        if token == (53, "^"):
-            tokens[i] = (53, "**")
-
-    return tokens
-
-
-def parse_expression(expr: str):
-    for f in Bonus.custom_functions.keys():
-        original = "class" if f == "charclass" else f
-        if original in expr:
-            expr = re.sub(
-                r"{}\(([^\)]+)\)".format(original), '{}("\\1")'.format(f), expr
-            )
-
-    custom_funcs = []
-
-    def register_custom_func(f_name, arg):
-        custom_funcs.append((f_name, arg))
-        return Symbol(f_name)
-
-    funcs = {
-        "abs": functions.Abs,
-        "min": functions.Min,
-        "max": functions.Max,
-        "sqrt": functions.sqrt,
-        "ceil": functions.ceiling,
-        "floor": functions.floor,
-        "A": Symbol("A"),
-        "B": Symbol("B"),
-        "C": Symbol("C"),
-        "D": Symbol("D"),
-        "E": Symbol("E"),
-        "F": Symbol("F"),
-        "G": Symbol("G"),
-        "H": Symbol("H"),
-        "I": Symbol("I"),
-        "J": Symbol("J"),
-        "K": Symbol("K"),
-        "L": Symbol("L"),
-        "M": Symbol("M"),
-        "N": Symbol("N"),
-        "P": Symbol("P"),
-        "R": Symbol("R"),
-        "S": Symbol("S"),
-        "T": Symbol("T"),
-        "U": Symbol("U"),
-        "W": Symbol("W"),
-        "X": Symbol("X"),
-        "Y": Symbol("Y"),
-        **{f: partial(register_custom_func, f) for f in Bonus.custom_functions.keys()},
-    }
-
-    transformations = standard_transformations + (
-        split_symbols_custom(can_split),
-        caret_to_pow,
-        implicit_multiplication,
-    )
-
-    try:
-        expr = parse_expr(
-            expr, local_dict=funcs, transformations=transformations, evaluate=True
-        )
-    except:
-        print("Failed to parse {}".format(expr))
-        return None
-
-    return expr, custom_funcs
-
-
 async def load_bonus(base, info, entity):
     key = info["key"]
 
@@ -168,7 +84,7 @@ async def load_bonus(base, info, entity):
     elif value[0] == "[":
         expr = value[1:-1]
         factor = bonus.expression_value or 1
-        bonus.expression_value = factor * parse_expression(expr)
+        bonus.expression_value = factor * expression.parse(expr)
     elif value[0] == '"':
         bonus.string_value = value[1:-1]
     else:

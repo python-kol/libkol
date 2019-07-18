@@ -52,6 +52,7 @@ setup(
         "PuLP==1.6.10",
         "sympy==1.4",
         "python-dotenv==0.10.3",
+        "dill==0.3.0",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

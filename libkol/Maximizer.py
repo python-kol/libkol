@@ -119,7 +119,11 @@ class Maximizer:
                     | Q(item__familiar_equipment=True)
                 )
                 .prefetch_related(
-                    "item", "outfit", "outfit__variants", "outfit__variants__pieces"
+                    "item",
+                    "outfit",
+                    "outfit__variants",
+                    "outfit__variants__pieces",
+                    "familiar",
                 )
             )
         ]

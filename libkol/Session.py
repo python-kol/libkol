@@ -250,8 +250,16 @@ class Session:
         return self.state.current_hp
 
     @property
+    def max_hp(self):
+        return self.state.max_hp
+
+    @property
     def mp(self):
         return self.state.current_mp
+
+    @property
+    def skills(self):
+        return self.state.skills
 
     @property
     def pwd(self):
@@ -338,9 +346,13 @@ class Session:
     def gender(self) -> str:
         return self.state.gender
 
-    @logged_in
-    def get_familiar_weight(self) -> int:
-        return self.state.familiars[self.state.familiar].weight
+    @property
+    def familiar(self) -> Optional[Familiar]:
+        return self.state.familiar
+
+    @property
+    def familiar_weight(self) -> int:
+        return self.state.familiars[self.familiar].weight
 
     @logged_in
     async def get_reagent_potion_duration(self) -> int:

@@ -1,9 +1,9 @@
 import libkol
 from enum import Enum
-from typing import List, Optional
+from typing import Dict, List, Optional
 from tortoise.fields import CharField, IntField, BooleanField
 
-from .util import EnumField, PickleField
+from .util import EnumField, PickleField, expression
 from .Model import Model
 from .Element import Element
 from .Phylum import Phylum
@@ -48,27 +48,32 @@ class Monster(Model):
     phylum = EnumField(enum_type=Phylum, null=True)
     physical_resistance = IntField(default=0)
 
-    @property
-    def cap(self) -> int:
-        return self._cap.evalf()
+    async def get_cap(self) -> int:
+        return await expression.evaluate(self.kol, self._cap)
 
-    @property
-    def floor(self) -> int:
-        return self._floor.evalf()
+    async def get_floor(self) -> int:
+        return await expression.evaluate(self.kol, self._floor)
 
-    @property
-    def scale(self) -> int:
-        return self._scale.evalf()
+    async def get_scale(self) -> int:
+        return await expression.evaluate(self.kol, self._scale)
 
-    @property
-    def hp(self) -> int:
+    async def get_attack(self) -> int:
+        return await expression.evaluate(self.kol, self._attack)
+
+    async def get_defence(self) -> int:
+        return await expression.evaluate(self.kol, self._defence)
+
+    async def get_hp(self) -> int:
         if self._hp is not None:
-            return max(self._hp.evalf(), 1)
+            return max(await expression.evaluate(self.kol, self._hp), 1)
 
-        if self.scale is None:
+        if self.get_scale() is None:
             return -1
 
-        hp = min(self.cap, max(self.floor, self.kol.get_stat(Stat.Muscle, buffed=True)))
+        hp = min(
+            self.get_cap(),
+            max(self.get_floor(), self.kol.get_stat(Stat.Muscle, buffed=True)),
+        )
 
         return max(hp // (4 / 3), 1)
 

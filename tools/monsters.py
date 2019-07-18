@@ -3,21 +3,14 @@ from tortoise.transactions import atomic
 from html import unescape
 from aiohttp import ClientSession
 import re
-from sympy import functions
-from sympy.parsing.sympy_parser import (
-    parse_expr,
-    _token_splittable,
-    standard_transformations,
-    implicit_multiplication,
-    split_symbols_custom,
-)
 
 from typing import Any, Coroutine, Dict, List, Union
 from libkol import Item, Monster, MonsterImage, MonsterDrop, Element, Phylum
+from libkol.util import expression
 
 from util import load_mafia_data, split_range, mafia_dedupe
 
-param_pattern = re.compile(r"(?:(\w+)(?:: +(\S+))?)")
+param_pattern = re.compile(r"(?:(?P<key>\w+)(?:: +(?P<value>\[[^\]]+\]|\S+))?)")
 drop_pattern = re.compile(
     r"^(?P<item>.*?)(?: \((?P<modifier>[a-zA-Z]?)(?P<rate>\d+)\))?$"
 )
@@ -37,61 +30,29 @@ param_map = {
 }
 
 
-def can_split(symbol):
-    return False
-
-
-def caret_to_pow(tokens, local_dict, global_dict):
-    for i, token in enumerate(tokens):
-        if token == (53, "^"):
-            tokens[i] = (53, "**")
-
-    return tokens
-
-
-def parse_expression(value: str):
-    funcs = {"min": functions.Min, "max": functions.Max}
-
-    transformations = standard_transformations + (
-        split_symbols_custom(can_split),
-        caret_to_pow,
-        implicit_multiplication,
-    )
-
-    try:
-        expr = parse_expr(
-            value, local_dict=funcs, transformations=transformations, evaluate=True
-        )
-    except:
-        print("Failed to parse {}".format(value))
-        return None
-
-    return expr
-
-
 def apply_params(monster: Monster, param_list: str):
     for m in re.finditer(param_pattern, param_list):
-        if m[1] in param_map.keys():
-            value = m[2]
+        key, value = m.groups()
+        if key in param_map.keys():
             if value[0] == "[":
                 value = value[1:-1]
-            setattr(monster, "_" + param_map[m[1]], parse_expression(value))
-        elif m[1] == "Meat":
-            start, end = split_range(m[2])
+            setattr(monster, "_" + param_map[key], expression.parse(value))
+        elif key == "Meat":
+            start, end = split_range(value)
             monster.meat = (start + end) / 2
-        elif m[1] == "Phys":
-            monster.physical_resistance = int(m[2])
-        elif m[1] == "P":
-            monster.phylum = Phylum(m[2])
-        elif m[1] == "E":
-            monster.attack_element = Element(m[2])
-            monster.defence_element = Element(m[2])
-        elif m[1] == "EA":
-            monster.attack_element = Element(m[2])
-        elif m[1] == "ED":
-            monster.defence_element = Element(m[2])
+        elif key == "Phys":
+            monster.physical_resistance = int(value)
+        elif key == "P":
+            monster.phylum = Phylum(value)
+        elif key == "E":
+            monster.attack_element = Element(value)
+            monster.defence_element = Element(value)
+        elif key == "EA":
+            monster.attack_element = Element(value)
+        elif key == "ED":
+            monster.defence_element = Element(value)
         else:
-            setattr(monster, m[1].lower(), True)
+            setattr(monster, key.lower(), True)
 
 
 @atomic()
