@@ -12,7 +12,7 @@ load_dotenv()
 
 
 async def do_combat(combat, start: CombatRound):
-    monster_hp = start.monster.hp
+    monster_hp = await start.monster.get_hp()
     round = start
 
     while monster_hp > 0:
