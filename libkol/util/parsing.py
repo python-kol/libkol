@@ -219,7 +219,7 @@ class ResourceGain:
 
 
 async def resource_gain(
-    html: str, session: Optional["libkol.Session"] = None
+    html: str, session: Optional["libkol.Session"] = None, combat: bool = False
 ) -> ResourceGain:
     rg = ResourceGain(
         items=(await item(html)),
@@ -233,6 +233,10 @@ async def resource_gain(
         mp=mp(html),
         meat=meat(html),
     )
+
+    if combat and "<!--WINWINWIN-->" in html:
+        if "<!--FREEFREEFREE-->" not in html:
+            rg.adventures -= 1
 
     if session:
         for iq in rg.items:
