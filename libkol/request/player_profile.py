@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 from dataclasses import dataclass
 from bs4 import BeautifulSoup
 
@@ -9,8 +9,8 @@ from ..Error import UnknownError
 from .request import Request
 from ..util import parsing
 
-username_pattern = re.compile(
-    r"<td valign=\"?center\"?>(?:<center>)?(?:<span [^>]+>)?<b>([^<>]+)<\/b> \(#[0-9]+\)<br>"
+user_pattern = re.compile(
+    r"<td valign=\"?center\"?>(?:<center>)?(?:<span [^>]+>)?<b>(?P<username>[^<>]+)<\/b> \(#(?P<user_id>[0-9]+)\)<br>"
 )
 clan_pattern = re.compile(
     r"Clan: <b><a class=nounder href=\"showclan\.php\?whichclan=([0-9]+)\">(.*?)<\/a>"
@@ -26,6 +26,7 @@ class Profile:
     tattoos: Optional[int]
     trophies: Optional[List["libkol.Trophy"]]
     username: str
+    id: int
 
 
 class player_profile(Request[Profile]):
@@ -38,9 +39,9 @@ class player_profile(Request[Profile]):
     async def parser(content: str, **kwargs) -> Profile:
         from .. import Clan, Trophy, Skill
 
-        username_match = username_pattern.search(content)
+        user_match = user_pattern.search(content)
 
-        if username_match is None:
+        if user_match is None:
             raise UnknownError("Cannot match username")
 
         soup = BeautifulSoup(content, "html.parser")
@@ -99,5 +100,6 @@ class player_profile(Request[Profile]):
             tattoo=tattoo,
             tattoos=tattoos,
             trophies=trophies,
-            username=username_match.group(1),
+            username=user_match.group("username"),
+            id=int(user_match.group("user_id")),
         )

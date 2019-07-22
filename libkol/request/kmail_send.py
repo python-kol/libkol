@@ -21,7 +21,10 @@ class kmail_send(Request):
         items: List["libkol.types.ItemQuantity"] = [],
         meat: int = 0,
     ) -> None:
+        super().__init__(session)
+
         params = {"toid": ""}
+
         data = {
             "action": "send",
             "towho": recipient,
@@ -30,7 +33,7 @@ class kmail_send(Request):
         }
 
         self.request = session.request(
-            "sendmessage.php", params=params, data=data, pwdt=True
+            "sendmessage.php", params=params, data=data, pwd=True
         )
 
     @staticmethod
