@@ -8,3 +8,4 @@ docs_source/_build
 htmlcov
 .coverage
 *.lp
+.env

@@ -14,8 +14,12 @@ from .Item import Item
 from .Kmail import Kmail
 from .Maximizer import Maximizer
 from .Modifier import Modifier
+from .Monster import Monster
+from .MonsterDrop import MonsterDrop
+from .MonsterImage import MonsterImage
 from .Outfit import Outfit
 from .OutfitVariant import OutfitVariant
+from .Phylum import Phylum
 from .Session import Session, models
 from .Skill import Skill
 from .Store import Store
@@ -43,10 +47,14 @@ __all__ = [
     "Item",
     "Kmail",
     "Maximizer",
+    "Monster",
+    "MonsterDrop",
+    "MonsterImage",
     "models",
     "Modifier",
     "Outfit",
     "OutfitVariant",
+    "Phylum",
     "Session",
     "Skill",
     "Store",

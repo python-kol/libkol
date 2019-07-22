@@ -31,7 +31,7 @@ class item_description(Request):
         image = URL(container.center.img["src"]).parts[-1]
         autosell_value = next(
             (
-                int(line[1].string.split(" ")[0].replace(",", ""))
+                parsing.to_int(line[1].string.split(" ")[0])
                 for line in lines
                 if line[0] == "Selling Price: "
             ),

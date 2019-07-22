@@ -22,7 +22,7 @@ def split_range(range: str):
     return start, int(m.group(2)) if m.group(2) else start
 
 
-id_duplicate_pattern = re.compile(r"\[([0-9]+)\].+")
+id_duplicate_pattern = re.compile(r"\[([0-9]+)\].*")
 
 
 def mafia_dedupe(name: str):

@@ -59,20 +59,6 @@ patterns = {
     "imprisonedByChums": r"^(.*) has been imprisoned by the C\. H\. U\. M\.s!$",
     "freedFromChums": r"^(.*) has rescued (.*) from the C\. H\. U\. M\.s\.$",
     "chefExplosion": r"Smoke begins to pour from the head of your chef-in-the-box. It begins to vibrate noisily, spits out a few dishes at random, and then explodes\.",
-    # Stat, Substat, Leveling, HP, and MP patterns. Will fail in Haiku Dungeon.
-    "muscleGainLoss": r"You (gain|lose) ([0-9,]+) (?:Beefiness|Fortitude|Muscleboundness|Strengthliness|Strongness)",
-    "mysticalityGainLoss": r"You (gain|lose) ([0-9,]+) (?:Enchantedness|Magicalness|Mysteriousness|Wizardliness)",
-    "moxieGainLoss": r"You (gain|lose) ([0-9,]+) (?:Cheek|Chutzpah|Roguishness|Sarcasm|Smarm)",
-    "musclePointGainLoss": r"You (gain|lose) (a|some) Muscle points?",
-    "mystPointGainLoss": r"You (gain|lose) (a|some) Mysticality points?",
-    "moxiePointGainLoss": r"You (gain|lose) (a|some) Moxie points?",
-    "levelGain": r"You gain (a|some) (?:L|l)evels?",
-    "hpGainLoss": r"You (gain|lose) ([0-9,]+) hit points?",
-    "mpGainLoss": r"You (gain|lose) ([0-9,]+) (?:Muscularity|Mana|Mojo) (?:P|p)oints?",
-    # Drunkenness, Adventures, and Effect patterns.
-    "gainDrunk": r"You gain ([0-9]+) Drunkenness",
-    "gainAdventures": r"You gain ([0-9,]+) Adventures",
-    "gainEffect": r"<td valign=center class=effect>You acquire an effect: <b>(.*?)</b><br>\(duration: ([0-9,]+) Adventures\)</td>",
     # Store patterns.
     "storeInventory": r'<tr class="deets" rel="([0-9]+)" after="([0-9]+)">(.*?)<b>(.*?)</b></td><td valign="center" align="center">([0-9]+)</td(.*?)name="price\[([0-9]+)\]" value="([0-9,]+)"(.*?)name="limit\[[0-9]+\]" value="([0-9]+)"(.*?)cheapest: ([0-9]+)</span>',
     # Adventure patterns.

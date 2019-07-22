@@ -1,8 +1,13 @@
+import os
+from dotenv import load_dotenv
 from libkol import Session, run, Modifier, Maximizer, Item
+
+load_dotenv()
 
 
 async def main():
     async with Session() as kol:
+        await kol.login(os.getenv("KOL_USERNAME"), os.getenv("KOL_PASSWORD"))
         problem = Maximizer(kol)
         problem += Modifier.HotResistance
         problem += await Item["high-temperature mining drill"]

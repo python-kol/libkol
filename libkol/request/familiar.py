@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup, Tag
 import libkol
 
 from .request import Request
+from ..util import parsing
 from ..Error import UnknownError
 
 stat_pattern = re.compile(
@@ -38,8 +39,8 @@ class familiar(Request):
             familiar=familiar,
             nickname=name.get_text(),
             weight=int(stats["weight"]),
-            experience=int(stats["experience"].replace(",", "")),
-            kills=int(stats["kills"].replace(",", "")),
+            experience=parsing.to_int(stats["experience"]),
+            kills=parsing.to_int(stats["kills"]),
         )
 
     @classmethod

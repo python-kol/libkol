@@ -156,6 +156,10 @@ class CannotChangeClanError(Error):
     pass
 
 
+class InCombatError(Error):
+    pass
+
+
 class ClanRaidsNotFoundError(Error):
     pass
 

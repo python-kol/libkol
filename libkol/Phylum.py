@@ -1,0 +1,26 @@
+from enum import Enum
+
+
+class Phylum(Enum):
+    Beast = "beast"
+    Bug = "bug"
+    Constellation = "constellation"
+    Construct = "construct"
+    Demon = "demon"
+    Dude = "dude"
+    Elemental = "elemental"
+    Elf = "elf"
+    Fish = "fish"
+    Goblin = "goblin"
+    Hippy = "hippy"
+    Hobo = "hobo"
+    Horror = "horror"
+    Humanoid = "humanoid"
+    Merkin = "mer-kin"
+    Orc = "orc"
+    Penguin = "penguin"
+    Pirate = "pirate"
+    Plant = "plant"
+    Slime = "slime"
+    Undead = "undead"
+    Weird = "weird"

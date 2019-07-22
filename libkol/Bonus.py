@@ -1,10 +1,9 @@
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from typing import Optional
 
-from .util import EnumField, PickleField
+from .util import EnumField, PickleField, expression
 from .Modifier import Modifier
 from .Model import Model
-from .koldate import koldate
 
 from .Error import UnknownError
 
@@ -35,31 +34,13 @@ class Bonus(Model):
     percentage = BooleanField(default=False)
     expression_value = PickleField(null=True)
 
-    custom_functions = {
-        "charclass": (lambda c: 1 if Bonus.kol.get_character_class().value == c else 0),
-        "effect": lambda effect: 0,
-        "env": lambda env: 0,
-        "event": lambda event: 0,
-        "loc": lambda loc: 0,
-        "mod": lambda mod: 0,
-        "path": lambda path: 0,
-        "pref": lambda pref: 0,
-        "skill": lambda name: next(
-            (1 for s in Bonus.kol.state.skills if s.name == name), 0
-        ),
-        "zone": lambda zone: 0,
-    }
-
     async def get_value(
         self,
         normalise: bool = False,
-        smithsness: int = 0,
+        smithsness: Optional[int] = None,
         familiar_weight: Optional[int] = None,
     ):
         kol = self.kol
-
-        if familiar_weight is None:
-            familiar_weight = kol.get_familiar_weight()
 
         if self.string_value:
             return 1
@@ -71,34 +52,14 @@ class Bonus(Model):
             return self.modifier.apply_percentage(kol, self.numeric_value / 100)
 
         if self.expression_value:
-            today = koldate.today()
+            subs = {}
 
-            expression, expression_symbols = self.expression_value
+            if familiar_weight is not None:
+                subs["W"] = familiar_weight
 
-            symbols = {
-                "A": kol.ascensions,
-                "D": kol.inebriety,
-                "G": today.grimace_darkness,
-                "K": smithsness,
-                "L": kol.level,
-                "M": today.moonlight,
-                "R": await kol.get_reagent_potion_duration(),
-                "W": familiar_weight,
-                "X": 1 if kol.gender == "f" else 0,
-            }
+            if smithsness is not None:
+                subs["K"] = smithsness
 
-            for f, a in expression_symbols:
-                symbols[f] = self.custom_functions[f](a)
-
-            try:
-                expr = expression.evalf(subs=symbols)
-                if isinstance(expr, int) or expr.is_number:
-                    return expr
-                else:
-                    UnknownError(
-                        "Unknown symbols {} in {}".format(expr.free_symbols, expression)
-                    )
-            except Exception:
-                UnknownError("Could not parse {}".format(expression))
+            return await expression.evaluate(kol, self.expression_value, subs)
 
         return 0

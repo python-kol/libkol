@@ -6,6 +6,7 @@ import libkol
 
 from ..CharacterClass import CharacterClass
 from ..Error import UnknownError
+from ..util import parsing
 from .request import Request
 
 pwd_pattern = re.compile(r"var pwdhash = \"([0-9a-f]+)\";")
@@ -105,7 +106,7 @@ class charpane(Request[bool]):
 
         match = characterMeat.search(content)
         if match:
-            session.state.meat = int(match.group(1).replace(",", ""))
+            session.state.meat = parsing.to_int(match.group(1))
 
         session.state.adventures = int(
             soup.find("img", alt="Adventures Remaining")

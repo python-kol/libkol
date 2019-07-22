@@ -28,6 +28,14 @@ def get_value(soup: Tag, key: str) -> Optional[Tag]:
     return None
 
 
+def to_float(s: str) -> float:
+    return float(s.replace(",", "").strip())
+
+
+def to_int(s: str) -> int:
+    return int(s.replace(",", "").strip())
+
+
 def wrap_elements(wrapper: Tag, elements: List[Tag]):
     w = copy(wrapper)
     elements[0].wrap(w)
@@ -62,6 +70,27 @@ gain_meat_pattern = re.compile(
 )
 lose_meat_pattern = re.compile(r"You (?:lose|spent) ([0-9,]+) Meat")
 
+muscle_substats = "|".join(Stat.Muscle.substats)
+mysticality_substats = "|".join(Stat.Mysticality.substats)
+moxie_substats = "|".join(Stat.Moxie.substats)
+
+substat_pattern = re.compile(
+    rf"You (?P<sign>gain|lose) (?P<quantity>[0-9,]+) (?:(?P<muscle>{muscle_substats})|(?P<mysticality>{mysticality_substats})|(?P<moxie>{moxie_substats}))"
+)
+stat_pattern = re.compile(
+    r"You (?P<sign>gain|lose) (?P<amount>a|some) (?P<stat>Muscle|Mysticality|Moxie) points?"
+)
+level_pattern = re.compile(r"You gain (a|some) (?:L|l)evels?")
+hp_pattern = re.compile(r"You (gain|lose) ([0-9,]+) hit points?")
+mp_pattern = re.compile(
+    r"You (gain|lose) ([0-9,]+) (?:Muscularity|Mana|Mojo) (?:P|p)oints?"
+)
+inebriety_pattern = re.compile(r"You gain ([0-9]+) Drunkenness")
+adventures_pattern = re.compile(r"You gain ([0-9,]+) Adventures")
+effect_pattern = re.compile(
+    r"<td valign=center class=effect>You acquire an effect: <b>(.*?)</b><br>\(duration: ([0-9,]+) Adventures\)</td>"
+)
+
 
 async def item(text: str) -> List["types.ItemQuantity"]:
     from .. import Item
@@ -73,7 +102,7 @@ async def item(text: str) -> List["types.ItemQuantity"]:
         item_quantities += [types.ItemQuantity(item, 1)]
 
     for match in multi_item_pattern.finditer(text):
-        quantity = int(match.group(2).replace(",", ""))
+        quantity = to_int(match.group(2))
         item = await Item.get_or_discover(desc_id=int(match.group(1)))
         item_quantities += [types.ItemQuantity(item, quantity)]
 
@@ -83,88 +112,50 @@ async def item(text: str) -> List["types.ItemQuantity"]:
 def meat(text) -> int:
     match = gain_meat_pattern.search(text)
     if match:
-        return int(match.group(1).replace(",", ""))
+        return to_int(match.group(1))
 
     match = lose_meat_pattern.search(text)
     if match:
-        return -1 * int(match.group(1).replace(",", ""))
+        return -1 * to_int(match.group(1))
 
     return 0
 
 
-def substat(text: str, stat: Stat = None) -> Dict[str, int]:
+def substat(text: str) -> Dict[Stat, int]:
     substats = {}
 
-    if stat in [Stat.Muscle, None]:
-        muscPattern = PatternManager.getOrCompilePattern("muscleGainLoss")
-        muscMatch = muscPattern.search(text)
-        if muscMatch:
-            muscle = int(muscMatch.group(2).replace(",", ""))
-            substats["muscle"] = muscle * (1 if muscMatch.group(1) == "gain" else -1)
-
-    if stat in [Stat.Mysticality, None]:
-        mystPattern = PatternManager.getOrCompilePattern("mysticalityGainLoss")
-        mystMatch = mystPattern.search(text)
-        if mystMatch:
-            myst = int(mystMatch.group(2).replace(",", ""))
-            substats["mysticality"] = myst * (1 if mystMatch.group(1) == "gain" else -1)
-
-    if stat in [Stat.Moxie, None]:
-        moxPattern = PatternManager.getOrCompilePattern("moxieGainLoss")
-        moxMatch = moxPattern.search(text)
-        if moxMatch:
-            moxie = int(moxMatch.group(2).replace(",", ""))
-            substats["moxie"] = moxie * (1 if moxMatch.group(1) == "gain" else -1)
+    for m in substat_pattern.finditer(text):
+        g = m.groupdict()
+        stat = (
+            Stat.Muscle
+            if g["muscle"]
+            else Stat.Mysticality
+            if g["mysticality"]
+            else Stat.Moxie
+        )
+        quantity = to_int(g["quantity"])
+        substats[stat] = quantity * (1 if g["sign"] == "gain" else -1)
 
     return substats
 
 
-def stats(text: str, stat: Stat = None) -> Dict[Stat, int]:
+def stats(text: str) -> Dict[Stat, int]:
     """
     Returns a dictionary describing how many stat points the user gained or lost. Please note that
     the user interface does not say how many points were gained or lost if the number is greater
     than 1. This method will return '2' or '-2' in these situations. If your program needs a more
     exact number then you should request the user's character pane.
     """
-    statPoints = {}
+    stats = {}
 
-    if stat in [Stat.Muscle, None]:
-        muscPattern = PatternManager.getOrCompilePattern("musclePointGainLoss")
-        muscMatch = muscPattern.search(text)
-        if muscMatch:
-            modifier = 1
-            if muscMatch.group(1) == "lose":
-                modifier = -1
-            if muscMatch.group(2) == "a":
-                statPoints[Stat.Muscle] = 1 * modifier
-            else:
-                statPoints[Stat.Muscle] = 2 * modifier
+    for m in stat_pattern.finditer(text):
+        g = m.groupdict()
+        stat = Stat(g["stat"])
+        sign = 1 if g["sign"] == "gain" else -1
+        quantity = 1 if g["amount"] == "a" else 2
+        stats[stat] = quantity * sign
 
-    if stat in [Stat.Mysticality, None]:
-        mystPattern = PatternManager.getOrCompilePattern("mystPointGainLoss")
-        mystMatch = mystPattern.search(text)
-        if mystMatch:
-            modifier = 1
-            if mystMatch.group(1) == "lose":
-                modifier = -1
-            if mystMatch.group(2) == "a":
-                statPoints[Stat.Mysticality] = 1 * modifier
-            else:
-                statPoints[Stat.Mysticality] = 2 * modifier
-
-    if stat in [Stat.Moxie, None]:
-        moxPattern = PatternManager.getOrCompilePattern("moxiePointGainLoss")
-        moxMatch = moxPattern.search(text)
-        if moxMatch:
-            modifier = 1
-            if moxMatch.group(1) == "lose":
-                modifier = -1
-            if moxMatch.group(2) == "a":
-                statPoints[Stat.Moxie] = 1 * modifier
-            else:
-                statPoints[Stat.Moxie] = 2 * modifier
-
-    return statPoints
+    return stats
 
 
 def level(text: str) -> int:
@@ -174,57 +165,43 @@ def level(text: str) -> int:
     will return 2 if more than 1 level was gained. If your application needs a more fine-grained
     response, you should check the user's character pane.
     """
-    levelPattern = PatternManager.getOrCompilePattern("levelGain")
-    levelMatch = levelPattern.search(text)
-    if levelMatch is None:
-        return 0
-
-    return 1 if levelMatch.group(1) == "a" else 2
+    m = level_pattern.search(text)
+    return 0 if m is None else 1 if m.group(1) == "a" else 2
 
 
 def hp(text: str) -> int:
-    hp = 0
-    hpPattern = PatternManager.getOrCompilePattern("hpGainLoss")
-    # Need to do an iteration because it may happen multiple times in combat.
-    for hpMatch in hpPattern.finditer(text):
-        hpChange = int(hpMatch.group(2).replace(",", ""))
-        hp += hpChange * (1 if hpMatch.group(1) == "gain" else -1)
-
-    return hp
+    return sum(
+        [
+            to_int(m.group(2)) * (1 if m.group(1) == "gain" else -1)
+            for m in hp_pattern.finditer(text)
+        ]
+    )
 
 
 def mp(text: str) -> int:
-    mp = 0
-    mpPattern = PatternManager.getOrCompilePattern("mpGainLoss")
-    # Need to do an iteration because it may happen multiple times in combat
-    for mpMatch in mpPattern.finditer(text):
-        mpChange = int(mpMatch.group(2).replace(",", ""))
-        mp += mpChange * (1 if mpMatch.group(1) == "gain" else -1)
-
-    return mp
+    return sum(
+        [
+            to_int(m.group(2)) * (1 if m.group(1) == "gain" else -1)
+            for m in mp_pattern.finditer(text)
+        ]
+    )
 
 
 def inebriety(text: str) -> int:
-    drunkPattern = PatternManager.getOrCompilePattern("gainDrunk")
-    match = drunkPattern.search(text)
-    return int(match.group(1).replace(",", "")) if match else 0
+    match = inebriety_pattern.search(text)
+    return to_int(match.group(1)) if match else 0
 
 
 def adventures(text: str) -> int:
-    adventurePattern = PatternManager.getOrCompilePattern("gainAdventures")
-    match = adventurePattern.search(text)
-    return int(match.group(1).replace(",", "")) if match else 0
+    match = adventures_pattern.search(text)
+    return to_int(match.group(1)) if match else 0
 
 
 def effects(text: str) -> List[Dict[str, Any]]:
-    effects = []  # type: List[Dict[str, Any]]
-    effectPattern = PatternManager.getOrCompilePattern("gainEffect")
-    for match in effectPattern.finditer(text):
-        effects += [
-            {"name": match.group(1), "turns": int(match.group(2).replace(",", ""))}
-        ]
-
-    return effects
+    return [
+        {"name": match.group(1), "turns": to_int(match.group(2))}
+        for match in effect_pattern.finditer(text)
+    ]
 
 
 @dataclass
@@ -232,7 +209,7 @@ class ResourceGain:
     items: List["types.ItemQuantity"]
     adventures: int
     inebriety: int
-    substats: Dict[str, int]
+    substats: Dict[Stat, int]
     stats: Dict[Stat, int]
     levels: int
     effects: List[Dict[str, Any]]
@@ -242,7 +219,7 @@ class ResourceGain:
 
 
 async def resource_gain(
-    html: str, session: Optional["libkol.Session"] = None
+    html: str, session: Optional["libkol.Session"] = None, combat: bool = False
 ) -> ResourceGain:
     rg = ResourceGain(
         items=(await item(html)),
@@ -256,6 +233,10 @@ async def resource_gain(
         mp=mp(html),
         meat=meat(html),
     )
+
+    if combat and "<!--WINWINWIN-->" in html:
+        if "<!--FREEFREEFREE-->" not in html:
+            rg.adventures -= 1
 
     if session:
         for iq in rg.items:
