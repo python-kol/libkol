@@ -20,11 +20,8 @@ class VerifyVersionCommand(install):
 
     def run(self):
         tag = os.getenv("CIRCLE_TAG")
-
         if tag != VERSION:
-            info = "Git tag: {0} does not match the version of this app: {1}".format(
-                tag, VERSION
-            )
+            info = f"Git tag: {tag} does not match the version of this app: {VERSION}"
             sys.exit(info)
 
 
@@ -51,7 +48,6 @@ setup(
         "tortoise-orm==0.12.2",
         "PuLP==1.6.10",
         "sympy==1.4",
-        "python-dotenv==0.10.3",
         "dill==0.3.0",
     ],
     classifiers=[
