@@ -5,6 +5,7 @@ from . import types
 from .Bonus import Bonus
 from .CharacterClass import CharacterClass
 from .Clan import Clan
+from .Chat import Chat
 from .Element import Element
 from .Effect import Effect
 from .Error import Error

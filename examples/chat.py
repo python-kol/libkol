@@ -1,13 +1,12 @@
 """
-This example demonstrates how to login to The Kingdom of Loathing, grab the contents of your inbox,
-and start listening to chat.
+This example demonstrates how to login to The Kingdom of Loathing,
+grab the contents of your inbox, and start listening to chat.
 """
 
-import asyncio
 import os
 from dotenv import load_dotenv
-from libkol import Session
-from libkol.request import getChatMessagesRequest, openChatRequest
+from libkol import run, Session
+from libkol.request import chat_channel
 
 load_dotenv()
 
@@ -18,36 +17,17 @@ async def main():
 
         kmails = await kol.kmail.get()
         for kmail in kmails:
-            print("Received kmail from %s (#%s)" % (kmail["userName"], kmail["userId"]))
-            print("Text: %s" % kmail["text"])
-            print("Meat: %s" % kmail["meat"])
-            for item in kmail["items"]:
-                print("Item: %s (%s)" % (item["name"], item["quantity"]))
+            print(f"Received kmail from {kmail.username} (#{kmail.user_id})")
+            print(f"Text: {kmail.text}")
+            print(f"Meat: {kmail.meat}")
+            for iq in kmail.items:
+                print(f"Item: {iq.item.name} ({iq.quantity})")
 
-        lastRequestTimestamp = 0
-        current_channel = (await (await openChatRequest(kol)).parse())[
-            "current_channel"
-        ]
+        current_channel = await chat_channel(kol).parse()
         print(current_channel)
 
-        while True:
-            data = await (
-                await getChatMessagesRequest(kol, lastRequestTimestamp)
-            ).parse()
-            lastRequestTimestamp = data["lastSeen"]
-            chats = data["chatMessages"]
-
-            # Set the channel in each channel-less chat to be the current channel.
-            for chat in chats:
-                t = chat["type"]
-                if t == "normal" or t == "emote":
-                    if "channel" not in chat:
-                        chat["channel"] = current_channel
-            print(chats)
-            await asyncio.sleep(10)
-
+        async for messages in kol.chat.messages():
+            print(messages)
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
-    loop.close()
+    run(main)
