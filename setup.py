@@ -35,7 +35,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/python-kol/libkol",
     packages=find_packages(),
-    package_data={"libkol": ["libkol.db"]},
+    package_data={"libkol": ["libkol.db", "py.typed"]},
     install_requires=[
         "aioitertools==0.4.0",
         "aiohttp==3.5.4",
