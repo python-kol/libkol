@@ -2,7 +2,7 @@ from .request import kmail_get, kmail_send
 from .util.decorators import logged_in
 
 
-class Kmail(object):
+class Kmail:
     "This class represents a user's kmail box"
 
     def __init__(self, session):
@@ -10,7 +10,7 @@ class Kmail(object):
 
     @logged_in
     async def get(self):
-        return await kmail_get(self.session)
+        return await kmail_get(self.session).parse()
 
     @logged_in
     async def send(self, recipient, message=""):

@@ -8,7 +8,7 @@ from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple, Unio
 from urllib.parse import urlparse
 
 import libkol
-from libkol import Clan, Kmail, request, Item, Bonus, Familiar, Trophy
+from libkol import Clan, Kmail, Chat, request, Item, Bonus, Familiar, Trophy
 
 from .types import FamiliarState
 from .Skill import Skill
@@ -102,6 +102,7 @@ class Session:
         self.state = State()
         self.server_url = None
         self.kmail = Kmail(self)
+        self.chat = Chat(self)
         self.db_file = db_file or path.join(path.dirname(__file__), "libkol.db")
 
     async def __aenter__(self) -> "Session":

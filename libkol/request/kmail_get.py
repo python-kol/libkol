@@ -59,7 +59,7 @@ class kmail_get(Request):
             "box": box,
             "begin": str(page),
             "order": 1 if oldest_first else 0,
-            "per_page": messages_per_page / 10,
+            "per_page": int(messages_per_page / 10),
         }
 
         self.request = session.request("messages.php", params=params)
