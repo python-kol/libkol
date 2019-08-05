@@ -29,3 +29,11 @@ class CombatTestCase(TestCase):
 
         for message, damage in logs:
             self.assertEqual(combat.parse_damage(message), damage)
+
+    def test_combat_fumble(self):
+        async def run_test(file):
+            result = await combat.parser(file.read(), session=self.session)
+            print(result.events)
+            self.assertEqual(len(result.events), 1)
+
+        self.run_async("fumble", run_test)

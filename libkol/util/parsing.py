@@ -1,24 +1,22 @@
 import re
-from typing import Optional
 from copy import copy
 from itertools import groupby
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from bs4 import BeautifulSoup, Tag
 
 import libkol
 
 from .. import types
-from ..pattern import PatternManager
 from ..Stat import Stat
 
 
-def panel(html: str, title: str = "Results:") -> Tag:
+def panel(html: str, title: str = "Results:") -> Optional[Tag]:
     soup = BeautifulSoup(html, "html.parser")
     headers = soup.find_all("b", text=title)
-    header = next(h for h in headers)
-    return header.parent.parent.next_sibling.td
+    header = next((h for h in headers), None)
+    return None if header is None else header.parent.parent.next_sibling.td
 
 
 def get_value(soup: Tag, key: str) -> Optional[Tag]:
@@ -150,7 +148,7 @@ def stats(text: str) -> Dict[Stat, int]:
 
     for m in stat_pattern.finditer(text):
         g = m.groupdict()
-        stat = Stat(g["stat"])
+        stat = Stat(g["stat"].lower())
         sign = 1 if g["sign"] == "gain" else -1
         quantity = 1 if g["amount"] == "a" else 2
         stats[stat] = quantity * sign

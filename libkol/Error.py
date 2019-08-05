@@ -76,6 +76,10 @@ class RecipeNotFoundError(Error):
     pass
 
 
+class NotFightingError(Error):
+    pass
+
+
 class WrongKindOfItemError(Error):
     pass
 
