@@ -5,8 +5,6 @@ from .util import EnumField, PickleField, expression
 from .Modifier import Modifier
 from .Model import Model
 
-from .Error import UnknownError
-
 
 class Bonus(Model):
     item = ForeignKeyField("models.Item", related_name="bonuses", null=True)
@@ -39,6 +37,7 @@ class Bonus(Model):
         normalise: bool = False,
         smithsness: Optional[int] = None,
         familiar_weight: Optional[int] = None,
+        hobo_power: Optional[int] = None,
     ):
         kol = self.kol
 
@@ -59,6 +58,9 @@ class Bonus(Model):
 
             if smithsness is not None:
                 subs["K"] = smithsness
+
+            if hobo_power is not None:
+                subs["H"] = hobo_power
 
             return await expression.evaluate(kol, self.expression_value, subs)
 

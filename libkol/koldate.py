@@ -126,6 +126,10 @@ class koldate:
 
         return 0
 
+    @property
+    def jarlsberg(self):
+        return self.month == 0 and self.day == 0
+
     def strftime(self, format: str) -> str:
         tokens = {
             "d": f"{self.day:02}",

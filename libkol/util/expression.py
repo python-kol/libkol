@@ -79,6 +79,8 @@ async def evaluate(
         "A": kol.ascensions,
         "D": kol.inebriety,
         "G": today.grimace_darkness,
+        "H": 0,  # hobopower
+        "J": 1 if today.jarlsberg else 0,
         "K": 0,  # smithsness,
         "L": kol.level,
         "M": today.moonlight,
@@ -86,6 +88,7 @@ async def evaluate(
         "R": await kol.get_reagent_potion_duration(),
         "W": kol.familiar_weight,
         "X": 1 if kol.gender == "f" else 0,
+        "Y": kol.fury,
         "MUS": kol.get_stat(Stat.Muscle, buffed=True),
         "MYS": kol.get_stat(Stat.Mysticality, buffed=True),
         "MOX": kol.get_stat(Stat.Moxie, buffed=True),

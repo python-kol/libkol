@@ -2,7 +2,6 @@ import asyncio
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from tortoise.models import ModelMeta
 from typing import Optional, Union
-from dataclasses import dataclass
 
 from .Model import Model
 

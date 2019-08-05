@@ -27,5 +27,6 @@ class status(Request[bool]):
         session.state.inebriety = int(content["drunk"])
         session.state.fullness = int(content["full"])
         session.state.spleenhit = int(content["spleen"])
+        session.state.fury = int(content.get("fury", 0))
 
         return True

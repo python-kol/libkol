@@ -8,17 +8,18 @@ from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple, Unio
 from urllib.parse import urlparse
 
 import libkol
-from libkol import Clan, Kmail, Chat, request, Item, Bonus, Familiar, Trophy
+from libkol import Clan, Kmail, Chat, request, Item, Bonus, Familiar
 
-from .types import FamiliarState
+from .CharacterClass import CharacterClass
+from .Element import Element
+from .Location import Location
+from .Model import Model
 from .Skill import Skill
 from .Slot import Slot
-from .Trophy import Trophy
-from .Model import Model
-from .Element import Element
 from .Stat import Stat
-from .CharacterClass import CharacterClass
-from .Location import Location
+from .Trophy import Trophy
+
+from .types import FamiliarState
 from .util.decorators import logged_in
 
 models = [
@@ -63,6 +64,7 @@ class State:
     familiar: Optional[Familiar] = None
     familiars: Dict[Familiar, FamiliarState] = field(default_factory=defaultdict)
     fullness: int = 0
+    fury: int = 0
     gender: str = "n"
     inebriety: int = 0
     inventory: DefaultDict[Item, int] = field(default_factory=lambda: defaultdict(int))
@@ -265,6 +267,10 @@ class Session:
     @property
     def pwd(self):
         return self.state.pwd
+
+    @property
+    def fury(self):
+        return self.state.fury
 
     @logged_in
     async def get_status(self) -> bool:
