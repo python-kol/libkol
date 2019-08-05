@@ -1,36 +1,33 @@
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from typing import Optional
 
+import libkol
 from .util import EnumField, PickleField, expression
 from .Modifier import Modifier
 from .Model import Model
 
 
 class Bonus(Model):
-    item = ForeignKeyField("models.Item", related_name="bonuses", null=True)
+    item: Optional["libkol.Item"] = ForeignKeyField("models.Item", related_name="bonuses", null=True)  # type: ignore
     item_id: Optional[int]
 
-    effect = ForeignKeyField("models.Effect", related_name="bonuses", null=True)
+    effect: Optional["libkol.Effect"] = ForeignKeyField("models.Effect", related_name="bonuses", null=True)  # type: ignore
     effect_id: Optional[int]
 
-    outfit = ForeignKeyField("models.Outfit", related_name="bonuses", null=True)
+    outfit: Optional["libkol.Outfit"] = ForeignKeyField("models.Outfit", related_name="bonuses", null=True)  # type: ignore
     outfit_id: Optional[int]
 
-    familiar = ForeignKeyField(
-        "models.Familiar", related_name="passive_bonuses", null=True
-    )
+    familiar: Optional["libkol.Familiar"] = ForeignKeyField("models.Familiar", related_name="passive_bonuses", null=True)  # type: ignore
     familiar_id: Optional[int]
 
-    throne_familiar = ForeignKeyField(
-        "models.Familiar", related_name="throne_bonus", null=True
-    )
+    throne_familiar: Optional["libkol.Familiar"] = ForeignKeyField("models.Familiar", related_name="throne_bonus", null=True)  # type: ignore
     throne_familiar_id: Optional[int]
 
-    modifier = EnumField(enum_type=Modifier)
-    numeric_value = IntField(null=True)
-    string_value = CharField(max_length=255, null=True)
-    percentage = BooleanField(default=False)
-    expression_value = PickleField(null=True)
+    modifier: Modifier = EnumField(enum_type=Modifier)  # type: ignore
+    numeric_value: Optional[int] = IntField(null=True)  # type: ignore
+    string_value: str = CharField(max_length=255, null=True)  # type: ignore
+    percentage: bool = BooleanField(default=False)  # type: ignore
+    expression_value: Optional[str] = PickleField(null=True)  # type: ignore
 
     async def get_value(
         self,

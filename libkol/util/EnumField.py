@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional, Type
 
-from tortoise import ConfigurationError
+from tortoise.exceptions import ConfigurationError
 from tortoise.fields import CharField
 
 

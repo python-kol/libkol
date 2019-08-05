@@ -6,11 +6,6 @@ from tortoise.query_utils import Q
 from typing import DefaultDict, Dict, List, Optional, Tuple
 
 import libkol
-from libkol import Familiar
-
-
-class ThroneFamiliar(Familiar):
-    pass
 
 
 class Maximizer:
@@ -77,6 +72,10 @@ class Maximizer:
             for id, quantity in solution.items()
             if quantity != 0 and id in hobo_power
         )
+
+    @staticmethod
+    def enthroned_repr(familiar: "libkol.Familiar") -> str:
+        return f"<Familiar(Enthroned): {familiar.id}>"
 
     def summarise(self) -> str:
         return ", ".join(
@@ -158,10 +157,6 @@ class Maximizer:
             )
         ]
 
-        for b in bonuses:
-            if isinstance(b.throne_familiar, Familiar):
-                b.throne_familiar.__class__ = ThroneFamiliar
-
         grouped_bonuses = {}  # type: Dict[libkol.Modifier, List[libkol.Bonus]]
         for b in bonuses:
             grouped_bonuses[b.modifier] = grouped_bonuses.get(b.modifier, []) + [b]
@@ -177,17 +172,16 @@ class Maximizer:
         possible_throne_familiars = [
             b.throne_familiar
             for b in bonuses
-            if isinstance(b.throne_familiar, ThroneFamiliar)
+            if isinstance(b.throne_familiar, Familiar)
         ]
+
+
 
         # Define the problem
         prob = LpProblem(self.summarise(), LpMaximize)
         solution = LpVariable.dicts(
             "outfit",
-            {
-                repr(i)
-                for i in possible_items + possible_familiars + possible_throne_familiars
-            },
+            {repr(i) for i in possible_items + possible_familiars} | { self.enthroned_repr(f) for f in possible_throne_familiars },
             0,
             3,
             cat="Integer",
@@ -221,8 +215,8 @@ class Maximizer:
                             else 1
                         )
                         * (
-                            solution[repr(b.throne_familiar)]
-                            if isinstance(b.throne_familiar, ThroneFamiliar)
+                            solution[self.enthroned_repr(b.throne_familiar)]
+                            if isinstance(b.throne_familiar, Familiar)
                             else 1
                         )
                         for b in bonuses
@@ -290,14 +284,14 @@ class Maximizer:
 
         # Only throne familiars with throneable equips
         prob += (
-            lpSum([solution[repr(f)] for f in possible_throne_familiars])
+            lpSum([solution[self.enthroned_repr(f)] for f in possible_throne_familiars])
             <= solution[repr(crown)] + solution[repr(bjorn)]
         )
 
         # Do not enthrone familiars we don't have
         for f in possible_throne_familiars:
             if f.have is False:
-                prob += solution[repr(f)] == 0
+                prob += solution[self.enthroned_repr(f)] == 0
 
         # You've only got so many hands!
         prob += (
@@ -356,9 +350,8 @@ class Maximizer:
                 familiar = next(f for f in possible_familiars if f.id == id)
                 continue
 
-            if index_parts[1] == "<ThroneFamiliar:":
-                throne_familiar = next(f for f in possible_familiars if f.id == id)
-                throne_familiar.__class__ = Familiar
+            if index_parts[1] == "<Familiar(Enthroned):":
+                throne_familiar = next(f for f in possible_throne_familiars if f.id == id)
                 continue
 
             item = next(i for i in possible_items if i.id == id)
