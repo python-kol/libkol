@@ -96,7 +96,7 @@ class Maximizer:
     ) -> Tuple[
         DefaultDict["libkol.Slot", Optional["libkol.Item"]],
         Optional["libkol.Familiar"],
-        Optional["libkol.Familiar"],
+        List["libkol.Familiar"],
     ]:
         from libkol import Modifier, Slot, Item, Familiar
 
@@ -333,7 +333,7 @@ class Maximizer:
             raise ValueError(LpStatus[prob.status])
 
         familiar = None
-        throne_familiar = None
+        throne_familiars = []  # type: List[Familiar]
         result = defaultdict(lambda: None)  # type: DefaultDict[Slot, Optional[Item]]
 
         for v in prob.variables():
@@ -351,7 +351,7 @@ class Maximizer:
                 continue
 
             if index_parts[1] == "<Familiar(Enthroned):":
-                throne_familiar = next(f for f in possible_throne_familiars if f.id == id)
+                throne_familiars += next(f for f in possible_throne_familiars if f.id == id)
                 continue
 
             item = next(i for i in possible_items if i.id == id)
@@ -370,10 +370,10 @@ class Maximizer:
 
             result[item_slot] = item
 
-        return result, familiar, throne_familiar
+        return result, familiar, throne_familiars
 
     async def solve_and_equip(self):
-        outfit, familiar, throne_familiar = await self.solve()
+        outfit, familiar, throne_familiars = await self.solve()
 
         await self.session.unequip()
 
