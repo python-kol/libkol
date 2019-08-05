@@ -29,5 +29,6 @@ async def main():
         async for messages in kol.chat.messages():
             print(messages)
 
+
 if __name__ == "__main__":
     run(main)

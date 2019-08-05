@@ -159,7 +159,9 @@ class combat(Request[CombatRound]):
         turn_match = turn_pattern.search(content)
         turn = int(turn_match.group(1)) if turn_match else 0
 
-        resource_gain = await parsing.resource_gain(content, session=session, combat=True)
+        resource_gain = await parsing.resource_gain(
+            content, session=session, combat=True
+        )
 
         panel = parsing.panel(content, "Combat!")
 

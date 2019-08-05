@@ -95,7 +95,9 @@ class Maximizer:
     async def solve(
         self
     ) -> Tuple[
-        DefaultDict["libkol.Slot", Optional["libkol.Item"]], Optional["libkol.Familiar"], Optional["libkol.Familiar"]
+        DefaultDict["libkol.Slot", Optional["libkol.Item"]],
+        Optional["libkol.Familiar"],
+        Optional["libkol.Familiar"],
     ]:
         from libkol import Modifier, Slot, Item, Familiar
 
@@ -164,18 +166,28 @@ class Maximizer:
         for b in bonuses:
             grouped_bonuses[b.modifier] = grouped_bonuses.get(b.modifier, []) + [b]
 
-        possible_items = [b.item for b in bonuses if isinstance(b.item, Item)] + self.must_equip + [bjorn, crown]
-        possible_familiars = [b.familiar for b in bonuses if isinstance(b.familiar, Familiar)]
+        possible_items = (
+            [b.item for b in bonuses if isinstance(b.item, Item)]
+            + self.must_equip
+            + [bjorn, crown]
+        )
+        possible_familiars = [
+            b.familiar for b in bonuses if isinstance(b.familiar, Familiar)
+        ]
         possible_throne_familiars = [
             b.throne_familiar
-            for b in bonuses if isinstance(b.throne_familiar, ThroneFamiliar)
+            for b in bonuses
+            if isinstance(b.throne_familiar, ThroneFamiliar)
         ]
 
         # Define the problem
         prob = LpProblem(self.summarise(), LpMaximize)
         solution = LpVariable.dicts(
             "outfit",
-            {repr(i) for i in possible_items + possible_familiars + possible_throne_familiars},
+            {
+                repr(i)
+                for i in possible_items + possible_familiars + possible_throne_familiars
+            },
             0,
             3,
             cat="Integer",
@@ -203,8 +215,16 @@ class Maximizer:
                             hobo_power=hobo_power,
                         )
                         * (solution[repr(b.item)] if isinstance(b.item, Item) else 1)
-                        * (solution[repr(b.familiar)] if isinstance(b.familiar, Familiar) else 1)
-                        * (solution[repr(b.throne_familiar)] if isinstance(b.throne_familiar, ThroneFamiliar) else 1)
+                        * (
+                            solution[repr(b.familiar)]
+                            if isinstance(b.familiar, Familiar)
+                            else 1
+                        )
+                        * (
+                            solution[repr(b.throne_familiar)]
+                            if isinstance(b.throne_familiar, ThroneFamiliar)
+                            else 1
+                        )
                         for b in bonuses
                         if b.outfit is None
                         or (
@@ -213,7 +233,8 @@ class Maximizer:
                                 [
                                     sb.item
                                     for sb in bonuses
-                                    if isinstance(sb.item, Item) and solution[repr(sb.item)] >= 1
+                                    if isinstance(sb.item, Item)
+                                    and solution[repr(sb.item)] >= 1
                                 ]
                             )
                         )
@@ -268,7 +289,10 @@ class Maximizer:
                 prob += solution[repr(f)] == 0
 
         # Only throne familiars with throneable equips
-        prob += lpSum([solution[repr(f)] for f in possible_throne_familiars]) <= solution[repr(crown)] + solution[repr(bjorn)]
+        prob += (
+            lpSum([solution[repr(f)] for f in possible_throne_familiars])
+            <= solution[repr(crown)] + solution[repr(bjorn)]
+        )
 
         # Do not enthrone familiars we don't have
         for f in possible_throne_familiars:

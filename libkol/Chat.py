@@ -16,7 +16,9 @@ class Chat:
         return await chat_channel(self.session).parse()
 
     @logged_in
-    async def messages(self, since: int = 0, delay: int = 10) -> AsyncIterator[List[str]]:
+    async def messages(
+        self, since: int = 0, delay: int = 10
+    ) -> AsyncIterator[List[str]]:
         while True:
             data = await chat_receive(self.session, since).parse()
             since = data.last
