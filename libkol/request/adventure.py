@@ -4,8 +4,9 @@ import libkol
 
 from .request import Request
 from .combat import combat, CombatRound
+from .choice import choice, Choice
 
-Response = Union[CombatRound, None]
+Response = Union[CombatRound, Choice, None]
 
 
 class adventure(Request[Response]):
@@ -32,6 +33,6 @@ class adventure(Request[Response]):
             return await combat.parser(content, **kwargs)
 
         if url.path == "/choice.php":
-            print("We don't support choices yet")
+            return await choice.parser(content, **kwargs)
 
         return None

@@ -11,21 +11,13 @@ load_dotenv()
 
 
 async def do_combat(combat, start: CombatRound):
-    monster_hp = await start.monster.get_hp()
-    round = start
-
-    while monster_hp > 0:
-        round = await combat.attack()
-        monster_hp -= round.damage
-
-    return round
+    raise Exception("There shouldn't be a combat here!")
 
 
 async def main():
     async with Session() as kol:
         await kol.login(os.getenv("KOL_USERNAME"), os.getenv("KOL_PASSWORD"))
-        result = await kol.adventure(92, combat_function=do_combat)
-        print(result)
+        await kol.adventure(355, do_combat, choices={793: 3})
 
 
 if __name__ == "__main__":
