@@ -20,6 +20,9 @@ class clan_accepting_applications(Request[bool]):
     async def parser(content: str, **kwargs) -> bool:
         results = parsing.panel(content)
 
+        if results is None:
+            raise UnknownError("Cannot find results panel")
+
         if results.string == "Applications turned on.":
             return True
 

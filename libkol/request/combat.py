@@ -1,14 +1,14 @@
 from enum import Enum
 from typing import List, Optional, Union
 from dataclasses import dataclass
-from bs4 import BeautifulSoup, Tag, NavigableString
+from bs4 import Tag, NavigableString
 from yarl import URL
 import re
 
 import libkol
 
 from ..util import parsing
-from ..Error import InvalidActionError
+from ..Error import InvalidActionError, UnknownError, NotFightingError
 from ..Skill import Skill
 from ..Monster import Monster
 from .request import Request
@@ -22,7 +22,7 @@ class CombatEvent:
 
 @dataclass
 class CombatRound:
-    monster: str
+    monster: Monster
     turn: int
     events: List[CombatEvent]
     resource_gain: parsing.ResourceGain
@@ -30,6 +30,7 @@ class CombatRound:
     finished: bool
     choice_follows: bool
     fight_follows: bool
+    raw: str
 
 
 class CombatAction(Enum):
@@ -150,15 +151,25 @@ class combat(Request[CombatRound]):
 
     @classmethod
     async def parser(cls, content: str, **kwargs) -> CombatRound:
+        session = kwargs["session"]  # type: "libkol.Session"
+
+        if "<b>Not in a Fight</b>" in content:
+            raise NotFightingError("You are not in a fight")
+
         turn_match = turn_pattern.search(content)
         turn = int(turn_match.group(1)) if turn_match else 0
 
-        resource_gain = await parsing.resource_gain(content, combat=True)
+        resource_gain = await parsing.resource_gain(
+            content, session=session, combat=True
+        )
 
         panel = parsing.panel(content, "Combat!")
 
+        if panel is None:
+            raise UnknownError("Couldn't parse combat")
+
         # Remove action interface, just intercase
-        actions = panel.find("a", attrs={"name": "end"}).parent.extract()
+        panel.find("a", attrs={"name": "end"}).parent.extract()
 
         # Intro
         intro = panel.find("blockquote")
@@ -180,6 +191,7 @@ class combat(Request[CombatRound]):
             cls.parse_event(e)
             for e in panel.find_all("p")
             if isinstance(e.contents[0], NavigableString)
+            or e.contents[0].name == "font"
         ]
 
         damage = sum(e.damage for e in events)
@@ -197,4 +209,5 @@ class combat(Request[CombatRound]):
             finished=finished,
             choice_follows=choice_follows,
             fight_follows=fight_follows,
+            raw=str(panel),
         )

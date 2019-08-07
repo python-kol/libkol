@@ -12,6 +12,7 @@ import re
 import time
 from statistics import mean
 
+import libkol
 from libkol import request
 from .CharacterClass import CharacterClass
 from .Slot import Slot
@@ -50,63 +51,64 @@ class ItemMeta(ModelMeta):
 
 
 class Item(Model, metaclass=ItemMeta):
-    id = IntField(pk=True, generated=False)
-    name = CharField(max_length=255)
-    desc_id = IntField()
-    plural = CharField(max_length=255, null=True)
-    image = CharField(max_length=255)
-    autosell_value = IntField(default=0)
-    level_required = IntField(default=0)  # Level required
+    id: int = IntField(pk=True, generated=False)  # type: ignore
+    name: str = CharField(max_length=255)  # type: ignore
+    desc_id: int = IntField()  # type: ignore
+    plural: str = CharField(max_length=255, null=True)  # type: ignore
+    image: str = CharField(max_length=255)  # type: ignore
+    autosell_value: int = IntField(default=0)  # type: ignore
+    level_required: int = IntField(default=0)  # type: ignore
 
     # Consumables
-    food = BooleanField(default=False)
-    fullness = IntField(default=0)
-    booze = BooleanField(default=False)
-    inebriety = IntField(default=0)
-    spleen = BooleanField(default=False)
-    spleenhit = IntField(default=0)
-    quality = CharField(max_length=255, null=True)
-    gained_adventures_min = IntField(default=0)
-    gained_adventures_max = IntField(default=0)
-    gained_muscle_min = IntField(default=0)
-    gained_muscle_max = IntField(default=0)
-    gained_mysticality_min = IntField(default=0)
-    gained_mysticality_max = IntField(default=0)
-    gained_moxie_min = IntField(default=0)
-    gained_moxie_max = IntField(default=0)
+    food: bool = BooleanField(default=False)  # type: ignore
+    fullness: int = IntField(default=0)  # type: ignore
+    booze: bool = BooleanField(default=False)  # type: ignore
+    inebriety: int = IntField(default=0)  # type: ignore
+    spleen: bool = BooleanField(default=False)  # type: ignore
+    spleenhit: int = IntField(default=0)  # type: ignore
+    quality: str = CharField(max_length=255, null=True)  # type: ignore
+    gained_adventures_min: int = IntField(default=0)  # type: ignore
+    gained_adventures_max: int = IntField(default=0)  # type: ignore
+    gained_muscle_min: int = IntField(default=0)  # type: ignore
+    gained_muscle_max: int = IntField(default=0)  # type: ignore
+    gained_mysticality_min: int = IntField(default=0)  # type: ignore
+    gained_mysticality_max: int = IntField(default=0)  # type: ignore
+    gained_moxie_min: int = IntField(default=0)  # type: ignore
+    gained_moxie_max: int = IntField(default=0)  # type: ignore
 
     # Usability
-    usable = BooleanField(default=False)
-    multiusable = BooleanField(default=False)
-    combat_usable = BooleanField(default=False)
-    reusable = BooleanField(default=False)
-    combat_reusable = BooleanField(default=False)
-    curse = BooleanField(default=False)  # Can be used on others
+    usable: bool = BooleanField(default=False)  # type: ignore
+    multiusable: bool = BooleanField(default=False)  # type: ignore
+    combat_usable: bool = BooleanField(default=False)  # type: ignore
+    reusable: bool = BooleanField(default=False)  # type: ignore
+    combat_reusable: bool = BooleanField(default=False)  # type: ignore
+    # Can be used on others
+    curse: bool = BooleanField(default=False)  # type: ignore
 
     # Equipment
-    hat = BooleanField(default=False)
-    pants = BooleanField(default=False)
-    shirt = BooleanField(default=False)
-    weapon = BooleanField(default=False)
-    weapon_hands = IntField(null=True)
-    weapon_type = CharField(max_length=255, null=True)
-    offhand = BooleanField(default=False)
-    offhand_type = CharField(max_length=255, null=True)
-    accessory = BooleanField(default=False)
-    container = BooleanField(default=False)
-    sixgun = BooleanField(default=False)
-    familiar_equipment = BooleanField(default=False)
-    power = IntField(null=True)
-    required_muscle = IntField(default=0)
-    required_mysticality = IntField(default=0)
-    required_moxie = IntField(default=0)
-    required_class = EnumField(enum_type=CharacterClass, null=True)
-    notes = CharField(max_length=255, default="")
+    hat: bool = BooleanField(default=False)  # type: ignore
+    pants: bool = BooleanField(default=False)  # type: ignore
+    shirt: bool = BooleanField(default=False)  # type: ignore
+    weapon: bool = BooleanField(default=False)  # type: ignore
+    weapon_hands: Optional[int] = IntField(null=True)  # type: ignore
+    weapon_type: Optional[str] = CharField(max_length=255, null=True)  # type: ignore
+    offhand: bool = BooleanField(default=False)  # type: ignore
+    offhand_type: Optional[str] = CharField(max_length=255, null=True)  # type: ignore
+    accessory: bool = BooleanField(default=False)  # type: ignore
+    container: bool = BooleanField(default=False)  # type: ignore
+    sixgun: bool = BooleanField(default=False)  # type: ignore
+    familiar_equipment: bool = BooleanField(default=False)  # type: ignore
+    power: Optional[int] = IntField(null=True)  # type: ignore
+    required_muscle: int = IntField(default=0)  # type: ignore
+    required_mysticality: int = IntField(default=0)  # type: ignore
+    required_moxie: int = IntField(default=0)  # type: ignore
+    required_class: Optional[CharacterClass] = EnumField(enum_type=CharacterClass, null=True)  # type: ignore
+    notes: str = CharField(max_length=255, default="")  # type: ignore
 
     # Collections
-    foldgroup = ForeignKeyField("models.FoldGroup", related_name="items", null=True)
+    foldgroup: Optional["libkol.FoldGroup"] = ForeignKeyField("models.FoldGroup", related_name="items", null=True)  # type: ignore
     foldgroup_id: Optional[int]
-    zapgroup = ForeignKeyField("models.ZapGroup", related_name="items", null=True)
+    zapgroup: Optional["libkol.ZapGroup"] = ForeignKeyField("models.ZapGroup", related_name="items", null=True)  # type: ignore
     zapgroup_id: Optional[int]
 
     outfit_variants = ManyToManyField(
@@ -114,37 +116,51 @@ class Item(Model, metaclass=ItemMeta):
     )
 
     # NPC Store Info
-    store_row = IntField(null=True)
-    store_price = IntField(null=True)
-    store = ForeignKeyField("models.Store", related_name="items", null=True)
+    store_row: Optional[int] = IntField(null=True)  # type: ignore
+    store_price: Optional[int] = IntField(null=True)  # type: ignore
+    store: Optional["libkol.Store"] = ForeignKeyField("models.Store", related_name="items", null=True)  # type: ignore
     store_id: Optional[int]
 
     # Flags
-    hatchling = BooleanField(default=False)
-    pokepill = BooleanField(default=False)
-    sticker = BooleanField(default=False)
-    card = BooleanField(default=False)
-    folder = BooleanField(default=False)
-    bootspur = BooleanField(default=False)
-    bootskin = BooleanField(default=False)
-    food_helper = BooleanField(default=False)
-    booze_helper = BooleanField(default=False)
-    guardian = BooleanField(default=False)
-    single_equip = BooleanField(default=True)
-    bounty = BooleanField(default=False)  # Can appear as a bounty item
-    candy = IntField()  # 0: n/a, 1: simple, 2: complex
-    sphere = BooleanField(default=False)  # What is this for?
-    quest = BooleanField(default=False)  # is a quest item
-    gift = BooleanField(default=False)  # is a gift item
-    tradeable = BooleanField(default=False)  # is tradeable
-    discardable = BooleanField(default=False)  # is discardable
-    salad = BooleanField(default=False)  # is considered salad when consumed
-    beer = BooleanField(default=False)  # is considered beer when consumed
-    wine = BooleanField(default=False)  # is considered wine when consumed
-    martini = BooleanField(default=False)  # is considered martini when consumed
-    saucy = BooleanField(default=False)  # is considered saucy when consumed
-    lasagna = BooleanField(default=False)  # is considered lasagna when consumed
-    pasta = BooleanField(default=False)  # is considered pasta when consumed
+    hatchling: bool = BooleanField(default=False)  # type: ignore
+    pokepill: bool = BooleanField(default=False)  # type: ignore
+    sticker: bool = BooleanField(default=False)  # type: ignore
+    card: bool = BooleanField(default=False)  # type: ignore
+    folder: bool = BooleanField(default=False)  # type: ignore
+    bootspur: bool = BooleanField(default=False)  # type: ignore
+    bootskin: bool = BooleanField(default=False)  # type: ignore
+    food_helper: bool = BooleanField(default=False)  # type: ignore
+    booze_helper: bool = BooleanField(default=False)  # type: ignore
+    guardian: bool = BooleanField(default=False)  # type: ignore
+    single_equip: bool = BooleanField(default=True)  # type: ignore
+    # Can appear as a bounty item
+    bounty: bool = BooleanField(default=False)  # type: ignore
+    # 0: n/a, 1: simple, 2: complex
+    candy: int = IntField()  # type: ignore
+    # What is this for?
+    sphere: bool = BooleanField(default=False)  # type: ignore
+    # is a quest item
+    quest: bool = BooleanField(default=False)  # type: ignore
+    # is a gift item
+    gift: bool = BooleanField(default=False)  # type: ignore
+    # is tradeable
+    tradeable: bool = BooleanField(default=False)  # type: ignore
+    # is discardable
+    discardable: bool = BooleanField(default=False)  # type: ignore
+    # is considered salad when consumed
+    salad: bool = BooleanField(default=False)  # type: ignore
+    # is considered beer when consumed
+    beer: bool = BooleanField(default=False)  # type: ignore
+    # is considered wine when consumed
+    wine: bool = BooleanField(default=False)  # type: ignore
+    # is considered martini when consumed
+    martini: bool = BooleanField(default=False)  # type: ignore
+    # is considered saucy when consumed
+    saucy: bool = BooleanField(default=False)  # type: ignore
+    # is considered lasagna when consumed
+    lasagna: bool = BooleanField(default=False)  # type: ignore
+    # is considered pasta when consumed
+    pasta: bool = BooleanField(default=False)  # type: ignore
 
     @property
     def adventures(self):

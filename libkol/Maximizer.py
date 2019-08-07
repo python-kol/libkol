@@ -1,8 +1,8 @@
-from libkol import Bonus
 from aioitertools import iter
-from tortoise.query_utils import Q
-from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus, LpStatusOptimal
 from collections import defaultdict
+from libkol import Bonus
+from pulp import LpProblem, LpVariable, LpMaximize, lpSum, LpStatus, LpStatusOptimal
+from tortoise.query_utils import Q
 from typing import DefaultDict, Dict, List, Optional, Tuple
 
 import libkol
@@ -65,6 +65,18 @@ class Maximizer:
             if quantity != 0 and id in smithsness
         )
 
+    @staticmethod
+    def calculate_hobo_power(solution, hobo_power) -> int:
+        return sum(
+            hobo_power[id]
+            for id, quantity in solution.items()
+            if quantity != 0 and id in hobo_power
+        )
+
+    @staticmethod
+    def enthroned_repr(familiar: "libkol.Familiar") -> str:
+        return f"<Familiar(Enthroned): {familiar.id}>"
+
     def summarise(self) -> str:
         return ", ".join(
             [
@@ -82,16 +94,32 @@ class Maximizer:
     async def solve(
         self
     ) -> Tuple[
-        DefaultDict["libkol.Slot", Optional["libkol.Item"]], Optional["libkol.Familiar"]
+        DefaultDict["libkol.Slot", Optional["libkol.Item"]],
+        Optional["libkol.Familiar"],
+        List["libkol.Familiar"],
     ]:
-        from libkol import Modifier, Slot, Item
+        from libkol import Modifier, Slot, Item, Familiar
 
-        # Load smithsness bonuses for tracking smithsness
+        # Get variables for some specific items
+        crown = await Item["Crown of Thrones"]
+        bjorn = await Item["Buddy Bjorn"]
+
+        # Load smithsness bonuses for tracking
         smithsness_bonuses = {
             s.item.id: await s.get_value()
             async for s in (
                 Bonus.filter(
                     modifier=Modifier.Smithsness, item_id__not_isnull=True
+                ).prefetch_related("item")
+            )
+        }
+
+        # Load hobo power bonuses for tracking
+        hobo_power_bonuses = {
+            s.item.id: await s.get_value()
+            async for s in (
+                Bonus.filter(
+                    modifier=Modifier.HoboPower, item_id__not_isnull=True
                 ).prefetch_related("item")
             )
         }
@@ -119,11 +147,12 @@ class Maximizer:
                     | Q(item__familiar_equipment=True)
                 )
                 .prefetch_related(
-                    "item",
-                    "outfit",
-                    "outfit__variants",
-                    "outfit__variants__pieces",
                     "familiar",
+                    "item",
+                    "outfit__variants__pieces",
+                    "outfit__variants",
+                    "outfit",
+                    "throne_familiar",
                 )
             )
         ]
@@ -132,14 +161,27 @@ class Maximizer:
         for b in bonuses:
             grouped_bonuses[b.modifier] = grouped_bonuses.get(b.modifier, []) + [b]
 
-        possible_items = [b.item for b in bonuses if b.item] + self.must_equip
-        possible_familiars = [b.familiar for b in bonuses if b.familiar]
+        possible_items = (
+            [b.item for b in bonuses if isinstance(b.item, Item)]
+            + self.must_equip
+            + [bjorn, crown]
+        )
+        possible_familiars = [
+            b.familiar for b in bonuses if isinstance(b.familiar, Familiar)
+        ]
+        possible_throne_familiars = [
+            b.throne_familiar
+            for b in bonuses
+            if isinstance(b.throne_familiar, Familiar)
+        ]
+
+
 
         # Define the problem
         prob = LpProblem(self.summarise(), LpMaximize)
         solution = LpVariable.dicts(
             "outfit",
-            {repr(i) for i in possible_items + possible_familiars},
+            {repr(i) for i in possible_items + possible_familiars} | { self.enthroned_repr(f) for f in possible_throne_familiars },
             0,
             3,
             cat="Integer",
@@ -147,6 +189,9 @@ class Maximizer:
 
         # Value of our Smithsness bonus
         smithsness = self.calculate_smithsness(solution, smithsness_bonuses)
+
+        # Value of our Hobo Power bonus
+        hobo_power = self.calculate_hobo_power(solution, hobo_power_bonuses)
 
         # Value of our familiar weight
         familiar_weight = next(
@@ -159,10 +204,21 @@ class Maximizer:
                 m.sum(
                     [
                         await b.get_value(
-                            smithsness=smithsness, familiar_weight=familiar_weight
+                            smithsness=smithsness,
+                            familiar_weight=familiar_weight,
+                            hobo_power=hobo_power,
                         )
-                        * (solution[repr(b.item)] if b.item else 1)
-                        * (solution[repr(b.familiar)] if b.familiar else 1)
+                        * (solution[repr(b.item)] if isinstance(b.item, Item) else 1)
+                        * (
+                            solution[repr(b.familiar)]
+                            if isinstance(b.familiar, Familiar)
+                            else 1
+                        )
+                        * (
+                            solution[self.enthroned_repr(b.throne_familiar)]
+                            if isinstance(b.throne_familiar, Familiar)
+                            else 1
+                        )
                         for b in bonuses
                         if b.outfit is None
                         or (
@@ -171,7 +227,8 @@ class Maximizer:
                                 [
                                     sb.item
                                     for sb in bonuses
-                                    if sb.item and solution[repr(sb.item)] >= 1
+                                    if isinstance(sb.item, Item)
+                                    and solution[repr(sb.item)] >= 1
                                 ]
                             )
                         )
@@ -225,6 +282,17 @@ class Maximizer:
             if f.have is False:
                 prob += solution[repr(f)] == 0
 
+        # Only throne familiars with throneable equips
+        prob += (
+            lpSum([solution[self.enthroned_repr(f)] for f in possible_throne_familiars])
+            <= solution[repr(crown)] + solution[repr(bjorn)]
+        )
+
+        # Do not enthrone familiars we don't have
+        for f in possible_throne_familiars:
+            if f.have is False:
+                prob += solution[self.enthroned_repr(f)] == 0
+
         # You've only got so many hands!
         prob += (
             lpSum(
@@ -265,6 +333,7 @@ class Maximizer:
             raise ValueError(LpStatus[prob.status])
 
         familiar = None
+        throne_familiars = []  # type: List[Familiar]
         result = defaultdict(lambda: None)  # type: DefaultDict[Slot, Optional[Item]]
 
         for v in prob.variables():
@@ -279,6 +348,10 @@ class Maximizer:
 
             if index_parts[1] == "<Familiar:":
                 familiar = next(f for f in possible_familiars if f.id == id)
+                continue
+
+            if index_parts[1] == "<Familiar(Enthroned):":
+                throne_familiars += next(f for f in possible_throne_familiars if f.id == id)
                 continue
 
             item = next(i for i in possible_items if i.id == id)
@@ -297,14 +370,14 @@ class Maximizer:
 
             result[item_slot] = item
 
-        return result, familiar
+        return result, familiar, throne_familiars
 
     async def solve_and_equip(self):
-        outfit, familiar = await self.solve()
+        outfit, familiar, throne_familiars = await self.solve()
 
         await self.session.unequip()
 
-        for slot, item in solution.items():
+        for slot, item in outfit.items():
             await item.equip(slot)
 
         return True

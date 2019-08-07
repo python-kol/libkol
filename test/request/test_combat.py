@@ -1,5 +1,3 @@
-from yarl import URL
-
 from libkol.request import combat
 from .test_base import TestCase
 
@@ -29,3 +27,12 @@ class CombatTestCase(TestCase):
 
         for message, damage in logs:
             self.assertEqual(combat.parse_damage(message), damage)
+
+    def test_combat_fumble(self):
+        async def run_test(file):
+            self.assertEqual(self.session.state.current_hp, 134)
+            result = await combat.parser(file.read(), session=self.session)
+            self.assertEqual(len(result.events), 1)
+            self.assertEqual(self.session.state.current_hp, 132)
+
+        self.run_async("fumble", run_test)

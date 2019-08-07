@@ -1,31 +1,22 @@
-from typing import Dict, NamedTuple
-
 import libkol
 
 from ..Error import InvalidLocationError, NotEnoughAdventuresError, RequestGenericError
 from ..pattern import PatternManager
-from ..Stat import Stat
 from ..util import parsing
 from .request import Request
-
-
-class Response(NamedTuple):
-    substats: Dict[str, int]
-    stats: Dict[str, int]
-    level: int
-
 
 no_adventures_pattern = PatternManager.getOrCompilePattern("noAdvInstitue")
 invalid_turns_pattern = PatternManager.getOrCompilePattern("invalidAdvInstitute")
 
 
-class canadia_gym(Request[Response]):
+class canadia_gym(Request[parsing.ResourceGain]):
     def __init__(self, session: "libkol.Session", turns: int):
         params = {"action": "institute", "numturns": turns}
         self.request = session.request("canadia.php", params=params)
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> Response:
+    async def parser(content: str, **kwargs) -> parsing.ResourceGain:
+        session = kwargs["session"]  # type: libkol.Session
         if len(content) == 0:
             raise InvalidLocationError(
                 "You cannot attend The Institute for Canadian Studies"
@@ -40,8 +31,4 @@ class canadia_gym(Request[Response]):
                 "That is an invalid number of turns for studying."
             )
 
-        return Response(
-            substats=parsing.substat(content, stat=Stat.Mysticality),
-            stats=parsing.stat(content, stat=Stat.Mysticality),
-            level=parsing.level(content),
-        )
+        return await parsing.resource_gain(content, session)

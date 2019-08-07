@@ -36,15 +36,15 @@ class Skill(Model, metaclass=SkillMeta):
     level_required = IntField(default=0)
     mp_cost = IntField(default=0)
 
-    passive = BooleanField(default=False)
-    noncombat = BooleanField(default=False)
-    shruggable = BooleanField(default=False)
-    combat = BooleanField(default=False)
-    healing = BooleanField(default=False)
-    summon = BooleanField(default=False)
-    expression = BooleanField(default=False)
-    walk = BooleanField(default=False)
-    mutex_song = BooleanField(default=False)
+    passive: bool = BooleanField(default=False)  # type: ignore
+    noncombat: bool = BooleanField(default=False)  # type: ignore
+    shruggable: bool = BooleanField(default=False)  # type: ignore
+    combat: bool = BooleanField(default=False)  # type: ignore
+    healing: bool = BooleanField(default=False)  # type: ignore
+    summon: bool = BooleanField(default=False)  # type: ignore
+    expression: bool = BooleanField(default=False)  # type: ignore
+    walk: bool = BooleanField(default=False)  # type: ignore
+    mutex_song: bool = BooleanField(default=False)  # type: ignore
 
     @property
     def buff(self) -> bool:

@@ -13,10 +13,13 @@ async def main():
         problem += await Item["high-temperature mining drill"]
 
         try:
-            items, familiar = await problem.solve()
+            items, familiar, throne_familiars = await problem.solve()
 
             if familiar:
                 print(f"Familiar: {familiar.name}")
+
+            for f in throne_familiars:
+                print(f"Enthrone: {f.name}")
 
             for slot, i in items.items():
                 print(f"{slot.value}: {i.name}")

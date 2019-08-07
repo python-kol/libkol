@@ -5,7 +5,8 @@
 from .element import (
     Tag as Tag,
     PageElement as PageElement,
-    Comment as Comment
+    Comment as Comment,
+    NavigableString as NavigableString,
 )
 from typing import Any, Optional
 
