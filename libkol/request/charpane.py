@@ -26,8 +26,8 @@ characterMeat = re.compile(
 characterAdventures = re.compile(
     r"onclick=\'doc\(\"adventures\"\);\'[^<>]*><br><span class=black>([0-9]+)</span>"
 )
-currentFamiliar = re.compile(
-    r"href=\"familiar.php\"(?:[^>]+)>(?:<b>)?<font size=[0-9]+>(.*?)</a>(?:</b>)?, the  <b>([0-9]+)<\/b> pound (.*?)<table"
+current_familiar = re.compile(
+    r"href=\"familiar.php\"(?:[^>]+)>(?:<b>)?<font size=[0-9]+>(.*?)</a>(?:</b>)?, the  <b>([0-9]+)<\/b> pound (.*?)<(?:table|\/)"
 )
 characterEffect = re.compile(
     r"eff\(\"[a-fA-F0-9]+\"\);\'.*?></td><td valign=center><font size=[0-9]+>(.*?) ?\(([0-9]+)\)</font><br></td>"
@@ -116,7 +116,7 @@ class charpane(Request[bool]):
         match = characterDrunk.search(content)
         session.state.inebriety = int(match.group(1)) if match else 0
 
-        match = currentFamiliar.search(content)
+        match = current_familiar.search(content)
         if match:
             familiar = await Familiar[str(match.group(3))]
             session.state.familiar = familiar

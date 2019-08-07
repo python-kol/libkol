@@ -1,6 +1,7 @@
 from typing import Any, Coroutine, Dict, Generic, Optional, TypeVar
 from yarl import URL
 from time import time
+import re
 import json
 
 from aiohttp import ClientResponse
@@ -10,6 +11,8 @@ from libkol.Error import UnknownError, InCombatError
 
 ParserReturn = TypeVar("ParserReturn")
 
+
+js_redirect = re.compile(r"<script type=\"text\/javascript\">top.mainpane.document.location = \"(?P<url>.*?)\";<\/script>")
 
 class Request(Generic[ParserReturn]):
     session: "libkol.Session"
@@ -43,6 +46,13 @@ class Request(Generic[ParserReturn]):
         content = await self.json() if self.returns_json else await self.text()
 
         assert self.response is not None
+
+        if isinstance(content, str) and len(content) < 200:
+            redirect = js_redirect.match(content)
+            if redirect:
+                redirect_url = redirect.group("url")
+                self.response = await self.session.request(redirect_url)
+                content = await self.text()
 
         url = self.response.url  # type: URL
 

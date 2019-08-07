@@ -64,6 +64,10 @@ class ItemNotFoundError(ItemError):
     pass
 
 
+class FamiliarNotFoundError(Error):
+    pass
+
+
 class SkillNotFoundError(Error):
     pass
 

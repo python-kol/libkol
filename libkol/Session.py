@@ -10,9 +10,11 @@ from urllib.parse import urlparse
 import libkol
 from libkol import Clan, Kmail, Chat, request, Item, Bonus, Familiar
 
+from .request.combat import CombatRound
+from .request.choice import Choice, Option
 from .CharacterClass import CharacterClass
 from .Element import Element
-from .Location import Location
+from .Location import Location, Combat
 from .Model import Model
 from .Skill import Skill
 from .Slot import Slot
@@ -414,8 +416,8 @@ class Session:
     async def adventure(
         self,
         location_id: int,
-        choices: Union[Dict[str, int], Callable[[str], int]] = {},
-        combat_function: Callable = None,
+        combat_function: Callable[[Combat, CombatRound], Any],
+        choices: Union[Dict[int, int], Callable[[Choice], Option]] = {},
     ):
         """
         Run adventure in a location
@@ -428,7 +430,7 @@ class Session:
         :param combat_function: A function that carries out combat
         """
         location = Location(self, id=location_id)
-        return await location.visit(choices, combat_function)
+        return await location.visit(combat_function, choices)
 
     @logged_in
     async def logout(self):

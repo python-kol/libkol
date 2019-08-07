@@ -1,9 +1,10 @@
-from typing import Callable, Dict, Union, List
+from typing import Any, Callable, Dict, Union, List, Optional
 
 import libkol
 
 from libkol import request
 from .request.combat import CombatAction, CombatRound
+from .request.choice import Choice, Option
 
 
 class Combat:
@@ -33,8 +34,8 @@ class Location:
 
     async def visit(
         self,
-        choices: Union[Dict[str, int], Callable[[str], int]] = {},
-        combat_function: Callable = None,
+        combat_function: Callable[[Combat, CombatRound], Any],
+        choices: Union[Dict[int, int], Callable[[Choice], Union[Option, int]]] = {},
     ):
         adventure = await request.adventure(self.session, self.id).parse()
 
@@ -45,6 +46,17 @@ class Location:
 
                 if combat_result.finished:
                     return combat_result
-            else:
-                print("Non combat adventures not yet supported")
-                return None
+            elif isinstance(adventure, Choice):
+                if isinstance(choices, dict):
+                    option = choices.get(adventure.id)
+                elif callable(choices):
+                    o = choices(adventure)
+                    if isinstance(o, Option):
+                        option = o.id
+                    else:
+                        option = o
+
+                if option is None:
+                    return None
+
+                return await request.choice(self.session, adventure.id, option).parse()

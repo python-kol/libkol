@@ -2,9 +2,10 @@ import asyncio
 from tortoise.fields import IntField, CharField, BooleanField, ForeignKeyField
 from tortoise.models import ModelMeta
 from typing import Optional, Union
+from tortoise.exceptions import DoesNotExist
 
 from .Model import Model
-
+from .Error import FamiliarNotFoundError
 
 class FamiliarMeta(ModelMeta):
     def __getitem__(self, key: Union[int, str]):
@@ -17,10 +18,13 @@ class FamiliarMeta(ModelMeta):
         future = loop.create_future()
 
         async def getitem():
-            if isinstance(key, int):
-                result = await self.get(id=key)
-            else:
-                result = await self.get(name=key)
+            try:
+                if isinstance(key, int):
+                    result = await self.get(id=key)
+                else:
+                    result = await self.get(name=key)
+            except DoesNotExist:
+                raise FamiliarNotFoundError(f"Cannot find a familiar with the token `{key}`")
 
             future.set_result(result)
 
