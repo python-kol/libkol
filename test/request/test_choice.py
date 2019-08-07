@@ -7,7 +7,7 @@ class ChoiceTestCase(TestCase):
 
     def test_choice_shore(self):
         async def run_test(file):
-            c = await choice.parser(file.read())
+            c = await choice.parser(file.read(), session=self.session)
             self.assertEqual(c.id, 793)
             self.assertEqual(len(c.options), 4)
             self.assertEqual(c.options[0].id, 1)
