@@ -1,14 +1,15 @@
-from typing import Tuple
+from typing import Tuple, Union
 from yarl import URL
 
 import libkol
 
+from .choice import choice, Choice
 from ..Error import NotEnoughItemsError, WrongKindOfItemError
 from .request import Request
 from ..util import parsing
 
 
-class item_use(Request[Tuple[str, parsing.ResourceGain]]):
+class item_use(Request[Union[Choice, Tuple[str, parsing.ResourceGain]]]):
     """
     Uses the requested item.
     """
@@ -22,7 +23,7 @@ class item_use(Request[Tuple[str, parsing.ResourceGain]]):
         )
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> Tuple[str, parsing.ResourceGain]:
+    async def parser(content: str, **kwargs) -> Union[Choice, Tuple[str, parsing.ResourceGain]]:
         if "<td>You don't have the item you're trying to use.</td>" in content:
             raise NotEnoughItemsError("You do not have that item")
 
@@ -37,8 +38,11 @@ class item_use(Request[Tuple[str, parsing.ResourceGain]]):
         session = kwargs["session"]  # type: libkol.Session
         url = kwargs["url"]  # type: URL
 
+        if url.path == "/choice.php":
+            return await choice.parser(content, **kwargs)
+
         used = await Item[int(url.query["whichitem"])]
-        session.state["inventory"][used] -= 1
+        session.state.inventory[used] -= 1
 
         result = str(parsing.panel(content))
 
