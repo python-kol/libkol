@@ -7,6 +7,7 @@ from tortoise.fields import (
     ManyToManyField,
 )
 from tortoise.models import ModelMeta
+from tortoise.exceptions import DoesNotExist
 from typing import Coroutine, List, Optional, Union, Tuple
 import re
 import time
@@ -34,15 +35,19 @@ class ItemMeta(ModelMeta):
         future = loop.create_future()
 
         async def getitem():
-            if isinstance(key, int):
-                # Most desc_ids are 9 digits but there are 14 that aren't.
-                # At time of writing this is good for 115,100 new items before any collisions.
-                if key == 31337 or key == 46522 or key >= 125353:
-                    result = await self.get_or_discover(desc_id=key)
+            try:
+                if isinstance(key, int):
+                    # Most desc_ids are 9 digits but there are 14 that aren't.
+                    # At time of writing this is good for 115,100 new items before any collisions.
+                    if key == 31337 or key == 46522 or key >= 125353:
+                        result = await self.get_or_discover(desc_id=key)
+                    else:
+                        result = await self.get_or_discover(id=key)
                 else:
-                    result = await self.get_or_discover(id=key)
-            else:
-                result = await self.get(name=key)
+                    result = await self.get(name=key)
+            except DoesNotExist:
+                raise ItemNotFoundError(f"Cannot find an item with the token `{key}`")
+
 
             future.set_result(result)
 
