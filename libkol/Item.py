@@ -123,8 +123,10 @@ class Item(Model, metaclass=ItemMeta):
     # NPC Store Info
     store_row: Optional[int] = IntField(null=True)  # type: ignore
     store_price: Optional[int] = IntField(null=True)  # type: ignore
+    store_buy: Optional[bool] = BooleanField(null=True)  # type: ignore
     store: Optional["libkol.Store"] = ForeignKeyField("models.Store", related_name="items", null=True)  # type: ignore
     store_id: Optional[int]
+    currency_in: Optional["libkol.Store"] = ForeignKeyField("models.Store", related_name="currency", null=True)  # type: ignore
 
     # Flags
     hatchling: bool = BooleanField(default=False)  # type: ignore

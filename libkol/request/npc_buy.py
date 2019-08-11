@@ -13,12 +13,7 @@ from .request import Request
 from ..Store import Store
 
 
-class Response(NamedTuple):
-    items: List["libkol.types.ItemQuantity"]
-    meat_gained: int
-
-
-class npc_buy(Request):
+class npc_buy(Request[parsing.ResourceGain]):
     """
     Purchases items from an NPC store.
 
@@ -35,6 +30,8 @@ class npc_buy(Request):
         item: "libkol.Item",
         quantity: int = 1,
     ) -> None:
+        super().__init__(session)
+
         if item.store_id != store.id:
             raise WrongKindOfItemError("This item cannot be purchased in that store")
 
@@ -43,6 +40,9 @@ class npc_buy(Request):
             params = {"action": "buy", "howmany": quantity, "whichitem": item.id}
             self.request = session.request("town_giftshop.php", pwd=True, params=params)
             return
+
+        if ".php" in store.slug:
+            raise UnknownError("This is a special shop but we don't know how to use it")
 
         params = {"whichshop": store.slug, "action": "buyitem", "quantity": quantity}
 
@@ -54,7 +54,8 @@ class npc_buy(Request):
         self.request = session.request("shop.php", pwd=True, params=params)
 
     @staticmethod
-    async def parser(content: str, **kwargs) -> Response:
+    async def parser(content: str, **kwargs) -> parsing.ResourceGain:
+        session = kwargs["session"] # type: libkol.Session
         if len(content) == 0:
             raise InvalidLocationError("You cannot visit that store yet.")
 
@@ -73,11 +74,4 @@ class npc_buy(Request):
                 "You do not have enough meat to purchase the item(s)."
             )
 
-        items = await parsing.item(content)
-
-        if len(items) == 0:
-            raise UnknownError("Unknown error. No items received.")
-
-        meat = parsing.meat(content)
-
-        return Response(items, meat)
+        return await parsing.resource_gain(content, session)
