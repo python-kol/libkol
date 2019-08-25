@@ -25,3 +25,12 @@ class PlayerSearchTestCase(TestCase):
             self.assertEqual(players[112].fame, 24)
 
         self.run_async("pvp", run_test)
+
+
+    def test_player_search_infinity(self):
+        async def run_test(file):
+            players = await player_search.parser(file.read())
+            player = players[0]
+            self.assertEqual(player.level, None)
+
+        self.run_async("infinity", run_test)

@@ -1,0 +1,31 @@
+<body bgcolor=white text=black link=black alink=black vlink=black>
+<div id='menu' class=rcm></div>
+
+<center><b>Search Results:<br><table align=center><tr><td class=small><b><u>Name</u></b></td><td class=small><b><u>PlayerID</u></b></td><td class=small><b><u>Level</u></b></td><td class=small><b><u>Class</u></b></td></tr><tr><td class=small><b><a target=mainpane href="showplayer.php?who=2067704">chameco</a></b> <br>(<a target=mainpane href="showclan.php?whichclan=84165">Alliance From Heck</a>)</td><td valign=top class=small>2067704</td><td valign=top class=small><img src="https://s3.amazonaws.com/images.kingdomofloathing.com/otherimages/inf_small.gif"></td><td class=small valign=top>Sauceror</td></tr></table></center>
+<form name="search" action="searchplayer.php" method="post">
+<input type="hidden" name="searching" value="Yep.">
+<input type="hidden" name="for" value="">
+<center>
+<b>Search for names:</b>
+<input class="text" type="text" name="searchstring" size="30" value="chameco"><br />
+<div style="font-weight: normal">
+	starting with <input type="radio" name="startswith" value="1" checked="checked">&nbsp;&nbsp;
+	containing<input type="radio" name="startswith" value="2">&nbsp;&nbsp;
+	ending with <input type="radio" name="startswith" value="3">
+</div>
+<table>
+<tr><td valign="center" align="center">
+Level: <input class="text" type="text" size=3 name=searchlevel>
+Fame: <input class="text" type="text" size=3 name=searchranking>
+</td></tr>
+<tr><td valign="center"><input type="checkbox" name="pvponly" >PvP players only</td>
+<td><input type="radio" name="hardcoreonly" value="1">Hardcore only<br>
+<input type="radio" name="hardcoreonly" value="2">Not in Hardcore<br>
+<input type="radio" name="hardcoreonly" value="0" checked>Don't Care</td>
+</tr>
+</table>
+<input class="button" type="submit" value="Search">
+</form>
+
+</font>
+</body>
