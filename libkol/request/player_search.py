@@ -7,6 +7,7 @@ from yarl import URL
 
 import libkol
 
+from ..Error import UnknownError
 from .request import Request
 
 
@@ -20,7 +21,7 @@ class QueryType(Enum):
 class Player:
     username: str
     id: int
-    level: int
+    level: Optional[int]
     character_class: str
     clan_id: Optional[int] = None
     clan_name: Optional[str] = None
@@ -73,24 +74,30 @@ class player_search(Request[List[Player]]):
             if row.contents[0].b.u is not None:
                 continue  # Header
 
-            players += [
-                Player(
-                    username=row.contents[0].b.string,
-                    id=int(row.contents[1].get_text()),
-                    level=int(row.contents[2].get_text()),
-                    character_class=row.contents[3].get_text(),
-                    clan_id=int(
-                        URL(str(row.contents[0].contents[4]["href"])).query["whichclan"]
+            try:
+                level_cell = row.contents[2]
+                level = None if level_cell.img else int(level_cell.get_text())
+
+                players += [
+                    Player(
+                        username=row.contents[0].b.string,
+                        id=int(row.contents[1].get_text()),
+                        level=level,
+                        character_class=row.contents[3].get_text(),
+                        clan_id=int(
+                            URL(str(row.contents[0].contents[4]["href"])).query["whichclan"]
+                        )
+                        if len(row.contents[0].contents) > 4
+                        else None,
+                        clan_name=row.contents[0].contents[4].string
+                        if len(row.contents[0].contents) > 4
+                        else None,
+                        fame=int(row.contents[4].get_text())
+                        if len(row.contents) > 4
+                        else None,
                     )
-                    if len(row.contents[0].contents) > 4
-                    else None,
-                    clan_name=row.contents[0].contents[4].string
-                    if len(row.contents[0].contents) > 4
-                    else None,
-                    fame=int(row.contents[4].get_text())
-                    if len(row.contents) > 4
-                    else None,
-                )
-            ]
+                ]
+            except ValueError:
+                raise UnknownError("Missing value")
 
         return players
