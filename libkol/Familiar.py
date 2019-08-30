@@ -18,15 +18,15 @@ class FamiliarMeta(ModelMeta):
         future = loop.create_future()
 
         async def getitem():
+            result = None
             try:
                 if isinstance(key, int):
                     result = await self.get(id=key)
                 else:
                     result = await self.get(name=key)
+                future.set_result(result)
             except DoesNotExist:
-                raise FamiliarNotFoundError(f"Cannot find a familiar with the token `{key}`")
-
-            future.set_result(result)
+                future.set_exception(FamiliarNotFoundError(f"Cannot find a familiar with the token `{key}`"))
 
         asyncio.ensure_future(getitem())
         return future

@@ -35,6 +35,7 @@ class ItemMeta(ModelMeta):
         future = loop.create_future()
 
         async def getitem():
+            result = None
             try:
                 if isinstance(key, int):
                     # Most desc_ids are 9 digits but there are 14 that aren't.
@@ -45,11 +46,10 @@ class ItemMeta(ModelMeta):
                         result = await self.get_or_discover(id=key)
                 else:
                     result = await self.get(name=key)
+                future.set_result(result)
+                
             except DoesNotExist:
-                raise ItemNotFoundError(f"Cannot find an item with the token `{key}`")
-
-
-            future.set_result(result)
+                future.set_exception(ItemNotFoundError(f"Cannot find an item with the token `{key}`"))
 
         asyncio.ensure_future(getitem())
         return future
