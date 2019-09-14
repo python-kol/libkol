@@ -32,7 +32,8 @@ class choice(Request[Union[Tag, Choice]]):
     """
 
     def __init__(
-        self, session: "libkol.Session",
+        self,
+        session: "libkol.Session",
         choice: Union[Choice, int],
         option: Union[Option, int],
         extra: Dict[str, Any] = {},
