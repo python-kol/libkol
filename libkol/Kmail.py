@@ -1,4 +1,4 @@
-from typings import List, Union
+from typing import List, Union
 
 from . import request
 from .util.decorators import logged_in
