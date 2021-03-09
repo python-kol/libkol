@@ -42,7 +42,7 @@ class item_description(Request):
             None,
         )
         type: Optional[List[str]] = next(
-            (line[1].string.split(" ") for line in lines if line[0] == "Type: "), None
+            (line[1].string.split(" ") for line in lines if line[0] == "Type: " and line[1].string is not None), None
         )
         power = next(
             (int(line[1].string) for line in lines if line[0] == "Power: "), None

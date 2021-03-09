@@ -33,10 +33,12 @@ class item_information(Request[Response]):
     Get information about a particular item.
     """
 
+    returns_json = True
+
     def __init__(self, session: "libkol.Session", item_id) -> None:
         super().__init__(session)
 
-        data = {"what": "item", "id": item_id}
+        data = {"what": "item", "id": item_id, "for": session.user_agent}
         self.request = session.request("api.php", json=True, data=data)
 
     @staticmethod
@@ -55,12 +57,12 @@ class item_information(Request[Response]):
             type=content["type"] if "type" in content else None,
             autosell_value=(
                 int(content["sellvalue"])
-                if "sellvalue" in content and int(content["sellvalue"] > 0)
+                if "sellvalue" in content and int(content["sellvalue"]) > 0
                 else 0
             ),
             power=int(content["power"]) if "power" in content else 0,
             num_hands=(
-                int(content["hands"]) if "hands" in content and int(content["hands"] > 0) else 0
+                int(content["hands"]) if "hands" in content and int(content["hands"]) > 0 else 0
             ),
             can_transfer=(
                 True if "cantransfer" in content and content["cantransfer"] == "1" else False
