@@ -36,7 +36,7 @@ class Request(Generic[ParserReturn]):
     async def json(self) -> Dict[str, Any]:
         response = self.response or await self.run()
 
-        return await response.json(content_type="text/html")
+        return await response.json(content_type=None)
 
     @staticmethod
     async def parser(content, **kwargs) -> ParserReturn:
